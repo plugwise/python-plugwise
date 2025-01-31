@@ -72,7 +72,7 @@ class SmileLegacyHelper(SmileCommon):
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_mac_address: str | None
         self.smile_model: str
-        self.smile_version: Version | None
+        self.smile_version: Version
         self.smile_zigbee_mac_address: str | None
         SmileCommon.__init__(self)
 

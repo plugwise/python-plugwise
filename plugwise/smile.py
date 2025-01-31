@@ -59,7 +59,7 @@ class SmileAPI(SmileData):
         smile_model_id: str | None,
         smile_name: str,
         smile_type: str,
-        smile_version: Version | None,
+        smile_version: Version,
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_present = _cooling_present

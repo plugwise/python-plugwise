@@ -50,7 +50,7 @@ class SmileLegacyAPI(SmileLegacyData):
         smile_model: str,
         smile_name: str,
         smile_type: str,
-        smile_version: Version | None,
+        smile_version: Version,
         smile_zigbee_mac_address: str | None,
     ) -> None:
         """Set the constructor for this class."""

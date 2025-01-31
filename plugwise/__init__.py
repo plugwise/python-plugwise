@@ -80,7 +80,7 @@ class Smile(SmileComm):
         self.smile_model_id: str | None = None
         self.smile_name: str = NONE
         self.smile_type: str = NONE
-        self.smile_version: Version | None = None
+        self.smile_version: Version = Version("0.0.0")
         self.smile_zigbee_mac_address: str | None = None
 
     @property
@@ -115,7 +115,7 @@ class Smile(SmileComm):
         """
         return not self.smile_legacy
 
-    async def connect(self) -> Version | None:
+    async def connect(self) -> Version:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
         result = await self._request(DOMAIN_OBJECTS)
         # Work-around for Stretch fw 2.7.18

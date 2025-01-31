@@ -86,7 +86,7 @@ class SmileHelper(SmileCommon):
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_model_id: str | None
-        self.smile_version: version.Version | None
+        self.smile_version: version.Version
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -786,7 +786,7 @@ class SmileHelper(SmileCommon):
 
         # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
         # In newer firmware versions, default to "off" when control_state is not present
-        if self.smile_version is not None:
+        if self.smile_version != version.Version("0.0.0"):
             if self.smile_version >= version.parse("3.2.0"):
                 return "off"
 
