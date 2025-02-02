@@ -306,7 +306,7 @@ class SmileLegacyHelper(SmileCommon):
         search = self._modules
         mod_logs = search.findall("./module/services")
         for loc.measurement, loc.attrs in P1_LEGACY_MEASUREMENTS.items():
-            loc.meas_list = loc.measurement.split("_")
+            loc.meas_list = loc.measurement.partition("_")[0::2]
             for loc.logs in mod_logs:
                 for loc.log_type in mod_list:
                     collect_power_values(data, loc, t_string, legacy=True)
