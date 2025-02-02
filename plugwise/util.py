@@ -218,7 +218,7 @@ def get_vendor_name(module: etree, model_data: ModuleData) -> ModuleData:
     if (vendor_name := module.find("vendor_name").text) is not None:
         model_data["vendor_name"] = vendor_name
         if "Plugwise" in vendor_name:
-            model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
+            model_data["vendor_name"] = vendor_name.partition(" ")[0]
 
     return model_data
 
@@ -275,9 +275,9 @@ def power_data_peak_value(loc: Munch, legacy: bool) -> Munch:
         if not loc.found:
             return loc
 
-    if (peak := loc.peak_select.split("_")[1]) == "offpeak":
+    if (peak := loc.peak_select.partition("_")[2]) == "offpeak":
         peak = "off_peak"
-    log_found = loc.log_type.split("_")[0]
+    log_found = loc.log_type.partition("_")[0]
     loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
     if "gas" in loc.measurement or loc.log_type == "point_meter":
         loc.key_string = f"{loc.measurement}_{log_found}"
@@ -314,7 +314,7 @@ def skip_obsolete_measurements(xml: etree, measurement: str) -> bool:
         measurement in OBSOLETE_MEASUREMENTS
         and (updated_date_key := xml.find(locator)) is not None
     ):
-        updated_date = updated_date_key.text.split("T")[0]
+        updated_date = updated_date_key.text.partition("T")[0]
         date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
         date_2 = dt.datetime.now()
         return int((date_2 - date_1).days) > 7
