@@ -1,6 +1,10 @@
 # Changelog
 
-## v.1.7.1
+## v1.7.2
+
+- Bugfix for Plugwise-beta Issue [#833](https://github.com/plugwise/plugwise-beta/issues/833)
+
+## v1.7.1
 
 - Avoid None-init for smile_version [#699](https://github.com/plugwise/python-plugwise/pull/699)
 - Replace string.split() by string.partition() [#702](https://github.com/plugwise/python-plugwise/pull/702)
