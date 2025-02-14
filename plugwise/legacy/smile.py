@@ -234,10 +234,10 @@ class SmileLegacyAPI(SmileLegacyData):
         """Set the given State of the relevant Switch."""
         switch = Munch()
         switch.actuator = "actuator_functionalities"
-        switch.func_type = "relay_functionality"
         if self._stretch_v2:
             switch.actuator = "actuators"
-            switch.func_type = "relay"
+        # From #833 it seems this is not correct: switch.func_type = "relay_functionality"
+        switch.func_type = "relay"
         switch.func = "state"
 
         if members is not None:
