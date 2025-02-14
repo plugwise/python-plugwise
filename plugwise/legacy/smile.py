@@ -234,17 +234,17 @@ class SmileLegacyAPI(SmileLegacyData):
         """Set the given State of the relevant Switch."""
         switch = Munch()
         switch.actuator = "actuator_functionalities"
+        switch.func_type = "relay_functionality"
         if self._stretch_v2:
             switch.actuator = "actuators"
-        # From #833 it seems this is not correct: switch.func_type = "relay_functionality"
-        switch.func_type = "relay"
+            switch.func_type = "relay"
         switch.func = "state"
 
         if members is not None:
             return await self._set_groupswitch_member_state(members, state, switch)
 
         data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-        uri = f"{APPLIANCES};id={appl_id}/{switch.func_type}"
+        uri = f"{APPLIANCES};id={appl_id}/relay"
 
         if model == "relay":
             locator = (
