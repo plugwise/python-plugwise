@@ -241,12 +241,22 @@ class SmileLegacyAPI(SmileLegacyData):
 
         if model == "lock":
             state = "false" if state == "off" else "true"
+            appliance = self._appliances.find(f'appliance[@id="{appl_id}"]')
+            appl_name = appliance.find("name").text
+            appl_type = appliance.find("type").text
+            data = (
+                f'<appliances><appliance id="{appl_id}"><name><![CDATA[{appl_name}]></name>'
+                f"<description><![CDATA[]]></description><type><![CDATA[{appl_type}]]></type><actuator_functionalities>"
+                "<relay_functionality><lock>true</lock></relay_functionality></actuator_functionalities></appliance></appliances>"
+            )
+            await self.call_request(APPLIANCES, method="post", data=data)
+            return
 
         if members is not None:
             return await self._set_groupswitch_member_state(members, state, switch)
 
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
-        uri = f"{APPLIANCES};id={appl_id}/{model}"
+        uri = f"{APPLIANCES};id={appl_id}/relay"
 
         if model == "relay":
             locator = (
