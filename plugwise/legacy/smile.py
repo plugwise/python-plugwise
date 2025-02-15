@@ -246,17 +246,19 @@ class SmileLegacyAPI(SmileLegacyData):
             appl_type = appliance.find("type").text
             data = (
                 f'<appliances><appliance id="{appl_id}"><name><![CDATA[{appl_name}]></name>'
-                f"<description><![CDATA[]]></description><type><![CDATA[{appl_type}]]></type><actuator_functionalities>"
-                "<relay_functionality><lock>true</lock></relay_functionality></actuator_functionalities></appliance></appliances>"
+                f"<description><![CDATA[]]></description><type><![CDATA[{appl_type}]]></type>"
+                f"<{switch.actuator}><{switch.func_type}><lock>{state}</lock></{switch.func_type}></{switch.actuator}>"
+                "</appliance></appliances>"
             )
             await self.call_request(APPLIANCES, method="post", data=data)
             return
 
-        if members is not None:
-            return await self._set_groupswitch_member_state(members, state, switch)
-
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
         uri = f"{APPLIANCES};id={appl_id}/relay"
+        if members is not None:
+            return await self._set_groupswitch_member_state(
+                data, members, state, switch
+            )
 
         if model == "relay":
             locator = (
@@ -269,16 +271,14 @@ class SmileLegacyAPI(SmileLegacyData):
         await self.call_request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
+        self, data: str, members: list[str], state: str, switch: Munch
     ) -> None:
         """Helper-function for set_switch_state().
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
         for member in members:
-            data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
             uri = f"{APPLIANCES};id={member}/relay"
-
             await self.call_request(uri, method="put", data=data)
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
