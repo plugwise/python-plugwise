@@ -2,7 +2,7 @@
 
 ## v1.7.2
 
-- Bugfix for Plugwise-beta Issue [#833](https://github.com/plugwise/plugwise-beta/issues/833)
+- Bugfix for Plugwise-beta issue [833](https://github.com/plugwise/plugwise-beta/issues/833) solving relay- and lock-switches not switching for the Stretch.
 
 ## v1.7.1
 
