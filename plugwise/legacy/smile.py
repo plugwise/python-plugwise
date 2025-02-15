@@ -231,21 +231,50 @@ class SmileLegacyAPI(SmileLegacyData):
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
-        """Set the given State of the relevant Switch."""
+        """Set the given state of the relevant switch.
+
+        For individual switches, sets the state directly.
+        For group switches, sets the state for each member in the group separately.
+        For switch-locks, sets the lock state using a different data format.
+        """
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.func_type = "relay_functionality"
         if self._stretch_v2:
             switch.actuator = "actuators"
             switch.func_type = "relay"
-        switch.func = "state"
 
+        # Handle switch-lock
+        if model == "lock":
+            state = "false" if state == "off" else "true"
+            appliance = self._appliances.find(f'appliance[@id="{appl_id}"]')
+            appl_name = appliance.find("name").text
+            appl_type = appliance.find("type").text
+            data = f'''
+                <appliances>
+                    <appliance id="{appl_id}">
+                        <name><![CDATA[{appl_name}]]></name>
+                        <description><![CDATA[]]></description>
+                        <type><![CDATA[{appl_type}]]></type>
+                        <{switch.actuator}>
+                            <{switch.func_type}>
+                                <lock>{state}</lock>
+                            </{switch.func_type}>
+                        </{switch.actuator}>
+                    </appliance>
+                </appliances>'''.strip()
+            await self.call_request(APPLIANCES, method="post", data=data)
+            return
+
+        # Handle group of switches
+        data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
         if members is not None:
-            return await self._set_groupswitch_member_state(members, state, switch)
+            return await self._set_groupswitch_member_state(
+                data, members, state, switch
+            )
 
-        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-        uri = f"{APPLIANCES};id={appl_id}/{switch.func_type}"
-
+        # Handle individual relay switches
+        uri = f"{APPLIANCES};id={appl_id}/relay"
         if model == "relay":
             locator = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
@@ -257,16 +286,14 @@ class SmileLegacyAPI(SmileLegacyData):
         await self.call_request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
+        self, data: str, members: list[str], state: str, switch: Munch
     ) -> None:
         """Helper-function for set_switch_state().
 
-        Set the given State of the relevant Switch within a group of members.
+        Set the given State of the relevant Switch (relay) within a group of members.
         """
         for member in members:
-            uri = f"{APPLIANCES};id={member}/{switch.func_type}"
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
+            uri = f"{APPLIANCES};id={member}/relay"
             await self.call_request(uri, method="put", data=data)
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:

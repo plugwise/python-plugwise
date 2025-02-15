@@ -167,8 +167,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
                 )
             else:
+                app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_http_ok)
                 app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
         else:
+            app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
