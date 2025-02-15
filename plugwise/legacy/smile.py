@@ -238,13 +238,15 @@ class SmileLegacyAPI(SmileLegacyData):
         if self._stretch_v2:
             switch.actuator = "actuators"
             switch.func_type = "relay"
-        switch.func = "state"
+
+        if model == "lock":
+            state = "false" if state == "off" else "true"
 
         if members is not None:
             return await self._set_groupswitch_member_state(members, state, switch)
 
-        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-        uri = f"{APPLIANCES};id={appl_id}/relay"
+        data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
+        uri = f"{APPLIANCES};id={appl_id}/{model}"
 
         if model == "relay":
             locator = (
@@ -261,10 +263,10 @@ class SmileLegacyAPI(SmileLegacyData):
     ) -> None:
         """Helper-function for set_switch_state().
 
-        Set the given State of the relevant Switch within a group of members.
+        Set the given State of the relevant Switch (relay) within a group of members.
         """
         for member in members:
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+            data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
             uri = f"{APPLIANCES};id={member}/relay"
 
             await self.call_request(uri, method="put", data=data)
