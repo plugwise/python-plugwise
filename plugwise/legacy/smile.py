@@ -251,7 +251,7 @@ class SmileLegacyAPI(SmileLegacyData):
             appl_name = appliance.find("name").text
             appl_type = appliance.find("type").text
             data = (
-                f'<appliances><appliance id="{appl_id}"><name><![CDATA[{appl_name}]></name>'
+                f'<appliances><appliance id="{appl_id}"><name><![CDATA[{appl_name}]]></name>'
                 f"<description><![CDATA[]]></description><type><![CDATA[{appl_type}]]></type>"
                 f"<{switch.actuator}><{switch.func_type}><lock>{state}</lock></{switch.func_type}></{switch.actuator}>"
                 "</appliance></appliances>"
