@@ -296,7 +296,7 @@ class Smile(SmileComm):
         ):
             system = await self._request(SYSTEM)
             self.smile_version = parse(system.find("./gateway/firmware").text)
-            return_model = system.find("./gateway/product").text
+            return_model = str(system.find("./gateway/product").text)
             self.smile_hostname = system.find("./gateway/hostname").text
             # If wlan0 contains data it's active, so eth0 should be checked last
             for network in ("wlan0", "eth0"):
@@ -307,7 +307,7 @@ class Smile(SmileComm):
         elif dsmrmain is not None:
             status = await self._request(STATUS)
             self.smile_version = parse(status.find("./system/version").text)
-            return_model = status.find("./system/product").text
+            return_model = str(status.find("./system/product").text)
             self.smile_hostname = status.find("./network/hostname").text
             self.smile_mac_address = status.find("./network/mac_address").text
         else:  # pragma: no cover
