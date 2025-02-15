@@ -75,6 +75,10 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         )
         assert switch_change
         switch_change = await self.tinker_switch(
+            smile, "2587a7fcdd7e482dab03fda256076b4b", model="lock"
+        )
+        assert switch_change
+        switch_change = await self.tinker_switch(
             smile,
             "f7b145c8492f4dd7a4de760456fdef3e",
             ["407aa1c1099d463c9137a3a9eda787fd"],
