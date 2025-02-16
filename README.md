@@ -1,11 +1,12 @@
 # Plugwise python module
 
-This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) in Home Assistant Core (which we maintain as co-code owners).
+This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) in Home Assistant Core (which we maintain as code owners).
 
-This module supports `Smile`s (and `Stretch`), i.e. the networked plugwise devices. For the USB (or Stick-standalone version) please refer to upcoming [`plugwise-usb` component](https://github.com/plugwise/plugwise_usb-beta).
+This module supports Hubs such as `Adam`, `Smile`s for Anna and P1 and `Stretch`, i.e. the networked plugwise devices. For the USB (or Stick-standalone version) please refer to upcoming [`plugwise-usb` component](https://github.com/plugwise/plugwise_usb-beta).
 
 Our main usage for this module is supporting [Home Assistant](https://www.home-assistant.io) / [home-assistant](http://github.com/home-assistant/core/)
 
+![Static Badge](https://img.shields.io/badge/Plugwise_Discord-Join_now-purple?style=social&logo=discord&link=https%3A%2F%2Fdiscord.gg%2FmFVhF8Ar6A)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/plugwise)
 [![CodeRabbit.ai is Awesome](https://img.shields.io/badge/AI-orange?label=CodeRabbit&color=orange&link=https%3A%2F%2Fcoderabbit.ai)](https://coderabbit.ai)
 [![renovate maintained](https://img.shields.io/badge/maintained%20with-renovate-blue?logo=renovatebot)](https://github.com/plugwise/python-plugwise/issues/291)
