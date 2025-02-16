@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improve readability of xml-data in POST/PUT requests
+
 ## v1.7.2
 
 - Bugfix for Plugwise-beta issue [833](https://github.com/plugwise/plugwise-beta/issues/833) solving relay- and lock-switches not switching for the Stretch.
