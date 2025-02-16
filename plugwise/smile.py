@@ -218,7 +218,7 @@ class SmileAPI(SmileData):
             </locations>
         '''
         uri = f"{LOCATIONS};id={loc_id}"
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_select(
         self, key: str, loc_id: str, option: str, state: str | None
@@ -426,7 +426,7 @@ class SmileAPI(SmileData):
             if self._domain_objects.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
