@@ -174,9 +174,13 @@ class SmileAPI(SmileData):
         if thermostat_id is None:
             raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
 
+        data = f"""
+            <thermostat_functionality>
+                <setpoint>{temp}</setpoint>
+            </thermostat_functionality>
+        """
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
-        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
@@ -186,10 +190,13 @@ class SmileAPI(SmileData):
             )
 
         value = str(offset)
+        data = f"""
+            <offset_functionality>
+                <offset>{value}</offset>
+            </offset_functionality>
+        """
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
-        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
@@ -201,15 +208,17 @@ class SmileAPI(SmileData):
         current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
-
+        data = f'''
+            <locations>
+                <location id="{loc_id}">
+                    <name>{location_name}</name>
+                    <type>{location_type}</type>
+                    <preset>{preset}</preset>
+                </location>
+            </locations>
+        '''
         uri = f"{LOCATIONS};id={loc_id}"
-        data = (
-            "<locations><location"
-            f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
-            f"</type><preset>{preset}</preset></location></locations>"
-        )
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_select(
         self, key: str, loc_id: str, option: str, state: str | None
@@ -231,10 +240,13 @@ class SmileAPI(SmileData):
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
+        data = f"""
+            <domestic_hot_water_mode_control_functionality>
+                <mode>{mode}</mode>
+            </domestic_hot_water_mode_control_functionality>
+        """
         uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
-        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
@@ -259,23 +271,32 @@ class SmileAPI(SmileData):
             vacation_time = time_2 + "T23:00:00.000Z"
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
+        data = f"""
+            <gateway_mode_control_functionality>
+                <mode>{mode}</mode>
+                {valid}
+            </gateway_mode_control_functionality>
+        """
         uri = f"{APPLIANCES};id={self._smile_props['gateway_id']}/gateway_mode_control"
-        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._reg_allowed_modes:
             raise PlugwiseError("Plugwise: invalid regulation mode.")
 
-        uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         duration = ""
         if "bleeding" in mode:
             duration = "<duration>300</duration>"
-        data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
 
-        await self.call_request(uri, method="put", data=data)
+        data = f"""
+            <regulation_mode_control_functionality>
+                {duration}
+                <mode>{mode}</mode>
+            </regulation_mode_control_functionality>
+        """
+        uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_schedule_state(
         self,
@@ -323,13 +344,17 @@ class SmileAPI(SmileData):
             template = f'<template id="{template_id}" />'
 
         contexts = self.determine_contexts(loc_id, name, new_state, schedule_rule_id)
+        data = f'''
+            <rules>
+                <rule id="{schedule_rule_id}">
+                    <name><![CDATA[{name}]]></name>
+                    {template}
+                    {contexts}
+                </rule>
+            </rules>
+        '''
         uri = f"{RULES};id={schedule_rule_id}"
-        data = (
-            f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
-            f"{template}{contexts}</rule></rules>"
-        )
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
         self._schedule_old_states[loc_id][name] = new_state
 
     def determine_contexts(
@@ -387,9 +412,12 @@ class SmileAPI(SmileData):
                 switch_id = item.attrib["id"]
                 break
 
+        data = f"""
+            <{switch.func_type}>
+                <{switch.func}>{state}</{switch.func}>
+            </{switch.func_type}>
+        """
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
         if model == "relay":
             locator = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
@@ -398,7 +426,7 @@ class SmileAPI(SmileData):
             if self._domain_objects.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
@@ -411,9 +439,12 @@ class SmileAPI(SmileData):
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._domain_objects.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-            await self.call_request(uri, method="put", data=data)
+            data = f"""
+                <{switch.func_type}>
+                    <{switch.func}>{state}</{switch.func}>
+                </{switch.func_type}>
+            """
+            await self.call_request(uri, method="put", data=data.strip())
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
@@ -448,13 +479,13 @@ class SmileAPI(SmileData):
             )  # pragma: no cover"
 
         temperature = str(setpoint)
+        data = f"""
+            <thermostat_functionality>
+                <setpoint>{temperature}</setpoint>
+            </thermostat_functionality>
+        """
         uri = self._thermostat_uri(loc_id)
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
-        )
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def call_request(self, uri: str, **kwargs: Any) -> None:
         """ConnectionFailedError wrapper for calling request()."""
