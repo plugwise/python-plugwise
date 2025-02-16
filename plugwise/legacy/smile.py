@@ -172,9 +172,14 @@ class SmileLegacyAPI(SmileLegacyData):
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         rule = self._domain_objects.find(locator)
-        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
-
-        await self.call_request(RULES, method="put", data=data)
+        data = f'''
+            <rules>
+                <rule id="{rule.attrib["id"]}">
+                    <active>true</active>
+                </rule>
+            </rules>
+        '''
+        await self.call_request(RULES, method="put", data=data.strip())
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
@@ -219,14 +224,17 @@ class SmileLegacyAPI(SmileLegacyData):
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
 
+        data = f'''
+            <rules>
+                <rule id="{schedule_rule_id}">
+                    <name><![CDATA[{name}]]></name>
+                    <template id="{template_id}" />
+                    <active>{new_state}</active>
+                </rule>
+            </rules>
+        '''
         uri = f"{RULES};id={schedule_rule_id}"
-        data = (
-            "<rules><rule"
-            f' id="{schedule_rule_id}"><name><![CDATA[{name}]]></name><template'
-            f' id="{template_id}" /><active>{new_state}</active></rule></rules>'
-        )
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
@@ -262,8 +270,9 @@ class SmileLegacyAPI(SmileLegacyData):
                             </{switch.func_type}>
                         </{switch.actuator}>
                     </appliance>
-                </appliances>'''.strip()
-            await self.call_request(APPLIANCES, method="post", data=data)
+                </appliances>
+            '''
+            await self.call_request(APPLIANCES, method="post", data=data.strip())
             return
 
         # Handle group of switches
@@ -308,13 +317,13 @@ class SmileLegacyAPI(SmileLegacyData):
             )  # pragma: no cover"
 
         temperature = str(setpoint)
+        data = f"""
+            <thermostat_functionality>
+                <setpoint>{temperature}</setpoint>
+            </thermostat_functionality>
+        """
         uri = self._thermostat_uri()
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
-        )
-
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data.strip())
 
     async def call_request(self, uri: str, **kwargs: Any) -> None:
         """ConnectionFailedError wrapper for calling request()."""
