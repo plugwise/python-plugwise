@@ -171,9 +171,9 @@ class SmileLegacyAPI(SmileLegacyData):
             raise PlugwiseError("Plugwise: invalid preset.")
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self._domain_objects.find(locator)
+        rule_id = self._domain_objects.find(locator).attrib["id"]
         data = (
-            f"<rules><rule id='{rule.attrib['id']}'><active>true</active></rule></rules>"
+            f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
         )
         await self.call_request(RULES, method="put", data=data)
 
