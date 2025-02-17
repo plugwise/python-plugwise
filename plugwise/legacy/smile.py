@@ -172,14 +172,14 @@ class SmileLegacyAPI(SmileLegacyData):
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         rule = self._domain_objects.find(locator)
-        data = f'''
-            <rules>
-                <rule id="{rule.attrib["id"]}">
-                    <active>true</active>
-                </rule>
-            </rules>
-        '''
-        await self.call_request(RULES, method="put", data=data.strip())
+        data = (
+            "<rules>"
+            "<rule id='{rule.attrib['id']}'>"
+            "<active>true</active>"
+            "</rule>"
+            "</rules>"
+        )
+        await self.call_request(RULES, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
@@ -224,17 +224,17 @@ class SmileLegacyAPI(SmileLegacyData):
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
 
-        data = f'''
-            <rules>
-                <rule id="{schedule_rule_id}">
-                    <name><![CDATA[{name}]]></name>
-                    <template id="{template_id}" />
-                    <active>{new_state}</active>
-                </rule>
-            </rules>
-        '''
+        data = (
+            "<rules>"
+            f"<rule id='{schedule_rule_id}'>"
+            f"<name><![CDATA[{name}]]></name>"
+            f"<template id='{template_id}' />"
+            f"<active>{new_state}</active>"
+            "</rule>"
+            "</rules>"
+        )
         uri = f"{RULES};id={schedule_rule_id}"
-        await self.call_request(uri, method="put", data=data.strip())
+        await self.call_request(uri, method="put", data=data)
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
@@ -258,21 +258,21 @@ class SmileLegacyAPI(SmileLegacyData):
             appliance = self._appliances.find(f'appliance[@id="{appl_id}"]')
             appl_name = appliance.find("name").text
             appl_type = appliance.find("type").text
-            data = f'''
-                <appliances>
-                    <appliance id="{appl_id}">
-                        <name><![CDATA[{appl_name}]]></name>
-                        <description><![CDATA[]]></description>
-                        <type><![CDATA[{appl_type}]]></type>
-                        <{switch.actuator}>
-                            <{switch.func_type}>
-                                <lock>{state}</lock>
-                            </{switch.func_type}>
-                        </{switch.actuator}>
-                    </appliance>
-                </appliances>
-            '''
-            await self.call_request(APPLIANCES, method="post", data=data.strip())
+            data = (
+                "<appliances>"
+                f"<appliance id='{appl_id}'>"
+                f"<name><![CDATA[{appl_name}]]></name>"
+                f"<description><![CDATA[]]></description>"
+                f"<type><![CDATA[{appl_type}]]></type>"
+                f"<{switch.actuator}>"
+                f"<{switch.func_type}>"
+                f"<lock>{state}</lock>"
+                f"</{switch.func_type}>"
+                f"</{switch.actuator}>"
+                "</appliance>"
+                "</appliances>"
+            )
+            await self.call_request(APPLIANCES, method="post", data=data)
             return
 
         # Handle group of switches
@@ -317,13 +317,13 @@ class SmileLegacyAPI(SmileLegacyData):
             )  # pragma: no cover"
 
         temperature = str(setpoint)
-        data = f"""
-            <thermostat_functionality>
-                <setpoint>{temperature}</setpoint>
-            </thermostat_functionality>
-        """
+        data = (
+            "<thermostat_functionality>"
+            f"<setpoint>{temperature}</setpoint>"
+            "</thermostat_functionality>"
+        )
         uri = self._thermostat_uri()
-        await self.call_request(uri, method="put", data=data.strip())
+        await self.call_request(uri, method="put", data=data)
 
     async def call_request(self, uri: str, **kwargs: Any) -> None:
         """ConnectionFailedError wrapper for calling request()."""
