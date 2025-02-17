@@ -190,11 +190,7 @@ class SmileAPI(SmileData):
             )
 
         value = str(offset)
-        data = (
-            "<offset_functionality>"
-            f"<offset>{value}</offset>"
-            "</offset_functionality>"
-        )
+        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
         await self.call_request(uri, method="put", data=data)
 
