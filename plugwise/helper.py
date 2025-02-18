@@ -195,6 +195,7 @@ class SmileHelper(SmileCommon):
                     other_entities = self.gw_entities
                     priority_entities = {entity_id: priority_entity}
                     self.gw_entities = {**priority_entities, **other_entities}
+                    break
 
     def _all_locations(self) -> None:
         """Collect all locations."""

@@ -69,6 +69,7 @@ class SmileData(SmileHelper):
             if entity_id == self._gateway_id:
                 mac_list = self._detect_low_batteries()
                 self._add_or_update_notifications(entity_id, entity, data)
+                break  # one gateway present
 
             entity.update(data)
             is_battery_low = (
@@ -228,6 +229,7 @@ class SmileData(SmileHelper):
                 for msg in item.values():
                     if message in msg:
                         data["available"] = False
+                        break
 
     def _get_adam_data(self, entity: GwEntityData, data: GwEntityData) -> None:
         """Helper-function for _get_entity_data().
@@ -334,11 +336,13 @@ class SmileData(SmileHelper):
             loc_schedule_states[schedule] = "off"
             if schedule == selected and data["climate_mode"] == "auto":
                 loc_schedule_states[schedule] = "on"
+
         self._schedule_old_states[location] = loc_schedule_states
 
         all_off = True
         for state in self._schedule_old_states[location].values():
             if state == "on":
                 all_off = False
+
         if all_off:
             data["select_schedule"] = OFF

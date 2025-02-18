@@ -303,6 +303,7 @@ class Smile(SmileComm):
                 locator = f"./{network}/mac"
                 if (net_locator := system.find(locator)) is not None:
                     self.smile_mac_address = net_locator.text
+                    break
         # P1 legacy:
         elif dsmrmain is not None:
             status = await self._request(STATUS)
