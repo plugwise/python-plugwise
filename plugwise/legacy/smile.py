@@ -215,8 +215,7 @@ class SmileLegacyAPI(SmileLegacyData):
             new_state = "true"
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
-        for rule in self._domain_objects.findall(locator):
-            template_id = rule.attrib["id"]
+        template_id = self._domain_objects.find(locator).attrib["id"]
 
         data = (
             "<rules>"
