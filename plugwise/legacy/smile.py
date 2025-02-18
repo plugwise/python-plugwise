@@ -172,9 +172,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         rule_id = self._domain_objects.find(locator).attrib["id"]
-        data = (
-            f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
-        )
+        data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
         await self.call_request(RULES, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
