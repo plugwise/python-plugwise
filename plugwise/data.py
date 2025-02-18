@@ -330,18 +330,14 @@ class SmileData(SmileHelper):
 
         Also, replace NONE by OFF when none of the schedules are active.
         """
-        loc_schedule_states: dict[str, str] = {}
+        self._schedule_old_states[location] = {}
         for schedule in schedules:
-            loc_schedule_states[schedule] = "off"
-            if schedule == selected and data["climate_mode"] == "auto":
-                loc_schedule_states[schedule] = "on"
-
-        self._schedule_old_states[location] = loc_schedule_states
+            self._schedule_old_states[location][schedule] = "on" if schedule == selected and data["climate_mode"] == "auto" else "off"
 
         all_off = True
         for state in self._schedule_old_states[location].values():
             if state == "on":
                 all_off = False
-
+                break
         if all_off:
             data["select_schedule"] = OFF
