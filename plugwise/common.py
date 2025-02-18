@@ -27,7 +27,9 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 
 
-def get_zigbee_data(module: etree, module_data: ModuleData, legacy: bool) -> None:
+def get_zigbee_data(
+    module: etree.Element, module_data: ModuleData, legacy: bool
+) -> None:
     """Helper-function for _get_module_data()."""
     if legacy:
         # Stretches
@@ -49,7 +51,7 @@ class SmileCommon:
         """Init."""
         self._cooling_present: bool
         self._count: int
-        self._domain_objects: etree
+        self._domain_objects: etree.Element
         self._heater_id: str = NONE
         self._on_off_device: bool
         self.gw_entities: dict[str, GwEntityData] = {}
@@ -63,10 +65,10 @@ class SmileCommon:
     def _appl_heater_central_info(
         self,
         appl: Munch,
-        xml_1: etree,
+        xml_1: etree.Element,
         legacy: bool,
-        xml_2: etree = None,
-        xml_3: etree = None,
+        xml_2: etree.Element = None,
+        xml_3: etree.Element = None,
     ) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         # Find the valid heater_central
@@ -101,7 +103,7 @@ class SmileCommon:
         return appl
 
     def _appl_thermostat_info(
-        self, appl: Munch, xml_1: etree, xml_2: etree = None
+        self, appl: Munch, xml_1: etree.Element, xml_2: etree.Element = None
     ) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
@@ -190,7 +192,7 @@ class SmileCommon:
         return switch_groups
 
     def _get_lock_state(
-        self, xml: etree, data: GwEntityData, stretch_v2: bool = False
+        self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -209,9 +211,9 @@ class SmileCommon:
 
     def _get_module_data(
         self,
-        xml_1: etree,
+        xml_1: etree.Element,
         locator: str,
-        xml_2: etree = None,
+        xml_2: etree.Element = None,
         legacy: bool = False,
     ) -> ModuleData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().

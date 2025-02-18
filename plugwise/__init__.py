@@ -198,7 +198,9 @@ class Smile(SmileComm):
 
         return self.smile_version
 
-    async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
+    async def _smile_detect(
+        self, result: etree.Element, dsmrmain: etree.Element
+    ) -> None:
         """Helper-function for connect().
 
         Detect which type of Plugwise Gateway is being connected.
@@ -256,10 +258,8 @@ class Smile(SmileComm):
             # For Adam, Anna, determine the system capabilities:
             # Find the connected heating/cooling device (heater_central),
             # e.g. heat-pump or gas-fired heater
-            onoff_boiler: etree = result.find("./module/protocols/onoff_boiler")
-            open_therm_boiler: etree = result.find(
-                "./module/protocols/open_therm_boiler"
-            )
+            onoff_boiler = result.find("./module/protocols/onoff_boiler")
+            open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
 
@@ -272,7 +272,7 @@ class Smile(SmileComm):
                 self._elga = True
 
     async def _smile_detect_legacy(
-        self, result: etree, dsmrmain: etree, model: str
+        self, result: etree.Element, dsmrmain: etree.Element, model: str
     ) -> str:
         """Helper-function for _smile_detect().
 

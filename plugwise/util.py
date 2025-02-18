@@ -74,7 +74,7 @@ def in_alternative_location(loc: Munch, legacy: bool) -> bool:
     return present
 
 
-def check_heater_central(xml: etree) -> str:
+def check_heater_central(xml: etree.Element) -> str:
     """Find the valid heater_central, helper-function for _appliance_info_finder().
 
     Solution for Core Issue #104433,
@@ -143,7 +143,7 @@ def collect_power_values(
 def common_match_cases(
     measurement: str,
     attrs: DATA | UOM,
-    location: etree,
+    location: etree.Element,
     data: GwEntityData,
 ) -> None:
     """Helper-function for common match-case execution."""
@@ -213,7 +213,7 @@ def format_measure(measure: str, unit: str) -> float | int:
     return result
 
 
-def get_vendor_name(module: etree, model_data: ModuleData) -> ModuleData:
+def get_vendor_name(module: etree.Element, model_data: ModuleData) -> ModuleData:
     """Helper-function for _get_model_data()."""
     if (vendor_name := module.find("vendor_name").text) is not None:
         model_data["vendor_name"] = vendor_name
@@ -302,12 +302,12 @@ def remove_empty_platform_dicts(data: GwEntityData) -> None:
         data.pop("switches")
 
 
-def return_valid(value: etree | None, default: etree) -> etree:
+def return_valid(value: etree.Element | None, default: etree.Element) -> etree.Element:
     """Return default when value is None."""
     return value if value is not None else default
 
 
-def skip_obsolete_measurements(xml: etree, measurement: str) -> bool:
+def skip_obsolete_measurements(xml: etree.Element, measurement: str) -> bool:
     """Skipping known obsolete measurements."""
     locator = f".//logs/point_log[type='{measurement}']/updated_date"
     if (

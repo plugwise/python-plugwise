@@ -50,7 +50,7 @@ from munch import Munch
 from packaging.version import Version
 
 
-def etree_to_dict(element: etree) -> dict[str, str]:
+def etree_to_dict(element: etree.Element) -> dict[str, str]:
     """Helper-function translating xml Element to dict."""
     node: dict[str, str] = {}
     if element is not None:
@@ -64,11 +64,11 @@ class SmileLegacyHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appliances: etree
+        self._appliances: etree.Element
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
-        self._locations: etree
-        self._modules: etree
+        self._locations: etree.Element
+        self._modules: etree.Element
         self._stretch_v2: bool
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_mac_address: str | None
@@ -318,7 +318,7 @@ class SmileLegacyHelper(SmileCommon):
 
     def _appliance_measurements(
         self,
-        appliance: etree,
+        appliance: etree.Element,
         data: GwEntityData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
@@ -347,7 +347,7 @@ class SmileLegacyHelper(SmileCommon):
         self._count = count_data_items(self._count, data)
 
     def _get_actuator_functionalities(
-        self, xml: etree, entity: GwEntityData, data: GwEntityData
+        self, xml: etree.Element, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:

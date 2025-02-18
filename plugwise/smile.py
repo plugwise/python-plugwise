@@ -355,7 +355,7 @@ class SmileAPI(SmileData):
 
     def determine_contexts(
         self, loc_id: str, name: str, state: str, sched_id: str
-    ) -> etree:
+    ) -> etree.Element:
         """Helper-function for set_schedule_state()."""
         locator = f'.//*[@id="{sched_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
