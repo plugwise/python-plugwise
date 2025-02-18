@@ -399,7 +399,7 @@ class SmileAPI(SmileData):
             return await self._set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found: list[etree] = self._domain_objects.findall(locator)
+        found = self._domain_objects.findall(locator)
         for item in found:
             # multiple types of e.g. toggle_functionality present
             if (sw_type := item.find("type")) is not None:
