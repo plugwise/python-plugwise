@@ -204,6 +204,7 @@ class SmileLegacyAPI(SmileLegacyData):
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
                 schedule_rule_id = rule.attrib["id"]
+                break
 
         if schedule_rule_id is None:
             raise PlugwiseError(
