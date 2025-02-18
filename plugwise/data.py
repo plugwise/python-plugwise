@@ -69,7 +69,6 @@ class SmileData(SmileHelper):
             if entity_id == self._gateway_id:
                 mac_list = self._detect_low_batteries()
                 self._add_or_update_notifications(entity_id, entity, data)
-                break  # one gateway present
 
             entity.update(data)
             is_battery_low = (
