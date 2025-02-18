@@ -332,11 +332,8 @@ class SmileData(SmileHelper):
         """
         self._schedule_old_states[location] = {}
         for schedule in schedules:
-            self._schedule_old_states[location][schedule] = (
-                "on"
-                if schedule == selected and data["climate_mode"] == "auto"
-                else "off"
-            )
+            active: bool = schedule == selected and data["climate_mode"] == "auto"
+            self._schedule_old_states[location][schedule] = "on" if active else "off"
 
         all_off = True
         for state in self._schedule_old_states[location].values():
