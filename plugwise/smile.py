@@ -401,12 +401,13 @@ class SmileAPI(SmileData):
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found: list[etree] = self._domain_objects.findall(locator)
         for item in found:
+            # multiple types of e.g. toggle_functionality present
             if (sw_type := item.find("type")) is not None:
                 if sw_type.text == switch.act_type:
                     switch_id = item.attrib["id"]
-            else:
+                    break
+            else:  # actuators with a single item like relay_functionality
                 switch_id = item.attrib["id"]
-                break
 
         data = (
             f"<{switch.func_type}>"
