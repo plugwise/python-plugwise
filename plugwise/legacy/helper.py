@@ -23,6 +23,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_LEGACY_MEASUREMENTS,
+    PRIORITY_DEVICE_CLASSES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     UOM,
@@ -130,7 +131,7 @@ class SmileLegacyHelper(SmileCommon):
             self._create_gw_entities(appl)
 
         # Place the gateway and optional heater_central devices as 1st and 2nd
-        for dev_class in ("heater_central", "gateway"):
+        for dev_class in PRIORITY_DEVICE_CLASSES:
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
                     tmp_entity = entity
@@ -138,6 +139,7 @@ class SmileLegacyHelper(SmileCommon):
                     cleared_dict = self.gw_entities
                     add_to_front = {entity_id: tmp_entity}
                     self.gw_entities = {**add_to_front, **cleared_dict}
+                    break
 
     def _all_locations(self) -> None:
         """Collect all locations."""

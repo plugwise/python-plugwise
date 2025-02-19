@@ -204,6 +204,7 @@ class SmileLegacyAPI(SmileLegacyData):
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
                 schedule_rule_id = rule.attrib["id"]
+                break
 
         if schedule_rule_id is None:
             raise PlugwiseError(
@@ -215,8 +216,7 @@ class SmileLegacyAPI(SmileLegacyData):
             new_state = "true"
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
-        for rule in self._domain_objects.findall(locator):
-            template_id = rule.attrib["id"]
+        template_id = self._domain_objects.find(locator).attrib["id"]
 
         data = (
             "<rules>"

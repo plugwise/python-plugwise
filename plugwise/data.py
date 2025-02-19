@@ -228,6 +228,7 @@ class SmileData(SmileHelper):
                 for msg in item.values():
                     if message in msg:
                         data["available"] = False
+                        break
 
     def _get_adam_data(self, entity: GwEntityData, data: GwEntityData) -> None:
         """Helper-function for _get_entity_data().
@@ -329,16 +330,14 @@ class SmileData(SmileHelper):
 
         Also, replace NONE by OFF when none of the schedules are active.
         """
-        loc_schedule_states: dict[str, str] = {}
-        for schedule in schedules:
-            loc_schedule_states[schedule] = "off"
-            if schedule == selected and data["climate_mode"] == "auto":
-                loc_schedule_states[schedule] = "on"
-        self._schedule_old_states[location] = loc_schedule_states
-
         all_off = True
-        for state in self._schedule_old_states[location].values():
-            if state == "on":
+        self._schedule_old_states[location] = {}
+        for schedule in schedules:
+            active: bool = schedule == selected and data["climate_mode"] == "auto"
+            self._schedule_old_states[location][schedule] = "off"
+            if active:
+                self._schedule_old_states[location][schedule] = "on"
                 all_off = False
+
         if all_off:
             data["select_schedule"] = OFF

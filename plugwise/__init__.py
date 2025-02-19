@@ -298,11 +298,12 @@ class Smile(SmileComm):
             self.smile_version = parse(system.find("./gateway/firmware").text)
             return_model = str(system.find("./gateway/product").text)
             self.smile_hostname = system.find("./gateway/hostname").text
-            # If wlan0 contains data it's active, so eth0 should be checked last
+            # If wlan0 contains data it's active, eth0 should be checked last as is preferred
             for network in ("wlan0", "eth0"):
                 locator = f"./{network}/mac"
                 if (net_locator := system.find(locator)) is not None:
                     self.smile_mac_address = net_locator.text
+
         # P1 legacy:
         elif dsmrmain is not None:
             status = await self._request(STATUS)
