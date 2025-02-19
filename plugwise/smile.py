@@ -370,7 +370,7 @@ class SmileAPI(SmileData):
         if state == "on":
             contexts.append(subject)
 
-        return etree.tostring(contexts, encoding="unicode").rstrip()
+        return str(etree.tostring(contexts, encoding="unicode").rstrip())
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
