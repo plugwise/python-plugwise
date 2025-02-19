@@ -59,7 +59,9 @@ from munch import Munch
 from packaging import version
 
 
-def search_actuator_functionalities(appliance: etree, actuator: str) -> etree | None:
+def search_actuator_functionalities(
+    appliance: etree.Element, actuator: str
+) -> etree.Element | None:
     """Helper-function for finding the relevant actuator xml-structure."""
     locator = f"./actuator_functionalities/{actuator}"
     if (search := appliance.find(locator)) is not None:
@@ -213,7 +215,7 @@ class SmileHelper(SmileCommon):
                 f"./location[@id='{loc.loc_id}']"
             )
 
-    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
+    def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Collect info for all appliances found."""
         match appl.pwclass:
             case "gateway":
@@ -253,7 +255,7 @@ class SmileHelper(SmileCommon):
             case _:  # pragma: no cover
                 return appl
 
-    def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
+    def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         self._gateway_id = appliance.attrib["id"]
         appl.firmware = str(self.smile_version)
@@ -286,7 +288,7 @@ class SmileHelper(SmileCommon):
         return appl
 
     def _get_appl_actuator_modes(
-        self, appliance: etree, actuator_type: str
+        self, appliance: etree.Element, actuator_type: str
     ) -> list[str]:
         """Get allowed modes for the given actuator type."""
         mode_list: list[str] = []
@@ -398,7 +400,7 @@ class SmileHelper(SmileCommon):
 
     def _appliance_measurements(
         self,
-        appliance: etree,
+        appliance: etree.Element,
         data: GwEntityData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
@@ -430,7 +432,7 @@ class SmileHelper(SmileCommon):
         self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
-        self, xml: etree, toggle: str, name: ToggleNameType, data: GwEntityData
+        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -459,7 +461,7 @@ class SmileHelper(SmileCommon):
                 )
 
     def _get_actuator_functionalities(
-        self, xml: etree, entity: GwEntityData, data: GwEntityData
+        self, xml: etree.Element, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Get and process the actuator_functionalities details for an entity.
 
@@ -521,7 +523,7 @@ class SmileHelper(SmileCommon):
                 data[act_item] = temp_dict
 
     def _get_actuator_mode(
-        self, appliance: etree, entity_id: str, key: str
+        self, appliance: etree.Element, entity_id: str, key: str
     ) -> str | None:
         """Helper-function for _get_regulation_mode and _get_gateway_mode.
 
@@ -536,7 +538,7 @@ class SmileHelper(SmileCommon):
         return None
 
     def _get_regulation_mode(
-        self, appliance: etree, entity_id: str, data: GwEntityData
+        self, appliance: etree.Element, entity_id: str, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -552,7 +554,7 @@ class SmileHelper(SmileCommon):
             self._cooling_enabled = mode == "cooling"
 
     def _get_gateway_mode(
-        self, appliance: etree, entity_id: str, data: GwEntityData
+        self, appliance: etree.Element, entity_id: str, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -838,9 +840,7 @@ class SmileHelper(SmileCommon):
                 return presets  # pragma: no cover
 
         for rule_id in rule_ids:
-            directives: etree = self._domain_objects.find(
-                f'rule[@id="{rule_id}"]/directives'
-            )
+            directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
             for directive in directives:
                 preset = directive.find("then").attrib
                 presets[directive.attrib["preset"]] = [
