@@ -13,6 +13,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    LOGGER,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
@@ -28,7 +29,7 @@ from plugwise.constants import (
     SpecialType,
     SwitchType,
 )
-
+from plugwise.exceptions import DataMissingError
 from defusedxml import ElementTree as etree
 from munch import Munch
 
@@ -92,6 +93,9 @@ def check_heater_central(xml: etree.Element) -> str:
         # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
         if heater_central.find("name").text == "Central heating boiler":
             hc_list.append({hc_id: has_actuators})
+
+    if not hc_list:
+        raise DataMissingError("No Central heating boiler found, please create an Issue")
 
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
