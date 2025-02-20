@@ -235,14 +235,8 @@ def power_data_energy_diff(
         and "phase" not in measurement
         and "interval" not in net_string
     ):
-        diff = 1
-        if "produced" in measurement:
-            diff = -1
-        if net_string not in data["sensors"]:
-            tmp_val: float | int = 0
-        else:
-            tmp_val = data["sensors"][net_string]
-
+        diff = 1 if "produced" in measurement else -1
+        tmp_val: float | int = data["sensors"].get(net_string, 0)
         if isinstance(f_val, int):
             tmp_val += f_val * diff
         else:
