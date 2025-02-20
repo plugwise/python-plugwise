@@ -236,12 +236,10 @@ def power_data_energy_diff(
         and "interval" not in net_string
     ):
         diff = 1 if "produced" in measurement else -1
-        tmp_val: float | int = data["sensors"].get(net_string, 0)
-        if isinstance(f_val, int):
-            tmp_val += f_val * diff
-        else:
-            tmp_val += float(f_val * diff)
-            tmp_val = float(f"{round(tmp_val, 3):.3f}")
+        tmp_val = data["sensors"].get(net_string, 0)
+        tmp_val += f_val * diff
+        if isinstance(f_val, float):
+            tmp_val = f"{round(tmp_val, 3):.3f}"
 
         data["sensors"][net_string] = tmp_val
 
