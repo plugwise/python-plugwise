@@ -192,8 +192,6 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
 
 def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
-    result: float | int = 0
-
     float_measure = float(measure)
     if unit == PERCENTAGE and 0 < float_measure <= 1:
         return int(float_measure * 100)
@@ -202,13 +200,13 @@ def format_measure(measure: str, unit: str) -> float | int:
         float_measure = float_measure / 1000
 
     if unit in SPECIAL_FORMAT:
-        result = float(f"{round(float_measure, 3):.3f}")
+        result = f"{round(float_measure, 3):.3f}"
     elif unit == ELECTRIC_POTENTIAL_VOLT:
-        result = float(f"{round(float_measure, 1):.1f}")
+        result = f"{round(float_measure, 1):.1f}"
     elif abs(float_measure) < 10:
-        result = float(f"{round(float_measure, 2):.2f}")
-    elif abs(float_measure) >= 10:
-        result = float(f"{round(float_measure, 1):.1f}")
+        result = f"{round(float_measure, 2):.2f}"
+    else  # abs(float_measure) >= 10
+        result = f"{round(float_measure, 1):.1f}"
 
     return result
 
