@@ -209,7 +209,7 @@ def format_measure(measure: str, unit: str) -> float | int:
         result = f"{round(float_measure, 1):.1f}"
     elif abs(float_measure) < 10:
         result = f"{round(float_measure, 2):.2f}"
-    else  # abs(float_measure) >= 10
+    else:  # abs(float_measure) >= 10
         result = f"{round(float_measure, 1):.1f}"
 
     return result
