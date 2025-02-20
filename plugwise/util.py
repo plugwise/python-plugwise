@@ -13,7 +13,6 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
-    LOGGER,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
@@ -30,6 +29,7 @@ from plugwise.constants import (
     SwitchType,
 )
 from plugwise.exceptions import DataMissingError
+
 from defusedxml import ElementTree as etree
 from munch import Munch
 
@@ -97,7 +97,7 @@ def check_heater_central(xml: etree.Element) -> str:
     if not hc_list:
         raise DataMissingError(
             "No Central heating boiler found, please create an Issue"
-        )
+        )  # pragma: no cover
 
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
@@ -141,7 +141,7 @@ def collect_power_values(
         if not loc.found:
             continue
 
-        data = power_data_energy_diff(loc.measurement, loc.net_string, loc.f_val, data)
+        power_data_energy_diff(loc.measurement, loc.net_string, loc.f_val, data)
         key = cast(SensorType, loc.key_string)
         data["sensors"][key] = loc.f_val
 
@@ -206,13 +206,13 @@ def format_measure(measure: str, unit: str) -> float | int:
         float_measure = float_measure / 1000
 
     if unit in SPECIAL_FORMAT:
-        result = f"{round(float_measure, 3):.3f}"
+        result = round(float_measure, 3)
     elif unit == ELECTRIC_POTENTIAL_VOLT:
-        result = f"{round(float_measure, 1):.1f}"
+        result = round(float_measure, 1)
     elif abs(float_measure) < 10:
-        result = f"{round(float_measure, 2):.2f}"
+        result = round(float_measure, 2)
     else:  # abs(float_measure) >= 10
-        result = f"{round(float_measure, 1):.1f}"
+        result = round(float_measure, 1)
 
     return result
 
@@ -232,22 +232,20 @@ def power_data_energy_diff(
     net_string: SensorType,
     f_val: float | int,
     data: GwEntityData,
-) -> GwEntityData:
+) -> None:
     """Calculate differential energy."""
     if (
         "electricity" in measurement
         and "phase" not in measurement
         and "interval" not in net_string
     ):
-        diff = 1 if "produced" in measurement else -1
+        diff = 1 if "consumed" in measurement else -1
         tmp_val = data["sensors"].get(net_string, 0)
         tmp_val += f_val * diff
         if isinstance(f_val, float):
-            tmp_val = f"{round(tmp_val, 3):.3f}"
+            tmp_val = round(tmp_val, 3)
 
         data["sensors"][net_string] = tmp_val
-
-    return data
 
 
 def power_data_local_format(
