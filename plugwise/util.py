@@ -13,6 +13,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    NONE,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
@@ -95,16 +96,15 @@ def check_heater_central(xml: etree.Element) -> str:
             hc_list.append({hc_id: has_actuators})
 
     if not hc_list:
-        return  # pragma: no cover
+        return NONE  # pragma: no cover
 
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
         for item in hc_list:  # pragma: no cover
-            for key, value in item.items():  # pragma: no cover
-                if value:  # pragma: no cover
-                    heater_central_id = key  # pragma: no cover
-                    # Stop when a valid id is found
-                    break  # pragma: no cover
+            if next(iter(item.values())):
+                heater_central_id = next(iter(item)) # pragma: no cover
+                # Stop when a valid id is found
+                break  # pragma: no cover
 
     return heater_central_id
 
