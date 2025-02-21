@@ -76,7 +76,7 @@ class SmileCommon:
         xml_2 = return_valid(xml_2, self._domain_objects)
         self._heater_id = check_heater_central(xml_2)
 
-        if self._heater_id is None:
+        if self._heater_id == NONE:
             return Munch()
 
         #  Info for On-Off device
