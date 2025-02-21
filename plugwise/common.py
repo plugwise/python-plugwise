@@ -76,6 +76,9 @@ class SmileCommon:
         xml_2 = return_valid(xml_2, self._domain_objects)
         self._heater_id = check_heater_central(xml_2)
 
+        if self._heater_id is None:
+            return appl
+
         #  Info for On-Off device
         if self._on_off_device:
             appl.name = "OnOff"  # pragma: no cover
