@@ -102,7 +102,7 @@ def check_heater_central(xml: etree.Element) -> str:
     if hc_count > 1:
         for item in hc_list:  # pragma: no cover
             if next(iter(item.values())):
-                heater_central_id = next(iter(item)) # pragma: no cover
+                heater_central_id = next(iter(item))  # pragma: no cover
                 # Stop when a valid id is found
                 break  # pragma: no cover
 
