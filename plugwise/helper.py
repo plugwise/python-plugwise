@@ -253,7 +253,7 @@ class SmileHelper(SmileCommon):
                 appl.zigbee_mac = module_data["zigbee_mac_address"]
                 return appl
             case _:  # pragma: no cover
-                return appl
+                return Munch()
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
