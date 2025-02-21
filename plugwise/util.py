@@ -95,9 +95,7 @@ def check_heater_central(xml: etree.Element) -> str:
             hc_list.append({hc_id: has_actuators})
 
     if not hc_list:
-        raise DataMissingError(
-            "No Central heating boiler found, please create an Issue"
-        )  # pragma: no cover
+        return  # pragma: no cover
 
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
