@@ -29,7 +29,6 @@ from plugwise.constants import (
     SpecialType,
     SwitchType,
 )
-from plugwise.exceptions import DataMissingError
 
 from defusedxml import ElementTree as etree
 from munch import Munch
