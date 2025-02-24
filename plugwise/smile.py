@@ -206,7 +206,7 @@ class SmileAPI(SmileData):
         location_type = current_location.find("type").text
         data = (
             "<locations>"
-            f"<location id='{loc_id}''>"
+            f'<location id="{loc_id}">'
             f"<name>{location_name}</name>"
             f"<type>{location_type}</type>"
             f"<preset>{preset}</preset>"
