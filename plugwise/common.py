@@ -77,7 +77,7 @@ class SmileCommon:
         self._heater_id = check_heater_central(xml_2)
 
         if self._heater_id == NONE:
-            return Munch()
+            return Munch()  # pragma: no cover
 
         #  Info for On-Off device
         if self._on_off_device:

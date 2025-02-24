@@ -99,11 +99,11 @@ def check_heater_central(xml: etree.Element) -> str:
 
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
-        for item in hc_list:  # pragma: no cover
-            if next(iter(item.values())):
-                heater_central_id = next(iter(item))  # pragma: no cover
-                # Stop when a valid id is found
-                break  # pragma: no cover
+        for item in hc_list:
+            hc_id, has_actuators = next(iter(item.items()))
+            if has_actuators:
+                heater_central_id = hc_id
+                break
 
     return heater_central_id
 
