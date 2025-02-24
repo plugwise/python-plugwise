@@ -13,6 +13,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    NONE,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
@@ -93,14 +94,16 @@ def check_heater_central(xml: etree.Element) -> str:
         if heater_central.find("name").text == "Central heating boiler":
             hc_list.append({hc_id: has_actuators})
 
+    if not hc_list:
+        return NONE  # pragma: no cover
+
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
-        for item in hc_list:  # pragma: no cover
-            for key, value in item.items():  # pragma: no cover
-                if value:  # pragma: no cover
-                    heater_central_id = key  # pragma: no cover
-                    # Stop when a valid id is found
-                    break  # pragma: no cover
+        for item in hc_list:
+            hc_id, has_actuators = next(iter(item.items()))
+            if has_actuators:
+                heater_central_id = hc_id
+                break
 
     return heater_central_id
 
@@ -135,7 +138,7 @@ def collect_power_values(
         if not loc.found:
             continue
 
-        data = power_data_energy_diff(loc.measurement, loc.net_string, loc.f_val, data)
+        power_data_energy_diff(loc.measurement, loc.net_string, loc.f_val, data)
         key = cast(SensorType, loc.key_string)
         data["sensors"][key] = loc.f_val
 
@@ -192,8 +195,6 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
 
 def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
-    result: float | int = 0
-
     float_measure = float(measure)
     if unit == PERCENTAGE and 0 < float_measure <= 1:
         return int(float_measure * 100)
@@ -202,13 +203,13 @@ def format_measure(measure: str, unit: str) -> float | int:
         float_measure = float_measure / 1000
 
     if unit in SPECIAL_FORMAT:
-        result = float(f"{round(float_measure, 3):.3f}")
+        result = round(float_measure, 3)
     elif unit == ELECTRIC_POTENTIAL_VOLT:
-        result = float(f"{round(float_measure, 1):.1f}")
+        result = round(float_measure, 1)
     elif abs(float_measure) < 10:
-        result = float(f"{round(float_measure, 2):.2f}")
-    elif abs(float_measure) >= 10:
-        result = float(f"{round(float_measure, 1):.1f}")
+        result = round(float_measure, 2)
+    else:  # abs(float_measure) >= 10
+        result = round(float_measure, 1)
 
     return result
 
@@ -228,30 +229,20 @@ def power_data_energy_diff(
     net_string: SensorType,
     f_val: float | int,
     data: GwEntityData,
-) -> GwEntityData:
+) -> None:
     """Calculate differential energy."""
     if (
         "electricity" in measurement
         and "phase" not in measurement
         and "interval" not in net_string
     ):
-        diff = 1
-        if "produced" in measurement:
-            diff = -1
-        if net_string not in data["sensors"]:
-            tmp_val: float | int = 0
-        else:
-            tmp_val = data["sensors"][net_string]
-
-        if isinstance(f_val, int):
-            tmp_val += f_val * diff
-        else:
-            tmp_val += float(f_val * diff)
-            tmp_val = float(f"{round(tmp_val, 3):.3f}")
+        diff = 1 if "consumed" in measurement else -1
+        tmp_val = data["sensors"].get(net_string, 0)
+        tmp_val += f_val * diff
+        if isinstance(f_val, float):
+            tmp_val = round(tmp_val, 3)
 
         data["sensors"][net_string] = tmp_val
-
-    return data
 
 
 def power_data_local_format(
