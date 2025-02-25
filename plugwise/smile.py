@@ -62,6 +62,7 @@ class SmileAPI(SmileData):
         smile_version: Version,
     ) -> None:
         """Set the constructor for this class."""
+        super().__init__()
         self._cooling_present = _cooling_present
         self._elga = _elga
         self._is_thermostat = _is_thermostat
@@ -81,7 +82,6 @@ class SmileAPI(SmileData):
         self.smile_type = smile_type
         self.smile_version = smile_version
         self.therms_with_offset_func: list[str] = []
-        SmileData.__init__(self)
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""

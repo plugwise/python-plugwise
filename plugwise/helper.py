@@ -75,6 +75,7 @@ class SmileHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
+        super().__init__()
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
@@ -89,7 +90,6 @@ class SmileHelper(SmileCommon):
         self.smile_model: str
         self.smile_model_id: str | None
         self.smile_version: version.Version
-        SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info.

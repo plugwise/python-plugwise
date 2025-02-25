@@ -27,9 +27,9 @@ class SmileData(SmileHelper):
 
     def __init__(self) -> None:
         """Init."""
+        super().__init__()
         self._smile_props: SmileProps
         self._zones: dict[str, GwEntityData] = {}
-        SmileHelper.__init__(self)
 
     def _all_entity_data(self) -> None:
         """Helper-function for get_all_gateway_entities().

@@ -64,6 +64,7 @@ class SmileLegacyHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
+        super().__init__()
         self._appliances: etree.Element
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
@@ -75,7 +76,6 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_model: str
         self.smile_version: Version
         self.smile_zigbee_mac_address: str | None
-        SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
