@@ -393,17 +393,6 @@ ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
 )
 
 
-class SmileProps(TypedDict, total=False):
-    """The SmileProps Data class."""
-
-    cooling_present: bool
-    gateway_id: str
-    heater_id: str
-    item_count: int
-    reboot: bool
-    smile_name: str
-
-
 class ModuleData(TypedDict):
     """The Module data class."""
 

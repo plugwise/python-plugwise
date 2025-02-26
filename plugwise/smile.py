@@ -22,7 +22,6 @@ from plugwise.constants import (
     OFF,
     RULES,
     GwEntityData,
-    SmileProps,
     ThermoLoc,
 )
 from plugwise.data import SmileData
@@ -51,7 +50,6 @@ class SmileAPI(SmileData):
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
-        _smile_props: SmileProps,
         smile_hostname: str | None,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
@@ -72,7 +70,6 @@ class SmileAPI(SmileData):
         self._opentherm_device = _opentherm_device
         self._request = _request
         self._schedule_old_states = _schedule_old_states
-        self._smile_props = _smile_props
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -126,8 +123,8 @@ class SmileAPI(SmileData):
             self.get_all_gateway_entities()
             # Set self._cooling_enabled - required for set_temperature(),
             # also, check for a failed data-retrieval
-            if "heater_id" in self._smile_props:
-                heat_cooler = self.gw_entities[self._smile_props["heater_id"]]
+            if self.heater_id != NONE:
+                heat_cooler = self.gw_entities[self.heater_id]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
@@ -136,7 +133,7 @@ class SmileAPI(SmileData):
                         "cooling_enabled"
                     ]
             else:  # cover failed data-retrieval for P1
-                _ = self.gw_entities[self._smile_props["gateway_id"]]["location"]
+                _ = self.gw_entities[self.gateway_id]["location"]
         except KeyError as err:
             raise DataMissingError("No Plugwise actual data received") from err
 
@@ -278,7 +275,7 @@ class SmileAPI(SmileData):
             f"{valid}"
             "</gateway_mode_control_functionality>"
         )
-        uri = f"{APPLIANCES};id={self._smile_props['gateway_id']}/gateway_mode_control"
+        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
         await self.call_request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, OFF, GwEntityData, SmileProps
+from plugwise.constants import NONE, OFF, GwEntityData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -18,19 +18,13 @@ class SmileLegacyData(SmileLegacyHelper):
     def __init__(self) -> None:
         """Init."""
         super().__init__()
-        self._smile_props: SmileProps
 
     def _all_entity_data(self) -> None:
         """Helper-function for get_all_gateway_entities().
 
-        Collect data for each entity and add to self._smile_props and self.gw_entities.
+        Collect data for each entity and add to self.gw_entities.
         """
         self._update_gw_entities()
-        self._smile_props["gateway_id"] = self.gateway_id
-        self._smile_props["item_count"] = self._count
-        self._smile_props["smile_name"] = self.smile_name
-        if self._is_thermostat:
-            self._smile_props["heater_id"] = self._heater_id
 
     def _update_gw_entities(self) -> None:
         """Helper-function for _all_entity_data() and async_update().

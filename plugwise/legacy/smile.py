@@ -19,7 +19,6 @@ from plugwise.constants import (
     REQUIRE_APPLIANCES,
     RULES,
     GwEntityData,
-    SmileProps,
     ThermoLoc,
 )
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
@@ -41,7 +40,6 @@ class SmileLegacyAPI(SmileLegacyData):
         _on_off_device: bool,
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
-        _smile_props: SmileProps,
         _stretch_v2: bool,
         _target_smile: str,
         smile_hostname: str,
@@ -61,7 +59,6 @@ class SmileLegacyAPI(SmileLegacyData):
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._request = _request
-        self._smile_props = _smile_props
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
         self.smile_hostname = smile_hostname
