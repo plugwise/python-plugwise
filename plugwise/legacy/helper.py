@@ -83,6 +83,11 @@ class SmileLegacyHelper(SmileCommon):
         """Return the gateway-id."""
         return self._gateway_id
 
+    @property
+    def item_count(self) -> int:
+        """Return the item-count."""
+        return self._count
+
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._count = 0

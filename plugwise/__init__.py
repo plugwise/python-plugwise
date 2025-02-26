@@ -101,7 +101,7 @@ class Smile(SmileComm):
     @property
     def item_count(self) -> int:
         """Return the item-count."""
-        return self._smile_props["item_count"]
+        return self._smile_api.item_count
 
     @property
     def reboot(self) -> bool:
