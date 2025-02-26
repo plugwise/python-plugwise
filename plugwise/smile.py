@@ -18,6 +18,7 @@ from plugwise.constants import (
     LOCATIONS,
     MAX_SETPOINT,
     MIN_SETPOINT,
+    NONE,
     NOTIFICATIONS,
     OFF,
     RULES,
