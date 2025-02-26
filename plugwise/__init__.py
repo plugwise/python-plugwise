@@ -18,7 +18,6 @@ from plugwise.constants import (
     STATUS,
     SYSTEM,
     GwEntityData,
-    SmileProps,
     ThermoLoc,
 )
 from plugwise.exceptions import (
@@ -69,7 +68,6 @@ class Smile(SmileComm):
         self._opentherm_device = False
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._smile_api: SmileAPI | SmileLegacyAPI
-        self._smile_props: SmileProps = {}
         self._stretch_v2 = False
         self._target_smile: str = NONE
         self.smile_hostname: str = NONE
@@ -86,26 +84,22 @@ class Smile(SmileComm):
     @property
     def cooling_present(self) -> bool:
         """Return the cooling capability."""
-        if "cooling_present" in self._smile_props:
-            return self._smile_props["cooling_present"]
-        return False
+        return self._smile_api.cooling_present
 
     @property
     def gateway_id(self) -> str:
         """Return the gateway-id."""
-        return self._smile_props["gateway_id"]
+        return self._smile_api.gateway_id
 
     @property
     def heater_id(self) -> str:
         """Return the heater-id."""
-        if "heater_id" in self._smile_props:
-            return self._smile_props["heater_id"]
-        return NONE
+        return self._smile_api.heater_id
 
     @property
     def item_count(self) -> int:
         """Return the item-count."""
-        return self._smile_props["item_count"]
+        return self._smile_api.item_count
 
     @property
     def reboot(self) -> bool:
@@ -162,7 +156,6 @@ class Smile(SmileComm):
                 self._opentherm_device,
                 self._request,
                 self._schedule_old_states,
-                self._smile_props,
                 self.smile_hostname,
                 self.smile_hw_version,
                 self.smile_mac_address,
@@ -179,7 +172,6 @@ class Smile(SmileComm):
                 self._on_off_device,
                 self._opentherm_device,
                 self._request,
-                self._smile_props,
                 self._stretch_v2,
                 self._target_smile,
                 self.smile_hostname,

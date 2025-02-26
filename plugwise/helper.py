@@ -75,6 +75,7 @@ class SmileHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
+        super().__init__()
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
@@ -89,7 +90,16 @@ class SmileHelper(SmileCommon):
         self.smile_model: str
         self.smile_model_id: str | None
         self.smile_version: version.Version
-        SmileCommon.__init__(self)
+
+    @property
+    def gateway_id(self) -> str:
+        """Return the gateway-id."""
+        return self._gateway_id
+
+    @property
+    def item_count(self) -> int:
+        """Return the item-count."""
+        return self._count
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info.
@@ -233,7 +243,7 @@ class SmileHelper(SmileCommon):
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
                 # Skip orphaned heater_central (Core Issue #104433)
-                if appl.entity_id != self._heater_id:
+                if appl.entity_id != self.heater_id:
                     return Munch()
                 return appl
             case _ as s if s.endswith("_plug"):
@@ -344,7 +354,7 @@ class SmileHelper(SmileCommon):
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and entity_id == self._heater_id:
+        if self._is_thermostat and entity_id == self.heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
             # Show the allowed dhw_modes (Loria only)
             if self._dhw_allowed_modes:
@@ -619,7 +629,7 @@ class SmileHelper(SmileCommon):
 
         Support added for Techneco Elga and Thercon Loria/Thermastage.
         """
-        if entity_id != self._heater_id:
+        if entity_id != self.heater_id:
             return
 
         if "elga_status_code" in data:
