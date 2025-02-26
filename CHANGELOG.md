@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v1.7.3
 
 - Improve readability of xml-data in POST/PUT requests via [#707](https://github.com/plugwise/python-plugwise/pull/707), [#708](https://github.com/plugwise/python-plugwise/pull/708) and [#715](https://github.com/plugwise/python-plugwise/pull/715)
 - Continuous improvements via [#711](https://github.com/plugwise/python-plugwise/pull/711), [#713](https://github.com/plugwise/python-plugwise/pull/713) and [#716](https://github.com/plugwise/python-plugwise/pull/716)
