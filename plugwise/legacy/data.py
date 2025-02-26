@@ -15,10 +15,6 @@ from plugwise.util import remove_empty_platform_dicts
 class SmileLegacyData(SmileLegacyHelper):
     """The Plugwise Smile main class."""
 
-    def __init__(self) -> None:
-        """Init."""
-        super().__init__()
-
     def _all_entity_data(self) -> None:
         """Helper-function for get_all_gateway_entities().
 
