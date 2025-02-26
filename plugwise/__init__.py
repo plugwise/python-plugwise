@@ -86,9 +86,7 @@ class Smile(SmileComm):
     @property
     def cooling_present(self) -> bool:
         """Return the cooling capability."""
-        if "cooling_present" in self._smile_props:
-            return self._smile_props["cooling_present"]
-        return False
+        return self._smile_api.cooling_present
 
     @property
     def gateway_id(self) -> str:
@@ -98,9 +96,7 @@ class Smile(SmileComm):
     @property
     def heater_id(self) -> str:
         """Return the heater-id."""
-        if "heater_id" in self._smile_props:
-            return self._smile_props["heater_id"]
-        return NONE
+        return self._smile_api.heater_id
 
     @property
     def item_count(self) -> int:

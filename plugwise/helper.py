@@ -233,7 +233,7 @@ class SmileHelper(SmileCommon):
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
                 # Skip orphaned heater_central (Core Issue #104433)
-                if appl.entity_id != self._heater_id:
+                if appl.entity_id != self.heater_id:
                     return Munch()
                 return appl
             case _ as s if s.endswith("_plug"):
@@ -344,7 +344,7 @@ class SmileHelper(SmileCommon):
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and entity_id == self._heater_id:
+        if self._is_thermostat and entity_id == self.heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
             # Show the allowed dhw_modes (Loria only)
             if self._dhw_allowed_modes:
@@ -619,7 +619,7 @@ class SmileHelper(SmileCommon):
 
         Support added for Techneco Elga and Thercon Loria/Thermastage.
         """
-        if entity_id != self._heater_id:
+        if entity_id != self.heater_id:
             return
 
         if "elga_status_code" in data:

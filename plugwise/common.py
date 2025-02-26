@@ -58,6 +58,11 @@ class SmileCommon:
         self.smile_name: str
         self.smile_type: str
 
+    @property
+    def heater_id(self) -> str:
+        """Return the heater-id."""
+        return self._heater_id
+
     def smile(self, name: str) -> bool:
         """Helper-function checking the smile-name."""
         return self.smile_name == name

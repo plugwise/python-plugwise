@@ -125,7 +125,7 @@ class SmileLegacyHelper(SmileCommon):
                 continue
 
             # Skip orphaned heater_central (Core Issue #104433)
-            if appl.pwclass == "heater_central" and appl.entity_id != self._heater_id:
+            if appl.pwclass == "heater_central" and appl.entity_id != self.heater_id:
                 continue  # pragma: no cover
 
             self._create_gw_entities(appl)
@@ -268,7 +268,7 @@ class SmileLegacyHelper(SmileCommon):
             return data
 
         measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and entity_id == self._heater_id:
+        if self._is_thermostat and entity_id == self.heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (

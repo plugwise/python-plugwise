@@ -83,6 +83,11 @@ class SmileAPI(SmileData):
         self.smile_version = smile_version
         self.therms_with_offset_func: list[str] = []
 
+    @property
+    def cooling_present(self) -> bool:
+        """Return the cooling capability."""
+        return self._cooling_present
+
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)

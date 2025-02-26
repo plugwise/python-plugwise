@@ -76,6 +76,11 @@ class SmileLegacyAPI(SmileLegacyData):
         self._first_update = True
         self._previous_day_number: str = "0"
 
+    @property
+    def cooling_present(self) -> bool:
+        """Return the cooling capability."""
+        return False
+
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
