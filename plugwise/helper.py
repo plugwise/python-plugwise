@@ -91,6 +91,11 @@ class SmileHelper(SmileCommon):
         self.smile_model_id: str | None
         self.smile_version: version.Version
 
+    @property
+    def gateway_id(self) -> str:
+        """Return the gateway-id."""
+        return self._gateway_id
+
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info.
 

@@ -91,7 +91,7 @@ class Smile(SmileComm):
     @property
     def gateway_id(self) -> str:
         """Return the gateway-id."""
-        return self._smile_props["gateway_id"]
+        return self._smile_api.gateway_id
 
     @property
     def heater_id(self) -> str:

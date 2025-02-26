@@ -66,6 +66,7 @@ class SmileLegacyHelper(SmileCommon):
         """Set the constructor for this class."""
         super().__init__()
         self._appliances: etree.Element
+        self._gateway_id: str = NONE
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
         self._locations: etree.Element
@@ -76,6 +77,11 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_model: str
         self.smile_version: Version
         self.smile_zigbee_mac_address: str | None
+
+    @property
+    def gateway_id(self) -> str:
+        """Return the gateway-id."""
+        return self._gateway_id
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -173,11 +179,11 @@ class SmileLegacyHelper(SmileCommon):
 
         Use the home_location or FAKE_APPL as entity id.
         """
-        self.gateway_id = self._home_loc_id
+        self._gateway_id = self._home_loc_id
         if self.smile_type == "power":
-            self.gateway_id = FAKE_APPL
+            self._gateway_id = FAKE_APPL
 
-        self.gw_entities[self.gateway_id] = {"dev_class": "gateway"}
+        self.gw_entities[self._gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
             "firmware": str(self.smile_version),
@@ -190,7 +196,7 @@ class SmileLegacyHelper(SmileCommon):
         }.items():
             if value is not None:
                 gw_key = cast(ApplianceType, key)
-                self.gw_entities[self.gateway_id][gw_key] = value
+                self.gw_entities[self._gateway_id][gw_key] = value
                 self._count += 1
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -282,7 +288,7 @@ class SmileLegacyHelper(SmileCommon):
 
         # Anna: the Smile outdoor_temperature is present in the Home location
         # For some Anna's LOCATIONS is empty, falling back to domain_objects!
-        if self._is_thermostat and entity_id == self.gateway_id:
+        if self._is_thermostat and entity_id == self._gateway_id:
             locator = f"./location[@id='{self._home_loc_id}']/logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._domain_objects.find(locator)) is not None:
                 value = format_measure(found.text, NONE)
