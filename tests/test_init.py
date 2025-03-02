@@ -342,10 +342,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert smile._timeout == 30
 
         # Connect to the smile
-        version = None
+        smile_version = None
         try:
-            version = await smile.connect()
-            assert version is not None
+            smile_version = await smile.connect()
+            assert smile_version is not None
             assert smile._timeout == 10
             return server, smile, client
         except (
@@ -353,7 +353,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
-            assert version is None
+            assert smile_version is None
             await self.disconnect(server, client)
             raise exception
 
@@ -428,10 +428,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert smile._timeout == 30
 
         # Connect to the smile
-        version = None
+        smile_version = None
         try:
-            version = await smile.connect()
-            assert version is not None
+            smile_version = await smile.connect()
+            assert smile_version is not None
             assert smile._timeout == 30
             return server, smile, client
         except (
@@ -439,7 +439,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
-            assert version is None
+            assert smile_version is None
             await self.disconnect(server, client)
             raise exception
 
