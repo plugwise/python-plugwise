@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools~=78.1", "wheel~=0.45.0"]
+requires = ["setuptools~=78.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -38,7 +38,6 @@ dependencies    = [
 "Bug Reports" = "https://github.com/plugwise/python-plugwise/issues"
 
 [tool.setuptools]
-platforms = ["any"]
 include-package-data = true
 
 [tool.setuptools.package-data]
