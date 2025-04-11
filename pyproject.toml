@@ -5,14 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name            = "plugwise"
 version         = "1.7.3"
-license         = {file = "LICENSE"}
+license         = "MIT"
 description     = "Plugwise Smile (Adam/Anna/P1) and Stretch module for Python 3."
 readme          = "README.md"
 keywords        = ["home", "automation", "plugwise", "module"]
 classifiers     = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
