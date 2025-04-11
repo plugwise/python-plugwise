@@ -1,4 +1,4 @@
-# Import from setup.py
+# Import from project.dependencies
 -e .
 # Minimal requirements for committing
 # Versioning omitted (leave this up to HA-core)

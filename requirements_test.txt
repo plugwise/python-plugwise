@@ -1,4 +1,4 @@
-# Import from setup.py
+# Import from project.dependencies
 -e .
 # Versioning omitted (leave this up to HA-core)
 pytest-asyncio
