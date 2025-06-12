@@ -298,7 +298,7 @@ class SmileLegacyAPI(SmileLegacyData):
             if not self.gw_entities[member]["switches"]["lock"]:
                 uri = f"{APPLIANCES};id={member}/relay"
                 await self.call_request(uri, method="put", data=data)
-        
+
         return True
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
