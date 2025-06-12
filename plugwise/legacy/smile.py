@@ -234,7 +234,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> None:
+    ) -> bool:
         """Set the given state of the relevant switch.
 
         For individual switches, sets the state directly.
@@ -269,7 +269,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 "</appliances>"
             )
             await self.call_request(APPLIANCES, method="post", data=data)
-            return
+            return True
 
         # Handle group of switches
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
@@ -280,26 +280,26 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Handle individual relay switches
         uri = f"{APPLIANCES};id={appl_id}/relay"
-        if model == "relay":
-            locator = (
-                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
-            )
+        if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
             # Don't bother switching a relay when the corresponding lock-state is true
-            if self._appliances.find(locator).text == "true":
-                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
+            return False
 
         await self.call_request(uri, method="put", data=data)
+        return True
 
     async def _set_groupswitch_member_state(
         self, data: str, members: list[str], state: str, switch: Munch
-    ) -> None:
+    ) -> bool:
         """Helper-function for set_switch_state().
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
         for member in members:
-            uri = f"{APPLIANCES};id={member}/relay"
-            await self.call_request(uri, method="put", data=data)
+            if not self.gw_entities[member]["switches"]["lock"]:
+                uri = f"{APPLIANCES};id={member}/relay"
+                await self.call_request(uri, method="put", data=data)
+        
+        return True
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""

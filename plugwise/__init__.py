@@ -398,10 +398,10 @@ class Smile(SmileComm):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> None:
+    ) -> bool:
         """Set the given State of the relevant Switch."""
         try:
-            await self._smile_api.set_switch_state(appl_id, members, model, state)
+            return await self._smile_api.set_switch_state(appl_id, members, model, state)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set switch state: {str(exc)}"
