@@ -434,6 +434,7 @@ class SmileAPI(SmileData):
 
         Set the given State of the relevant Switch within a group of members.
         """
+        req_state = state == STATE_ON
         switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
@@ -448,7 +449,11 @@ class SmileAPI(SmileData):
                 await self.call_request(uri, method="put", data=data)
                 switched += 1
 
-        return switched > 0
+        if switched > 0:
+            return req_state
+        else:
+            return not req_state
+
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
