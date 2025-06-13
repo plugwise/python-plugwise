@@ -22,7 +22,6 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
-    STATE_ON,
     GwEntityData,
     ThermoLoc,
 )
@@ -380,7 +379,7 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
-        req_state = state == STATE_ON
+        req_state = state == "true"
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.device = "relay"
@@ -434,7 +433,7 @@ class SmileAPI(SmileData):
 
         Set the given State of the relevant Switch within a group of members.
         """
-        req_state = state == STATE_ON
+        req_state = state == "true"
         switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
