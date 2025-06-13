@@ -4,7 +4,7 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 12
+  CACHE_VERSION: 13
   DEFAULT_PYTHON: "3.13"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
@@ -173,7 +173,7 @@ jobs:
     needs: commitcheck
     strategy:
       matrix:
-        python-version: ["3.13", "3.12"]
+        python-version: ["3.13"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -213,7 +213,7 @@ jobs:
     needs: prepare-test-cache
     strategy:
       matrix:
-        python-version: ["3.13", "3.12"]
+        python-version: ["3.13"]
 
     steps:
       - name: Check out committed code

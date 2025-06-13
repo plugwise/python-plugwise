@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.7.5
+
+- Maintenance chores
+- Deprecating python 3.12
+
+## v1.7.4
+
+- Maintenance chores
+
 ## v1.7.3
 
 - Improve readability of xml-data in POST/PUT requests via [#707](https://github.com/plugwise/python-plugwise/pull/707), [#708](https://github.com/plugwise/python-plugwise/pull/708) and [#715](https://github.com/plugwise/python-plugwise/pull/715)
