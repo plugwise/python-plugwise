@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# 20250613 Copied from HA-core and adjusted
+# 20250613 Copied from HA-core and shell-check adjusted and modified for local use
 set -e
 
-my_path=$(git rev-parse --show-toplevel)
-
-if [ ! -n "$VIRTUAL_ENV" ]; then
+if [ -z "$VIRTUAL_ENV" ]; then
   if [ -x "$(command -v uv)" ]; then
     uv venv venv
   else

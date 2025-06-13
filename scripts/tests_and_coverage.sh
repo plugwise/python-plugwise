@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # 20250613 Copied from HA-Core: run-in-env.sh
 set -eu
 
@@ -15,6 +15,7 @@ if [ -s .python-version ]; then
 fi
 
 if [ -n "${VIRTUAL_ENV-}" ] && [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
+  # shellcheck disable=SC1091 # ingesting virtualenv
   . "${VIRTUAL_ENV}/bin/activate"
 else
   # other common virtualenvs
@@ -22,6 +23,7 @@ else
 
   for venv in venv .venv .; do
     if [ -f "${my_path}/${venv}/bin/activate" ]; then
+      # shellcheck disable=SC1090 # ingesting virtualenv
       . "${my_path}/${venv}/bin/activate"
       break
     fi
