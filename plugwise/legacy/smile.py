@@ -242,7 +242,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
         """
-        req_state = state == STATE_ON
+        requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.func_type = "relay_functionality"
@@ -271,7 +271,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 "</appliances>"
             )
             await self.call_request(APPLIANCES, method="post", data=data)
-            return req_state
+            return requested_state
 
         # Handle group of switches
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
@@ -284,10 +284,10 @@ class SmileLegacyAPI(SmileLegacyData):
         uri = f"{APPLIANCES};id={appl_id}/relay"
         if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
             # Don't bother switching a relay when the corresponding lock-state is true
-            return False
+            return not requested_state
 
         await self.call_request(uri, method="put", data=data)
-        return req_state
+        return requested_state
 
     async def _set_groupswitch_member_state(
         self, data: str, members: list[str], state: str, switch: Munch
@@ -296,7 +296,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
-        req_state = state == STATE_ON
+        requested_state = state == STATE_ON
         switched = 0
         for member in members:
             if not self.gw_entities[member]["switches"]["lock"]:
@@ -305,9 +305,9 @@ class SmileLegacyAPI(SmileLegacyData):
                 switched += 1
 
         if switched > 0:
-            return req_state
-        else:
-            return not req_state  # pragma: no cover
+            return requested_state
+
+        return not requested_state  # pragma: no cover
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""

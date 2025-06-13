@@ -380,7 +380,7 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
-        req_state = state == STATE_ON
+        requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.device = "relay"
@@ -422,10 +422,10 @@ class SmileAPI(SmileData):
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
             # Don't switch a relay when its corresponding lock-state is true
-            return False
+            return not requested_state
 
         await self.call_request(uri, method="put", data=data)
-        return req_state
+        return requested_state
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
@@ -434,7 +434,7 @@ class SmileAPI(SmileData):
 
         Set the given State of the relevant Switch within a group of members.
         """
-        req_state = state == STATE_ON
+        requested_state = state == STATE_ON
         switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
@@ -450,9 +450,9 @@ class SmileAPI(SmileData):
                 switched += 1
 
         if switched > 0:
-            return req_state
-        else:
-            return not req_state
+            return requested_state
+
+        return not requested_state
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
