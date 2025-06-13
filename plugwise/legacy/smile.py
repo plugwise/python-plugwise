@@ -306,7 +306,7 @@ class SmileLegacyAPI(SmileLegacyData):
         if switched > 0:
             return req_state
         else:
-            return not req_state
+            return not req_state  # pragma: no cover
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
@@ -317,7 +317,7 @@ class SmileLegacyAPI(SmileLegacyData):
         if setpoint is None:
             raise PlugwiseError(
                 "Plugwise: failed setting temperature: no valid input provided"
-            )  # pragma: no cover"
+            )  # pragma: no cover
 
         temperature = str(setpoint)
         data = (
