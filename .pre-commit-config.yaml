@@ -29,13 +29,16 @@ repos:
       - id: pyupgrade
         name: "Check Py upgrade"
         args: [--py311-plus]
-  #  Moved codespell configuration to setup.cfg as per 'all-files' issues not reading args
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
       - id: codespell
-        name: "Check spelling"
+        args:
+          - --ignore-words-list=aiport,astroid,checkin,currenty,hass,iif,incomfort,lookin,nam,NotIn,leeg  # HA-core copied, self-added: leeg (Dutch for empty)
+          - --skip="./.*,*.csv,*.json,*.ambr"
+          - --quiet-level=2
         exclude_types: [csv, json]
+        exclude: ^tests/fixtures/|homeassistant/generated/|tests/components/.*/snapshots/
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.3
     hooks:

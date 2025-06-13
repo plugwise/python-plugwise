@@ -13,7 +13,6 @@ classifiers     = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Home Automation",
 ]
@@ -24,7 +23,7 @@ maintainers = [
         { name = "bouwew"},
         { name = "CoMPaTech" }
 ]
-requires-python = ">=3.12.0"
+requires-python = ">=3.13"
 dependencies    = [
         "aiohttp",
         "defusedxml",
@@ -52,7 +51,7 @@ include = ["plugwise*"]
 # 20241208: W0201 / attribute-defined-outside-init
 # 20241208: R1702 / too-many-nested-blocks # too many nested blocks in test_init 8/5
 # 20241208: R6102 / consider-using-tuple
-# 20241208: Recommended disabling => "implicit-str-concat", # ISC001 - 2 occurances!
+# 20241208: Recommended disabling => "implicit-str-concat", # ISC001 - 2 occurrences!
 ##
 
 [tool.pylint.MAIN]
@@ -466,7 +465,6 @@ lint.select = [
     "S317",  # suspicious-xml-sax-usage
     "S318",  # suspicious-xml-mini-dom-usage
     "S319",  # suspicious-xml-pull-dom-usage
-    "S320",  # suspicious-xmle-tree-usage
     "S601",  # paramiko-call
     "S602",  # subprocess-popen-with-shell-equals-true
     "S604",  # call-with-shell-equals-true
