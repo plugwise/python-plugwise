@@ -688,10 +688,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for new_state in ["false", "true", "false"]:
             _LOGGER.info("- Switching %s", new_state)
             try:
-                tinker_switch_passed = await smile.set_switch_state(
+                result = await smile.set_switch_state(
                     dev_id, members, model, new_state
                 )
-                _LOGGER.info("  + tinker_switch worked as intended")
+                if result == new_state:
+                    tinker_switch_passed = True
+                    _LOGGER.info("  + tinker_switch worked as intended")
+                else:
+                    _LOGGER.info("  + tinker_switch failed unexpectedly")
+                    return False
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
                 return False
