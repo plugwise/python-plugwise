@@ -8,6 +8,7 @@ if [ -z "$VIRTUAL_ENV" ]; then
   else
     python3 -m venv venv
   fi
+  # shellcheck disable=SC1091 # ingesting virtualenv
   source venv/bin/activate
 fi
 
