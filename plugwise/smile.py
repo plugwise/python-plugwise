@@ -453,7 +453,6 @@ class SmileAPI(SmileData):
         else:
             return not req_state
 
-
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         setpoint: float | None = None
