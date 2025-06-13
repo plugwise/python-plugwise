@@ -304,6 +304,14 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "675416a629f343c495449970e2ca37b5"
         )
         assert not switch_change
+        # Test a blocked group-change, both relays are locked.
+        group_change = await self.tinker_switch(
+            smile,
+            "e8ef2a01ed3b4139a53bf749204fe6b4",
+            ["02cf28bfec924855854c544690a609ef", "4a810418d5394b3f82727340b91ba740"],
+        )
+        assert not group_change
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
