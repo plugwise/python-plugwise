@@ -684,6 +684,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
+        convert = {"true": True, "false": False}
         tinker_switch_passed = False
         for new_state in ["false", "true", "false"]:
             _LOGGER.info("- Switching %s", new_state)
@@ -691,7 +692,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 result = await smile.set_switch_state(
                     dev_id, members, model, new_state
                 )
-                if result == new_state:
+                if result == convert[new_state]:
                     tinker_switch_passed = True
                     _LOGGER.info("  + tinker_switch worked as intended")
                 else:
