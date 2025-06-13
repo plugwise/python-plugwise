@@ -22,6 +22,7 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
+    STATE_ON,
     GwEntityData,
     ThermoLoc,
 )
@@ -379,6 +380,7 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
+        req_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.device = "relay"
@@ -423,7 +425,7 @@ class SmileAPI(SmileData):
             return False
 
         await self.call_request(uri, method="put", data=data)
-        return True
+        return req_state
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
@@ -432,6 +434,7 @@ class SmileAPI(SmileData):
 
         Set the given State of the relevant Switch within a group of members.
         """
+        switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._domain_objects.find(locator).attrib["id"]
@@ -443,8 +446,9 @@ class SmileAPI(SmileData):
             )
             if not self.gw_entities[member]["switches"].get("lock"):
                 await self.call_request(uri, method="put", data=data)
+                switched += 1
 
-        return True
+        return switched > 0
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
