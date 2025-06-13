@@ -288,7 +288,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.entity_items == 370
+        assert self.entity_items == 375
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
