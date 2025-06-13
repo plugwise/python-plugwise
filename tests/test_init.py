@@ -696,9 +696,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 else:
                     _LOGGER.info("  + tinker_switch failed unexpectedly")
                     return False
-            except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + locked, not switched as expected")
-                return False
             except (
                 pw_exceptions.ConnectionFailedError
             ):  # leave for-loop at connect-error
