@@ -270,7 +270,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 "</appliances>"
             )
             await self.call_request(APPLIANCES, method="post", data=data)
-            return True
+            return req_state
 
         # Handle group of switches
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
