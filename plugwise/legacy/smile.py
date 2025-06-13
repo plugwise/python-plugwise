@@ -18,6 +18,7 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
+    STATE_ON,
     GwEntityData,
     ThermoLoc,
 )
@@ -241,6 +242,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
         """
+        req_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.func_type = "relay_functionality"
@@ -285,7 +287,7 @@ class SmileLegacyAPI(SmileLegacyData):
             return False
 
         await self.call_request(uri, method="put", data=data)
-        return True
+        return req_state
 
     async def _set_groupswitch_member_state(
         self, data: str, members: list[str], state: str, switch: Munch
@@ -294,12 +296,14 @@ class SmileLegacyAPI(SmileLegacyData):
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
+        switched = 0
         for member in members:
             if not self.gw_entities[member]["switches"]["lock"]:
                 uri = f"{APPLIANCES};id={member}/relay"
                 await self.call_request(uri, method="put", data=data)
+                switched += 1
 
-        return True
+        return switched > 0
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
