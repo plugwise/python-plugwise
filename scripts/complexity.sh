@@ -3,18 +3,23 @@ set -eu
 
 my_path=$(git rev-parse --show-toplevel)
 
-# shellcheck disable=SC1091
-source "${my_path}/scripts/python-venv.sh"
-
-# shellcheck disable=SC2154
-if [ -f "${my_venv}/bin/activate" ]; then
-    # shellcheck disable=SC1091
-    . "${my_venv}/bin/activate"
-    echo "-----------------------------"
-    echo "Running cyclomatic complexity"
-    echo "-----------------------------"
-    PYTHONPATH=$(pwd) radon cc plugwise/ tests/ -s -nc --no-assert
+if [ -n "${VIRTUAL_ENV-}" ] && [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
+  # shellcheck disable=SC1091 # ingesting virtualenv
+  . "${VIRTUAL_ENV}/bin/activate"
 else
-    echo "Virtualenv available, bailing out"
-    exit 2
+  # other common virtualenvs
+  my_path=$(git rev-parse --show-toplevel)
+
+  for venv in venv .venv .; do
+    if [ -f "${my_path}/${venv}/bin/activate" ]; then
+      # shellcheck disable=SC1090 # ingesting virtualenv
+      . "${my_path}/${venv}/bin/activate"
+      break
+    fi
+  done
 fi
+
+echo "-----------------------------"
+echo "Running cyclomatic complexity"
+echo "-----------------------------"
+PYTHONPATH=$(pwd) radon cc plugwise/ tests/ -s -nc --no-assert

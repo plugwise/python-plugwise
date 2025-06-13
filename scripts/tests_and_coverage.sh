@@ -1,24 +1,40 @@
 #!/usr/bin/env bash
+# 20250613 Copied from HA-Core: run-in-env.sh
 set -eu
 
-my_path=$(git rev-parse --show-toplevel)
+# Used in venv activate script.
+# Would be an error if undefined.
+OSTYPE="${OSTYPE-}"
 
-# shellcheck disable=SC1091
-. "${my_path}/scripts/python-venv.sh"
+# Activate pyenv and virtualenv if present, then run the specified command
 
-# shellcheck disable=SC2154
-if [ -f "${my_venv}/bin/activate" ]; then
-    set +o nounset  # Workaround https://github.com/pypa/virtualenv/issues/150 for nodeenv
-    # shellcheck disable=SC1091
-    . "${my_venv}/bin/activate"
-    set -o nounset
-    if [ ! "$(which pytest)" ]; then
-        echo "Unable to find pytest, run setup_test.sh before this script"
-        exit 1
-    fi
+# pyenv, pyenv-virtualenv
+if [ -s .python-version ]; then
+    PYENV_VERSION=$(head -n 1 .python-version)
+    export PYENV_VERSION
+fi
+
+if [ -n "${VIRTUAL_ENV-}" ] && [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
+  # shellcheck disable=SC1091 # ingesting virtualenv
+  . "${VIRTUAL_ENV}/bin/activate"
 else
-    echo "Virtualenv available, bailing out"
-    exit 2
+  # other common virtualenvs
+  my_path=$(git rev-parse --show-toplevel)
+
+  for venv in venv .venv .; do
+    if [ -f "${my_path}/${venv}/bin/activate" ]; then
+      # shellcheck disable=SC1090 # ingesting virtualenv
+      . "${my_path}/${venv}/bin/activate"
+      break
+    fi
+  done
+fi
+
+# 20250613 End of copy
+
+if ! command -v pytest >/dev/null; then
+  echo "Unable to find pytest, run setup_test.sh before this script"
+  exit 1
 fi
 
 handle_command_error() {
@@ -36,7 +52,6 @@ biome_format() {
 # Install/update dependencies
 pre-commit install
 pre-commit install-hooks
-pip install uv
 uv pip install -r requirements_test.txt -r requirements_commit.txt
 
 set +u
