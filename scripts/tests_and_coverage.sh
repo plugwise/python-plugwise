@@ -32,7 +32,7 @@ fi
 
 # 20250613 End of copy
 
-if [ ! "$(which pytest)" ]; then
+if ! command -v pytest >/dev/null; then
   echo "Unable to find pytest, run setup_test.sh before this script"
   exit 1
 fi
