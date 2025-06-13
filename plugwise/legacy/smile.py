@@ -18,6 +18,7 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
+    STATE_ON,
     GwEntityData,
     ThermoLoc,
 )
@@ -241,7 +242,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
         """
-        req_state = state == "true"
+        req_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.func_type = "relay_functionality"
@@ -251,7 +252,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Handle switch-lock
         if model == "lock":
-            state = "false" if state == "off" else "true"
+            state = "true" if state == STATE_ON else "false"
             appliance = self._appliances.find(f'appliance[@id="{appl_id}"]')
             appl_name = appliance.find("name").text
             appl_type = appliance.find("type").text
@@ -295,7 +296,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
-        req_state = state == "true"
+        req_state = state == STATE_ON
         switched = 0
         for member in members:
             if not self.gw_entities[member]["switches"]["lock"]:
