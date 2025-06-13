@@ -296,6 +296,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
+        req_state = state == STATE_ON
         switched = 0
         for member in members:
             if not self.gw_entities[member]["switches"]["lock"]:
@@ -303,7 +304,10 @@ class SmileLegacyAPI(SmileLegacyData):
                 await self.call_request(uri, method="put", data=data)
                 switched += 1
 
-        return switched > 0
+        if switched > 0:
+            return req_state
+        else:
+            return not req_state
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
