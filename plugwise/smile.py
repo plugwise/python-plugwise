@@ -22,6 +22,7 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
+    STATE_ON,
     GwEntityData,
     ThermoLoc,
 )
@@ -377,8 +378,9 @@ class SmileAPI(SmileData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> None:
+    ) -> bool:
         """Set the given State of the relevant Switch."""
+        requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.device = "relay"
@@ -396,7 +398,7 @@ class SmileAPI(SmileData):
 
         if model == "lock":
             switch.func = "lock"
-            state = "false" if state == "off" else "true"
+            state = "true" if state == STATE_ON else "false"
 
         if members is not None:
             return await self._set_groupswitch_member_state(members, state, switch)
@@ -418,23 +420,22 @@ class SmileAPI(SmileData):
             f"</{switch.func_type}>"
         )
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        if model == "relay":
-            locator = (
-                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
-            )
-            # Don't bother switching a relay when the corresponding lock-state is true
-            if self._domain_objects.find(locator).text == "true":
-                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
+        if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
+            # Don't switch a relay when its corresponding lock-state is true
+            return not requested_state
 
         await self.call_request(uri, method="put", data=data)
+        return requested_state
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
-    ) -> None:
+    ) -> bool:
         """Helper-function for set_switch_state().
 
         Set the given State of the relevant Switch within a group of members.
         """
+        requested_state = state == STATE_ON
+        switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._domain_objects.find(locator).attrib["id"]
@@ -444,7 +445,14 @@ class SmileAPI(SmileData):
                 f"<{switch.func}>{state}</{switch.func}>"
                 f"</{switch.func_type}>"
             )
-            await self.call_request(uri, method="put", data=data)
+            if not self.gw_entities[member]["switches"].get("lock"):
+                await self.call_request(uri, method="put", data=data)
+                switched += 1
+
+        if switched > 0:
+            return requested_state
+
+        return not requested_state
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
