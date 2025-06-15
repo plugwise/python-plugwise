@@ -381,7 +381,7 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch.
-        
+
         Return the requested state when succesful, the current state otherwise.
         """
         model_type = cast(SwitchType, model)
