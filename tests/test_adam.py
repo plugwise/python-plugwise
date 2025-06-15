@@ -108,7 +108,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert switch_change
         # Test relay without lock-attribute
         switch_change = await self.tinker_switch(
-            smile, "854f8a9b0e7e425db97f1f110e1ce4b3",
+            smile,
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
         )
         assert not switch_change
         switch_change = await self.tinker_switch(
