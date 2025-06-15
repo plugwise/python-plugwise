@@ -283,7 +283,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Handle individual relay switches
         uri = f"{APPLIANCES};id={appl_id}/relay"
-        if model == "relay" and self.gw_entities[appl_id]["switches"].get("lock"):
+        if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
             # Don't bother switching a relay when the corresponding lock-state is true
             return current_state
 
