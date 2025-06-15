@@ -116,6 +116,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "2568cc4b9c1e401495d4741a5f89bee1"
         )
         assert not switch_change
+        switch_change = await self.tinker_switch(
+            smile, "2568cc4b9c1e401495d4741a5f89bee1", model="lock",
+        )
+        assert switch_change
 
         tinkered = await self.tinker_gateway_mode(smile)
         assert not tinkered
