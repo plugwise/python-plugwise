@@ -380,7 +380,7 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
-        current_state = self.gw_entities[appl_id]["switches"]["relay"]
+        current_state = self.gw_entities[appl_id]["switches"][model]
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -425,7 +425,8 @@ class SmileAPI(SmileData):
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay" and self.gw_entities[appl_id]["switches"].get("lock"):
-            # Don't switch a relay when its corresponding lock-state is true
+            # Don't switch a relay when its corresponding lock-state is true or no
+            # lock is present. That means the relay can't be controlled by the user.
             return current_state
 
         await self.call_request(uri, method="put", data=data)
