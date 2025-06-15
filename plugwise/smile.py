@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 import datetime as dt
-from typing import Any
+from typing import Any, cast
 
 from plugwise.constants import (
     ADAM,
@@ -24,6 +24,7 @@ from plugwise.constants import (
     RULES,
     STATE_ON,
     GwEntityData,
+    SwitchType,
     ThermoLoc,
 )
 from plugwise.data import SmileData
@@ -380,7 +381,8 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
-        current_state = self.gw_entities[appl_id]["switches"][model]
+        model_type = cast(SwitchType, model)
+        current_state = self.gw_entities[appl_id]["switches"][model_type]
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
