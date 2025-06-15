@@ -16,7 +16,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -427,7 +426,6 @@ class SmileAPI(SmileData):
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay":
             lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
-            LOGGER.debug("HOI lock_blocked=%s", lock_blocked)
             if lock_blocked or lock_blocked is None:
                 # Don't switch a relay when its corresponding lock-state is true or no
                 # lock is present. That means the relay can't be controlled by the user.
