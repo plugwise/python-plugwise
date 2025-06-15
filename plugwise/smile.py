@@ -429,8 +429,8 @@ class SmileAPI(SmileData):
             lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
             LOGGER.debug("HOI lock_blocked=%s", lock_blocked)
             if lock_blocked or lock_blocked is None:
-            # Don't switch a relay when its corresponding lock-state is true or no
-            # lock is present. That means the relay can't be controlled by the user.
+                # Don't switch a relay when its corresponding lock-state is true or no
+                # lock is present. That means the relay can't be controlled by the user.
                 return current_state
 
         await self.call_request(uri, method="put", data=data)
