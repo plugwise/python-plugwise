@@ -380,6 +380,7 @@ class SmileAPI(SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -400,8 +401,16 @@ class SmileAPI(SmileData):
             switch.func = "lock"
             state = "true" if state == STATE_ON else "false"
 
+        data = (
+            f"<{switch.func_type}>"
+            f"<{switch.func}>{state}</{switch.func}>"
+            f"</{switch.func_type}>"
+        )
+
         if members is not None:
-            return await self._set_groupswitch_member_state(members, state, switch)
+            return await self._set_groupswitch_member_state(
+                appl_id, data, members, state, switch
+            )
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found = self._domain_objects.findall(locator)
@@ -414,37 +423,28 @@ class SmileAPI(SmileData):
             else:  # actuators with a single item like relay_functionality
                 switch_id = item.attrib["id"]
 
-        data = (
-            f"<{switch.func_type}>"
-            f"<{switch.func}>{state}</{switch.func}>"
-            f"</{switch.func_type}>"
-        )
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
+        if model == "relay" and self.gw_entities[appl_id]["switches"].get("lock"):
             # Don't switch a relay when its corresponding lock-state is true
-            return not requested_state
+            return current_state
 
         await self.call_request(uri, method="put", data=data)
         return requested_state
 
     async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
+        self, appl_id: str, data: str, members: list[str], state: str, switch: Munch
     ) -> bool:
         """Helper-function for set_switch_state().
 
         Set the given State of the relevant Switch within a group of members.
         """
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON
         switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._domain_objects.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            data = (
-                f"<{switch.func_type}>"
-                f"<{switch.func}>{state}</{switch.func}>"
-                f"</{switch.func_type}>"
-            )
             if not self.gw_entities[member]["switches"].get("lock"):
                 await self.call_request(uri, method="put", data=data)
                 switched += 1
@@ -452,7 +452,7 @@ class SmileAPI(SmileData):
         if switched > 0:
             return requested_state
 
-        return not requested_state
+        return current_state
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
