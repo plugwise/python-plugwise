@@ -1425,7 +1425,9 @@
 		<modified_date>2020-03-20T17:44:58.716+01:00</modified_date>
 		<deleted_date></deleted_date>
 		<location id='cd143c07248f491493cea0533bc3d669'/>
-		<groups/>
+		<groups>
+			<group id="e8ef2a01ed3b4139a53bf749204fe6b4"/>
+		</groups>
 		<logs>
 			<interval_log id='075466c308d04b2eb22d611b801703bd'>
 				<updated_date>2020-03-20T17:30:00+01:00</updated_date>
@@ -3146,7 +3148,9 @@
 		<modified_date>2020-03-20T17:39:34.219+01:00</modified_date>
 		<deleted_date></deleted_date>
 		<location id='cd143c07248f491493cea0533bc3d669'/>
-		<groups/>
+		<groups>
+			<group id="e8ef2a01ed3b4139a53bf749204fe6b4"/>
+		</groups>
 		<logs>
 			<point_log id='27388b64d1684da4b5b77740b3cddbca'>
 				<updated_date>2020-03-20T17:28:23.547+01:00</updated_date>
@@ -3517,6 +3521,54 @@
 			</relay_functionality>
 		</actuator_functionalities>
 	</appliance>
+	<group id='e8ef2a01ed3b4139a53bf749204fe6b4'>
+		<name>Test</name>
+		<description></description>
+		<type>switching</type>
+		<created_date>2021-12-23T08:25:07.571+01:00</created_date>
+		<modified_date>2023-12-22T16:29:14.088+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<appliances>
+			<appliance id='02cf28bfec924855854c544690a609ef'/>
+			<appliance id='4a810418d5394b3f82727340b91ba740'/>
+		</appliances>
+		<logs>
+			<point_log id='40be4ec87012420e87e9639a3023214c'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval/>
+			</point_log>
+			<point_log id='516005b3d22544bf926f32034fb2a18d'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2023-12-22T16:29:13.997+01:00</updated_date>
+				<last_consecutive_log_date>2023-08-16T23:58:55.515+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2023-12-22T16:29:13.997+01:00" end_date="2023-12-22T16:29:13.997+01:00">
+					<measurement log_date="2023-12-22T16:29:13.997+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='a0b4dbf42a1240399364842a22e1cdb1'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2023-12-22T16:29:13.997+01:00</updated_date>
+				<last_consecutive_log_date>2023-08-16T23:58:55.515+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2023-12-22T16:29:13.997+01:00" end_date="2023-12-22T16:29:13.997+01:00">
+					<measurement log_date="2023-12-22T16:29:13.997+01:00">14.81</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='221f4c1a1e184ae0a1e06fc8fe187676'>
+				<updated_date></updated_date>
+				<lock>false</lock>
+				<delegation_strategy>single</delegation_strategy>
+			</relay_functionality>
+		</actuator_functionalities>
+	</group>
 	<rule id='3683589f956842ccb3d35d30940e3a01'>
 		<name></name>
 		<description></description>
