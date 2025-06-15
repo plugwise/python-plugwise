@@ -242,6 +242,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
         """
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -277,25 +278,26 @@ class SmileLegacyAPI(SmileLegacyData):
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
         if members is not None:
             return await self._set_groupswitch_member_state(
-                data, members, state, switch
+                appl_id, data, members, state, switch
             )
 
         # Handle individual relay switches
         uri = f"{APPLIANCES};id={appl_id}/relay"
-        if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
+        if model == "relay" and self.gw_entities[appl_id]["switches"].get("lock"):
             # Don't bother switching a relay when the corresponding lock-state is true
-            return not requested_state
+            return current_state
 
         await self.call_request(uri, method="put", data=data)
         return requested_state
 
     async def _set_groupswitch_member_state(
-        self, data: str, members: list[str], state: str, switch: Munch
+        self, appl_id: str, data: str, members: list[str], state: str, switch: Munch
     ) -> bool:
         """Helper-function for set_switch_state().
 
         Set the given State of the relevant Switch (relay) within a group of members.
         """
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON
         switched = 0
         for member in members:
@@ -307,7 +309,7 @@ class SmileLegacyAPI(SmileLegacyData):
         if switched > 0:
             return requested_state
 
-        return not requested_state  # pragma: no cover
+        return current_state  # pragma: no cover
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
