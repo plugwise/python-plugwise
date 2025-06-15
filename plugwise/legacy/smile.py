@@ -241,6 +241,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For individual switches, sets the state directly.
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
+        Return the requested state when succesful, the current state otherwise.
         """
         current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON
@@ -296,6 +297,7 @@ class SmileLegacyAPI(SmileLegacyData):
         """Helper-function for set_switch_state().
 
         Set the given State of the relevant Switch (relay) within a group of members.
+        Return the requested state when at least one requested change was succesful, the current state otherwise.
         """
         current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON
