@@ -425,12 +425,13 @@ class SmileAPI(SmileData):
                 switch_id = item.attrib["id"]
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
-        LOGGER.debug("HOI lock_blocked=%s", lock_blocked)
-        if model == "relay" and lock_blocked:
+        if model == "relay":
+            lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
+            LOGGER.debug("HOI lock_blocked=%s", lock_blocked)
+            if lock_blocked or lock_blocked is None:
             # Don't switch a relay when its corresponding lock-state is true or no
             # lock is present. That means the relay can't be controlled by the user.
-            return current_state
+                return current_state
 
         await self.call_request(uri, method="put", data=data)
         return requested_state
