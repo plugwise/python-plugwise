@@ -4,9 +4,10 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 13
+  CACHE_VERSION: 14
   DEFAULT_PYTHON: "3.13"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
+  VENV: venv
 
 on:
   schedule:
@@ -16,9 +17,28 @@ on:
 # pull_request:
 
 jobs:
+  # Determine cache key once
+  cache:
+    runs-on: ubuntu-latest
+    name: Cache identify
+    outputs:
+      cache-key: ${{ steps.set-key.outputs.cache-key }}
+    steps:
+      - name: Check out committed code
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+        id: python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON }}
+      - name: Compute cache key
+        id: set-key
+        run: echo "cache-key=${{ runner.os }}-venv-cache-${{ env.CACHE_VERSION }}-${{ steps.python.outputs.python-version }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
+
   # Prepare default python version environment
   prepare:
     runs-on: ubuntu-latest
+    needs: cache
     name: Prepare
     steps:
       - name: Check out committed code
@@ -28,48 +48,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-          restore-keys: |
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{ steps.python.outputs.python-version }}-${{ hashFiles('requirements_test.txt') }}-${{ hashFiles('setup.py') }}-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{ steps.python.outputs.python-version }}-${{ hashFiles('requirements_test.txt') }}
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{ steps.python.outputs.python-version }}-
-      - name: Create Python virtual environment
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          pip install virtualenv --upgrade
-          python -m venv venv
-          . venv/bin/activate
-          pip install uv
-          uv pip install -U pip setuptools wheel
-          uv pip install -r requirements_test.txt -r requirements_commit.txt
-      - name: Restore pre-commit environment from cache
-        id: cache-precommit
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PRE_COMMIT_HOME }}
-          key: |
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-          restore-keys: |
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-
-      - name: Install pre-commit dependencies
-        if: steps.cache-precommit.outputs.cache-hit != 'true'
-        run: |
-          . venv/bin/activate
-          pre-commit install-hooks
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          fail-on-miss: false # First time create cache (if not already exists)
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
 
   ruff:
     runs-on: ubuntu-latest
     name: Ruff check and force
-    needs: prepare
+    needs: 
+      - cache
+      - prepare
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -80,21 +74,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Ruff (with fix)
         run: |
           . venv/bin/activate
@@ -115,6 +102,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Check commit
     needs:
+      - cache
+      - prepare
       - ruff
       - shellcheck
       - dependencies_check
@@ -126,33 +115,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
-          exit 1
-      - name: Restore pre-commit environment from cache
-        id: cache-precommit
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PRE_COMMIT_HOME }}
-          key: |
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: Fail job if cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore pre-commit environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Verify commit
         run: |
           . venv/bin/activate
@@ -167,54 +137,16 @@ jobs:
           . venv/bin/activate
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
 
-  prepare-test-cache:
-    runs-on: ubuntu-latest
-    name: Create pytest cache for Python ${{ matrix.python-version }}
-    needs: commitcheck
-    strategy:
-      matrix:
-        python-version: ["3.13"]
-    steps:
-      - name: Check out committed code
-        uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Restore full Python ${{ matrix.python-version }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
-        with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{
-            matrix.python-version }}-${{ hashFiles('requirements_test.txt')
-            }}-${{ hashFiles('setup.py') }}
-          restore-keys: |
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{ matrix.python-version }}-${{ hashFiles('requirements_test.txt') }}-${{ hashFiles('setup.py') }}
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{ matrix.python-version }}-${{ hashFiles('requirements_test.txt') }}
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{ matrix.python-version }}-
-      - name: Create full Python ${{ matrix.python-version }} virtual environment
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          python -m venv venv
-          . venv/bin/activate
-          pip install uv
-          uv pip install -U pip setuptools wheel
-          #pip install -r requirements_test.txt
-          # 20220124 Mimic setup_test.sh
-          uv pip install --upgrade -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
-          uv pip install --upgrade pytest-asyncio
-
   pytest:
     runs-on: ubuntu-latest
     name: Run pytest using Python ${{ matrix.python-version }}
-    needs: prepare-test-cache
+    needs: 
+      - cache
+      - prepare
+      - commitcheck
     strategy:
       matrix:
         python-version: ["3.13"]
-
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -223,20 +155,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Restore full Python ${{ matrix.python-version }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{
-            matrix.python-version }}-${{ hashFiles('requirements_test.txt')
-            }}-${{ hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python virtual environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}-pytest-matrix-${{ matrix.python-version }}
+          fail-on-miss: false # First time create cache (if not already exists)
+          python-version: ${{ matrix.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
         run: |
           . venv/bin/activate
@@ -252,7 +179,10 @@ jobs:
   mypy:
     runs-on: ubuntu-latest
     name: Run mypy
-    needs: pytest
+    needs: 
+      - cache
+      - prepare
+      - pytest
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -263,21 +193,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run mypy
         run: |
           . venv/bin/activate
@@ -307,7 +230,11 @@ jobs:
   coverage:
     name: Process test coverage
     runs-on: ubuntu-latest
-    needs: pytest
+    needs: 
+      - cache
+      - prepare
+      - pytest
+      - mypy
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -316,21 +243,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python virtual environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Download all coverage artifacts
         uses: actions/download-artifact@v4
       - name: Combine coverage results
@@ -347,7 +267,11 @@ jobs:
   test-publishing:
     name: Build and publish Python 🐍 distributions 📦 to TestPyPI
     runs-on: ubuntu-latest
-    needs: [coverage, mypy]
+    needs:
+      - cache
+      - prepare
+      - coverage
+      - mypy
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -356,29 +280,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python virtual environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Install pypa/build
-        run: >-
-          python3 -m
-          pip install
-          build
-          --user
+        run: |
+          . venv/bin/activate
+          uv pip install build
       - name: Build a binary wheel and a source tarball
-        run: python3 -m build
+        run: |
+          . venv/bin/activate
+          python3 -m build
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         continue-on-error: true
@@ -390,7 +307,10 @@ jobs:
   complexity:
     name: Process test complexity
     runs-on: ubuntu-latest
-    needs: coverage
+    needs: 
+      - cache
+      - prepare
+      - coverage
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
@@ -399,21 +319,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v4
+      - name: Create or reuse cache
+        id: cache-reuse
+        uses: ./.github/actions/restore-venv
         with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python virtual environment from cache"
-          exit 1
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ steps.python.outputs.python-version }}
+          venv-dir: ${{ env.VENV }}
+          precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run complexity report (click to view details)
         run: |
           . venv/bin/activate
