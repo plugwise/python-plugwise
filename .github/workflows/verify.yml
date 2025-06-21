@@ -31,6 +31,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
+      - name: Fetch HA pyproject
+        id: core-version
+        run: wget -O ha_pyproject.toml "https://raw.githubusercontent.com/home-assistant/core/refs/heads/dev/pyproject.toml"
       - name: Compute cache key
         id: set-key
         run: echo "cache-key=${{ runner.os }}-venv-cache-${{ env.CACHE_VERSION }}-${{ steps.python.outputs.python-version }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
@@ -41,20 +44,13 @@ jobs:
     needs: cache
     name: Prepare
     steps:
-      - name: Check out committed code
-        uses: actions/checkout@v4
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Prepare code checkout and python/pre-commit setup
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/prepare-python-and-code@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          fail-on-miss: false # First time create cache (if not already exists)
-          python-version: ${{ steps.python.outputs.python-version }}
+          fail-on-miss: false  # First time create cache (if not already exists)
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
 
@@ -69,17 +65,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Ruff (with fix)
@@ -110,17 +101,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Verify commit
@@ -150,18 +136,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}-pytest-matrix-${{ matrix.python-version }}
-          fail-on-miss: false # First time create cache (if not already exists)
-          python-version: ${{ matrix.python-version }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
@@ -188,17 +168,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run mypy
@@ -238,17 +213,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Download all coverage artifacts
@@ -275,17 +245,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Install pypa/build
@@ -314,17 +279,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Create or reuse cache
+      - name: Restore cached environment
         id: cache-reuse
-        uses: ./.github/actions/restore-venv
+        uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run complexity report (click to view details)
