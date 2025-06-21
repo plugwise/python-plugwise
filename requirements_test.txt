@@ -5,3 +5,4 @@ pytest-asyncio
 radon==6.0.1
 types-python-dateutil
 uv
+pytest-cov

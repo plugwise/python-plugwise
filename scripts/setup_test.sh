@@ -25,14 +25,13 @@ uv pip install --upgrade -e . -r requirements_test.txt -c https://raw.githubuser
 
 # Prepare biomejs
 echo "Fetching/updating biome cli"
-if uname -a | grep -q arm64; then
-  curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-darwin-arm64" -o "${my_path}/tmp/biome"
-elif uname -a | grep -q x86_64; then
-  curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64" -o "${my_path}/tmp/biome"
-else
-  echo "Unable to determine processor and as such to install packaged biome cli version, bailing out"
-  exit 2
-fi
+arch=$(uname -m)
+case "$arch" in
+  aarch64|arm64) use_arch="darwin-arm64" ;;
+  x86_64)       use_arch="linux-x64" ;;
+  *) echo "Unsupported arch for biome cli version: $arch"; exit 2 ;;
+esac
+curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-${use_arch}" -o "${my_path}/tmp/biome"
 
 # Make biome executable (if necessary)
 chmod +x "${my_path}/tmp/biome"
