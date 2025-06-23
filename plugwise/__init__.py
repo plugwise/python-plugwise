@@ -404,7 +404,7 @@ class Smile(SmileComm):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch.
-        
+
         Return the result:
           - True when switched to state on,
           - False when switched to state off,
