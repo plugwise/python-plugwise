@@ -18,6 +18,7 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
+    STATE_OFF,
     STATE_ON,
     GwEntityData,
     ThermoLoc,
@@ -168,11 +169,6 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        if (presets := self._presets()) is None:
-            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
-        if preset not in list(presets):
-            raise PlugwiseError("Plugwise: invalid preset.")
-
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         rule_id = self._domain_objects.find(locator).attrib["id"]
         data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
@@ -196,7 +192,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
-        if state not in ("on", "off"):
+        if state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Handle no schedule-name / Off-schedule provided
@@ -215,7 +211,7 @@ class SmileLegacyAPI(SmileLegacyData):
             )  # pragma: no cover
 
         new_state = "false"
-        if state == "on":
+        if state == STATE_ON:
             new_state = "true"
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'

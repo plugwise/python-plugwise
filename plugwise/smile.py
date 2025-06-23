@@ -22,6 +22,7 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
+    STATE_OFF,
     STATE_ON,
     GwEntityData,
     SwitchType,
@@ -201,11 +202,6 @@ class SmileAPI(SmileData):
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
-        if (presets := self._presets(loc_id)) is None:
-            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
-        if preset not in list(presets):
-            raise PlugwiseError("Plugwise: invalid preset.")
-
         current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
@@ -311,12 +307,12 @@ class SmileAPI(SmileData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
-        if new_state not in ("on", "off"):
+        if new_state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Translate selection of Off-schedule-option to disabling the active schedule
         if name == OFF:
-            new_state = "off"
+            new_state = STATE_OFF
 
         # Handle no schedule-name / Off-schedule provided
         if name is None or name == OFF:
@@ -369,10 +365,10 @@ class SmileAPI(SmileData):
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
-        if state == "off":
+        if state == STATE_OFF:
             self._last_active[loc_id] = name
             contexts.remove(subject)
-        if state == "on":
+        if state == STATE_ON:
             contexts.append(subject)
 
         return str(etree.tostring(contexts, encoding="unicode").rstrip())
