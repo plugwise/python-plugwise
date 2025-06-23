@@ -712,11 +712,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_switch_bad_input(
         self, smile, dev_id=None, members=None, model="relay", unhappy=False
     ):
+        """Enter a wrong state as input to toggle a Switch."""
         _LOGGER.info("Test entering bad input set_switch_state:")
         _LOGGER.info("- Devices (%s):", dev_id)
         new_state = "false"
         try:
-            result = await smile.set_switch_state(dev_id, members, model, new_state)
+            await smile.set_switch_state(dev_id, members, model, new_state)
         except pw_exceptions.PlugwiseError:
             _LOGGER.info("  + failed input-check as expected")
             return True  # test is pass!

@@ -123,9 +123,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert switch_change
 
-        assert self.tinker_switch_bad_input(
+        assert await self.tinker_switch_bad_input(
             smile,
-            "854f8a9b0e7e425db97f1f110e1ce4b3",            
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
         )
 
         tinkered = await self.tinker_gateway_mode(smile)
