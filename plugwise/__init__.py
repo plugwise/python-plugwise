@@ -15,6 +15,8 @@ from plugwise.constants import (
     MODULES,
     NONE,
     SMILES,
+    STATE_OFF,
+    STATE_ON,
     STATUS,
     SYSTEM,
     GwEntityData,
@@ -410,7 +412,7 @@ class Smile(SmileComm):
           - False when switched to state off,
           - the unchanged state when the switch is for instance locked.
         """
-        if state not in (STATE_ON, STATE_OFF):
+        if state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Invalid state supplied to set_switch_state")
 
         try:
