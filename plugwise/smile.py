@@ -458,7 +458,9 @@ class SmileAPI(SmileData):
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._domain_objects.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            if not self.gw_entities[member]["switches"].get("lock"):
+            lock_blocked = self.gw_entities[member]["switches"].get("lock")
+            # Assume Plugs under Plugwise control are not part of a group
+            if lock_blocked is not None and not lock_blocked:
                 await self.call_request(uri, method="put", data=data)
                 switched += 1
 
