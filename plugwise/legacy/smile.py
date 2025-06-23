@@ -169,6 +169,11 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
+        if (presets := self._presets()) is None:
+            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
+        if preset not in list(presets):
+            raise PlugwiseError("Plugwise: invalid preset.")
+
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         rule_id = self._domain_objects.find(locator).attrib["id"]
         data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"

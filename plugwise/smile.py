@@ -202,6 +202,11 @@ class SmileAPI(SmileData):
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
+        if (presets := self._presets(loc_id)) is None:
+            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
+        if preset not in list(presets):
+            raise PlugwiseError("Plugwise: invalid preset.")
+
         current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
