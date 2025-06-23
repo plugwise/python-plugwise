@@ -709,6 +709,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_switch_passed
 
     @pytest.mark.asyncio
+    async def tinker_switch_bad_input(
+        self, smile, dev_id=None, members=None, model="relay", unhappy=False
+    ):
+        _LOGGER.info("Test entering bad input set_switch_state:")
+        _LOGGER.info("- Devices (%s):", dev_id)
+        new_state = "false"
+        try:
+            result = await smile.set_switch_state(dev_id, members, model, new_state)
+        except pw_exceptions.PlugwiseError:
+            _LOGGER.info("  + failed input-check as expected")
+            return True  # test is pass!
+
+    @pytest.mark.asyncio
     async def tinker_thermostat_temp(
         self, smile, loc_id, block_cooling=False, fail_cooling=False, unhappy=False
     ):
