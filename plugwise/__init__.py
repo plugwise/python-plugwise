@@ -406,6 +406,9 @@ class Smile(SmileComm):
           - False when switched to state off,
           - the unchanged state when the switch is for instance locked.
         """
+        if state not in (STATE_ON, STATE_OFF):
+            raise PlugwiseError("Invalid state supplied to set_switch_state")
+
         try:
             return await self._smile_api.set_switch_state(
                 appl_id, members, model, state
