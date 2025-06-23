@@ -380,8 +380,11 @@ class SmileAPI(SmileData):
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
-        """Set the given State of the relevant Switch.
+        """Set the given state of the relevant Switch.
 
+        For individual switches, sets the state directly.
+        For group switches, sets the state for each member in the group separately.
+        For switch-locks, sets the lock state using a different data format.
         Return the requested state when succesful, the current state otherwise.
         """
         model_type = cast(SwitchType, model)
@@ -444,8 +447,8 @@ class SmileAPI(SmileData):
     ) -> bool:
         """Helper-function for set_switch_state().
 
-        Set the given State of the relevant Switch within a group of members.
-        Return the requested state when at least one requested change was succesful, the current state otherwise.
+        Set the requested state of the relevant switch within a group of switches.
+        Return the current group-state when none of the switches has changed its state, the requested state otherwise.
         """
         current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON

@@ -296,8 +296,8 @@ class SmileLegacyAPI(SmileLegacyData):
     ) -> bool:
         """Helper-function for set_switch_state().
 
-        Set the given State of the relevant Switch (relay) within a group of members.
-        Return the requested state when at least one requested change was succesful, the current state otherwise.
+        Set the requested state of the relevant switch within a group of switches.
+        Return the current group-state when none of the switches has changed its state, the requested state otherwise.
         """
         current_state = self.gw_entities[appl_id]["switches"]["relay"]
         requested_state = state == STATE_ON

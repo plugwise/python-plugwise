@@ -399,7 +399,13 @@ class Smile(SmileComm):
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
-        """Set the given State of the relevant Switch."""
+        """Set the given State of the relevant Switch.
+        
+        Return the result:
+          - True when switched to state on,
+          - False when switched to state off,
+          - the unchanged state when the switch is for instance locked.
+        """
         try:
             return await self._smile_api.set_switch_state(
                 appl_id, members, model, state
