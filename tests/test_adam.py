@@ -106,14 +106,27 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "056ee145a816487eaa69243c3280f8bf", model="dhw_cm_switch"
         )
         assert switch_change
+        # Test relay without lock-attribute
         switch_change = await self.tinker_switch(
-            smile, "854f8a9b0e7e425db97f1f110e1ce4b3", model="lock"
+            smile,
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
         )
-        assert switch_change
+        assert not switch_change
         switch_change = await self.tinker_switch(
             smile, "2568cc4b9c1e401495d4741a5f89bee1"
         )
         assert not switch_change
+        switch_change = await self.tinker_switch(
+            smile,
+            "2568cc4b9c1e401495d4741a5f89bee1",
+            model="lock",
+        )
+        assert switch_change
+
+        assert await self.tinker_switch_bad_input(
+            smile,
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
+        )
 
         tinkered = await self.tinker_gateway_mode(smile)
         assert not tinkered
@@ -288,7 +301,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.entity_items == 370
+        assert self.entity_items == 375
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -304,6 +317,14 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "675416a629f343c495449970e2ca37b5"
         )
         assert not switch_change
+        # Test a blocked group-change, both relays are locked.
+        group_change = await self.tinker_switch(
+            smile,
+            "e8ef2a01ed3b4139a53bf749204fe6b4",
+            ["02cf28bfec924855854c544690a609ef", "4a810418d5394b3f82727340b91ba740"],
+        )
+        assert not group_change
+
         await smile.close_connection()
         await self.disconnect(server, client)
 

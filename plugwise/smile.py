@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 import datetime as dt
-from typing import Any
+from typing import Any, cast
 
 from plugwise.constants import (
     ADAM,
@@ -22,7 +22,10 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
+    STATE_OFF,
+    STATE_ON,
     GwEntityData,
+    SwitchType,
     ThermoLoc,
 )
 from plugwise.data import SmileData
@@ -309,12 +312,12 @@ class SmileAPI(SmileData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
-        if new_state not in ("on", "off"):
+        if new_state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Translate selection of Off-schedule-option to disabling the active schedule
         if name == OFF:
-            new_state = "off"
+            new_state = STATE_OFF
 
         # Handle no schedule-name / Off-schedule provided
         if name is None or name == OFF:
@@ -367,18 +370,27 @@ class SmileAPI(SmileData):
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
-        if state == "off":
+        if state == STATE_OFF:
             self._last_active[loc_id] = name
             contexts.remove(subject)
-        if state == "on":
+        if state == STATE_ON:
             contexts.append(subject)
 
         return str(etree.tostring(contexts, encoding="unicode").rstrip())
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> None:
-        """Set the given State of the relevant Switch."""
+    ) -> bool:
+        """Set the given state of the relevant Switch.
+
+        For individual switches, sets the state directly.
+        For group switches, sets the state for each member in the group separately.
+        For switch-locks, sets the lock state using a different data format.
+        Return the requested state when succesful, the current state otherwise.
+        """
+        model_type = cast(SwitchType, model)
+        current_state = self.gw_entities[appl_id]["switches"][model_type]
+        requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.device = "relay"
@@ -396,10 +408,18 @@ class SmileAPI(SmileData):
 
         if model == "lock":
             switch.func = "lock"
-            state = "false" if state == "off" else "true"
+            state = "true" if state == STATE_ON else "false"
+
+        data = (
+            f"<{switch.func_type}>"
+            f"<{switch.func}>{state}</{switch.func}>"
+            f"</{switch.func_type}>"
+        )
 
         if members is not None:
-            return await self._set_groupswitch_member_state(members, state, switch)
+            return await self._set_groupswitch_member_state(
+                appl_id, data, members, state, switch
+            )
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found = self._domain_objects.findall(locator)
@@ -412,39 +432,42 @@ class SmileAPI(SmileData):
             else:  # actuators with a single item like relay_functionality
                 switch_id = item.attrib["id"]
 
-        data = (
-            f"<{switch.func_type}>"
-            f"<{switch.func}>{state}</{switch.func}>"
-            f"</{switch.func_type}>"
-        )
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay":
-            locator = (
-                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
-            )
-            # Don't bother switching a relay when the corresponding lock-state is true
-            if self._domain_objects.find(locator).text == "true":
-                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
+            lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
+            if lock_blocked or lock_blocked is None:
+                # Don't switch a relay when its corresponding lock-state is true or no
+                # lock is present. That means the relay can't be controlled by the user.
+                return current_state
 
         await self.call_request(uri, method="put", data=data)
+        return requested_state
 
     async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
-    ) -> None:
+        self, appl_id: str, data: str, members: list[str], state: str, switch: Munch
+    ) -> bool:
         """Helper-function for set_switch_state().
 
-        Set the given State of the relevant Switch within a group of members.
+        Set the requested state of the relevant switch within a group of switches.
+        Return the current group-state when none of the switches has changed its state, the requested state otherwise.
         """
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
+        requested_state = state == STATE_ON
+        switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._domain_objects.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            data = (
-                f"<{switch.func_type}>"
-                f"<{switch.func}>{state}</{switch.func}>"
-                f"</{switch.func_type}>"
-            )
-            await self.call_request(uri, method="put", data=data)
+            lock_blocked = self.gw_entities[member]["switches"].get("lock")
+            # Assume Plugs under Plugwise control are not part of a group
+            if lock_blocked is not None and not lock_blocked:
+                await self.call_request(uri, method="put", data=data)
+                switched += 1
+
+        if switched > 0:
+            return requested_state
+
+        return current_state
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""

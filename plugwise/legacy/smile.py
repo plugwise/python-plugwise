@@ -18,6 +18,8 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
+    STATE_OFF,
+    STATE_ON,
     GwEntityData,
     ThermoLoc,
 )
@@ -195,7 +197,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
-        if state not in ("on", "off"):
+        if state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Handle no schedule-name / Off-schedule provided
@@ -214,7 +216,7 @@ class SmileLegacyAPI(SmileLegacyData):
             )  # pragma: no cover
 
         new_state = "false"
-        if state == "on":
+        if state == STATE_ON:
             new_state = "true"
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
@@ -234,13 +236,16 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> None:
+    ) -> bool:
         """Set the given state of the relevant switch.
 
         For individual switches, sets the state directly.
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
+        Return the requested state when succesful, the current state otherwise.
         """
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
+        requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.func_type = "relay_functionality"
@@ -250,7 +255,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Handle switch-lock
         if model == "lock":
-            state = "false" if state == "off" else "true"
+            state = "true" if state == STATE_ON else "false"
             appliance = self._appliances.find(f'appliance[@id="{appl_id}"]')
             appl_name = appliance.find("name").text
             appl_type = appliance.find("type").text
@@ -269,37 +274,45 @@ class SmileLegacyAPI(SmileLegacyData):
                 "</appliances>"
             )
             await self.call_request(APPLIANCES, method="post", data=data)
-            return
+            return requested_state
 
         # Handle group of switches
         data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
         if members is not None:
             return await self._set_groupswitch_member_state(
-                data, members, state, switch
+                appl_id, data, members, state, switch
             )
 
         # Handle individual relay switches
         uri = f"{APPLIANCES};id={appl_id}/relay"
-        if model == "relay":
-            locator = (
-                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
-            )
+        if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
             # Don't bother switching a relay when the corresponding lock-state is true
-            if self._appliances.find(locator).text == "true":
-                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
+            return current_state
 
         await self.call_request(uri, method="put", data=data)
+        return requested_state
 
     async def _set_groupswitch_member_state(
-        self, data: str, members: list[str], state: str, switch: Munch
-    ) -> None:
+        self, appl_id: str, data: str, members: list[str], state: str, switch: Munch
+    ) -> bool:
         """Helper-function for set_switch_state().
 
-        Set the given State of the relevant Switch (relay) within a group of members.
+        Set the requested state of the relevant switch within a group of switches.
+        Return the current group-state when none of the switches has changed its state, the requested state otherwise.
         """
+        current_state = self.gw_entities[appl_id]["switches"]["relay"]
+        requested_state = state == STATE_ON
+        switched = 0
         for member in members:
-            uri = f"{APPLIANCES};id={member}/relay"
-            await self.call_request(uri, method="put", data=data)
+            if not self.gw_entities[member]["switches"]["lock"]:
+                uri = f"{APPLIANCES};id={member}/relay"
+                await self.call_request(uri, method="put", data=data)
+                switched += 1
+
+        if switched > 0:
+            return requested_state
+
+        return current_state  # pragma: no cover
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
@@ -310,7 +323,7 @@ class SmileLegacyAPI(SmileLegacyData):
         if setpoint is None:
             raise PlugwiseError(
                 "Plugwise: failed setting temperature: no valid input provided"
-            )  # pragma: no cover"
+            )  # pragma: no cover
 
         temperature = str(setpoint)
         data = (

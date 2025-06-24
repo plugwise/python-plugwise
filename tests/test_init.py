@@ -684,16 +684,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
+        convert = {"on": True, "off": False}
         tinker_switch_passed = False
-        for new_state in ["false", "true", "false"]:
+        for new_state in ["off", "on", "off"]:
             _LOGGER.info("- Switching %s", new_state)
             try:
-                await smile.set_switch_state(dev_id, members, model, new_state)
-                tinker_switch_passed = True
-                _LOGGER.info("  + tinker_switch worked as intended")
-            except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + locked, not switched as expected")
-                return False
+                result = await smile.set_switch_state(dev_id, members, model, new_state)
+                if result == convert[new_state]:
+                    tinker_switch_passed = True
+                    _LOGGER.info("  + tinker_switch worked as intended")
+                else:
+                    _LOGGER.info("  + tinker_switch failed unexpectedly")
+                    return False
             except (
                 pw_exceptions.ConnectionFailedError
             ):  # leave for-loop at connect-error
@@ -705,6 +707,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     return False
 
         return tinker_switch_passed
+
+    @pytest.mark.asyncio
+    async def tinker_switch_bad_input(
+        self, smile, dev_id=None, members=None, model="relay", unhappy=False
+    ):
+        """Enter a wrong state as input to toggle a Switch."""
+        _LOGGER.info("Test entering bad input set_switch_state:")
+        _LOGGER.info("- Devices (%s):", dev_id)
+        new_state = "false"
+        try:
+            await smile.set_switch_state(dev_id, members, model, new_state)
+        except pw_exceptions.PlugwiseError:
+            _LOGGER.info("  + failed input-check as expected")
+            return True  # test is pass!
 
     @pytest.mark.asyncio
     async def tinker_thermostat_temp(

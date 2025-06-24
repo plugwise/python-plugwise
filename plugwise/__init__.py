@@ -15,6 +15,8 @@ from plugwise.constants import (
     MODULES,
     NONE,
     SMILES,
+    STATE_OFF,
+    STATE_ON,
     STATUS,
     SYSTEM,
     GwEntityData,
@@ -398,10 +400,21 @@ class Smile(SmileComm):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> None:
-        """Set the given State of the relevant Switch."""
+    ) -> bool:
+        """Set the given State of the relevant Switch.
+
+        Return the result:
+          - True when switched to state on,
+          - False when switched to state off,
+          - the unchanged state when the switch is for instance locked.
+        """
+        if state not in (STATE_OFF, STATE_ON):
+            raise PlugwiseError("Invalid state supplied to set_switch_state")
+
         try:
-            await self._smile_api.set_switch_state(appl_id, members, model, state)
+            return await self._smile_api.set_switch_state(
+                appl_id, members, model, state
+            )
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set switch state: {str(exc)}"
