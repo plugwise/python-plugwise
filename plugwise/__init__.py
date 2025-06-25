@@ -65,6 +65,7 @@ class Smile(SmileComm):
         self._elga = False
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
+        self._loria = False
         self._loc_data: dict[str, ThermoLoc] = {}
         self._on_off_device = False
         self._opentherm_device = False
@@ -153,6 +154,7 @@ class Smile(SmileComm):
                 self._elga,
                 self._is_thermostat,
                 self._last_active,
+                self._loria,
                 self._loc_data,
                 self._on_off_device,
                 self._opentherm_device,
@@ -259,10 +261,13 @@ class Smile(SmileComm):
 
             # Determine the presence of special features
             locator_1 = "./gateway/features/cooling"
-            locator_2 = "./gateway/features/elga_support"
+            locator_2 = "./gateway/features/loria_support"
+            locator_3 = "./gateway/features/elga_support"
             if result.find(locator_1) is not None:
                 self._cooling_present = True
             if result.find(locator_2) is not None:
+                self._loria = True
+            if result.find(locator_3) is not None:
                 self._elga = True
 
     async def _smile_detect_legacy(

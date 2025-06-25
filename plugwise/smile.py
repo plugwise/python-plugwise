@@ -49,6 +49,7 @@ class SmileAPI(SmileData):
         _elga: bool,
         _is_thermostat: bool,
         _last_active: dict[str, str | None],
+        _loria: bool,
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
@@ -69,6 +70,7 @@ class SmileAPI(SmileData):
         self._elga = _elga
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
+        self._loria = _loria
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device

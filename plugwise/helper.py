@@ -383,6 +383,9 @@ class SmileHelper(SmileCommon):
             data.pop("c_heating_state")
             self._count -= 1
 
+        if self._loria and "modulation_level" not in data:
+            self._cooling_present = False
+
         if self._is_thermostat and self.smile(ANNA):
             self._update_anna_cooling(entity_id, data)
 
@@ -597,7 +600,10 @@ class SmileHelper(SmileCommon):
             self._process_on_off_device_c_heating_state(data)
 
         # Anna + Elga: use central_heating_state to show heating_state
-        if self._elga:
+        if (
+            self._elga
+            or (self._loria and "modulation_level" not in data["sensors"])
+        ):
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
     def _process_on_off_device_c_heating_state(self, data: GwEntityData) -> None:
@@ -634,7 +640,7 @@ class SmileHelper(SmileCommon):
 
         if "elga_status_code" in data:
             self._update_elga_cooling(data)
-        elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
+        if self._cooling_present and "cooling_state" in data["binary_sensors"]:
             self._update_loria_cooling(data)
 
     def _update_elga_cooling(self, data: GwEntityData) -> None:
