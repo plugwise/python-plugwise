@@ -640,7 +640,7 @@ class SmileHelper(SmileCommon):
 
         if "elga_status_code" in data:
             self._update_elga_cooling(data)
-        if self._cooling_present and "cooling_state" in data["binary_sensors"]:
+        elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
             self._update_loria_cooling(data)
 
     def _update_elga_cooling(self, data: GwEntityData) -> None:
