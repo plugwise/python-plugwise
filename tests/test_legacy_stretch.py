@@ -15,7 +15,7 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         """Test a legacy Stretch with firmware 3.1 setup."""
         self.smile_setup = "stretch_v31"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_legacy_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
@@ -39,7 +39,7 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
-        testdata_updated = self.load_testdata(
+        testdata_updated = await self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
         self.smile_setup = "updated/stretch_v31"
@@ -55,7 +55,7 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         """Test a legacy Stretch with firmware 2.3 setup."""
         self.smile_setup = "stretch_v23"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_legacy_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
@@ -94,7 +94,7 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         self.smile_setup = "stretch_v27_no_domain"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_legacy_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 

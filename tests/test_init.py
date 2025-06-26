@@ -16,6 +16,7 @@ import string
 import pytest
 
 # Testing
+import aiofiles
 import aiohttp
 from freezegun import freeze_time
 from packaging import version
@@ -50,7 +51,7 @@ _LOGGER.setLevel(logging.DEBUG)
 class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     """Tests for Plugwise Smile."""
 
-    def _write_json(self, call, data):
+    async def _write_json(self, call, data):
         """Store JSON data to per-setup files for HA component testing."""
         no_fixtures = os.getenv("NO_FIXTURES") == "1"
         if no_fixtures:
@@ -65,8 +66,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if not os.path.exists(os.path.dirname(datafile)):  # pragma: no cover
             os.mkdir(os.path.dirname(datafile))
 
-        with open(datafile, "w", encoding="utf-8") as fixture_file:
-            fixture_file.write(
+        async with aiofiles.open(datafile, "w", encoding="utf-8") as fixture_file:
+            await fixture_file.write(
                 json.dumps(
                     data,
                     indent=2,
@@ -77,15 +78,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 + "\n"
             )
 
-    def load_testdata(
+    async def load_testdata(
         self, smile_type: str = "adam", smile_setup: str = "adam_zone_per_device"
     ):
         """Load JSON data from setup, return as object."""
         path = os.path.join(
             os.path.dirname(__file__), f"../tests/data/{smile_type}/{smile_setup}.json"
         )
-        with open(path, encoding="utf-8") as testdata_file:
-            return json.load(testdata_file)
+        async with aiofiles.open(path, encoding="utf-8") as testdata_file:
+            content = await testdata_file.read()
+            return json.loads(content)
 
     async def setup_app(
         self,
@@ -187,8 +189,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.appliances.xml",
         )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
+        async with aiofiles.open(userdata, encoding="utf-8") as filedata:
+            data = await filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
@@ -197,8 +199,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.domain_objects.xml",
         )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
+        async with aiofiles.open(userdata, encoding="utf-8") as filedata:
+            data = await filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_locations(self, request):
@@ -207,8 +209,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.locations.xml",
         )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
+        async with aiofiles.open(userdata, encoding="utf-8") as filedata:
+            data = await filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_modules(self, request):
@@ -217,8 +219,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.modules.xml",
         )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
+        async with aiofiles.open(userdata, encoding="utf-8") as filedata:
+            data = await filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_status(self, request):
@@ -228,8 +230,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 os.path.dirname(__file__),
                 f"../userdata/{self.smile_setup}/system_status_xml.xml",
             )
-            with open(userdata, encoding="utf-8") as filedata:
-                data = filedata.read()
+            async with aiofiles.open(userdata, encoding="utf-8") as filedata:
+                data = await filedata.read()
             return aiohttp.web.Response(text=data)
         except OSError as exc:
             raise aiohttp.web.HTTPNotFound from exc
@@ -641,7 +643,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "cooling_state"
                     ]
 
-        self._write_json("data", data)
+        await self._write_json("data", data)
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
