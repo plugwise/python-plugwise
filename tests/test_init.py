@@ -374,9 +374,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = self.setup_legacy_app(
-            broken, timeout, raise_timeout, fail_auth, stretch
-        )
+        app = self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
