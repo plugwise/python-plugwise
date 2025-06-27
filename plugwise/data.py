@@ -86,7 +86,7 @@ class SmileData(SmileHelper):
         mac_pattern = re.compile(r"(?:[0-9A-F]{2}){8}")
         matches = ["Battery", "below"]
         if self._notifications:
-            for msg_id, notification in self._notifications.items():
+            for msg_id, notification in self._notifications.copy().items():
                 mac_address: str | None = None
                 message: str | None = notification.get("message")
                 warning: str | None = notification.get("warning")
