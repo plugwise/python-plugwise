@@ -232,12 +232,12 @@ class SmileData(SmileHelper):
             if self._on_off_device and isinstance(self._heating_valves(), int):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
             # Add cooling_enabled binary_sensor
-            if "binary_sensors" in data:
-                if (
-                    "cooling_enabled" not in data["binary_sensors"]
-                    and self._cooling_present
-                ):
-                    data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
+            if (
+                "binary_sensors" in data
+                and "cooling_enabled" not in data["binary_sensors"]
+                and self._cooling_present
+            ):
+                data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
 
         # Show the allowed regulation_modes and gateway_modes
         if entity["dev_class"] == "gateway":
