@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Implement async file-open in tests
+
 ## v1.7.6
 
 - Maintenance chores (mostly reworking Github CI Actions) backporting from efforts on Python Plugwise [USB: #264](https://github.com/plugwise/python-plugwise-usb/pull/264) after porting our progress using [USB: #263](https://github.com/plugwise/python-plugwise-usb/pull/263)
