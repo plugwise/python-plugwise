@@ -17,7 +17,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna firmware 4 setup."""
         self.smile_setup = "anna_v4"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -55,7 +55,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
-        testdata_updated = self.load_testdata(
+        testdata_updated = await self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
 
@@ -97,7 +97,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna firmware 4 setup for domestic hot water."""
         self.smile_setup = "anna_v4_dhw"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -127,7 +127,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna firmware 4 setup - missing tag (issue)."""
         self.smile_setup = "anna_v4_no_tag"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -155,7 +155,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna with firmware 4.4, without a boiler."""
         self.smile_setup = "anna_without_boiler_fw441"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -183,7 +183,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         self.smile_setup = "anna_heatpump_heating"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -218,7 +218,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval,
         # set testday to Monday to force an incremental update
-        testdata_updated = self.load_testdata(
+        testdata_updated = await self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
 
@@ -240,7 +240,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """
         self.smile_setup = "anna_heatpump_cooling"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -287,7 +287,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """
         self.smile_setup = "anna_heatpump_cooling_fake_firmware"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -312,7 +312,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         self.smile_setup = "anna_elga_no_cooling"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -337,7 +337,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test a 2nd Anna with Elga setup, cooling off, in idle mode (with missing outdoor temperature - solved)."""
         self.smile_setup = "anna_elga_2"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -366,7 +366,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off."""
         self.smile_setup = "anna_elga_2_schedule_off"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -391,7 +391,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """
         self.smile_setup = "anna_elga_2_cooling"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -421,7 +421,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert result
 
         # Simulate a change of season: from cooling to heating after an update_interval
-        testdata_updated = self.load_testdata(
+        testdata_updated = await self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
 
@@ -448,7 +448,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna with a Loria in heating mode - state idle."""
         self.smile_setup = "anna_loria_heating_idle"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -516,7 +516,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna with a Loria in heating mode - state idle."""
         self.smile_setup = "anna_loria_cooling_active"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -540,7 +540,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Anna with a Loria in heating mode - state idle."""
         self.smile_setup = "anna_loria_driessens"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 

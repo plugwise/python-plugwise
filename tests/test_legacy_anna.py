@@ -16,7 +16,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
         self.smile_setup = "legacy_anna"
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
 
         server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
@@ -53,7 +53,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test another legacy Anna device."""
         self.smile_setup = "legacy_anna_2"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
 

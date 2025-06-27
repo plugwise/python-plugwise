@@ -21,7 +21,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test extended Adam (firmware 3.7) with Anna and a switch-group setup."""
         self.smile_setup = "adam_plus_anna_new"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -139,7 +139,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
-        testdata_updated = self.load_testdata(
+        testdata_updated = await self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
         self.smile_setup = "updated/adam_plus_anna_new"
@@ -167,7 +167,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
         self.smile_setup = "adam_plus_anna_new"
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.device_test(
             smile, "2023-12-17 00:00:01", testdata, skip_testing=True
@@ -190,7 +190,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test regultaion_mode off with control_state key missing for Adam."""
         self.smile_setup = "adam_plus_anna_new_regulation_off"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -204,7 +204,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an extensive setup of Adam with a zone per device."""
         self.smile_setup = "adam_zone_per_device"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -285,7 +285,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an extensive setup of Adam with multiple devices per zone."""
         self.smile_setup = "adam_multiple_devices_per_zone"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -333,7 +333,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test Adam with heatpump in cooling mode and idle."""
         self.smile_setup = "adam_heatpump_cooling"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
@@ -359,7 +359,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test an Adam with a fake OnOff cooling device in cooling mode."""
         self.smile_setup = "adam_onoff_cooling_fake_firmware"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -382,7 +382,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test Adam (firmware 3.0) with Anna setup."""
         self.smile_setup = "adam_plus_anna"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -432,7 +432,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test Adam with Jip setup."""
         self.smile_setup = "adam_jip"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, "2021-06-20 00:00:01", testdata)

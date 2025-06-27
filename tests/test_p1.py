@@ -15,7 +15,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         """Test a P1 firmware 4.4 single-phase setup."""
         self.smile_setup = "p1v4_442_single"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -33,7 +33,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
-        testdata_updated = self.load_testdata(
+        testdata_updated = await self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
         self.smile_setup = "updated/p1v4_442_single"
@@ -65,7 +65,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         """Test a P1 firmware 4 3-phase setup."""
         self.smile_setup = "p1v4_442_triple"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
