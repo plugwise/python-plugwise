@@ -89,7 +89,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             content = await testdata_file.read()
             return json.loads(content)
 
-    async def setup_app(
+    def setup_app(
         self,
         broken=False,
         timeout=False,
@@ -132,7 +132,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         return app
 
-    async def setup_legacy_app(
+    def setup_legacy_app(
         self,
         broken=False,
         timeout=False,
@@ -290,7 +290,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
+        app = self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -374,7 +374,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = await self.setup_legacy_app(
+        app = self.setup_legacy_app(
             broken, timeout, raise_timeout, fail_auth, stretch
         )
 
