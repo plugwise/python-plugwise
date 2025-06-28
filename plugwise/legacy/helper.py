@@ -139,7 +139,7 @@ class SmileLegacyHelper(SmileCommon):
             self._reorder_devices()
 
     def _reorder_devices(self) -> None:
-       """Place the gateway and optional heater_central devices as 1st and 2nd."""
+        """Place the gateway and optional heater_central devices as 1st and 2nd."""
         reordered = {}
         for dev_class in PRIORITY_DEVICE_CLASSES:
             for entity_id, entity in dict(self.gw_entities).items():
