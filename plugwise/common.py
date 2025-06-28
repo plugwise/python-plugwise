@@ -10,6 +10,7 @@ from typing import cast
 from plugwise.constants import (
     ANNA,
     NONE,
+    PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     ApplianceType,
@@ -151,6 +152,16 @@ class SmileCommon:
                 appl_key = cast(ApplianceType, key)
                 self.gw_entities[appl.entity_id][appl_key] = value
                 self._count += 1
+
+    def _reorder_devices(self) -> None:
+        """Place the gateway and optional heater_central devices as 1st and 2nd."""
+        reordered = {}
+        for dev_class in PRIORITY_DEVICE_CLASSES:
+            for entity_id, entity in dict(self.gw_entities).items():
+                if entity["dev_class"] == dev_class:
+                    reordered[entity_id] = self.gw_entities.pop(entity_id)
+                    break
+        self.gw_entities = {**reordered, **self.gw_entities}
 
     def _entity_switching_group(self, entity: GwEntityData, data: GwEntityData) -> None:
         """Helper-function for _get_device_zone_data().
