@@ -136,8 +136,10 @@ class SmileLegacyHelper(SmileCommon):
                 continue  # pragma: no cover
 
             self._create_gw_entities(appl)
+            self._reorder_devices()
 
-        # Place the gateway and optional heater_central devices as 1st and 2nd
+    def _reorder_devices(self) -> None:
+        """Place the gateway and optional heater_central devices as 1st and 2nd."""
         for dev_class in PRIORITY_DEVICE_CLASSES:
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
