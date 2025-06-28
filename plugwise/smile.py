@@ -37,6 +37,27 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 
 
+def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
+    """Translate state and switch attributes based on model name.
+
+    Helper function for set_switch_state().
+    """
+    match model:
+        case "dhw_cm_switch":
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
+            switch.act_type = "domestic_hot_water_comfort_mode"
+        case "cooling_ena_switch":
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
+            switch.act_type = "cooling_enabled"
+        case "lock":
+            switch.func = "lock"
+            state = "true" if state == STATE_ON else "false"
+
+    return (state, switch)
+
+
 class SmileAPI(SmileData):
     """The Plugwise SmileAPI helper class for actual Plugwise devices."""
 
@@ -381,20 +402,7 @@ class SmileAPI(SmileData):
         switch.device = "relay"
         switch.func_type = "relay_functionality"
         switch.func = "state"
-        if model == "dhw_cm_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
-            switch.act_type = "domestic_hot_water_comfort_mode"
-
-        if model == "cooling_ena_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
-            switch.act_type = "cooling_enabled"
-
-        if model == "lock":
-            switch.func = "lock"
-            state = "true" if state == STATE_ON else "false"
-
+        (state, switch) = model_to_switch_items(model, state, switch)
         data = (
             f"<{switch.func_type}>"
             f"<{switch.func}>{state}</{switch.func}>"
