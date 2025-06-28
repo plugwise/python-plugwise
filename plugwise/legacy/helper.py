@@ -74,10 +74,6 @@ class SmileLegacyHelper(SmileCommon):
         self._stretch_v2: bool
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile: Munch = Munch()
-        self.smile.mac_address: str | None
-        self.smile.model: str
-        self.smile.version: Version
-        self.smile.zigbee_mac_address: str | None
 
     @property
     def gateway_id(self) -> str:

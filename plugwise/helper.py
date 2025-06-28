@@ -86,11 +86,6 @@ class SmileHelper(SmileCommon):
         self._zones: dict[str, GwEntityData]
         self.gw_entities: dict[str, GwEntityData]
         self.smile: Munch = Munch()
-        self.smile.hw_version: str | None
-        self.smile.mac_address: str | None
-        self.smile.model: str
-        self.smile.model_id: str | None
-        self.smile.version: version.Version
 
     @property
     def gateway_id(self) -> str:

@@ -74,16 +74,16 @@ class Smile(SmileComm):
         self._stretch_v2 = False
         self._target_smile: str = NONE
         self.smile: Munch = Munch()
-        self.smile.hostname: str = NONE
-        self.smile.hw_version: str | None = None
+        self.smile.hostname = NONE
+        self.smile.hw_version = None
         self.smile.legacy = False
-        self.smile.mac_address: str | None = None
-        self.smile.model: str = NONE
-        self.smile.model_id: str | None = None
-        self.smile.name: str = NONE
-        self.smile.type: str = NONE
-        self.smile.version: Version = Version("0.0.0")
-        self.smile.zigbee_mac_address: str | None = None
+        self.smile.mac_address = None
+        self.smile.model = NONE
+        self.smile.model_id = None
+        self.smile.name = NONE
+        self.smile.type = NONE
+        self.smile.version = Version("0.0.0")
+        self.smile.zigbee_mac_address = None
 
     @property
     def cooling_present(self) -> bool:
