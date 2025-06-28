@@ -139,16 +139,14 @@ class SmileLegacyHelper(SmileCommon):
             self._reorder_devices()
 
     def _reorder_devices(self) -> None:
-        """Place the gateway and optional heater_central devices as 1st and 2nd."""
+       """Place the gateway and optional heater_central devices as 1st and 2nd."""
+        reordered = {}
         for dev_class in PRIORITY_DEVICE_CLASSES:
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
-                    tmp_entity = entity
-                    self.gw_entities.pop(entity_id)
-                    cleared_dict = self.gw_entities
-                    add_to_front = {entity_id: tmp_entity}
-                    self.gw_entities = {**add_to_front, **cleared_dict}
+                    reordered[entity_id] = self.gw_entities.pop(entity_id)
                     break
+        self.gw_entities = {**reordered, **self.gw_entities}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
