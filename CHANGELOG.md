@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Implement async file-open in tests
+- Implement code quality improvements as suggested by SonarCloud
 
 ## v1.7.6
 
