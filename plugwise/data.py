@@ -111,7 +111,7 @@ class SmileData(SmileHelper):
         """Helper-function adding or updating the Plugwise notifications."""
         if (
             entity_id == self._gateway_id
-            and (self._is_thermostat or self.smile_type == "power")
+            and (self._is_thermostat or self.smile.type == "power")
         ) or (
             "binary_sensors" in entity
             and "plugwise_notification" in entity["binary_sensors"]
