@@ -547,7 +547,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if initialize:
                 _LOGGER.info("Asserting testdata:")
                 data = await smile.async_update()
-                if smile.smile_legacy:
+                if smile.smile.legacy:
                     assert smile._timeout == 30
                 else:
                     assert smile._timeout == 10
@@ -557,7 +557,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         _LOGGER.info("Gateway id = %s", smile.gateway_id)
         _LOGGER.info("Heater id = %s", smile.heater_id)
-        _LOGGER.info("Hostname = %s", smile.smile_hostname)
+        _LOGGER.info("Hostname = %s", smile.smile.hostname)
         _LOGGER.info("Entities list = %s", data)
 
         self.cooling_present = smile.cooling_present
@@ -670,7 +670,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
         if self.cooling_present and not block_cooling:
-            if smile.smile_name == "Smile Anna":
+            if smile.smile.name == "Smile Anna":
                 if self._cooling_enabled:
                     test_temp = {"setpoint_low": 4.0, "setpoint_high": 23.0}
                 else:
@@ -999,17 +999,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if smile_type:
             log_msg = f" # Assert type matching {smile_type}"
             parent_logger.info(log_msg)
-            assert smile.smile_type == smile_type
+            assert smile.smile.type == smile_type
         if smile_version:
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
-            assert smile.smile_version == version.parse(smile_version)
+            assert smile.smile.version == version.parse(smile_version)
         log_msg = f" # Assert legacy {smile_legacy}"
         parent_logger.info(log_msg)
         if smile_legacy:
-            assert smile.smile_legacy
+            assert smile.smile.legacy
         else:
-            assert not smile.smile_legacy
+            assert not smile.smile.legacy
 
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""

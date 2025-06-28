@@ -23,7 +23,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -192,7 +192,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         await self.device_test(smile, "2023-12-17 00:00:01", testdata)
 
@@ -206,7 +206,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -287,7 +287,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -361,7 +361,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -384,7 +384,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
