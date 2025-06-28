@@ -92,7 +92,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     def setup_app(
         self,
         broken=False,
-        timeout=False,
+        timeout_happened=False,
         raise_timeout=False,
         fail_auth=False,
         stretch=False,
@@ -108,7 +108,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         if broken:
             app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_broken)
-        elif timeout:
+        elif timeout_happened:
             app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_timeout)
         else:
             app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_domain_objects)
@@ -135,7 +135,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     def setup_legacy_app(
         self,
         broken=False,
-        timeout=False,
+        timeout_happened=False,
         raise_timeout=False,
         fail_auth=False,
         stretch=False,
@@ -151,7 +151,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         if broken:
             app.router.add_get(CORE_LOCATIONS, self.smile_broken)
-        elif timeout:
+        elif timeout_happened:
             app.router.add_get(CORE_LOCATIONS, self.smile_timeout)
         else:
             app.router.add_get(CORE_LOCATIONS, self.smile_locations)
@@ -264,12 +264,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         raise aiohttp.web.HTTPUnauthorized()
 
     @staticmethod
-    def connect_status(broken, timeout, fail_auth):
+    def connect_status(broken, timeout_happened, fail_auth):
         """Determine assumed status from settings."""
         assumed_status = 200
         if broken:
             assumed_status = 500
-        if timeout:
+        if timeout_happened:
             assumed_status = 504
         if fail_auth:
             assumed_status = 401
@@ -278,7 +278,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def connect(
         self,
         broken=False,
-        timeout=False,
+        timeout_happened=False,
         raise_timeout=False,
         fail_auth=False,
         stretch=False,
@@ -290,7 +290,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
+        app = self.setup_app(broken, timeout_happened, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -313,7 +313,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             timeoutpass_result = True
             assert timeoutpass_result
 
-        if not broken and not timeout and not fail_auth:
+        if not broken and not timeout_happened and not fail_auth:
             text = await resp.text()
             assert "xml" in text
 
@@ -340,7 +340,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             websession=websession,
         )
 
-        if not timeout:
+        if not timeout_happened:
             assert smile._timeout == 30
 
         # Connect to the smile
@@ -362,7 +362,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def connect_legacy(
         self,
         broken=False,
-        timeout=False,
+        timeout_happened=False,
         raise_timeout=False,
         fail_auth=False,
         stretch=False,
@@ -374,7 +374,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
+        app = self.setup_legacy_app(broken, timeout_happened, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -389,7 +389,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
             resp = await websession.get(url)
-            assumed_status = self.connect_status(broken, timeout, fail_auth)
+            assumed_status = self.connect_status(broken, timeout_happened, fail_auth)
             assert resp.status == assumed_status
             timeoutpass_result = False
             assert timeoutpass_result
@@ -397,7 +397,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             timeoutpass_result = True
             assert timeoutpass_result
 
-        if not broken and not timeout and not fail_auth:
+        if not broken and not timeout_happened and not fail_auth:
             text = await resp.text()
             assert "xml" in text
 
@@ -424,7 +424,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             websession=websession,
         )
 
-        if not timeout:
+        if not timeout_happened:
             assert smile._timeout == 30
 
         # Connect to the smile
@@ -464,7 +464,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
-            await self.connect(timeout=True)
+            await self.connect(timeout_happened=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
@@ -491,7 +491,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
-            await self.connect_legacy(timeout=True)
+            await self.connect_legacy(timeout_happened=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
