@@ -277,11 +277,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     async def connect(
         self,
+        function,
         broken=False,
         timeout_happened=False,
         raise_timeout=False,
+        real_timeout_value=10,
         fail_auth=False,
         stretch=False,
+        url_part=CORE_DOMAIN_OBJECTS,
     ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
@@ -290,9 +293,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = self.setup_app(
-            broken, timeout_happened, raise_timeout, fail_auth, stretch
-        )
+        app = function(broken, timeout_happened, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -302,7 +303,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         client = aiohttp.test_utils.TestClient(server)
         websession = client.session
 
-        url = f"{server.scheme}://{server.host}:{server.port}{CORE_DOMAIN_OBJECTS}"
+        url = f"{server.scheme}://{server.host}:{server.port}{url_part}"
 
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
@@ -350,93 +351,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             smile_version = await smile.connect()
             assert smile_version is not None
-            assert smile._timeout == 10
-            return server, smile, client
-        except (
-            pw_exceptions.ConnectionFailedError,
-            pw_exceptions.InvalidXMLError,
-            pw_exceptions.InvalidAuthentication,
-        ) as exception:
-            assert smile_version is None
-            await self.disconnect(server, client)
-            raise exception
-
-    async def connect_legacy(
-        self,
-        broken=False,
-        timeout_happened=False,
-        raise_timeout=False,
-        fail_auth=False,
-        stretch=False,
-    ):
-        """Connect to a smile environment and perform basic asserts."""
-        port = aiohttp.test_utils.unused_port()
-        test_password = "".join(
-            secrets.choice(string.ascii_lowercase) for _ in range(8)
-        )
-
-        # Happy flow
-        app = self.setup_legacy_app(
-            broken, timeout_happened, raise_timeout, fail_auth, stretch
-        )
-
-        server = aiohttp.test_utils.TestServer(
-            app, port=port, scheme="http", host="127.0.0.1"
-        )
-        await server.start_server()
-
-        client = aiohttp.test_utils.TestClient(server)
-        websession = client.session
-
-        url = f"{server.scheme}://{server.host}:{server.port}{CORE_LOCATIONS}"
-
-        # Try/exceptpass to accommodate for Timeout of aoihttp
-        try:
-            resp = await websession.get(url)
-            assumed_status = self.connect_status(broken, timeout_happened, fail_auth)
-            assert resp.status == assumed_status
-            timeoutpass_result = False
-            assert timeoutpass_result
-        except Exception:  # pylint: disable=broad-except
-            timeoutpass_result = True
-            assert timeoutpass_result
-
-        if not broken and not timeout_happened and not fail_auth:
-            text = await resp.text()
-            assert "xml" in text
-
-        # Test lack of websession
-        try:
-            smile = pw_smile.Smile(
-                host=server.host,
-                username=pw_constants.DEFAULT_USERNAME,
-                password=test_password,
-                port=server.port,
-                websession=None,
-            )
-            lack_of_websession = False
-            assert lack_of_websession
-        except Exception:  # pylint: disable=broad-except
-            lack_of_websession = True
-            assert lack_of_websession
-
-        smile = pw_smile.Smile(
-            host=server.host,
-            username=pw_constants.DEFAULT_USERNAME,
-            password=test_password,
-            port=server.port,
-            websession=websession,
-        )
-
-        if not timeout_happened:
-            assert smile._timeout == 30
-
-        # Connect to the smile
-        smile_version = None
-        try:
-            smile_version = await smile.connect()
-            assert smile_version is not None
-            assert smile._timeout == 30
+            assert smile._timeout == real_timeout_value
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
@@ -455,7 +370,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if fail_auth:
             try:
                 _LOGGER.warning("Connecting to device with invalid credentials:")
-                await self.connect(fail_auth=fail_auth)
+                await self.connect(self.setup_app, fail_auth=fail_auth)
                 _LOGGER.error(" - invalid credentials not handled")  # pragma: no cover
                 raise self.ConnectError  # pragma: no cover
             except pw_exceptions.InvalidAuthentication as exc:
@@ -464,11 +379,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
-            return await self.connect(raise_timeout=True)
+            return await self.connect(self.setup_app, raise_timeout=True)
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
-            await self.connect(timeout_happened=True)
+            await self.connect(self.setup_app, timeout_happened=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
@@ -476,14 +391,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         try:
             _LOGGER.warning("Connecting to device with missing data:")
-            await self.connect(broken=True)
+            await self.connect(self.setup_app, broken=True)
             _LOGGER.error(" - broken information not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
-        return await self.connect(stretch=stretch)
+        return await self.connect(self.setup_app, stretch=stretch)
 
     async def connect_legacy_wrapper(
         self, raise_timeout=False, fail_auth=False, stretch=False
@@ -491,11 +406,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Wrap connect to try negative testing before positive testing."""
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
-            return await self.connect_legacy(raise_timeout=True)
+            return await self.connect(
+                self.setup_legacy_app,
+                raise_timeout=True,
+                real_timeout_value=30,
+                url_part=CORE_LOCATIONS,
+            )
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
-            await self.connect_legacy(timeout_happened=True)
+            await self.connect(
+                self.setup_legacy_app,
+                real_timeout_value=30,
+                timeout_happened=True,
+                url_part=CORE_LOCATIONS,
+            )
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
@@ -503,14 +428,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         try:
             _LOGGER.warning("Connecting to device with missing data:")
-            await self.connect_legacy(broken=True)
+            await self.connect(
+                self.setup_legacy_app,
+                broken=True,
+                real_timeout_value=30,
+                url_part=CORE_LOCATIONS,
+            )
             _LOGGER.error(" - broken information not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
-        return await self.connect_legacy(stretch=stretch)
+        return await self.connect(
+            self.setup_legacy_app,
+            real_timeout_value=30,
+            stretch=stretch,
+            url_part=CORE_LOCATIONS,
+        )
 
     # Generic disconnect
     @classmethod
