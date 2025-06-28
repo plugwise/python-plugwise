@@ -5,6 +5,8 @@ Plugwise backend module for Home Assistant Core.
 
 from __future__ import annotations
 
+from typing import cast
+
 from plugwise.constants import (
     DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
@@ -178,7 +180,7 @@ class Smile(SmileComm):
         # Update all endpoints on first connect
         await self._smile_api.full_xml_update()
 
-        return self.smile.version
+        return cast(Version, self.smile.version)
 
     async def _smile_detect(
         self, result: etree.Element, dsmrmain: etree.Element
@@ -199,7 +201,9 @@ class Smile(SmileComm):
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
-        if model == "Unknown" or self.smile.version is None:  # pragma: no cover
+        if model == "Unknown" or self.smile.version == Version(
+            "0.0.0"
+        ):  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create"
