@@ -12,7 +12,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer SJ",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -26,7 +32,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["d3a276aeb3114a509bab1e4bf8c40348"],
+      "primary": [
+        "d3a276aeb3114a509bab1e4bf8c40348"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -130,7 +138,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer DB",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -144,7 +158,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["47e2c550a33846b680725aa3fb229473"],
+      "primary": [
+        "47e2c550a33846b680725aa3fb229473"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -244,7 +260,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Badkamer 2",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -257,7 +279,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["f04c985c11ad4848b8fcd710343f9dcf"],
+      "primary": [
+        "f04c985c11ad4848b8fcd710343f9dcf"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -288,7 +312,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "eedadcb297564f1483faa509179aebed",
     "mac_address": "012345670001",
@@ -386,7 +414,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Badkamer 1",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -400,7 +434,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["eac5db95d97241f6b17790897847ccf5"],
+      "primary": [
+        "eac5db95d97241f6b17790897847ccf5"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -418,7 +454,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer RB",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 3.13,
@@ -431,7 +473,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["c4ed311d54e341f58b4cdd201d1fde7e"],
+      "primary": [
+        "c4ed311d54e341f58b4cdd201d1fde7e"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -469,7 +513,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer SQ",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -483,7 +533,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["beb32da072274e698146db8b022f3c36"],
+      "primary": [
+        "beb32da072274e698146db8b022f3c36"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -521,7 +573,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Keuken",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 2.13,
@@ -535,7 +593,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["ea8372c0e3ad4622ad45a041d02425f5"],
+      "primary": [
+        "ea8372c0e3ad4622ad45a041d02425f5"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -553,7 +613,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Bijkeuken",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -567,7 +633,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["1053c8bbf8be43c6921742b146a625f1"],
+      "primary": [
+        "1053c8bbf8be43c6921742b146a625f1"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -683,7 +751,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer JM",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -697,7 +771,9 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["7fda9f84f01342f8afe9ebbbbff30c0f"],
+      "primary": [
+        "7fda9f84f01342f8afe9ebbbbff30c0f"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -785,7 +861,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -799,7 +881,9 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": ["ca79d23ae0094120b877558734cff85c"],
+      "primary": [
+        "ca79d23ae0094120b877558734cff85c"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
