@@ -27,7 +27,6 @@ from plugwise.exceptions import ConnectionFailedError, DataMissingError, Plugwis
 from plugwise.legacy.data import SmileLegacyData
 
 from munch import Munch
-from packaging.version import Version
 
 
 class SmileLegacyAPI(SmileLegacyData):

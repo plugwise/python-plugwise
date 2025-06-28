@@ -35,7 +35,6 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
-from packaging.version import Version
 
 
 class SmileAPI(SmileData):
