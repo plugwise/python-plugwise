@@ -47,7 +47,6 @@ from plugwise.util import (
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
 from munch import Munch
-from packaging.version import Version
 
 
 def etree_to_dict(element: etree.Element) -> dict[str, str]:
