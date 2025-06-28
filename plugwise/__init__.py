@@ -5,6 +5,8 @@ Plugwise backend module for Home Assistant Core.
 
 from __future__ import annotations
 
+from typing import cast
+
 from plugwise.constants import (
     DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
@@ -36,6 +38,7 @@ from plugwise.smilecomm import SmileComm
 
 import aiohttp
 from defusedxml import ElementTree as etree
+from munch import Munch
 from packaging.version import Version, parse
 
 
@@ -72,16 +75,17 @@ class Smile(SmileComm):
         self._smile_api: SmileAPI | SmileLegacyAPI
         self._stretch_v2 = False
         self._target_smile: str = NONE
-        self.smile_hostname: str = NONE
-        self.smile_hw_version: str | None = None
-        self.smile_legacy = False
-        self.smile_mac_address: str | None = None
-        self.smile_model: str = NONE
-        self.smile_model_id: str | None = None
-        self.smile_name: str = NONE
-        self.smile_type: str = NONE
-        self.smile_version: Version = Version("0.0.0")
-        self.smile_zigbee_mac_address: str | None = None
+        self.smile: Munch = Munch()
+        self.smile.hostname = NONE
+        self.smile.hw_version = None
+        self.smile.legacy = False
+        self.smile.mac_address = None
+        self.smile.model = NONE
+        self.smile.model_id = None
+        self.smile.name = NONE
+        self.smile.type = NONE
+        self.smile.version = Version("0.0.0")
+        self.smile.zigbee_mac_address = None
 
     @property
     def cooling_present(self) -> bool:
@@ -109,7 +113,7 @@ class Smile(SmileComm):
 
         All non-legacy devices support gateway-rebooting.
         """
-        return not self.smile_legacy
+        return not self.smile.legacy
 
     async def connect(self) -> Version:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
@@ -158,16 +162,9 @@ class Smile(SmileComm):
                 self._opentherm_device,
                 self._request,
                 self._schedule_old_states,
-                self.smile_hostname,
-                self.smile_hw_version,
-                self.smile_mac_address,
-                self.smile_model,
-                self.smile_model_id,
-                self.smile_name,
-                self.smile_type,
-                self.smile_version,
+                self.smile,
             )
-            if not self.smile_legacy
+            if not self.smile.legacy
             else SmileLegacyAPI(
                 self._is_thermostat,
                 self._loc_data,
@@ -176,21 +173,14 @@ class Smile(SmileComm):
                 self._request,
                 self._stretch_v2,
                 self._target_smile,
-                self.smile_hostname,
-                self.smile_hw_version,
-                self.smile_mac_address,
-                self.smile_model,
-                self.smile_name,
-                self.smile_type,
-                self.smile_version,
-                self.smile_zigbee_mac_address,
+                self.smile,
             )
         )
 
         # Update all endpoints on first connect
         await self._smile_api.full_xml_update()
 
-        return self.smile_version
+        return cast(Version, self.smile.version)
 
     async def _smile_detect(
         self, result: etree.Element, dsmrmain: etree.Element
@@ -203,15 +193,17 @@ class Smile(SmileComm):
         if (gateway := result.find("./gateway")) is not None:
             if (v_model := gateway.find("vendor_model")) is not None:
                 model = v_model.text
-            self.smile_version = parse(gateway.find("firmware_version").text)
-            self.smile_hw_version = gateway.find("hardware_version").text
-            self.smile_hostname = gateway.find("hostname").text
-            self.smile_mac_address = gateway.find("mac_address").text
-            self.smile_model_id = gateway.find("vendor_model").text
+            self.smile.version = parse(gateway.find("firmware_version").text)
+            self.smile.hw_version = gateway.find("hardware_version").text
+            self.smile.hostname = gateway.find("hostname").text
+            self.smile.mac_address = gateway.find("mac_address").text
+            self.smile.model_id = gateway.find("vendor_model").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
-        if model == "Unknown" or self.smile_version is None:  # pragma: no cover
+        if model == "Unknown" or self.smile.version == Version(
+            "0.0.0"
+        ):  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create"
@@ -219,7 +211,7 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        version_major = str(self.smile_version.major)
+        version_major = str(self.smile.version.major)
         self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
@@ -230,7 +222,7 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        if not self.smile_legacy:
+        if not self.smile.legacy:
             self._timeout = DEFAULT_TIMEOUT
 
         if self._target_smile in ("smile_open_therm_v2", "smile_thermo_v3"):
@@ -240,14 +232,14 @@ class Smile(SmileComm):
             )  # pragma: no cover
             raise UnsupportedDeviceError  # pragma: no cover
 
-        self.smile_model = "Gateway"
-        self.smile_name = SMILES[self._target_smile].smile_name
-        self.smile_type = SMILES[self._target_smile].smile_type
+        self.smile.model = "Gateway"
+        self.smile.name = SMILES[self._target_smile].smile_name
+        self.smile.type = SMILES[self._target_smile].smile_type
 
-        if self.smile_type == "stretch":
+        if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
 
-        if self.smile_type == "thermostat":
+        if self.smile.type == "thermostat":
             self._is_thermostat = True
             # For Adam, Anna, determine the system capabilities:
             # Find the connected heating/cooling device (heater_central),
@@ -275,13 +267,13 @@ class Smile(SmileComm):
         return_model = model
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if (network := result.find("./module/protocols/master_controller")) is not None:
-            self.smile_zigbee_mac_address = network.find("mac_address").text
+            self.smile.zigbee_mac_address = network.find("mac_address").text
         # Find the active MAC in case there is an orphaned Stick
         if zb_networks := result.findall("./network"):
             for zb_network in zb_networks:
                 if zb_network.find("./nodes/network_router") is not None:
                     network = zb_network.find("./master_controller")
-                    self.smile_zigbee_mac_address = network.find("mac_address").text
+                    self.smile.zigbee_mac_address = network.find("mac_address").text
 
         # Legacy Anna or Stretch:
         if (
@@ -289,22 +281,22 @@ class Smile(SmileComm):
             or network is not None
         ):
             system = await self._request(SYSTEM)
-            self.smile_version = parse(system.find("./gateway/firmware").text)
+            self.smile.version = parse(system.find("./gateway/firmware").text)
             return_model = str(system.find("./gateway/product").text)
-            self.smile_hostname = system.find("./gateway/hostname").text
+            self.smile.hostname = system.find("./gateway/hostname").text
             # If wlan0 contains data it's active, eth0 should be checked last as is preferred
             for network in ("wlan0", "eth0"):
                 locator = f"./{network}/mac"
                 if (net_locator := system.find(locator)) is not None:
-                    self.smile_mac_address = net_locator.text
+                    self.smile.mac_address = net_locator.text
 
         # P1 legacy:
         elif dsmrmain is not None:
             status = await self._request(STATUS)
-            self.smile_version = parse(status.find("./system/version").text)
+            self.smile.version = parse(status.find("./system/version").text)
             return_model = str(status.find("./system/product").text)
-            self.smile_hostname = status.find("./network/hostname").text
-            self.smile_mac_address = status.find("./network/mac_address").text
+            self.smile.hostname = status.find("./network/hostname").text
+            self.smile.mac_address = status.find("./network/mac_address").text
         else:  # pragma: no cover
             # No cornercase, just end of the line
             LOGGER.error(
@@ -313,7 +305,7 @@ class Smile(SmileComm):
             )
             raise ResponseError
 
-        self.smile_legacy = True
+        self.smile.legacy = True
         return return_model
 
     async def async_update(self) -> dict[str, GwEntityData]:

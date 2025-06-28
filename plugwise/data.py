@@ -35,7 +35,7 @@ class SmileData(SmileHelper):
         Collect data for each entity and add to self.gw_entities.
         """
         self._update_gw_entities()
-        if self.smile(ADAM):
+        if self.check_name(ADAM):
             self._update_zones()
             self.gw_entities.update(self._zones)
 
@@ -111,7 +111,7 @@ class SmileData(SmileHelper):
         """Helper-function adding or updating the Plugwise notifications."""
         if (
             entity_id == self._gateway_id
-            and (self._is_thermostat or self.smile_type == "power")
+            and (self._is_thermostat or self.smile.type == "power")
         ) or (
             "binary_sensors" in entity
             and "plugwise_notification" in entity["binary_sensors"]
@@ -124,7 +124,7 @@ class SmileData(SmileHelper):
         """Helper-function for adding/updating various cooling-related values."""
         # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
-            self.smile(ANNA)
+            self.check_name(ANNA)
             and self._cooling_present
             and entity["dev_class"] == "thermostat"
         ):
@@ -194,11 +194,11 @@ class SmileData(SmileHelper):
         # Switching groups data
         self._entity_switching_group(entity, data)
         # Adam data
-        if self.smile(ADAM):
+        if self.check_name(ADAM):
             self._get_adam_data(entity, data)
 
         # Thermostat data for Anna (presets, temperatures etc)
-        if self.smile(ANNA) and entity["dev_class"] == "thermostat":
+        if self.check_name(ANNA) and entity["dev_class"] == "thermostat":
             self._climate_data(entity_id, entity, data)
             self._get_anna_control_state(data)
 

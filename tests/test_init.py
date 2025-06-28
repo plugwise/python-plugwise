@@ -92,10 +92,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     def setup_app(
         self,
         broken=False,
-        timeout_happened=False,
-        raise_timeout=False,
         fail_auth=False,
+        raise_timeout=False,
         stretch=False,
+        timeout_happened=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
@@ -135,10 +135,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     def setup_legacy_app(
         self,
         broken=False,
-        timeout_happened=False,
-        raise_timeout=False,
         fail_auth=False,
+        raise_timeout=False,
         stretch=False,
+        timeout_happened=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
@@ -264,7 +264,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         raise aiohttp.web.HTTPUnauthorized()
 
     @staticmethod
-    def connect_status(broken, timeout_happened, fail_auth):
+    def connect_status(broken, fail_auth, timeout_happened):
         """Determine assumed status from settings."""
         assumed_status = 200
         if broken:
@@ -279,11 +279,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self,
         function,
         broken=False,
-        timeout_happened=False,
-        raise_timeout=False,
-        real_timeout_value=10,
         fail_auth=False,
+        raise_timeout=False,
+        smile_timeout_value=10,
         stretch=False,
+        timeout_happened=False,
         url_part=CORE_DOMAIN_OBJECTS,
     ):
         """Connect to a smile environment and perform basic asserts."""
@@ -293,7 +293,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = function(broken, timeout_happened, raise_timeout, fail_auth, stretch)
+        app = function(broken, fail_auth, raise_timeout, stretch, timeout_happened)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -308,7 +308,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
             resp = await websession.get(url)
-            assumed_status = self.connect_status(broken, timeout_happened, fail_auth)
+            assumed_status = self.connect_status(broken, fail_auth, timeout_happened)
             assert resp.status == assumed_status
             timeoutpass_result = False
             assert timeoutpass_result
@@ -351,7 +351,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             smile_version = await smile.connect()
             assert smile_version is not None
-            assert smile._timeout == real_timeout_value
+            assert smile._timeout == smile_timeout_value
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
@@ -409,7 +409,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return await self.connect(
                 self.setup_legacy_app,
                 raise_timeout=True,
-                real_timeout_value=30,
+                smile_timeout_value=30,
                 url_part=CORE_LOCATIONS,
             )
 
@@ -417,7 +417,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
             await self.connect(
                 self.setup_legacy_app,
-                real_timeout_value=30,
+                smile_timeout_value=30,
                 timeout_happened=True,
                 url_part=CORE_LOCATIONS,
             )
@@ -431,7 +431,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect(
                 self.setup_legacy_app,
                 broken=True,
-                real_timeout_value=30,
+                smile_timeout_value=30,
                 url_part=CORE_LOCATIONS,
             )
             _LOGGER.error(" - broken information not handled")  # pragma: no cover
@@ -442,7 +442,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Connecting to functioning device:")
         return await self.connect(
             self.setup_legacy_app,
-            real_timeout_value=30,
+            smile_timeout_value=30,
             stretch=stretch,
             url_part=CORE_LOCATIONS,
         )
@@ -547,7 +547,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if initialize:
                 _LOGGER.info("Asserting testdata:")
                 data = await smile.async_update()
-                if smile.smile_legacy:
+                if smile.smile.legacy:
                     assert smile._timeout == 30
                 else:
                     assert smile._timeout == 10
@@ -557,7 +557,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         _LOGGER.info("Gateway id = %s", smile.gateway_id)
         _LOGGER.info("Heater id = %s", smile.heater_id)
-        _LOGGER.info("Hostname = %s", smile.smile_hostname)
+        _LOGGER.info("Hostname = %s", smile.smile.hostname)
         _LOGGER.info("Entities list = %s", data)
 
         self.cooling_present = smile.cooling_present
@@ -670,7 +670,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
         if self.cooling_present and not block_cooling:
-            if smile.smile_name == "Smile Anna":
+            if smile.smile.name == "Smile Anna":
                 if self._cooling_enabled:
                     test_temp = {"setpoint_low": 4.0, "setpoint_high": 23.0}
                 else:
@@ -999,17 +999,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if smile_type:
             log_msg = f" # Assert type matching {smile_type}"
             parent_logger.info(log_msg)
-            assert smile.smile_type == smile_type
+            assert smile.smile.type == smile_type
         if smile_version:
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
-            assert smile.smile_version == version.parse(smile_version)
+            assert smile.smile.version == version.parse(smile_version)
         log_msg = f" # Assert legacy {smile_legacy}"
         parent_logger.info(log_msg)
         if smile_legacy:
-            assert smile.smile_legacy
+            assert smile.smile.legacy
         else:
-            assert not smile.smile_legacy
+            assert not smile.smile.legacy
 
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""

@@ -27,7 +27,6 @@ from plugwise.exceptions import ConnectionFailedError, DataMissingError, Plugwis
 from plugwise.legacy.data import SmileLegacyData
 
 from munch import Munch
-from packaging.version import Version
 
 
 class SmileLegacyAPI(SmileLegacyData):
@@ -44,14 +43,7 @@ class SmileLegacyAPI(SmileLegacyData):
         _request: Callable[..., Awaitable[Any]],
         _stretch_v2: bool,
         _target_smile: str,
-        smile_hostname: str,
-        smile_hw_version: str | None,
-        smile_mac_address: str | None,
-        smile_model: str,
-        smile_name: str,
-        smile_type: str,
-        smile_version: Version,
-        smile_zigbee_mac_address: str | None,
+        smile: Munch,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__()
@@ -63,14 +55,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self._request = _request
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
-        self.smile_hostname = smile_hostname
-        self.smile_hw_version = smile_hw_version
-        self.smile_mac_address = smile_mac_address
-        self.smile_model = smile_model
-        self.smile_name = smile_name
-        self.smile_type = smile_type
-        self.smile_version = smile_version
-        self.smile_zigbee_mac_address = smile_zigbee_mac_address
+        self.smile = smile
 
         self._first_update = True
         self._previous_day_number: str = "0"
@@ -86,7 +71,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
-        if self.smile_type != "power":
+        if self.smile.type != "power":
             self._appliances = await self._request(APPLIANCES)
 
     def get_all_gateway_entities(self) -> None:

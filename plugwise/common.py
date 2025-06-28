@@ -55,17 +55,16 @@ class SmileCommon:
         self._heater_id: str = NONE
         self._on_off_device: bool
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_name: str
-        self.smile_type: str
+        self.smile: Munch
 
     @property
     def heater_id(self) -> str:
         """Return the heater-id."""
         return self._heater_id
 
-    def smile(self, name: str) -> bool:
+    def check_name(self, name: str) -> bool:
         """Helper-function checking the smile-name."""
-        return self.smile_name == name
+        return bool(self.smile.name == name)
 
     def _appl_heater_central_info(
         self,
@@ -173,7 +172,7 @@ class SmileCommon:
         """
         switch_groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile(ANNA):
+        if self.smile.type == "power" or self.check_name(ANNA):
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):

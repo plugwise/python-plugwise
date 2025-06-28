@@ -35,7 +35,6 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
-from packaging.version import Version
 
 
 class SmileAPI(SmileData):
@@ -54,14 +53,7 @@ class SmileAPI(SmileData):
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
-        smile_hostname: str | None,
-        smile_hw_version: str | None,
-        smile_mac_address: str | None,
-        smile_model: str,
-        smile_model_id: str | None,
-        smile_name: str,
-        smile_type: str,
-        smile_version: Version,
+        smile: Munch,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__()
@@ -74,14 +66,7 @@ class SmileAPI(SmileData):
         self._opentherm_device = _opentherm_device
         self._request = _request
         self._schedule_old_states = _schedule_old_states
-        self.smile_hostname = smile_hostname
-        self.smile_hw_version = smile_hw_version
-        self.smile_mac_address = smile_mac_address
-        self.smile_model = smile_model
-        self.smile_model_id = smile_model_id
-        self.smile_name = smile_name
-        self.smile_type = smile_type
-        self.smile_version = smile_version
+        self.smile = smile
         self.therms_with_offset_func: list[str] = []
 
     @property
@@ -107,7 +92,7 @@ class SmileAPI(SmileData):
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
-            if self.smile(ADAM):
+            if self.check_name(ADAM):
                 self._scan_thermostats()
 
         if group_data := self._get_group_switches():
@@ -340,7 +325,7 @@ class SmileAPI(SmileData):
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
-        if self.smile(ANNA):
+        if self.check_name(ANNA):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
@@ -476,7 +461,7 @@ class SmileAPI(SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self.smile(ANNA) and self._cooling_present:
+        if self.check_name(ANNA) and self._cooling_present:
             if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: failed setting temperature: no valid input provided"
