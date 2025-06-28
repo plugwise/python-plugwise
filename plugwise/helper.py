@@ -85,11 +85,12 @@ class SmileHelper(SmileCommon):
         self._gateway_id: str = NONE
         self._zones: dict[str, GwEntityData]
         self.gw_entities: dict[str, GwEntityData]
-        self.smile_hw_version: str | None
-        self.smile_mac_address: str | None
-        self.smile_model: str
-        self.smile_model_id: str | None
-        self.smile_version: version.Version
+        self.smile: Munch = Munch()
+        self.smile.hw_version: str | None
+        self.smile.mac_address: str | None
+        self.smile.model: str
+        self.smile.model_id: str | None
+        self.smile.version: version.Version
 
     @property
     def gateway_id(self) -> str:
@@ -160,7 +161,7 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        if self.smile_type == "power":
+        if self.smile.type == "power":
             self._get_p1_smartmeter_info()
 
         # Sort the gw_entities
@@ -268,12 +269,12 @@ class SmileHelper(SmileCommon):
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         self._gateway_id = appliance.attrib["id"]
-        appl.firmware = str(self.smile_version)
-        appl.hardware = self.smile_hw_version
-        appl.mac = self.smile_mac_address
-        appl.model = self.smile_model
-        appl.model_id = self.smile_model_id
-        appl.name = self.smile_name
+        appl.firmware = str(self.smile.version)
+        appl.hardware = self.smile.hw_version
+        appl.mac = self.smile.mac_address
+        appl.model = self.smile.model
+        appl.model_id = self.smile.model_id
+        appl.name = self.smile.name
         appl.vendor_name = "Plugwise"
 
         # Adam: collect the ZigBee MAC address of the Smile
@@ -346,7 +347,7 @@ class SmileHelper(SmileCommon):
         # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
-        if self.smile_type == "power":
+        if self.smile.type == "power":
             if entity["dev_class"] == "smartmeter":
                 data.update(self._power_data_from_location())
 
@@ -799,8 +800,8 @@ class SmileHelper(SmileCommon):
 
         # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
         # In newer firmware versions, default to "off" when control_state is not present
-        if self.smile_version != version.Version("0.0.0"):
-            if self.smile_version >= version.parse("3.2.0"):
+        if self.smile.version != version.Version("0.0.0"):
+            if self.smile.version >= version.parse("3.2.0"):
                 return "off"
 
             # Older Adam firmware does not have the control_state xml-key

@@ -195,7 +195,7 @@ class Smile(SmileComm):
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
-            self.smile._model_id = gateway.find("vendor_model").text
+            self.smile.model_id = gateway.find("vendor_model").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
