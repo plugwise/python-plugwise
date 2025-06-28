@@ -55,7 +55,7 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
             switch.func = "lock"
             state = "true" if state == STATE_ON else "false"
 
-    return (state, switch)
+    return state, switch
 
 
 class SmileAPI(SmileData):
@@ -402,7 +402,7 @@ class SmileAPI(SmileData):
         switch.device = "relay"
         switch.func_type = "relay_functionality"
         switch.func = "state"
-        (state, switch) = model_to_switch_items(model, state, switch)
+        state, switch = model_to_switch_items(model, state, switch)
         data = (
             f"<{switch.func_type}>"
             f"<{switch.func}>{state}</{switch.func}>"
