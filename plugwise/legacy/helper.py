@@ -73,10 +73,10 @@ class SmileLegacyHelper(SmileCommon):
         self._modules: etree.Element
         self._stretch_v2: bool
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_mac_address: str | None
-        self.smile_model: str
-        self.smile_version: Version
-        self.smile_zigbee_mac_address: str | None
+        self.smile.mac_address: str | None
+        self.smile.model: str
+        self.smile.version: Version
+        self.smile.zigbee_mac_address: str | None
 
     @property
     def gateway_id(self) -> str:
@@ -95,7 +95,7 @@ class SmileLegacyHelper(SmileCommon):
 
         self._create_legacy_gateway()
         # For legacy P1 collect the connected SmartMeter info
-        if self.smile_type == "power":
+        if self.smile.type == "power":
             appl = Munch()
             self._p1_smartmeter_info_finder(appl)
             # Legacy P1 has no more devices
@@ -167,13 +167,13 @@ class SmileLegacyHelper(SmileCommon):
             loc.loc_id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
-            if self.smile_type == "power" and len(location.find(locator)) == 0:
+            if self.smile.type == "power" and len(location.find(locator)) == 0:
                 continue
 
             if loc.name == "Home":
                 self._home_loc_id = loc.loc_id
             # Replace location-name for P1 legacy, can contain privacy-related info
-            if self.smile_type == "power":
+            if self.smile.type == "power":
                 loc.name = "Home"
                 self._home_loc_id = loc.loc_id
 
@@ -185,18 +185,18 @@ class SmileLegacyHelper(SmileCommon):
         Use the home_location or FAKE_APPL as entity id.
         """
         self._gateway_id = self._home_loc_id
-        if self.smile_type == "power":
+        if self.smile.type == "power":
             self._gateway_id = FAKE_APPL
 
         self.gw_entities[self._gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
-            "firmware": str(self.smile_version),
+            "firmware": str(self.smile.version),
             "location": self._home_loc_id,
-            "mac_address": self.smile_mac_address,
-            "model": self.smile_model,
-            "name": self.smile_name,
-            "zigbee_mac_address": self.smile_zigbee_mac_address,
+            "mac_address": self.smile.mac_address,
+            "model": self.smile.model,
+            "name": self.smile.name,
+            "zigbee_mac_address": self.smile.zigbee_mac_address,
             "vendor": "Plugwise",
         }.items():
             if value is not None:
@@ -224,14 +224,14 @@ class SmileLegacyHelper(SmileCommon):
 
         Collect energy entity info (Smartmeter, Circle, Stealth, etc.): firmware, model and vendor name.
         """
-        if self.smile_type in ("power", "stretch"):
+        if self.smile.type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
             module_data = self._get_module_data(
                 appliance, locator, self._modules, legacy=True
             )
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             # Filter appliance without zigbee_mac, it's an orphaned device
-            if appl.zigbee_mac is None and self.smile_type != "power":
+            if appl.zigbee_mac is None and self.smile.type != "power":
                 return None
 
             appl.hardware = module_data["hardware_version"]
@@ -253,7 +253,7 @@ class SmileLegacyHelper(SmileCommon):
         appl.entity_id = loc_id
         appl.location = loc_id
         appl.mac = None
-        appl.model = self.smile_model
+        appl.model = self.smile.model
         appl.model_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
@@ -272,7 +272,7 @@ class SmileLegacyHelper(SmileCommon):
         # Get P1 smartmeter data from MODULES
         entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
-        if self.smile_type == "power":
+        if self.smile.type == "power":
             if entity["dev_class"] == "smartmeter":
                 data.update(self._power_data_from_modules())
 

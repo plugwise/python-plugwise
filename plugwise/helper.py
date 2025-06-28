@@ -277,7 +277,7 @@ class SmileHelper(SmileCommon):
         appl.vendor_name = "Plugwise"
 
         # Adam: collect the ZigBee MAC address of the Smile
-        if self.smile(ADAM):
+        if self.check_name(ADAM):
             if (
                 found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
             ) is not None:
@@ -383,7 +383,7 @@ class SmileHelper(SmileCommon):
             data.pop("c_heating_state")
             self._count -= 1
 
-        if self._is_thermostat and self.smile(ANNA):
+        if self._is_thermostat and self.check_name(ANNA):
             self._update_anna_cooling(entity_id, data)
 
         self._cleanup_data(data)
@@ -484,7 +484,7 @@ class SmileHelper(SmileCommon):
                 item == "thermostat"
                 and (
                     entity["dev_class"] != "climate"
-                    if self.smile(ADAM)
+                    if self.check_name(ADAM)
                     else entity["dev_class"] != "thermostat"
                 )
             ):
@@ -539,7 +539,7 @@ class SmileHelper(SmileCommon):
 
         Collect the requested gateway mode.
         """
-        if not (self.smile(ADAM) and entity_id == self._gateway_id):
+        if not (self.check_name(ADAM) and entity_id == self._gateway_id):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
@@ -605,10 +605,10 @@ class SmileHelper(SmileCommon):
 
         Solution for Core issue #81839.
         """
-        if self.smile(ANNA):
+        if self.check_name(ANNA):
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
-        if self.smile(ADAM):
+        if self.check_name(ADAM):
             # First count when not present, then create and init to False.
             # When present init to False
             if "heating_state" not in data["binary_sensors"]:
