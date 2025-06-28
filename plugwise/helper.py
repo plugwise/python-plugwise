@@ -723,7 +723,7 @@ class SmileHelper(SmileCommon):
             for entity_id, entity in self.gw_entities.items():
                 self._rank_thermostat(thermo_matching, loc_id, entity_id, entity)
 
-        for loc_id, loc_data in list(self._thermo_locs.items()):
+        for loc_id, loc_data in self._thermo_locs.items():
             if loc_data["primary_prio"] != 0:
                 self._zones[loc_id] = {
                     "dev_class": "climate",
