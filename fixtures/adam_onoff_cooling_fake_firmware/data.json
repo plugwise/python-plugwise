@@ -42,11 +42,7 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
-    "gateway_modes": [
-      "away",
-      "full",
-      "vacation"
-    ],
+    "gateway_modes": ["away", "full", "vacation"],
     "hardware": "AME Smile 2.0 board",
     "location": "eedadcb297564f1483faa509179aebed",
     "mac_address": "012345670001",
@@ -94,13 +90,7 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": [
-      "no_frost",
-      "vacation",
-      "away",
-      "home",
-      "asleep"
-    ],
+    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -114,9 +104,7 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": [
-        "ca79d23ae0094120b877558734cff85c"
-      ],
+      "primary": ["ca79d23ae0094120b877558734cff85c"],
       "secondary": []
     },
     "vendor": "Plugwise"
