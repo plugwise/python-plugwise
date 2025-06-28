@@ -19,7 +19,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -99,7 +99,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -129,7 +129,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -157,7 +157,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -185,7 +185,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -242,7 +242,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -289,7 +289,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -314,7 +314,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -339,7 +339,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -368,7 +368,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
         assert (
@@ -393,7 +393,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -450,7 +450,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -518,7 +518,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
@@ -542,7 +542,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
+        assert smile.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
