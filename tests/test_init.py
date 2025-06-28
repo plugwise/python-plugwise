@@ -307,7 +307,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
             resp = await websession.get(url)
-            assumed_status = self.connect_status(broken, timeout, fail_auth)
+            assumed_status = self.connect_status(broken, timeout_happened, fail_auth)
             assert resp.status == assumed_status
             timeoutpass_result = False
             assert timeoutpass_result
