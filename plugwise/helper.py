@@ -28,7 +28,6 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
-    PRIORITY_DEVICE_CLASSES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     TOGGLES,
@@ -160,7 +159,7 @@ class SmileHelper(SmileCommon):
             self._get_p1_smartmeter_info()
 
         # Sort the gw_entities
-        self._sort_gw_entities()
+        self._reorder_devices()
 
     def _get_p1_smartmeter_info(self) -> None:
         """For P1 collect the connected SmartMeter info from the Home/building location.
@@ -192,18 +191,6 @@ class SmileHelper(SmileCommon):
         self._gateway_id = self._home_loc_id
 
         self._create_gw_entities(appl)
-
-    def _sort_gw_entities(self) -> None:
-        """Place the gateway and optional heater_central entities as 1st and 2nd."""
-        for dev_class in PRIORITY_DEVICE_CLASSES:
-            for entity_id, entity in dict(self.gw_entities).items():
-                if entity["dev_class"] == dev_class:
-                    priority_entity = entity
-                    self.gw_entities.pop(entity_id)
-                    other_entities = self.gw_entities
-                    priority_entities = {entity_id: priority_entity}
-                    self.gw_entities = {**priority_entities, **other_entities}
-                    break
 
     def _all_locations(self) -> None:
         """Collect all locations."""
