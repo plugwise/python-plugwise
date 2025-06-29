@@ -17,7 +17,7 @@ class TestPlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-ou
         """Test erroneous adam with anna system."""
         self.smile_setup = "anna_connected_to_adam"
         try:
-            _server, _smile, _client = await self.connect_wrapper()
+            _server, _api, _client = await self.connect_wrapper()
             setup_result = False  # pragma: no cover
         except pw_exceptions.InvalidSetupError:
             setup_result = True
@@ -59,7 +59,7 @@ class TestPlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-ou
             self.smile_setup = "p1v4"
             (
                 server,
-                smile,
+                api,
                 client,
             ) = await self.connect_wrapper()
             setup_result = False  # pragma: no cover
