@@ -16,18 +16,18 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         self.smile_setup = "p1v4_442_single"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile.hostname == "smile000000"
+        server, api, client = await self.connect_wrapper()
+        assert api.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="power",
             smile_version="4.4.2",
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
+        assert api.gateway_id == "a455b61e52394b2db5081ce025a430f3"
         assert self.entity_items == 33
         assert not self.notifications
 
@@ -38,13 +38,13 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
         self.smile_setup = "updated/p1v4_442_single"
         await self.device_test(
-            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+            api, "2022-05-16 00:00:01", testdata_updated, initialize=False
         )
 
         # Simulate receiving no xml-data after a requesting a reboot of the gateway
         self.smile_setup = "reboot/p1v4_442_single"
         try:
-            await self.device_test(smile, initialize=False)
+            await self.device_test(api, initialize=False)
         except pw_exceptions.PlugwiseError as err:
             _LOGGER.debug(
                 f"Receiving no data after a reboot is properly handled: {err}"
@@ -53,11 +53,11 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         # Simulate receiving xml-data with <error>
         self.smile_setup = "error/p1v4_442_single"
         try:
-            await self.device_test(smile, initialize=False)
+            await self.device_test(api, initialize=False)
         except pw_exceptions.ResponseError:
             _LOGGER.debug("Receiving error-data from the Gateway")
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
@@ -66,20 +66,20 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         self.smile_setup = "p1v4_442_triple"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile.hostname == "smile000000"
+        server, api, client = await self.connect_wrapper()
+        assert api.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="power",
             smile_version="4.4.2",
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
+        assert api.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
         assert self.entity_items == 42
         assert self.notifications
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)

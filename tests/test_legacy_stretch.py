@@ -16,23 +16,23 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         self.smile_setup = "stretch_v31"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_legacy_wrapper(stretch=True)
-        assert smile.smile.hostname == "stretch000000"
+        server, api, client = await self.connect_legacy_wrapper(stretch=True)
+        assert api.smile.hostname == "stretch000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="stretch",
             smile_version="3.1.11",
             smile_legacy=True,
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
+        assert api.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.entity_items == 83
 
         switch_change = await self.tinker_switch(
-            smile,
+            api,
             "059e4d03c7a34d278add5c7a4a781d19",
         )
         assert not switch_change
@@ -44,10 +44,10 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         )
         self.smile_setup = "updated/stretch_v31"
         await self.device_test(
-            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+            api, "2022-05-16 00:00:01", testdata_updated, initialize=False
         )
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
@@ -56,36 +56,36 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         self.smile_setup = "stretch_v23"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_legacy_wrapper(stretch=True)
-        assert smile.smile.hostname == "stretch000000"
+        server, api, client = await self.connect_legacy_wrapper(stretch=True)
+        assert api.smile.hostname == "stretch000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="stretch",
             smile_version="2.3.12",
             smile_legacy=True,
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 243
 
         switch_change = await self.tinker_switch(
-            smile, "2587a7fcdd7e482dab03fda256076b4b"
+            api, "2587a7fcdd7e482dab03fda256076b4b"
         )
         assert switch_change
         switch_change = await self.tinker_switch(
-            smile, "2587a7fcdd7e482dab03fda256076b4b", model="lock"
+            api, "2587a7fcdd7e482dab03fda256076b4b", model="lock"
         )
         assert switch_change
         switch_change = await self.tinker_switch(
-            smile,
+            api,
             "f7b145c8492f4dd7a4de760456fdef3e",
             ["407aa1c1099d463c9137a3a9eda787fd"],
         )
         assert switch_change
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
@@ -95,25 +95,25 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         self.smile_setup = "stretch_v27_no_domain"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_legacy_wrapper(stretch=True)
-        assert smile.smile.hostname == "stretch000000"
+        server, api, client = await self.connect_legacy_wrapper(stretch=True)
+        assert api.smile.hostname == "stretch000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="stretch",
             smile_version="2.7.18",
             smile_legacy=True,
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 190
         _LOGGER.info(" # Assert no master thermostat")
 
         switch_change = await self.tinker_switch(
-            smile, "8b8d14b242e24cd789743c828b9a2ea9"
+            api, "8b8d14b242e24cd789743c828b9a2ea9"
         )
         assert switch_change
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)

@@ -322,7 +322,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Test lack of websession
         try:
-            smile = pw_smile.Smile(
+            api = pw_smile.Smile(
                 host=server.host,
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
@@ -335,7 +335,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             lack_of_websession = True
             assert lack_of_websession
 
-        smile = pw_smile.Smile(
+        api = pw_smile.Smile(
             host=server.host,
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
@@ -344,15 +344,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         if not timeout_happened:
-            assert smile._timeout == 30
+            assert api._timeout == 30
 
         # Connect to the smile
         smile_version = None
         try:
-            smile_version = await smile.connect()
+            smile_version = await api.connect()
             assert smile_version is not None
-            assert smile._timeout == smile_timeout_value
-            return server, smile, client
+            assert api._timeout == smile_timeout_value
+            return server, api, client
         except (
             pw_exceptions.ConnectionFailedError,
             pw_exceptions.InvalidXMLError,
@@ -479,7 +479,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def device_test(
         self,
-        smile=pw_smile.Smile,
+        api=pw_smile.Smile,
         test_time=None,
         testdata=None,
         initialize=True,
@@ -546,30 +546,30 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         with freeze_time(test_time):
             if initialize:
                 _LOGGER.info("Asserting testdata:")
-                data = await smile.async_update()
-                if smile.smile.legacy:
-                    assert smile._timeout == 30
+                data = await api.async_update()
+                if api.smile.legacy:
+                    assert api._timeout == 30
                 else:
-                    assert smile._timeout == 10
+                    assert api._timeout == 10
             else:
                 _LOGGER.info("Asserting updated testdata:")
-                data = await smile.async_update()
+                data = await api.async_update()
 
-        _LOGGER.info("Gateway id = %s", smile.gateway_id)
-        _LOGGER.info("Heater id = %s", smile.heater_id)
-        _LOGGER.info("Hostname = %s", smile.smile.hostname)
+        _LOGGER.info("Gateway id = %s", api.gateway_id)
+        _LOGGER.info("Heater id = %s", api.heater_id)
+        _LOGGER.info("Hostname = %s", api.smile.hostname)
         _LOGGER.info("Entities list = %s", data)
 
-        self.cooling_present = smile.cooling_present
+        self.cooling_present = api.cooling_present
         self.notifications = None
-        if "notifications" in data[smile.gateway_id]:
-            self.notifications = data[smile.gateway_id]["notifications"]
-        self.entity_items = smile.item_count
+        if "notifications" in data[api.gateway_id]:
+            self.notifications = data[api.gateway_id]["notifications"]
+        self.entity_items = api.item_count
 
         self._cooling_active = False
         self._cooling_enabled = False
-        if smile.heater_id != "None":
-            heat_cooler = data[smile.heater_id]
+        if api.heater_id != "None":
+            heat_cooler = data[api.heater_id]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
                     self._cooling_enabled = heat_cooler["binary_sensors"][
@@ -587,7 +587,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return  # pragma: no cover
 
         self.entity_list = list(data.keys())
-        location_list = smile._loc_data
+        location_list = api._loc_data
 
         self.show_setup(location_list, data)
 
@@ -601,11 +601,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # pragma warning restore S3776
 
     @pytest.mark.asyncio
-    async def tinker_reboot(self, smile, unhappy=False):
+    async def tinker_reboot(self, api, unhappy=False):
         """Test rebooting a gateway."""
         _LOGGER.info("- Rebooting the gateway")
         try:
-            await smile.reboot_gateway()
+            await api.reboot_gateway()
             _LOGGER.info("  + worked as intended")
             return True
         except pw_exceptions.ConnectionFailedError:
@@ -618,7 +618,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_switch(
-        self, smile, dev_id=None, members=None, model="relay", unhappy=False
+        self, api, dev_id=None, members=None, model="relay", unhappy=False
     ):
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
@@ -628,7 +628,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for new_state in ["off", "on", "off"]:
             _LOGGER.info("- Switching %s", new_state)
             try:
-                result = await smile.set_switch_state(dev_id, members, model, new_state)
+                result = await api.set_switch_state(dev_id, members, model, new_state)
                 if result == convert[new_state]:
                     tinker_switch_passed = True
                     _LOGGER.info("  + tinker_switch worked as intended")
@@ -649,28 +649,28 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_switch_bad_input(
-        self, smile, dev_id=None, members=None, model="relay", unhappy=False
+        self, api, dev_id=None, members=None, model="relay", unhappy=False
     ):
         """Enter a wrong state as input to toggle a Switch."""
         _LOGGER.info("Test entering bad input set_switch_state:")
         _LOGGER.info("- Devices (%s):", dev_id)
         new_state = "false"
         try:
-            await smile.set_switch_state(dev_id, members, model, new_state)
+            await api.set_switch_state(dev_id, members, model, new_state)
         except pw_exceptions.PlugwiseError:
             _LOGGER.info("  + failed input-check as expected")
             return True  # test is pass!
 
     @pytest.mark.asyncio
     async def tinker_thermostat_temp(
-        self, smile, loc_id, block_cooling=False, fail_cooling=False, unhappy=False
+        self, api, loc_id, block_cooling=False, fail_cooling=False, unhappy=False
     ):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
         if self.cooling_present and not block_cooling:
-            if smile.smile.name == "Smile Anna":
+            if api.smile.name == "Smile Anna":
                 if self._cooling_enabled:
                     test_temp = {"setpoint_low": 4.0, "setpoint_high": 23.0}
                 else:
@@ -679,7 +679,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     test_temp = {"setpoint_low": 19.0, "setpoint_high": 23.0}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
-            await smile.set_temperature(loc_id, test_temp)
+            await api.set_temperature(loc_id, test_temp)
             _LOGGER.info("  + tinker_thermostat_temp worked as intended")
             tinker_temp_passed = True
         except pw_exceptions.ConnectionFailedError:
@@ -693,7 +693,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_temp_passed
 
     @pytest.mark.asyncio
-    async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
+    async def tinker_thermostat_preset(self, api, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
         tinker_preset_passed = False
         for new_preset in ["asleep", "home", BOGUS]:
@@ -703,7 +703,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 new_preset = new_preset[1:]
             _LOGGER.info("%s", f"- Adjusting preset to {new_preset}{warning}")
             try:
-                await smile.set_preset(loc_id, new_preset)
+                await api.set_preset(loc_id, new_preset)
                 tinker_preset_passed = True
                 _LOGGER.info("  + tinker_thermostat_preset worked as intended")
             except pw_exceptions.PlugwiseError:
@@ -723,7 +723,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat_schedule(
-        self, smile, loc_id, state, good_schedules=None, single=False, unhappy=False
+        self, api, loc_id, state, good_schedules=None, single=False, unhappy=False
     ):
         """Toggle schedules to test functionality."""
         # pragma warning disable S3776
@@ -739,9 +739,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    await smile.set_select(
-                        "select_schedule", loc_id, new_schedule, state
-                    )
+                    await api.set_select("select_schedule", loc_id, new_schedule, state)
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
@@ -764,14 +762,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # pragma warning restore S3776
 
     @pytest.mark.asyncio
-    async def tinker_legacy_thermostat_schedule(self, smile, unhappy=False):
+    async def tinker_legacy_thermostat_schedule(self, api, unhappy=False):
         """Toggle schedules to test functionality."""
         states = ["on", "off", "!Bogus"]
         tinker_schedule_passed = False
         for state in states:
             _LOGGER.info("- Adjusting schedule to state %s", state)
             try:
-                await smile.set_select("select_schedule", "dummy", None, state)
+                await api.set_select("select_schedule", "dummy", None, state)
                 tinker_schedule_passed = True
                 _LOGGER.info("  + working as intended")
             except pw_exceptions.PlugwiseError:
@@ -793,7 +791,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def tinker_thermostat(
         self,
-        smile,
+        api,
         loc_id,
         schedule_on=True,
         good_schedules=None,
@@ -807,21 +805,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules = ["Weekschema"]
 
         result_1 = await self.tinker_thermostat_temp(
-            smile, loc_id, block_cooling, fail_cooling, unhappy
+            api, loc_id, block_cooling, fail_cooling, unhappy
         )
-        result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
-        if smile._schedule_old_states != {}:
-            for item in smile._schedule_old_states[loc_id]:
-                smile._schedule_old_states[loc_id][item] = "off"
+        result_2 = await self.tinker_thermostat_preset(api, loc_id, unhappy)
+        if api._schedule_old_states != {}:
+            for item in api._schedule_old_states[loc_id]:
+                api._schedule_old_states[loc_id][item] = "off"
         result_3 = await self.tinker_thermostat_schedule(
-            smile, loc_id, "on", good_schedules, single, unhappy
+            api, loc_id, "on", good_schedules, single, unhappy
         )
         if schedule_on:
             result_4 = await self.tinker_thermostat_schedule(
-                smile, loc_id, "off", good_schedules, single, unhappy
+                api, loc_id, "off", good_schedules, single, unhappy
             )
             result_5 = await self.tinker_thermostat_schedule(
-                smile, loc_id, "on", good_schedules, single, unhappy
+                api, loc_id, "on", good_schedules, single, unhappy
             )
             return result_1 and result_2 and result_3 and result_4 and result_5
         return result_1 and result_2 and result_3
@@ -829,7 +827,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def tinker_legacy_thermostat(
         self,
-        smile,
+        api,
         schedule_on=True,
         block_cooling=False,
         fail_cooling=False,
@@ -837,17 +835,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Toggle various climate settings to test functionality."""
         result_1 = await self.tinker_thermostat_temp(
-            smile, "dummy", block_cooling, fail_cooling, unhappy
+            api, "dummy", block_cooling, fail_cooling, unhappy
         )
-        result_2 = await self.tinker_thermostat_preset(smile, None, unhappy)
-        result_3 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
+        result_2 = await self.tinker_thermostat_preset(api, None, unhappy)
+        result_3 = await self.tinker_legacy_thermostat_schedule(api, unhappy)
         if schedule_on:
-            result_4 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
+            result_4 = await self.tinker_legacy_thermostat_schedule(api, unhappy)
             return result_1 and result_2 and result_3 and result_4
         return result_1 and result_2 and result_3
 
     @staticmethod
-    async def tinker_dhw_mode(smile, unhappy=False):
+    async def tinker_dhw_mode(api, unhappy=False):
         """Toggle dhw to test functionality."""
         tinker_dhw_mode_passed = False
         for mode in ["auto", "boost", BOGUS]:
@@ -857,7 +855,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
-                await smile.set_select("select_dhw_mode", "dummy", mode)
+                await api.set_select("select_dhw_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
                 tinker_dhw_mode_passed = True
             except pw_exceptions.PlugwiseError:
@@ -876,7 +874,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_dhw_mode_passed
 
     @staticmethod
-    async def tinker_regulation_mode(smile, unhappy=False):
+    async def tinker_regulation_mode(api, unhappy=False):
         """Toggle regulation_mode to test functionality."""
         tinker_reg_mode_passed = False
         for mode in ["off", "heating", "bleeding_cold", BOGUS]:
@@ -886,7 +884,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
             try:
-                await smile.set_select("select_regulation_mode", "dummy", mode)
+                await api.set_select("select_regulation_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_regulation_mode worked as intended")
                 tinker_reg_mode_passed = True
             except pw_exceptions.PlugwiseError:
@@ -907,7 +905,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_reg_mode_passed
 
     @staticmethod
-    async def tinker_max_boiler_temp(smile, unhappy=False):
+    async def tinker_max_boiler_temp(api, unhappy=False):
         """Change max boiler temp setpoint to test functionality."""
         tinker_max_boiler_temp_passed = False
         new_temp = 60.0
@@ -919,7 +917,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         ]:
             _LOGGER.info("  + for %s", test)
             try:
-                await smile.set_number("dummy", test, new_temp)
+                await api.set_number("dummy", test, new_temp)
                 _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
                 tinker_max_boiler_temp_passed = True
             except pw_exceptions.PlugwiseError:
@@ -938,12 +936,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_max_boiler_temp_passed
 
     @staticmethod
-    async def tinker_temp_offset(smile, dev_id, unhappy=False):
+    async def tinker_temp_offset(api, dev_id, unhappy=False):
         """Change temperature_offset to test functionality."""
         new_offset = 1.0
         _LOGGER.info("- Adjusting temperature offset to %s", new_offset)
         try:
-            await smile.set_number(dev_id, "temperature_offset", new_offset)
+            await api.set_number(dev_id, "temperature_offset", new_offset)
             _LOGGER.info("  + tinker_temp_offset worked as intended")
             return True
         except pw_exceptions.PlugwiseError:
@@ -958,7 +956,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 return False
 
     @staticmethod
-    async def tinker_gateway_mode(smile, unhappy=False):
+    async def tinker_gateway_mode(api, unhappy=False):
         """Toggle gateway_mode to test functionality."""
         tinker_gateway_mode_passed = False
         for mode in ["away", "full", "vacation", "!bogus"]:
@@ -968,7 +966,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting gateway mode to {mode}{warning}")
             try:
-                await smile.set_select("select_gateway_mode", "dummy", mode)
+                await api.set_select("select_gateway_mode", "dummy", mode)
                 _LOGGER.info("  + worked as intended")
                 tinker_gateway_mode_passed = True
             except pw_exceptions.PlugwiseError:
@@ -989,7 +987,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     def validate_test_basics(
         parent_logger,
-        smile,
+        api,
         smile_type="thermostat",
         smile_version=None,
         smile_legacy=False,
@@ -999,17 +997,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if smile_type:
             log_msg = f" # Assert type matching {smile_type}"
             parent_logger.info(log_msg)
-            assert smile.smile.type == smile_type
+            assert api.smile.type == smile_type
         if smile_version:
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
-            assert smile.smile.version == version.parse(smile_version)
+            assert api.smile.version == version.parse(smile_version)
         log_msg = f" # Assert legacy {smile_legacy}"
         parent_logger.info(log_msg)
         if smile_legacy:
-            assert smile.smile.legacy
+            assert api.smile.legacy
         else:
-            assert not smile.smile.legacy
+            assert not api.smile.legacy
 
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""

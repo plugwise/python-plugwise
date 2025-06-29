@@ -16,22 +16,22 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         self.smile_setup = "smile_p1_v2"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_legacy_wrapper()
-        assert smile.smile.hostname == "smile000000"
+        server, api, client = await self.connect_legacy_wrapper()
+        assert api.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="power",
             smile_version="2.5.9",
             smile_legacy=True,
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
+        assert api.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
         assert self.entity_items == 26
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
@@ -40,18 +40,18 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         self.smile_setup = "smile_p1_v2_2"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_legacy_wrapper()
-        assert smile.smile.hostname == "smile000000"
+        server, api, client = await self.connect_legacy_wrapper()
+        assert api.smile.hostname == "smile000000"
 
         self.validate_test_basics(
             _LOGGER,
-            smile,
+            api,
             smile_type="power",
             smile_version="2.5.9",
             smile_legacy=True,
         )
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 26
 
         # Now change some data and change directory reading xml from
@@ -61,8 +61,8 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
         self.smile_setup = "updated/smile_p1_v2_2"
         await self.device_test(
-            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+            api, "2022-05-16 00:00:01", testdata_updated, initialize=False
         )
 
-        await smile.close_connection()
+        await api.close_connection()
         await self.disconnect(server, client)
