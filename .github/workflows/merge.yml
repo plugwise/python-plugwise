@@ -18,6 +18,9 @@ jobs:
   publishing:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+        id-token: write
     # Only trigger on merges, not just closes
     if: github.event.pull_request.merged == true
     steps:
@@ -28,16 +31,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install pypa/build
-        run: >-
-          python3 -m
-          pip install
-          build
-          --user
-      - name: Build a binary wheel and a source tarball
-        run: python3 -m build
+      - name: Prepare uv
+        run: |
+          pip install uv
+          uv venv --seed venv
+      - name: Build
+        run: |
+          . venv/bin/activate
+          uv build 
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.pypi_token }}
-          skip-existing: true
+        run: |
+          . venv/bin/activate
+          uv publish 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Chores move module publishing on (test)pypi to Trusted Publishing (and using uv)
+
 ## v1.7.7
 
 - Implement code quality improvements as suggested by SonarCloud via [#762](https://github.com/plugwise/python-plugwise/pull/762), [#763](https://github.com/plugwise/python-plugwise/pull/763), [#764](https://github.com/plugwise/python-plugwise/pull/764), and [#765](https://github.com/plugwise/python-plugwise/pull/765)
