@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-        id-token: write
+      id-token: write
     # Only trigger on merges, not just closes
     if: github.event.pull_request.merged == true
     steps:
@@ -38,8 +38,8 @@ jobs:
       - name: Build
         run: |
           . venv/bin/activate
-          uv build 
+          uv build
       - name: Publish distribution 📦 to PyPI
         run: |
           . venv/bin/activate
-          uv publish 
+          uv publish
