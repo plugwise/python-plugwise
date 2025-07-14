@@ -239,7 +239,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: testpypi
     permissions:
-      id-token: write
+      contents: read     # Required by actions/checkout
+      id-token: write    # Needed for OIDC-based Trusted Publishing
     needs:
       - cache
       - prepare

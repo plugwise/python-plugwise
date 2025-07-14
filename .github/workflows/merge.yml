@@ -20,7 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-      id-token: write
+      contents: read     # Required by actions/checkout
+      id-token: write    # Needed for OIDC-based Trusted Publishing
     # Only trigger on merges, not just closes
     if: github.event.pull_request.merged == true
     steps:
