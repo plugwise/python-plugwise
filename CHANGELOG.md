@@ -1,8 +1,8 @@
 # Changelog
 
-## Ongoing
+## Ongoing / 1.7.8a0
 
-- Chores move module publishing on (test)pypi to Trusted Publishing (and using uv)
+- Chores move module publishing on (test)pypi to Trusted Publishing (and using uv) - released as alpha 1.7.8a0 to demonstrate functionality
 
 ## v1.7.7
 
