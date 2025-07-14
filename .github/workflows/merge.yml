@@ -26,20 +26,38 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v4
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Prepare uv
         run: |
           pip install uv
           uv venv --seed venv
+          . venv/bin/activate
+          uv pip install toml
+      - name: Check for existing package on PyPI
+        id: check_package
+        run: |
+          . venv/bin/activate
+          PACKAGE_VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+          PACKAGE_NAME=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['name'])")
+
+          # Use jq to check for the version in the releases object
+          EXISTING_VERSIONS=$(curl -s "https://pypi.org/pypi/$PACKAGE_NAME/json" | jq '.releases | keys[]')
+
+          echo "Checking for package: $PACKAGE_NAME==$PACKAGE_VERSION"
+
+          if [[ "$EXISTING_VERSIONS" =~ "$PACKAGE_VERSION" ]]; then
+            echo "Package version already exists. Skipping upload."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Package version does not exist. Proceeding with upload."
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
       - name: Build
+        if: steps.check_package.outputs.should_publish == 'true'
         run: |
           . venv/bin/activate
           uv build
       - name: Publish distribution 📦 to PyPI
+        if: steps.check_package.outputs.should_publish == 'true'
         run: |
           . venv/bin/activate
           uv publish
