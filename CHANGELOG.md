@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing / 1.7.8a0+1
+
+- Chores move module publishing on (test)pypi to Trusted Publishing (and using uv) - released as alpha 1.7.8a0+1 to demonstrate functionality
+
 ## v1.7.7
 
 - Implement code quality improvements as suggested by SonarCloud via [#762](https://github.com/plugwise/python-plugwise/pull/762), [#763](https://github.com/plugwise/python-plugwise/pull/763), [#764](https://github.com/plugwise/python-plugwise/pull/764), and [#765](https://github.com/plugwise/python-plugwise/pull/765)
