@@ -38,7 +38,6 @@ adam_multiple_devices_per_zone = base.copy()
 # Change schedule to not present for "446ac08dd04d4eff8ac57489757b7314"
 adam_multiple_devices_per_zone["446ac08dd04d4eff8ac57489757b7314"]["available_schedules"] = []
 adam_multiple_devices_per_zone["446ac08dd04d4eff8ac57489757b7314"]["select_schedule"] = None
-)
 
 json_writer("m_adam_multiple_devices_per_zone", adam_multiple_devices_per_zone)
 
