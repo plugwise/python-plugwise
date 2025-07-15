@@ -273,9 +273,10 @@ class SmileData(SmileHelper):
             data["available_schedules"] = avail_schedules
             data["select_schedule"] = sel_schedule
             self._count += 2
+        # Handle removal of the last remaining schedule for a thermostat zone
         elif data["available_schedules"]:
-            data.pop("available_schedules")
-            data.pop("select_schedule")
+            data["available_schedules"] = []
+            data["select_schedule"] = None
 
         # Set HA climate HVACMode: auto, heat, heat_cool, cool and off
         data["climate_mode"] = "auto"
