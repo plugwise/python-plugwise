@@ -273,6 +273,9 @@ class SmileData(SmileHelper):
             data["available_schedules"] = avail_schedules
             data["select_schedule"] = sel_schedule
             self._count += 2
+        elif data["available_schedules"]:
+            data.pop("available_schedules")
+            data.pop("select_schedule")
 
         # Set HA climate HVACMode: auto, heat, heat_cool, cool and off
         data["climate_mode"] = "auto"
