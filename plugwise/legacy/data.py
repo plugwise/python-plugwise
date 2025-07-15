@@ -72,6 +72,10 @@ class SmileLegacyData(SmileLegacyHelper):
             data["available_schedules"] = avail_schedules
             data["select_schedule"] = sel_schedule
             self._count += 2
+        # Handle removal of the thermostat schedule
+        elif data["available_schedules"]:
+            data["available_schedules"] = []
+            data["select_schedule"] = None
 
         # Set HA climate HVACMode: auto, heat
         data["climate_mode"] = "auto"
