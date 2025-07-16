@@ -89,7 +89,6 @@
         "error": "There is no OpenTherm communication with the boiler."
       }
     },
-    "select_regulation_mode": "heating",
     "sensors": {
       "outdoor_temperature": 11.9
     },

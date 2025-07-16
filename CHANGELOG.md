@@ -1,8 +1,9 @@
 # Changelog
 
-## Ongoing / 1.7.8a0+1
+## v1.7.8
 
-- Chores move module publishing on (test)pypi to Trusted Publishing (and using uv) - released as alpha 1.7.8a0+1 to demonstrate functionality
+- Implement fixes related to the select-platform-data provided to the HA Core integrations, part of solving pw-beta issue [#897](https://github.com/plugwise/plugwise-beta/issues/897)
+- Chores move module publishing on (test)pypi to Trusted Publishing (and using uv)
 
 ## v1.7.7
 

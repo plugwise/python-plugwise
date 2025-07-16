@@ -411,7 +411,8 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        data["select_dhw_mode"] = appl_p_loc.text
+                        if self._dhw_allowed_modes:
+                            data["select_dhw_mode"] = appl_p_loc.text
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
@@ -522,7 +523,7 @@ class SmileHelper(SmileCommon):
 
         Collect the requested gateway mode.
         """
-        if not (self.check_name(ADAM) and entity_id == self._gateway_id):
+        if not (entity_id == self._gateway_id and self.check_name(ADAM)):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
@@ -535,29 +536,31 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Adam: collect the gateway regulation_mode.
+        Adam gateway: collect the gateway regulation_mode.
         """
         if (
             mode := self._get_actuator_mode(
                 appliance, entity_id, "regulation_mode_control_functionality"
             )
         ) is not None:
-            data["select_regulation_mode"] = mode
-            self._count += 1
+            # Below line needs to be here to set the boolean for both older and recent Adam firmware versions
             self._cooling_enabled = mode == "cooling"
+            if self._reg_allowed_modes:
+                data["select_regulation_mode"] = mode
+                self._count += 1
 
     def _get_gateway_mode(
         self, appliance: etree.Element, entity_id: str, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Adam: collect the gateway mode.
+        Adam gateway: collect the gateway mode.
         """
         if (
             mode := self._get_actuator_mode(
                 appliance, entity_id, "gateway_mode_control_functionality"
             )
-        ) is not None:
+        ) is not None and self._gw_allowed_modes:
             data["select_gateway_mode"] = mode
             self._count += 1
 

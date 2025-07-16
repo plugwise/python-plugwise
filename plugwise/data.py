@@ -268,11 +268,13 @@ class SmileData(SmileHelper):
             data["active_preset"] = self._preset(loc_id)
 
         # Schedule
+        data["available_schedules"] = []
+        data["select_schedule"] = None
+        self._count += 2
         avail_schedules, sel_schedule = self._schedules(loc_id)
         if avail_schedules != [NONE]:
             data["available_schedules"] = avail_schedules
             data["select_schedule"] = sel_schedule
-            self._count += 2
 
         # Set HA climate HVACMode: auto, heat, heat_cool, cool and off
         data["climate_mode"] = "auto"

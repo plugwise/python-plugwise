@@ -85,7 +85,6 @@
       "model": "Gateway",
       "model_id": "smile_open_therm",
       "name": "Adam",
-      "select_regulation_mode": "heating",
       "sensors": {
         "outdoor_temperature": 11.9
       },

@@ -217,7 +217,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert api._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert api._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert api._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.entity_items == 370
+        assert self.entity_items == 369
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await api.delete_notification()
@@ -295,7 +295,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert api._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert api._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert api._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.entity_items == 375
+        assert self.entity_items == 374
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -389,7 +389,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert api._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
-        assert self.entity_items == 81
+        assert self.entity_items == 80
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
@@ -433,7 +433,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert api._last_active["06aecb3d00354375924f50c47af36bd2"] is None
         assert api._last_active["d27aede973b54be484f6842d1b2802ad"] is None
         assert api._last_active["13228dab8ce04617af318a2888b3c548"] is None
-        assert self.entity_items == 245
+        assert self.entity_items == 253
 
         # Negative test
         result = await self.tinker_thermostat(

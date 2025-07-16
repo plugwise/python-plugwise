@@ -30,7 +30,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert self.entity_items == 41
+        assert self.entity_items == 43
         assert not api.reboot
 
         result = await self.tinker_legacy_thermostat(api, schedule_on=False)
