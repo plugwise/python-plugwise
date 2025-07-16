@@ -389,7 +389,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert api._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
-        assert self.entity_items == 81
+        assert self.entity_items == 80
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
