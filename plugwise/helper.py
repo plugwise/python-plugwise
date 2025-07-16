@@ -523,7 +523,7 @@ class SmileHelper(SmileCommon):
 
         Collect the requested gateway mode.
         """
-        if not (self.check_name(ADAM) and entity_id == self._gateway_id):
+        if not (entity_id == self._gateway_id and self.check_name(ADAM)):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
@@ -538,7 +538,7 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway regulation_mode.
         """
-        if self._reg_allowed_modes:
+        if entity_id == self._gateway_id and self._reg_allowed_modes:
             if (
                 mode := self._get_actuator_mode(
                     appliance, entity_id, "regulation_mode_control_functionality"
@@ -559,7 +559,7 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway mode.
         """
-        if self._gw_allowed_modes:
+        if entity_id == self._gateway_id and self._gw_allowed_modes:
             if (
                 mode := self._get_actuator_mode(
                     appliance, entity_id, "gateway_mode_control_functionality"
