@@ -553,20 +553,16 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Adam: collect the gateway mode.
+        Adam gateway: collect the gateway mode.
         """
-        if entity_id == self._gateway_id and self._gw_allowed_modes:
-            if (
-                mode := self._get_actuator_mode(
-                    appliance, entity_id, "gateway_mode_control_functionality"
-                )
-            ) is None:
-                data["select_gateway_mode"] = None
+        if (
+            mode := self._get_actuator_mode(
+                appliance, entity_id, "gateway_mode_control_functionality"
+            )
+        ) is not None:
+            if self._gw_allowed_modes:
+                data["select_gateway_mode"] = mode
                 self._count += 1
-                return
-
-            data["select_gateway_mode"] = mode
-            self._count += 1
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
         """Adam & Anna: the Smile outdoor_temperature is present in the Home location."""
