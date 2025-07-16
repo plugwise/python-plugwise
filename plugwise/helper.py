@@ -536,21 +536,17 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Adam: collect the gateway regulation_mode.
+        Adam gateway: collect the gateway regulation_mode.
         """
-        if entity_id == self._gateway_id and self._reg_allowed_modes:
-            if (
-                mode := self._get_actuator_mode(
-                    appliance, entity_id, "regulation_mode_control_functionality"
-                )
-            ) is None:
-                data["select_regulation_mode"] = None
-                self._count += 1
-                return
-
-            data["select_regulation_mode"] = mode
-            self._count += 1
+        if (
+            mode := self._get_actuator_mode(
+                appliance, entity_id, "regulation_mode_control_functionality"
+            )
+        ) is not None:
             self._cooling_enabled = mode == "cooling"
+            if self._reg_allowed_modes:
+                data["select_regulation_mode"] = mode
+                self._count += 1
 
     def _get_gateway_mode(
         self, appliance: etree.Element, entity_id: str, data: GwEntityData
