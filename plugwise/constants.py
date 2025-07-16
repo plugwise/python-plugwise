@@ -536,15 +536,15 @@ class GwEntityData(TypedDict, total=False):
     available: bool | None
 
     # Loria
-    select_dhw_mode: str | None
+    select_dhw_mode: str
     dhw_modes: list[str]
 
     # Gateway
     gateway_modes: list[str]
     notifications: dict[str, dict[str, str]]
     regulation_modes: list[str]
-    select_gateway_mode: str | None
-    select_regulation_mode: str | None
+    select_gateway_mode: str
+    select_regulation_mode: str
 
     # Thermostat-related
     thermostats: dict[str, list[str]]
