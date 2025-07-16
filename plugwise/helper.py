@@ -411,7 +411,7 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        data["select_dhw_mode"] = appl_p_loc.text
+                        data["select_dhw_mode"] = appl_p_loc.text or None
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
