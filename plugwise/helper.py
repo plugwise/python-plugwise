@@ -411,7 +411,8 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        data["select_dhw_mode"] = appl_p_loc.text or None
+                        if self._dhw_allowed_modes:
+                            data["select_dhw_mode"] = appl_p_loc.text
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
@@ -537,11 +538,16 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway regulation_mode.
         """
-        if (
-            mode := self._get_actuator_mode(
-                appliance, entity_id, "regulation_mode_control_functionality"
-            )
-        ) is not None:
+        if self._reg_allowed_modes:
+            if (
+                mode := self._get_actuator_mode(
+                    appliance, entity_id, "regulation_mode_control_functionality"
+                )
+            ) is None:
+                data["select_regulation_mode"] = None
+                self._count += 1
+                return
+
             data["select_regulation_mode"] = mode
             self._count += 1
             self._cooling_enabled = mode == "cooling"
@@ -553,11 +559,16 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway mode.
         """
-        if (
-            mode := self._get_actuator_mode(
-                appliance, entity_id, "gateway_mode_control_functionality"
-            )
-        ) is not None:
+        if self._gw_allowed_modes:
+            if (
+                mode := self._get_actuator_mode(
+                    appliance, entity_id, "gateway_mode_control_functionality"
+                )
+            ) is None:
+                data["select_gateway_mode"] = None
+                self._count += 1
+                return
+
             data["select_gateway_mode"] = mode
             self._count += 1
 
