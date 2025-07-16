@@ -543,6 +543,7 @@ class SmileHelper(SmileCommon):
                 appliance, entity_id, "regulation_mode_control_functionality"
             )
         ) is not None:
+            # Below line needs to be here to set the boolean for older Adam firmware - for testing only
             self._cooling_enabled = mode == "cooling"
             if self._reg_allowed_modes:
                 data["select_regulation_mode"] = mode
@@ -559,10 +560,9 @@ class SmileHelper(SmileCommon):
             mode := self._get_actuator_mode(
                 appliance, entity_id, "gateway_mode_control_functionality"
             )
-        ) is not None:
-            if self._gw_allowed_modes:
-                data["select_gateway_mode"] = mode
-                self._count += 1
+        ) is not None and self._gw_allowed_modes:
+            data["select_gateway_mode"] = mode
+            self._count += 1
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
         """Adam & Anna: the Smile outdoor_temperature is present in the Home location."""
