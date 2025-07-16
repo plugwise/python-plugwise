@@ -543,7 +543,7 @@ class SmileHelper(SmileCommon):
                 appliance, entity_id, "regulation_mode_control_functionality"
             )
         ) is not None:
-            # Below line needs to be here to set the boolean for older Adam firmware - for testing only
+            # Below line needs to be here to set the boolean for both older and recent Adam firmware versions
             self._cooling_enabled = mode == "cooling"
             if self._reg_allowed_modes:
                 data["select_regulation_mode"] = mode
