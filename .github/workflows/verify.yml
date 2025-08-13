@@ -222,7 +222,10 @@ jobs:
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Download all coverage artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
+        with:
+          pattern: coverage-*
+          path: ./
       - name: Combine coverage results
         run: |
           . venv/bin/activate
