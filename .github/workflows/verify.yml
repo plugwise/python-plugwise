@@ -225,11 +225,11 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           pattern: coverage-*
-          path: ./
+          path: ${{ github.workspace }}/artifacts
       - name: Combine coverage results
         run: |
           . venv/bin/activate
-          coverage combine coverage*/.coverage*
+          coverage combine artifacts/coverage*/.coverage*
           coverage report --fail-under=94
           coverage xml
       - name: Upload coverage to Codecov
