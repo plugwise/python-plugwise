@@ -210,6 +210,9 @@ jobs:
       - prepare
       - pytest
       - mypy
+    strategy:
+      matrix:
+        python-version: ["3.13"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v5
@@ -229,7 +232,7 @@ jobs:
       - name: Combine coverage results
         run: |
           . venv/bin/activate
-          coverage combine artifacts/coverage*/.coverage*
+          coverage combine artifacts/coverage-*/.coverage* || mv artifacts/coverage-*/.coverage* .coverage
           coverage report --fail-under=94
           coverage xml
       - name: Upload coverage to Codecov
