@@ -206,10 +206,10 @@ class JipLisaTomSensors(TypedDict, total=False):
     """Tom sensors class."""
     
     battery: int
-    humidity: int
-    setpoint: float
-    setpoint_high: float
-    setpoint_low: float
+    humidity: int  # Jip only
+    setpoint: float  # heat or cool
+    setpoint_high: float  # heat_cool
+    setpoint_low: float  # heat_cool
     temperature: float
     temperature_difference: float
     valve_position: float
@@ -240,9 +240,9 @@ class ThermostatDict(TypedDict, total=False):
 
     lower_bound: float
     resolution: float
-    setpoint: float
-    setpoint_high: float
-    setpoint_low: float
+    setpoint: float  # heat or cool
+    setpoint_high: float  # heat_cool
+    setpoint_low: float  # heat_cool
     upper_bound: float
 
 
