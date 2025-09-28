@@ -22,7 +22,7 @@ class BaseGateway:
 class SmileP1Gateway(BaseGateway):
     """Plugwise Smile P1 Gateway data class."""
 
-    binary_sensors: GatewayBinarySensors
+    binary_sensors: GatewayBinarySensors  # Not for legacy?
     hardware: str
     model_id: str
 
@@ -45,14 +45,14 @@ class SmileThermostatGateway(SmileP1Gateway):
 class GatewayBinarySensors:
     """Gateway binary_sensors class."""
 
-    plugwise_notification: bool
+    plugwise_notification: bool  # None for some?
 
 
 @dataclass
 class GatewaySensors:
     """Gateway sensors class."""
 
-    outdoor_temperature: float
+    outdoor_temperature: float | None  # None when not enabled?
 
 
 @dataclass
@@ -79,34 +79,68 @@ class SmartEnergyMeter:
     vendor: str
 
 
-class SmartEnergySensors(TypedDict, total=False):
-    """DSMR Energy Meter sensors class."""
+@dataclass
+class SmartEnergySensors:
+    """DSMR Energy Meter sensors class (P1 v4)."""
 
     electricity_consumed_off_peak_cumulative: float
     electricity_consumed_off_peak_interval: int
     electricity_consumed_off_peak_point: int
     electricity_consumed_peak_cumulative: float
     electricity_consumed_peak_interval: int
-    electricity_consumed_peak_point: int,
+    electricity_consumed_peak_point: int
     electricity_phase_one_consumed: int
     electricity_phase_one_produced: int
-    electricity_phase_three_consumed: int
-    electricity_phase_three_produced: int
-    electricity_phase_two_consumed: int
-    electricity_phase_two_produced: int
+    electricity_phase_three_consumed: int | None
+    electricity_phase_three_produced: int | None
+    electricity_phase_two_consumed: int | None
+    electricity_phase_two_produced: int | None
     electricity_produced_off_peak_cumulative: float
     electricity_produced_off_peak_interval: int
     electricity_produced_off_peak_point: int
     electricity_produced_peak_cumulative: float
     electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
-    gas_consumed_cumulative: float
-    gas_consumed_interval: float
+    gas_consumed_cumulative: float | None
+    gas_consumed_interval: float | None
     net_electricity_cumulative:float
     net_electricity_point: int
-    voltage_phase_one: float
-    voltage_phase_three:float
-    voltage_phase_two: float
+    voltage_phase_one: float | None
+    voltage_phase_three:float | None
+    voltage_phase_two: float | None
+
+
+@dataclass
+class SmartEnergyLegacyMeter:
+    """Legacy DSMR Energy Meter data class."""
+
+    available: bool
+    dev_class: str
+    location: str
+    model: str
+    name: str
+    sensors: SmartEnergyLegacySensors
+    vendor: str
+
+
+@dataclass
+class SmartEnergyLegacySensors:
+    """Legacy DSMR Energy Meter sensors class (P1 v2)."""
+
+    electricity_consumed_off_peak_cumulative: float
+    electricity_consumed_off_peak_interval: int
+    electricity_consumed_peak_cumulative: float
+    electricity_consumed_peak_interval: int
+    electricity_consumed_point: int
+    electricity_produced_off_peak_cumulative: float
+    electricity_produced_off_peak_interval: int
+    electricity_produced_peak_cumulative: float
+    electricity_produced_peak_interval: int
+    electricity_produced_point: int
+    gas_consumed_cumulative: float | None
+    gas_consumed_interval: float | None
+    net_electricity_cumulative:float
+    net_electricity_point: int
 
 
 class AnnaData(TypedDict, total=False):
