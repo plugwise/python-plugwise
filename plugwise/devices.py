@@ -111,18 +111,6 @@ class SmartEnergySensors:
     voltage_phase_two: float | None
 
 
-@dataclass
-class SmartEnergyLegacyMeter:
-    """Legacy DSMR Energy Meter data class."""
-
-    available: bool
-    dev_class: str
-    location: str
-    model: str
-    name: str
-    sensors: SmartEnergyLegacySensors
-    vendor: str
-
 
 @dataclass
 class SmartEnergyLegacySensors:
@@ -144,36 +132,36 @@ class SmartEnergyLegacySensors:
     net_electricity_point: int
 
 
-class AnnaData(TypedDict, total=False):
-    """Plugwise Anna data class."""
+@dataclass
+class AnnaData:
+    """Plugwise Anna data class, also for legacy Anna."""
 
-    active_preset: str
+    active_preset: str | None
     available_schedules: list[str]
+    climate_mode: str
+    control_state: str
     dev_class: str
     firmware: str
     hardware: str
     location: str
-    mode: str
     model: str
-    model_id: str
     name: str
-    preset_modes: list[str]
-    select_schedule: str
+    preset_modes: list[str] | None
+    select_schedule: str | None
     sensors: AnnaSensors
-    temperature_offset: SetpointDict
+    temperature_offset: SetpointDict | None  # not for legacy
     thermostat: ThermostatDict
     vendor: str
 
 
-class AnnaSensors(TypedDict, total=False):
+@dataclass
+class AnnaSensors:
     """Anna sensors class."""
 
-    cooling_activation_outdoor_temperature: float
-    cooling_deactivation_threshold: float
     illuminance: float
-    setpoint: float
-    setpoint_high: float
-    setpoint_low: float
+    setpoint: float | None
+    setpoint_high: float | None
+    setpoint_low: float | None
     temperature: float
 
 
@@ -181,54 +169,56 @@ class AnnaSensors(TypedDict, total=False):
 class ThermoZone:
     """Plugwise Adam ThermoZone data class."""
 
-    active_preset: str
+    active_preset: str | None
     available_schedules: list[str]
     climate_mode: str
     control_state: str
+    dev_class: str
+    model: str
+    name: str
     preset_modes: list[str]
     select_schedule: str
     sensors: ThermoZoneSensors
     thermostat: ThermostatDict
+    thermostats: ThermostatsDict
+    vendor: str
 
 
-class ThermoZoneSensors(TypedDict, total=False):
+@dataclass
+class ThermoZoneSensors:
     """ThermoZone sensors class."""
 
-    electricity_consumed: float
-    electricity_produced: float
+    electricity_consumed: float | None  # only with Plug(s) in the zone
+    electricity_produced: float | None  # only with Plug(s) in the zone
     temperature: float
 
 
-class AnnaAdamData(TypedDict, total=False):
+@dataclass
+class AnnaAdamData:
     """Plugwise Anna-connected-to-Adam data class."""
 
-    available: bool
     dev_class: str
-    firmware: str
-    hardware: str
     location: str
-    mode: str
     model: str
     model_id: str
     name: str
     sensors: AnnaSensors
-    temperature_offset: SetpointDict
     vendor: str
 
 
-class JipLisaTomData(TypedDict, total=False):
+@dataclass
+class JipLisaTomData:
     """JipLisaTomData data class.
 
     Covering Plugwise Jip, Lisa and Tom/Floor devices.
     """
 
     available: bool
-    binary_sensors: WirelessThermostatBinarySensors
+    binary_sensors: WirelessThermostatBinarySensors | None  # Not for AC powered Lisa/Tom
     dev_class: str
     firmware: str
     hardware: str
     location: str
-    mode: str
     model: str
     model_id: str
     name: str
@@ -238,17 +228,18 @@ class JipLisaTomData(TypedDict, total=False):
     zigbee_mac_address: str
 
 
-class JipLisaTomSensors(TypedDict, total=False):
+@dataclass
+class JipLisaTomSensors:
     """Tom sensors class."""
 
-    battery: int
-    humidity: int  # Jip only
-    setpoint: float  # heat or cool
-    setpoint_high: float  # heat_cool
-    setpoint_low: float  # heat_cool
+    battery: int | None  # not when AC powered, Lisa/Tom
+    humidity: int | None  # Jip only
+    setpoint: float | None  # heat or cool
+    setpoint_high: float | None  # heat_cool
+    setpoint_low: float | None  # heat_cool
     temperature: float
-    temperature_difference: float
-    valve_position: float
+    temperature_difference: float | None # Tom only
+    valve_position: float | None  # Tom only
 
 
 @dataclass
@@ -271,15 +262,24 @@ class SetpointDict:
     upper_bound: float
 
 
-class ThermostatDict(TypedDict, total=False):
+@dataclass
+class ThermostatDict:
     """Thermostat dict class."""
 
     lower_bound: float
     resolution: float
-    setpoint: float  # heat or cool
-    setpoint_high: float  # heat_cool
-    setpoint_low: float  # heat_cool
+    setpoint: float | None  # heat or cool
+    setpoint_high: float | None  # heat_cool
+    setpoint_low: float| None  # heat_cool
     upper_bound: float
+
+
+@dataclass
+class ThermostatsDict:
+    """Thermostats dict class."""
+
+    primary: list[str]
+    secondary: list[str]
 
 
 @dataclass
@@ -293,68 +293,72 @@ class OnOffTherm:
     name: str
 
 
-class OpenTherm(TypedDict, total=False):
+@dataclass
+class OpenTherm:
     """OpenTherm heater/cooler device class."""
 
     available: str
     binary_sensors: HeaterCentralBinarySensors
     dev_class: str
     location: str
-    maximum_boiler_temperature: SetpointDict
-    max_dhw_temperature: SetpointDict
+    maximum_boiler_temperature: SetpointDict | None
+    max_dhw_temperature: SetpointDict | None
     model: str
-    model_id: str
+    model_id: str | None
     name: str
     sensors: HeaterCentralSensors
     switches: HeaterCentralSwitches
     vendor: str
 
 
-class HeaterCentralBinarySensors(TypedDict, total=False):
+@dataclass
+class HeaterCentralBinarySensors:
     """Heater-central binary_sensors class."""
 
-    compressor_state: bool
-    cooling_enabled: bool
-    cooling_state: bool
+    compressor_state: bool | None
+    cooling_enabled: bool | None
+    cooling_state: bool | None
     dhw_state: bool
     flame_state: bool
     heating_state: bool
-    secondary_boiler_state: bool
+    secondary_boiler_state: bool | None
 
 
-class HeaterCentralSensors(TypedDict, total=False):
+@dataclass
+class HeaterCentralSensors:
     """Heater-central sensors class."""
 
-    dhw_temperature: float
-    domestic_hot_water_setpoint: float
-    intended_boiler_temperature: float
-    modulation_level: float
-    outdoor_air_temperature: float
+    dhw_temperature: float | None
+    domestic_hot_water_setpoint: float | None
+    intended_boiler_temperature: float | None
+    modulation_level: float | None
+    outdoor_air_temperature: float | None
     return_temperature: float
-    water_pressure: float
+    water_pressure: float | None
     water_temperature: float
 
 
-class HeaterCentralSwitches(TypedDict, total=False):
+@dataclass
+class HeaterCentralSwitches:
     """Heater-central switches class."""
 
-    cooling_ena_switch: bool
+    cooling_ena_switch: bool | None
     dhw_cm_switch: bool
 
 
 @dataclass
 class PlugData:
-    """Plug data class."""
+    """Plug data class covering Plugwise Adam/Stretch and Aqara Plugs, and generic ZigBee type Switches."""
 
-    available: bool
+    available: bool | None
     dev_class: str
-    firmware: str
-    # hardware: str
+    firmware: str | None
+    hardware: str | None
     location: str
-    model: str
+    model: str | None
     model_id: str
     name: str
-    sensors: PlugSensors
+    sensors: PlugSensors | None
     switches: PlugSwitches
     vendor: str
     zigbee_mac_address: str
@@ -364,29 +368,30 @@ class PlugData:
 class PlugSensors:
     """Plug sensors class."""
 
-    electricity_consumed: float
+    electricity_consumed: float | None
     electricity_consumed_interval: float
-    electricity_produced: float
-    electricity_produced_interval: float
+    electricity_produced: float | None
+    electricity_produced_interval: float | None
 
 
 @dataclass
-class PlugSwitches(TypedDict, total=False):
+class PlugSwitches:
     """Plug switches class."""
 
-    lock: bool
+    lock: bool | None
     relay: bool
 
 
 class PlugwiseP1:
     """Plugwise P1 data class."""
 
-    data: dict[str, SmileP1Gateway | SmartEnergyMeter]
+    data: dict[str, SmileP1Gateway | SmartEnergyMeter | SmartEnergyLegacySensors]
 
 
 class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
     """Plugwise Anna data class."""
 
+    data: dict[str, SmileThermostatGateway | OnOffTherm | OpenTherm | AnnaData]
 
 class Adam(
     AdamGateway,
@@ -398,3 +403,11 @@ class Adam(
     OpenTherm,
 ):
     """Plugwise Anna data class."""
+
+    data: dict[str, AdamGateway | OnOffTherm | OpenTherm | AnnaAdamData | JipLisaTomData | ThermoZone | PlugData]
+
+
+class Stretch:
+    """Plugwise Stretch data class."""
+
+    data: dict[str, StretchGateway | PlugData]
