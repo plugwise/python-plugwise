@@ -1,4 +1,5 @@
 """Plugwise Device classes."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -103,10 +104,10 @@ class SmartEnergySensors:
     electricity_produced_peak_point: int
     gas_consumed_cumulative: float | None
     gas_consumed_interval: float | None
-    net_electricity_cumulative:float
+    net_electricity_cumulative: float
     net_electricity_point: int
     voltage_phase_one: float | None
-    voltage_phase_three:float | None
+    voltage_phase_three: float | None
     voltage_phase_two: float | None
 
 
@@ -139,7 +140,7 @@ class SmartEnergyLegacySensors:
     electricity_produced_point: int
     gas_consumed_cumulative: float | None
     gas_consumed_interval: float | None
-    net_electricity_cumulative:float
+    net_electricity_cumulative: float
     net_electricity_point: int
 
 
@@ -179,6 +180,7 @@ class AnnaSensors(TypedDict, total=False):
 @dataclass
 class ThermoZone:
     """Plugwise Adam ThermoZone data class."""
+
     active_preset: str
     available_schedules: list[str]
     climate_mode: str
@@ -238,7 +240,7 @@ class JipLisaTomData(TypedDict, total=False):
 
 class JipLisaTomSensors(TypedDict, total=False):
     """Tom sensors class."""
-    
+
     battery: int
     humidity: int  # Jip only
     setpoint: float  # heat or cool
@@ -259,7 +261,7 @@ class WirelessThermostatBinarySensors:
 @dataclass
 class SetpointDict:
     """Generic setpoint dict class.
-    
+
     Used for temperature_offset, max_dhw_temperature,maximum_boiler_temperature.
     """
 
@@ -305,7 +307,7 @@ class OpenTherm(TypedDict, total=False):
     name: str
     sensors: HeaterCentralSensors
     switches: HeaterCentralSwitches
-    vendor : str
+    vendor: str
 
 
 class HeaterCentralBinarySensors(TypedDict, total=False):
@@ -378,11 +380,21 @@ class PlugSwitches(TypedDict, total=False):
 
 class PlugwiseP1:
     """Plugwise P1 data class."""
-    data: dict[str, SmileP1Gateway|SmartEnergyMeter]
+
+    data: dict[str, SmileP1Gateway | SmartEnergyMeter]
+
 
 class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
     """Plugwise Anna data class."""
 
 
-class Adam(AdamGateway, AnnaAdamData, JipLisaTomData, ThermoZone, PlugData, OnOffTherm, OpenTherm):
+class Adam(
+    AdamGateway,
+    AnnaAdamData,
+    JipLisaTomData,
+    ThermoZone,
+    PlugData,
+    OnOffTherm,
+    OpenTherm,
+):
     """Plugwise Anna data class."""
