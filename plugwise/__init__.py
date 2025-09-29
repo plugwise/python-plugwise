@@ -332,7 +332,11 @@ class Smile(SmileComm):
         self.smile.legacy = True
         return return_model
 
-    async def async_update(self) -> dict[str, PlugwiseAnnaData | PlugwiseAdamData | PlugwiseP1Data | PlugwiseStretchData]:
+    async def async_update(
+        self,
+    ) -> dict[
+        str, PlugwiseAnnaData | PlugwiseAdamData | PlugwiseP1Data | PlugwiseStretchData
+    ]:
         """Update the Plugwise Gateway entities and their data and states."""
         if self.smile.type == ANNA:
             data: dict[str, PlugwiseAnnaData] = {}
