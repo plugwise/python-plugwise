@@ -8,6 +8,8 @@ from __future__ import annotations
 from typing import cast
 
 from plugwise.constants import (
+    ADAM,
+    ANNA,
     DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -16,12 +18,16 @@ from plugwise.constants import (
     LOGGER,
     MODULES,
     NONE,
+    SMILE_P1,
     SMILES,
     STATE_OFF,
     STATE_ON,
     STATUS,
     SYSTEM,
-    GwEntityData,
+    PlugwiseAdamData,
+    PlugwiseAnnaData,
+    PlugwiseP1Data,
+    PlugwiseStretchData,
     ThermoLoc,
 )
 from plugwise.exceptions import (
@@ -326,9 +332,17 @@ class Smile(SmileComm):
         self.smile.legacy = True
         return return_model
 
-    async def async_update(self) -> dict[str, GwEntityData]:
-        """Update the Plughwise Gateway entities and their data and states."""
-        data: dict[str, GwEntityData] = {}
+    async def async_update(self) -> dict[str, PlugwiseAnnaData | PlugwiseAdamData | PlugwiseP1Data | PlugwiseStretchData]:
+        """Update the Plugwise Gateway entities and their data and states."""
+        if self.smile.type == ANNA:
+            data: dict[str, PlugwiseAnnaData] = {}
+        if self.smile.type == ADAM:
+            data: dict[str, PlugwiseAdamData] = {}
+        if self.smile.type == SMILE_P1:
+            data: dict[str, PlugwiseP1Data] = {}
+        if self.smile.type == "Stretch":
+            data: dict[str, PlugwiseStretchData] = {}
+
         try:
             data = await self._smile_api.async_update()
         except (DataMissingError, KeyError) as err:
