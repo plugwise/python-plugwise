@@ -25,7 +25,10 @@ from plugwise.constants import (
     RULES,
     STATE_OFF,
     STATE_ON,
-    GwEntityData,
+    PlugwiseAdamData,
+    PlugwiseAnnaData,
+    PlugwiseP1Data,
+    PlugwiseStretchData,
     SwitchType,
     ThermoLoc,
 )
@@ -120,7 +123,7 @@ class SmileAPI(SmileData):
 
         self._all_entity_data()
 
-    async def async_update(self) -> dict[str, GwEntityData]:
+    async def async_update(self) -> dict[str, PlugwiseAnnaData | PlugwiseAdamData | PlugwiseP1Data | PlugwiseStretchData]:
         """Perform an full update: re-collect all gateway entities and their data and states.
 
         Any change in the connected entities will be detected immediately.
