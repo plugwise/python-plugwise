@@ -382,42 +382,42 @@ class PlugSwitches:
     relay: bool
 
 
-class PlugwiseP1:
-    """Plugwise P1 data class."""
-
-    data: dict[str, SmileP1Gateway | SmartEnergyMeter | SmartEnergyLegacySensors]
-
-
-class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
-    """Plugwise Anna data class."""
-
-    data: dict[str, SmileThermostatGateway | OnOffTherm | OpenTherm | AnnaData]
+# class PlugwiseP1:
+#     """Plugwise P1 data class."""
+#
+#     data: dict[str, SmileP1Gateway | SmartEnergyMeter | SmartEnergyLegacySensors]
 
 
-class Adam(
-    AdamGateway,
-    AnnaAdamData,
-    JipLisaTomData,
-    ThermoZone,
-    PlugData,
-    OnOffTherm,
-    OpenTherm,
-):
-    """Plugwise Anna data class."""
-
-    data: dict[
-        str,
-        AdamGateway
-        | OnOffTherm
-        | OpenTherm
-        | AnnaAdamData
-        | JipLisaTomData
-        | ThermoZone
-        | PlugData,
-    ]
+# class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
+#     """Plugwise Anna data class."""
+#
+#     data: dict[str, SmileThermostatGateway | OnOffTherm | OpenTherm | AnnaData]
 
 
-class Stretch:
-    """Plugwise Stretch data class."""
+# class Adam(
+#    AdamGateway,
+#    AnnaAdamData,
+#    JipLisaTomData,
+#    ThermoZone,
+#    PlugData,
+#    OnOffTherm,
+#    OpenTherm,
+#):
+#    """Plugwise Anna data class."""
+#
+#    data: dict[
+#        str,
+#        AdamGateway
+#        | OnOffTherm
+#        | OpenTherm
+#        | AnnaAdamData
+#        | JipLisaTomData
+#        | ThermoZone
+#        | PlugData,
+#    ]
 
-    data: dict[str, StretchGateway | PlugData]
+
+# class Stretch:
+#    """Plugwise Stretch data class."""
+#
+#    data: dict[str, StretchGateway | PlugData]
