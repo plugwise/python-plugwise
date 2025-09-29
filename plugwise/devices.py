@@ -39,7 +39,7 @@ class StretchGateway(BaseClass):
 class SmileTGateway(BaseClass):
     """Plugwise Anna Smile-T Gateway data class."""
 
-    binary_sensors: GatewayBinarySensors  # Not for legacy?
+    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors  # Not for legacy?
     sensors: GatewaySensors
 
 
@@ -61,7 +61,7 @@ class GatewaySensors:
 class AdamGateway(BaseClass):
     """Plugwise Adam HA Gateway data class."""
 
-    binary_sensors: GatewayBinarySensors  # Not for legacy?
+    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors  # Not for legacy?
     gateway_modes: list[str]
     regulation_modes: list[str]
     select_gateway_mode: str
@@ -258,14 +258,14 @@ class ThermostatsDict:
 class OnOffTherm(BaseClass):
     """On-off heater/cooler device class."""
 
-    binary_sensors: HeaterCentralBinarySensors
+    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors
 
 
 @dataclass
 class OpenTherm(BaseClass):
     """OpenTherm heater/cooler device class."""
 
-    binary_sensors: HeaterCentralBinarySensors
+    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors
     maximum_boiler_temperature: SetpointDict | None
     max_dhw_temperature: SetpointDict | None
     sensors: HeaterCentralSensors
