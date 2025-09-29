@@ -18,7 +18,7 @@ from plugwise.devices import (
     SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
-    SmileThermostatGateway,
+    SmileTGateway,
     StretchGateway,
     ThermoZone,
 )
@@ -541,7 +541,7 @@ class PlugwiseAnnaData(
     GwEntityData,
     OnOffTherm,
     OpenTherm,
-    SmileThermostatGateway,
+    SmileTGateway,
 ):
     """The Plugwise Anna Data class."""
 

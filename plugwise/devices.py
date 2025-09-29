@@ -6,38 +6,40 @@ from dataclasses import dataclass
 
 
 @dataclass
-class BaseGateway:
+class BaseClass:
     """Plugwise Base Gateway data class."""
 
+    available: bool | None
     dev_class: str
     firmware: str
+    hardware: str | None
     location: str
     mac_address: str
     model: str
+    model_id: str | None
     name: str
     vendor: str
 
 
 @dataclass
-class SmileP1Gateway(BaseGateway):
+class SmileP1Gateway(BaseClass):
     """Plugwise Smile P1 Gateway data class."""
 
     binary_sensors: GatewayBinarySensors  # Not for legacy?
-    hardware: str
-    model_id: str
 
 
 @dataclass
-class StretchGateway(BaseGateway):
+class StretchGateway(BaseClass):
     """Plugwise Stretch Gateway data class."""
 
     zigbee_mac_address: str
 
 
 @dataclass
-class SmileThermostatGateway(SmileP1Gateway):
+class SmileTGateway(BaseClass):
     """Plugwise Anna Smile-T Gateway data class."""
 
+    binary_sensors: GatewayBinarySensors  # Not for legacy?
     sensors: GatewaySensors
 
 
@@ -56,7 +58,7 @@ class GatewaySensors:
 
 
 @dataclass
-class AdamGateway(SmileThermostatGateway):
+class AdamGateway(SmileTGateway):
     """Plugwise Adam HA Gateway data class."""
 
     gateway_modes: list[str]
@@ -67,16 +69,10 @@ class AdamGateway(SmileThermostatGateway):
 
 
 @dataclass
-class SmartEnergyMeter:
+class SmartEnergyMeter(BaseClass):
     """DSMR Energy Meter data class."""
 
-    available: bool
-    dev_class: str
-    location: str
-    model: str
-    name: str
     sensors: SmartEnergySensors
-    vendor: str
 
 
 @dataclass
@@ -131,25 +127,18 @@ class SmartEnergyLegacySensors:
 
 
 @dataclass
-class AnnaData:
+class AnnaData(BaseClass):
     """Plugwise Anna data class, also for legacy Anna."""
 
     active_preset: str | None
     available_schedules: list[str]
     climate_mode: str
     control_state: str
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    model: str
-    name: str
     preset_modes: list[str] | None
     select_schedule: str | None
     sensors: AnnaSensors
     temperature_offset: SetpointDict | None  # not for legacy
     thermostat: ThermostatDict
-    vendor: str
 
 
 @dataclass
@@ -164,23 +153,18 @@ class AnnaSensors:
 
 
 @dataclass
-class ThermoZone:
+class ThermoZone(BaseClass):
     """Plugwise Adam ThermoZone data class."""
 
     active_preset: str | None
     available_schedules: list[str]
     climate_mode: str
     control_state: str
-    dev_class: str
-    model: str
-    name: str
     preset_modes: list[str]
     select_schedule: str
     sensors: ThermoZoneSensors
     thermostat: ThermostatDict
     thermostats: ThermostatsDict
-    vendor: str
-
 
 @dataclass
 class ThermoZoneSensors:
@@ -192,39 +176,24 @@ class ThermoZoneSensors:
 
 
 @dataclass
-class AnnaAdamData:
+class AnnaAdamData(BaseClass):
     """Plugwise Anna-connected-to-Adam data class."""
 
-    dev_class: str
-    location: str
-    model: str
-    model_id: str
-    name: str
     sensors: AnnaSensors
-    vendor: str
 
 
 @dataclass
-class JipLisaTomData:
+class JipLisaTomData(BaseClass):
     """JipLisaTomData data class.
 
     Covering Plugwise Jip, Lisa and Tom/Floor devices.
     """
 
-    available: bool
     binary_sensors: (
         WirelessThermostatBinarySensors | None
     )  # Not for AC powered Lisa/Tom
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    model: str
-    model_id: str
-    name: str
     sensors: JipLisaTomSensors
     temperature_offset: SetpointDict
-    vendor: str
     zigbee_mac_address: str
 
 
@@ -388,10 +357,10 @@ class PlugSwitches:
 #     data: dict[str, SmileP1Gateway | SmartEnergyMeter | SmartEnergyLegacySensors]
 
 
-# class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
+# class Anna(SmileTGateway, AnnaData, OnOffTherm, OpenTherm):
 #     """Plugwise Anna data class."""
 #
-#     data: dict[str, SmileThermostatGateway | OnOffTherm | OpenTherm | AnnaData]
+#     data: dict[str, SmileTGateway | OnOffTherm | OpenTherm | AnnaData]
 
 
 # class Adam(
