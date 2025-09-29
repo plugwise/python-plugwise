@@ -7,18 +7,17 @@ from dataclasses import dataclass
 import logging
 from typing import Final, Literal, TypedDict, get_args
 
-from .devices import (
+from plugwise.devices import (
     AdamGateway,
     AnnaAdamData,
-    AnnaData, 
+    AnnaData,
     JipLisaTomData,
-    PlugData,
     OnOffTherm,
     OpenTherm,
+    PlugData,
     SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
-    SmileThermostatGateway,
     StretchGateway,
     ThermoZone,
 )
@@ -538,7 +537,7 @@ class ActuatorData(TypedDict, total=False):
 class GwEntityData(
     AdamGateway,
     AnnaAdamData,
-    AnnaData, 
+    AnnaData,
     JipLisaTomData,
     PlugData,
     OnOffTherm,
@@ -546,7 +545,6 @@ class GwEntityData(
     SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
-    #SmileThermostatGateway,
     StretchGateway,
     ThermoZone,
 ):
