@@ -269,7 +269,7 @@ class OpenTherm(BaseClass):
     maximum_boiler_temperature: SetpointDict | None
     max_dhw_temperature: SetpointDict | None
     sensors: HeaterCentralSensors
-    switches: HeaterCentralSwitches
+    switches: HeaterCentralSwitches | PlugSwitches
 
 
 @dataclass
