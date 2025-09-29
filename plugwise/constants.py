@@ -18,6 +18,7 @@ from plugwise.devices import (
     SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
+    SmileThermostatGateway,
     StretchGateway,
     ThermoZone,
 )
@@ -541,24 +542,8 @@ class ActuatorData(TypedDict, total=False):
 
 
 @dataclass
-class GwEntityData(
-    AdamGateway,
-    AnnaAdamData,
-    AnnaData,
-    JipLisaTomData,
-    PlugData,
-    OnOffTherm,
-    OpenTherm,
-    SmartEnergyLegacySensors,
-    SmartEnergyMeter,
-    SmileP1Gateway,
-    StretchGateway,
-    ThermoZone,
-):
-    """The Gateway Entity data class.
-
-    Covering the collected output-data per device or location.
-    """
+class GwEntityData:
+    """The base Gateway Entity data class."""
 
     # For temporary use
     cooling_enabled: bool
@@ -566,3 +551,45 @@ class GwEntityData(
     elga_status_code: int
     c_heating_state: bool
     thermostat_supports_cooling: bool
+
+
+@dataclass
+class PlugwiseAnnaData(
+    AnnaData,
+    GwEntityData,
+    OnOffTherm,
+    OpenTherm,
+    SmileThermostatGateway,
+):
+    """The Plugwise Anna Data class."""
+
+
+@dataclass
+class PlugwiseAdamData(
+    AdamGateway,
+    AnnaAdamData,
+    GwEntityData,
+    JipLisaTomData,
+    PlugData,
+    OnOffTherm,
+    OpenTherm,
+    ThermoZone,
+):
+    """The Plugwise Adam Data class."""
+
+
+@dataclass
+class PlugwiseP1Data(
+    SmartEnergyLegacySensors,
+    SmartEnergyMeter,
+    SmileP1Gateway,
+):
+    """The Plugwise P1 Data class."""
+
+
+@dataclass
+class PlugwiseStretchData(
+    PlugData,
+    StretchGateway,
+):
+    """The Plugwise Stretch Data class."""
