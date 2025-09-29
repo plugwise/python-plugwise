@@ -402,7 +402,7 @@ class PlugSwitches:
 #    PlugData,
 #    OnOffTherm,
 #    OpenTherm,
-#):
+# ):
 #    """Plugwise Anna data class."""
 #
 #    data: dict[
