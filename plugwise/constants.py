@@ -6,6 +6,22 @@ from collections import namedtuple
 import logging
 from typing import Final, Literal, TypedDict, get_args
 
+from plugwise.devices import (
+    AdamGateway,
+    AnnaAdamData,
+    AnnaData, 
+    JipLisaTomData,
+    PlugData,
+    OnOffTherm,
+    OpenTherm,
+    SmartEnergyLegacySensors,
+    SmartEnergyMeter,
+    SmileP1Gateway,
+    SmileThermostatGateway,
+    StretchGateway,
+    ThermoZone,
+)
+
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
@@ -524,24 +540,25 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class GwEntityData(TypedDict, total=False):
+class GwEntityData(
+    AdamGateway,
+    AnnaAdamData,
+    AnnaData, 
+    JipLisaTomData,
+    PlugData,
+    OnOffTherm,
+    OpenTherm,
+    SmartEnergyLegacySensors,
+    SmartEnergyMeter,
+    SmileP1Gateway,
+    SmileThermostatGateway,
+    StretchGateway,
+    ThermoZone,
+):
     """The Gateway Entity data class.
 
     Covering the collected output-data per device or location.
     """
-
-    # Appliance base data
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    mac_address: str
-    members: list[str]
-    model: str
-    model_id: str | None
-    name: str
-    vendor: str
-    zigbee_mac_address: str
 
     # For temporary use
     cooling_enabled: bool
@@ -549,41 +566,3 @@ class GwEntityData(TypedDict, total=False):
     elga_status_code: int
     c_heating_state: bool
     thermostat_supports_cooling: bool
-
-    # Device availability
-    available: bool | None
-
-    # Loria
-    select_dhw_mode: str
-    dhw_modes: list[str]
-
-    # Gateway
-    gateway_modes: list[str]
-    notifications: dict[str, dict[str, str]]
-    regulation_modes: list[str]
-    select_gateway_mode: str
-    select_regulation_mode: str
-
-    # Thermostat-related
-    select_zone_profile: str
-    thermostats: dict[str, list[str]]
-    zone_profiles: list[str]
-    # Presets:
-    active_preset: str | None
-    preset_modes: list[str] | None
-    # Schedules:
-    available_schedules: list[str]
-    select_schedule: str | None
-
-    climate_mode: str
-    # Extra for Adam Master Thermostats
-    control_state: str
-
-    # Dict-types
-    binary_sensors: SmileBinarySensors
-    max_dhw_temperature: ActuatorData
-    maximum_boiler_temperature: ActuatorData
-    sensors: SmileSensors
-    switches: SmileSwitches
-    temperature_offset: ActuatorData
-    thermostat: ActuatorData
