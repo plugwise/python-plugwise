@@ -166,6 +166,7 @@ class ThermoZone(BaseClass):
     thermostat: ThermostatDict
     thermostats: ThermostatsDict
 
+
 @dataclass
 class ThermoZoneSensors:
     """ThermoZone sensors class."""
