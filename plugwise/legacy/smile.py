@@ -90,7 +90,11 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._all_entity_data()
 
-    async def async_update(self) -> dict[str, PlugwiseAnnaData | PlugwiseAdamData | PlugwiseP1Data | PlugwiseStretchData]:
+    async def async_update(
+        self,
+    ) -> dict[
+        str, PlugwiseAnnaData | PlugwiseAdamData | PlugwiseP1Data | PlugwiseStretchData
+    ]:
         """Perform an full update update at day-change: re-collect all gateway entities and their data and states.
 
         Otherwise perform an incremental update: only collect the entities updated data and states.
