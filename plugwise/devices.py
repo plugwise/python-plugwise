@@ -111,7 +111,6 @@ class SmartEnergySensors:
     voltage_phase_two: float | None
 
 
-
 @dataclass
 class SmartEnergyLegacySensors:
     """Legacy DSMR Energy Meter sensors class (P1 v2)."""
@@ -214,7 +213,9 @@ class JipLisaTomData:
     """
 
     available: bool
-    binary_sensors: WirelessThermostatBinarySensors | None  # Not for AC powered Lisa/Tom
+    binary_sensors: (
+        WirelessThermostatBinarySensors | None
+    )  # Not for AC powered Lisa/Tom
     dev_class: str
     firmware: str
     hardware: str
@@ -238,7 +239,7 @@ class JipLisaTomSensors:
     setpoint_high: float | None  # heat_cool
     setpoint_low: float | None  # heat_cool
     temperature: float
-    temperature_difference: float | None # Tom only
+    temperature_difference: float | None  # Tom only
     valve_position: float | None  # Tom only
 
 
@@ -270,7 +271,7 @@ class ThermostatDict:
     resolution: float
     setpoint: float | None  # heat or cool
     setpoint_high: float | None  # heat_cool
-    setpoint_low: float| None  # heat_cool
+    setpoint_low: float | None  # heat_cool
     upper_bound: float
 
 
@@ -393,6 +394,7 @@ class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
 
     data: dict[str, SmileThermostatGateway | OnOffTherm | OpenTherm | AnnaData]
 
+
 class Adam(
     AdamGateway,
     AnnaAdamData,
@@ -404,7 +406,16 @@ class Adam(
 ):
     """Plugwise Anna data class."""
 
-    data: dict[str, AdamGateway | OnOffTherm | OpenTherm | AnnaAdamData | JipLisaTomData | ThermoZone | PlugData]
+    data: dict[
+        str,
+        AdamGateway
+        | OnOffTherm
+        | OpenTherm
+        | AnnaAdamData
+        | JipLisaTomData
+        | ThermoZone
+        | PlugData,
+    ]
 
 
 class Stretch:
