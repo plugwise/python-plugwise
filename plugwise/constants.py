@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from collections import namedtuple
+from dataclasses import dataclass
 import logging
 from typing import Final, Literal, TypedDict, get_args
 
-from plugwise.devices import (
+from .devices import (
     AdamGateway,
     AnnaAdamData,
     AnnaData, 
@@ -533,6 +534,7 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
+@dataclass
 class GwEntityData(
     AdamGateway,
     AnnaAdamData,
@@ -544,7 +546,7 @@ class GwEntityData(
     SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
-    SmileThermostatGateway,
+    #SmileThermostatGateway,
     StretchGateway,
     ThermoZone,
 ):
