@@ -58,13 +58,15 @@ class GatewaySensors:
 
 
 @dataclass
-class AdamGateway(SmileTGateway):
+class AdamGateway(BaseClass):
     """Plugwise Adam HA Gateway data class."""
 
+    binary_sensors: GatewayBinarySensors  # Not for legacy?
     gateway_modes: list[str]
     regulation_modes: list[str]
     select_gateway_mode: str
     select_regulation_mode: str
+    sensors: GatewaySensors
     zigbee_mac_address: str
 
 
@@ -253,32 +255,21 @@ class ThermostatsDict:
 
 
 @dataclass
-class OnOffTherm:
+class OnOffTherm(BaseClass):
     """On-off heater/cooler device class."""
 
     binary_sensors: HeaterCentralBinarySensors
-    dev_class: str
-    location: str
-    model: str
-    name: str
 
 
 @dataclass
-class OpenTherm:
+class OpenTherm(BaseClass):
     """OpenTherm heater/cooler device class."""
 
-    available: str
     binary_sensors: HeaterCentralBinarySensors
-    dev_class: str
-    location: str
     maximum_boiler_temperature: SetpointDict | None
     max_dhw_temperature: SetpointDict | None
-    model: str
-    model_id: str | None
-    name: str
     sensors: HeaterCentralSensors
     switches: HeaterCentralSwitches
-    vendor: str
 
 
 @dataclass
@@ -317,20 +308,11 @@ class HeaterCentralSwitches:
 
 
 @dataclass
-class PlugData:
+class PlugData(BaseClass):
     """Plug data class covering Plugwise Adam/Stretch and Aqara Plugs, and generic ZigBee type Switches."""
 
-    available: bool | None
-    dev_class: str
-    firmware: str | None
-    hardware: str | None
-    location: str
-    model: str | None
-    model_id: str
-    name: str
     sensors: PlugSensors | None
     switches: PlugSwitches
-    vendor: str
     zigbee_mac_address: str
 
 
