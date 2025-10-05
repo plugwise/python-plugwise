@@ -333,6 +333,53 @@ class PlugSwitches:
     lock: bool | None
     relay: bool
 
+##################################################
+class PlugwiseData
+"""
+Overview of existing options:
+
+- Gateway Adam
+    - Climate device
+        - OnOff
+        - Opentherm
+    - Zones (1 to many) with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
+    - Location (Home) with weather data - only outdoor_temp used
+    - Single devices (appliances) assigned to a Zone, or not
+        - Anna (wired thermostat)
+        - Lisa (ZigBee thermostat)
+        - Jip (ZigBee thermostat)
+        - Tom/Floor (ZigBee valve/thermostat)
+        - Plug (energy switch/meter)
+        - Aqara Plug (energy switch/meter)
+        - Noname switch (energy switch)
+
+- Gateway SmileT
+    - Climate device
+        - OnOff
+        - OpenTherm
+    - Zone (Living room) with with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
+    - Location (Home) with weather data - only outdoor_temp used
+    - Single devices (appliances)
+        - Anna (wired thermostat)
+        - P1-DSMR device (new Anna P1) (?)
+
+- Gateway SmileT legacy
+    - OnOff/OpenTherm device
+    - Anna (wired thermostat)
+    - Location (Home) with weather data (optional?) - only outdoor_temp used
+
+- Gateway P1 
+    - P1-DSMR device (in Home location)
+
+- Gateway P1 legacy
+    - P1-DSMR device (in modules)
+
+- Gateway Stretch (legacy)
+    - Single devices (Zigbee)
+    - ??
+
+"""
+##################################################
 
 # class PlugwiseP1:
 #     """Plugwise P1 data class."""
