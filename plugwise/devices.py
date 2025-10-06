@@ -9,12 +9,12 @@ from dataclasses import dataclass
 class BaseClass:
     """Plugwise Base Gateway data class."""
 
-    available: bool | None
+    available: bool | None  # not for gateway, should always be available
     dev_class: str
     firmware: str
     hardware: str | None
     location: str
-    mac_address: str
+    mac_address: str 
     model: str
     model_id: str | None
     name: str
@@ -22,10 +22,43 @@ class BaseClass:
 
 
 @dataclass
+class AdamGateway(BaseClass):
+    """Plugwise Adam HA Gateway data class."""
+
+    binary_sensors: GatewayBinarySensors
+    gateway_modes: list[str]
+    regulation_modes: list[str]
+    select_gateway_mode: str
+    select_regulation_mode: str
+    sensors: Weather
+    zigbee_mac_address: str
+
+
+@dataclass
+class SmileTGateway(BaseClass):
+    """Plugwise Anna Smile-T Gateway data class."""
+
+    binary_sensors: GatewayBinarySensors
+    sensors: Weather
+
+
+@dataclass
+class SmileTLegacyGateway(BaseClass):
+    """Plugwise legacy Anna Smile-T Gateway data class."""
+
+    sensors: Weather
+
+
+@dataclass
 class SmileP1Gateway(BaseClass):
     """Plugwise Smile P1 Gateway data class."""
 
-    binary_sensors: GatewayBinarySensors  # Not for legacy?
+    binary_sensors: GatewayBinarySensors
+
+
+@dataclass
+class SmileP1LegacyGateway(BaseClass):
+    """Plugwise legacy Smile P1 Gateway data class."""
 
 
 @dataclass
@@ -36,38 +69,17 @@ class StretchGateway(BaseClass):
 
 
 @dataclass
-class SmileTGateway(BaseClass):
-    """Plugwise Anna Smile-T Gateway data class."""
-
-    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors  # Not for legacy?
-    sensors: GatewaySensors
-
-
-@dataclass
 class GatewayBinarySensors:
     """Gateway binary_sensors class."""
 
-    plugwise_notification: bool  # None for some?
+    plugwise_notification: bool
 
 
 @dataclass
-class GatewaySensors:
-    """Gateway sensors class."""
+class Weather:
+    """Gateway weather sensor class."""
 
-    outdoor_temperature: float | None  # None when not enabled?
-
-
-@dataclass
-class AdamGateway(BaseClass):
-    """Plugwise Adam HA Gateway data class."""
-
-    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors  # Not for legacy?
-    gateway_modes: list[str]
-    regulation_modes: list[str]
-    select_gateway_mode: str
-    select_regulation_mode: str
-    sensors: GatewaySensors
-    zigbee_mac_address: str
+    outdoor_temperature: float | None  # None when not available
 
 
 @dataclass
@@ -75,7 +87,7 @@ class SmartEnergyMeter(BaseClass):
     """DSMR Energy Meter data class."""
 
     sensors: SmartEnergySensors
-
+SmartEnergyMeterSmartEnergyMeter
 
 @dataclass
 class SmartEnergySensors:
@@ -255,26 +267,43 @@ class ThermostatsDict:
 
 
 @dataclass
-class OnOffTherm(BaseClass):
-    """On-off heater/cooler device class."""
+class OnOff(BaseClass):
+    """On-off climate device class."""
 
-    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors
+    binary_sensors: OnOffBinarySensors
+    sensors: OnOffSensors
+
+
+@dataclass
+class OpOffBinarySensors:
+    """OpenTherm binary_sensors class."""
+
+    heating_state: bool
+
+
+@dataclass
+class OnOffSensors:
+    """Heater-central sensors class."""
+
+    intended_boiler_temperature: float | None
+    modulation_level: float | None
+    water_temperature: float
 
 
 @dataclass
 class OpenTherm(BaseClass):
-    """OpenTherm heater/cooler device class."""
+    """OpenTherm climate device class."""
 
-    binary_sensors: GatewayBinarySensors | HeaterCentralBinarySensors
+    binary_sensors: OpenThermBinarySensors
     maximum_boiler_temperature: SetpointDict | None
     max_dhw_temperature: SetpointDict | None
-    sensors: HeaterCentralSensors
-    switches: HeaterCentralSwitches | PlugSwitches
+    sensors: OpenThermSensors
+    switches: OpenThermSwitches
 
 
 @dataclass
-class HeaterCentralBinarySensors:
-    """Heater-central binary_sensors class."""
+class OpenThermBinarySensors:
+    """OpenTherm binary_sensors class."""
 
     compressor_state: bool | None
     cooling_enabled: bool | None
@@ -286,8 +315,8 @@ class HeaterCentralBinarySensors:
 
 
 @dataclass
-class HeaterCentralSensors:
-    """Heater-central sensors class."""
+class OpenThermSensors:
+    """OpenTherm sensors class."""
 
     dhw_temperature: float | None
     domestic_hot_water_setpoint: float | None
@@ -300,8 +329,8 @@ class HeaterCentralSensors:
 
 
 @dataclass
-class HeaterCentralSwitches:
-    """Heater-central switches class."""
+class OpenThermSwitches:
+    """OpenTherm switches class."""
 
     cooling_ena_switch: bool | None
     dhw_cm_switch: bool
@@ -335,50 +364,109 @@ class PlugSwitches:
 
 ##################################################
 class PlugwiseData
-"""
-Overview of existing options:
+    """
+    Overview of existing options:
 
-- Gateway Adam
-    - Climate device
-        - OnOff
-        - Opentherm
-    - Zones (1 to many) with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
-    - Location (Home) with weather data - only outdoor_temp used
-    - Single devices (appliances) assigned to a Zone, or not
+    - Gateway Adam
+        - Climate device
+            - OnOff
+            - Opentherm
+        - Zones (1 to many) with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
+        - Location (Home) with weather data - only outdoor_temp used
+        - Single devices (appliances) assigned to a Zone, or not
+            - Anna (wired thermostat)
+            - Lisa (ZigBee thermostat)
+            - Jip (ZigBee thermostat)
+            - Tom/Floor (ZigBee valve/thermostat)
+            - Plug (energy switch/meter)
+            - Aqara Plug (energy switch/meter)
+            - Noname switch (energy switch)
+
+    - Gateway SmileT
+        - Climate device
+            - OnOff
+            - OpenTherm
+        - Zone (Living room) with with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
+        - Location (Home) with weather data - only outdoor_temp used
+        - Single devices (appliances)
+            - Anna (wired thermostat)
+            - P1-DSMR device (new Anna P1) (?)
+
+    - Gateway SmileT legacy
+        - OnOff/OpenTherm device
         - Anna (wired thermostat)
-        - Lisa (ZigBee thermostat)
-        - Jip (ZigBee thermostat)
-        - Tom/Floor (ZigBee valve/thermostat)
-        - Plug (energy switch/meter)
-        - Aqara Plug (energy switch/meter)
-        - Noname switch (energy switch)
+        - Location (Home) with weather data (optional?) - only outdoor_temp used
 
-- Gateway SmileT
-    - Climate device
-        - OnOff
-        - OpenTherm
-    - Zone (Living room) with with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
-    - Location (Home) with weather data - only outdoor_temp used
-    - Single devices (appliances)
-        - Anna (wired thermostat)
-        - P1-DSMR device (new Anna P1) (?)
+    - Gateway P1 
+        - P1-DSMR device (in Home location)
 
-- Gateway SmileT legacy
-    - OnOff/OpenTherm device
-    - Anna (wired thermostat)
-    - Location (Home) with weather data (optional?) - only outdoor_temp used
+    - Gateway P1 legacy
+        - P1-DSMR device (in modules)
 
-- Gateway P1 
-    - P1-DSMR device (in Home location)
+    - Gateway Stretch (legacy)
+        - Single devices (Zigbee)
+        - ??
+    """
 
-- Gateway P1 legacy
-    - P1-DSMR device (in modules)
+    adam: AdamGateway()
+    smile_t: SmileTGateway()
+    smile_t_legacy: SmileTLegacyGateway()
+    # smile_t_p1: AnnaP1Gateway()  # double?
+    smile_p1: SmileP1Gateway()
+    smile_p1_legacy: SmileP1LegacyGateway()
+    stretch: StretchGateway
+    onoff: OnOff()
+    opentherm: OpenTherm()
+    zones: list[Zone()]
+    weather: Weather()
+    anna: Anna()
+    anna_legacy: AnnaLegacy()
+    anna_adam: AnnaAdam()
+    lisa: Lisa()
+    jip: Jip()
+    tom_floor: TomFloor()
+    plug: Plug()
+    plug_legacy: PlugLegacy()
+    aqara_plug: AqaraPlug()
+    misc_plug: MiscPlug()
+    p1_dsmr: P1_DSMR()
 
-- Gateway Stretch (legacy)
-    - Single devices (Zigbee)
-    - ??
-
-"""
+    def update_from_dict(self, data: dict[str, Any]) -> PlugwiseData:
+        """Update the status object with data received from the Plugwise API."""
+        if "adam" in data:
+            self.adam.update_from_dict(data["adam"])
+        if "smile_t" in data:
+            self.smile_t.update_from_dict(data["smile_t"])
+        # if "smile_t_p1" in data:
+        #     self.smile_t_p1.update_from_dict(data["smile_t_p1"])
+        if "smile_p1" in data:
+            self.smile_p1.update_from_dict(data["smile_p1"])
+         if "stretch" in data:
+            self.stretch.update_from_dict(data["stretch"])
+        if "onoff" in data:
+            self.onoff.update_from_dict(data["onoff"])
+        if "opentherm" in data:
+            self.opentherm.update_from_dict(data["opentherm"])
+        if "zones" in data:
+            self.zones.update_from_dict(data["zones"])
+        if "anna" in data:
+            self.anna.update_from_dict(data["anna"])
+        if "anna_adam" in data:
+            self.anna_adam.update_from_dict(data["anna_adam"])
+        if "lisa" in data:
+            self.lisa.update_from_dict(data["lisa"])
+        if "jip" in data:
+            self.zones.update_from_dict(data["jip"])
+        if "tom_floor" in data:
+            self.tom_floor.update_from_dict(data["tom_floor"])
+        if "plug" in data:
+            self.plug.update_from_dict(data["plug"])
+        if "aqara_plug" in data:
+            self.opentherm.update_from_dict(data["aqara_plug"])
+        if "misc_plug" in data:
+            self.misc_plug.update_from_dict(data["misc_plug"])
+        if "p1_dsmr" in data:
+            self.p1_dsmr.update_from_dict(data["p1_dsmr"])
 ##################################################
 
 # class PlugwiseP1:
