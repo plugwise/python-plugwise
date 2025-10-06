@@ -468,7 +468,7 @@ class SmileHelper(SmileCommon):
                 item == "thermostat"
                 and (
                     entity["dev_class"] != "climate"
-                    if self.check_name(ADAM)
+                    if self._is_thermostat
                     else entity["dev_class"] != "thermostat"
                 )
             ):

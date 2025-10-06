@@ -113,8 +113,7 @@ class SmileAPI(SmileData):
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
-            if self.check_name(ADAM):
-                self._scan_thermostats()
+            self._scan_thermostats()
 
         if group_data := self._get_group_switches():
             self.gw_entities.update(group_data)

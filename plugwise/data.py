@@ -35,7 +35,7 @@ class SmileData(SmileHelper):
         Collect data for each entity and add to self.gw_entities.
         """
         self._update_gw_entities()
-        if self.check_name(ADAM):
+        if self._is_thermostat:
             self._update_zones()
             self.gw_entities.update(self._zones)
 
@@ -198,9 +198,9 @@ class SmileData(SmileHelper):
             self._get_adam_data(entity, data)
 
         # Thermostat data for Anna (presets, temperatures etc)
-        if self.check_name(ANNA) and entity["dev_class"] == "thermostat":
-            self._climate_data(entity_id, entity, data)
-            self._get_anna_control_state(data)
+        # if self.check_name(ANNA) and entity["dev_class"] == "thermostat":
+        #     self._climate_data(entity_id, entity, data)
+        #     self._get_anna_control_state(data)
 
         return data
 
