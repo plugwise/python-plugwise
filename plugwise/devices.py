@@ -141,15 +141,11 @@ class SmartEnergyLegacySensors:
 
 
 @dataclass
-class AnnaData(BaseClass):
-    """Plugwise Anna data class, also for legacy Anna."""
+class Anna(BaseClass):
+    """Plugwise Anna class, also for legacy Anna."""
 
-    active_preset: str | None
-    available_schedules: list[str]
     climate_mode: str
     control_state: str
-    preset_modes: list[str] | None
-    select_schedule: str | None
     sensors: AnnaSensors
     temperature_offset: SetpointDict | None  # not for legacy
     thermostat: ThermostatDict
@@ -167,8 +163,8 @@ class AnnaSensors:
 
 
 @dataclass
-class ThermoZone(BaseClass):
-    """Plugwise Adam ThermoZone data class."""
+class Zone(BaseClass):
+    """Plugwise climate Zone data class."""
 
     active_preset: str | None
     available_schedules: list[str]
@@ -176,18 +172,18 @@ class ThermoZone(BaseClass):
     control_state: str
     preset_modes: list[str]
     select_schedule: str
-    sensors: ThermoZoneSensors
+    sensors: ZoneSensors
     thermostat: ThermostatDict
     thermostats: ThermostatsDict
 
 
 @dataclass
-class ThermoZoneSensors:
-    """ThermoZone sensors class."""
+class ZoneSensors:
+    """ Climate Zone sensors class."""
 
-    electricity_consumed: float | None  # only with Plug(s) in the zone
-    electricity_produced: float | None  # only with Plug(s) in the zone
-    temperature: float
+    electricity_consumed: float | None
+    electricity_produced: float | None
+    temperature: float | None
 
 
 @dataclass
@@ -309,7 +305,7 @@ class OpenThermBinarySensors:
     cooling_enabled: bool | None
     cooling_state: bool | None
     dhw_state: bool
-    flame_state: bool
+    flame_state: bool | None
     heating_state: bool
     secondary_boiler_state: bool | None
 
@@ -467,44 +463,3 @@ class PlugwiseData
             self.misc_plug.update_from_dict(data["misc_plug"])
         if "p1_dsmr" in data:
             self.p1_dsmr.update_from_dict(data["p1_dsmr"])
-##################################################
-
-# class PlugwiseP1:
-#     """Plugwise P1 data class."""
-#
-#     data: dict[str, SmileP1Gateway | SmartEnergyMeter | SmartEnergyLegacySensors]
-
-
-# class Anna(SmileTGateway, AnnaData, OnOffTherm, OpenTherm):
-#     """Plugwise Anna data class."""
-#
-#     data: dict[str, SmileTGateway | OnOffTherm | OpenTherm | AnnaData]
-
-
-# class Adam(
-#    AdamGateway,
-#    AnnaAdamData,
-#    JipLisaTomData,
-#    ThermoZone,
-#    PlugData,
-#    OnOffTherm,
-#    OpenTherm,
-# ):
-#    """Plugwise Anna data class."""
-#
-#    data: dict[
-#        str,
-#        AdamGateway
-#        | OnOffTherm
-#        | OpenTherm
-#        | AnnaAdamData
-#        | JipLisaTomData
-#        | ThermoZone
-#        | PlugData,
-#    ]
-
-
-# class Stretch:
-#    """Plugwise Stretch data class."""
-#
-#    data: dict[str, StretchGateway | PlugData]
