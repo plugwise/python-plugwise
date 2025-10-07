@@ -148,7 +148,7 @@ jobs:
         with:
           fail-on-miss: false  # First time create cache (if not already exists)
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor
+          python-version: ${{ matrix.python-version }}  # Force to installed python minor
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
