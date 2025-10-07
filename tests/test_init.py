@@ -51,14 +51,14 @@ _LOGGER.setLevel(logging.DEBUG)
 class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     """Tests for Plugwise Smile."""
 
-    async def _write_json(self, call, data):
+    async def _write_json(self, file_path, call, data):
         """Store JSON data to per-setup files for HA component testing."""
         no_fixtures = os.getenv("NO_FIXTURES") == "1"
         if no_fixtures:
             return  # pragma: no cover
 
         path = os.path.join(
-            os.path.dirname(__file__), "../fixtures/" + self.smile_setup
+            os.path.dirname(__file__), file_path,
         )
         datafile = os.path.join(path, call + ".json")
         if not os.path.exists(path):  # pragma: no cover
@@ -580,10 +580,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "cooling_state"
                     ]
 
-        await self._write_json("data", data)
+        await self._write_json("../fixtures/" + self.smile_setup, "data", data)
+        prefix = "dummy"
+        _LOGGER.debug("HOI smile_setup = %s", self.smile_setup)
+        if str(self.smile_setup).startswith("adam"):
+            _LOGGER.debug("HOI starts with adam = True")
+            prefix = "adam"
+        if str(self.smile_setup).startswith("anna"):
+            _LOGGER.debug("HOI starts with anna = True")
+            prefix = "anna"
+        _LOGGER.debug("HOI prefix = %s", prefix)
+        _LOGGER.debug("HOI path = %s", f"../tests/data/{prefix}/")
+        await self._write_json(f"../tests/data/{prefix}/", self.smile_setup, {"devices": data})
 
         if "FIXTURES" in os.environ:
-            _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
+            _LOGGER.info("Skipping tests-: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
         self.entity_list = list(data.keys())
