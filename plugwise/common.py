@@ -145,8 +145,8 @@ class SmileCommon:
             "model": appl.model,
             "model_id": appl.model_id,
             "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
             "vendor": appl.vendor_name,
+            "zigbee_mac_address": appl.zigbee_mac,
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
