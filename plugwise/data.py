@@ -126,7 +126,7 @@ class SmileData(SmileHelper):
         if (
             self.check_name(ANNA)
             and self._cooling_present
-            and entity["dev_class"] == "thermostat"
+            and entity["dev_class"] == "climate"
         ):
             thermostat = entity["thermostat"]
             sensors = entity["sensors"]
