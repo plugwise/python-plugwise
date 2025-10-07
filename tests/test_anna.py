@@ -30,7 +30,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert api.gateway_id == "0466eae8520144c78afb29628384edeb"
         assert api._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
-        assert self.entity_items == 60
+        assert self.entity_items == 64
         assert not self.notifications
 
         assert not self.cooling_present
@@ -103,7 +103,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert api._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
-        assert self.entity_items == 60
+        assert self.entity_items == 64
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -132,7 +132,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
-        assert self.entity_items == 60
+        assert self.entity_items == 64
 
         result = await self.tinker_thermostat(
             api,
@@ -161,7 +161,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api._last_active["c34c6864216446528e95d88985e714cc"] == "Normaal"
-        assert self.entity_items == 41
+        assert self.entity_items == 45
         assert not self.notifications
 
         result = await self.tinker_thermostat(
