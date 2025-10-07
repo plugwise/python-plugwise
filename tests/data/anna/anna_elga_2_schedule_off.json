@@ -35,25 +35,54 @@
       },
       "vendor": "Techneco"
     },
-    "ebd90df1ab334565b5895f37590ccff4": {
+    "d3ce834534114348be628b61b26d9220": {
       "active_preset": "home",
-      "available_schedules": ["Thermostat schedule", "off"],
+      "available_schedules": [
+        "Thermostat schedule",
+        "off"
+      ],
       "climate_mode": "heat_cool",
       "control_state": "idle",
+      "dev_class": "climate",
+      "model": "ThermoZone",
+      "name": "Living room",
+      "preset_modes": [
+        "away",
+        "no_frost",
+        "vacation",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "off",
+      "sensors": {
+        "temperature": 20.9
+      },
+      "thermostat": {
+        "lower_bound": 4.0,
+        "resolution": 0.1,
+        "setpoint": 19.5,
+        "upper_bound": 30.0
+      },
+      "thermostats": {
+        "primary": [
+          "ebd90df1ab334565b5895f37590ccff4"
+        ],
+        "secondary": []
+      },
+      "vendor": "Plugwise"
+    },
+    "ebd90df1ab334565b5895f37590ccff4": {
       "dev_class": "thermostat",
       "firmware": "2018-02-08T11:15:53+01:00",
       "hardware": "6539-1301-5002",
       "location": "d3ce834534114348be628b61b26d9220",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
-      "select_schedule": "off",
       "sensors": {
         "cooling_activation_outdoor_temperature": 26.0,
         "cooling_deactivation_threshold": 3.0,
         "illuminance": 0.5,
-        "setpoint_high": 30.0,
-        "setpoint_low": 19.5,
+        "setpoint": 19.5,
         "temperature": 20.9
       },
       "temperature_offset": {
@@ -61,13 +90,6 @@
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "thermostat": {
-        "lower_bound": 4.0,
-        "resolution": 0.1,
-        "setpoint_high": 30.0,
-        "setpoint_low": 19.5,
-        "upper_bound": 30.0
       },
       "vendor": "Plugwise"
     },
