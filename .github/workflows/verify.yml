@@ -146,6 +146,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
+          fail-on-miss: false  # First time create cache (if not already exists)
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor
           venv-dir: ${{ env.VENV }}
