@@ -4,8 +4,8 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 14
-  DEFAULT_PYTHON: "3.13"
+  CACHE_VERSION: 15
+  DEFAULT_PYTHON: "3.14"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
   VENV: venv
 
@@ -133,7 +133,7 @@ jobs:
       - commitcheck
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.14", "3.13"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v5
@@ -147,7 +147,7 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor$
+          python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
