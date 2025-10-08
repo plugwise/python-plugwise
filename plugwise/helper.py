@@ -721,7 +721,7 @@ class SmileHelper(SmileCommon):
                     },
                     "vendor": "Plugwise",
                 }
-                self._count += 3
+                self._count += 5
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().

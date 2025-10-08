@@ -169,6 +169,7 @@
       "model": "Gateway",
       "model_id": "smile_open_therm",
       "name": "Adam",
+      "notifications": {},
       "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
       "select_gateway_mode": "full",
       "select_regulation_mode": "off",
@@ -214,7 +215,8 @@
       "name": "Test",
       "switches": {
         "relay": true
-      }
+      },
+      "vendor": "Plugwise"
     },
     "f2bf9048bef64cc5b6d5110154e33c81": {
       "active_preset": "home",
@@ -228,6 +230,7 @@
       "climate_mode": "off",
       "control_state": "idle",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Living room",
       "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
       "select_schedule": "off",
@@ -245,7 +248,8 @@
       "thermostats": {
         "primary": ["ad4838d7d35c4d6ea796ee12ae5aedf8"],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "f871b8c4d63549319221e294e4f88074": {
       "active_preset": "home",
@@ -259,6 +263,7 @@
       "climate_mode": "off",
       "control_state": "idle",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Bathroom",
       "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
       "select_schedule": "off",
@@ -276,7 +281,8 @@
       "thermostats": {
         "primary": ["e2f4322d57924fa090fbbc48b3a140dc"],
         "secondary": ["1772a4ea304041adb83f357b751341ff"]
-      }
+      },
+      "vendor": "Plugwise"
     }
   }
 }

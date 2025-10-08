@@ -50,6 +50,7 @@
       "model": "Gateway",
       "model_id": "smile_open_therm",
       "name": "Adam",
+      "notifications": {},
       "regulation_modes": [
         "heating",
         "off",
@@ -88,6 +89,7 @@
       "climate_mode": "auto",
       "control_state": "idle",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Woonkamer",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
@@ -105,7 +107,8 @@
       "thermostats": {
         "primary": ["ca79d23ae0094120b877558734cff85c"],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     }
   }
 }
