@@ -37,7 +37,7 @@ jobs:
         run: wget -O ha_pyproject.toml "https://raw.githubusercontent.com/home-assistant/core/refs/heads/dev/pyproject.toml"
       - name: Compute cache key
         id: set-key
-        run: echo "cache-key=${{ runner.os }}-venv-cache-${{ env.CACHE_VERSION }}-${{ steps.python.outputs.python-version }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
+        run: echo "cache-key=${{ runner.os }}-venv-cache-${{ env.CACHE_VERSION }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
 
   # Prepare default python version environment
   prepare:
@@ -49,7 +49,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/prepare-python-and-code@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ needs.cache.outputs.python-version }}
           fail-on-miss: false  # First time create cache (if not already exists)
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
@@ -70,7 +70,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ needs.cache.outputs.python-version }}
           python-version: ${{ needs.cache.outputs.python-version}}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
@@ -106,7 +106,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ needs.cache.outputs.python-version }}
           python-version: ${{ needs.cache.outputs.python-version}}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
@@ -147,7 +147,7 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           fail-on-miss: false  # First time create cache (if not already exists)
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ matrix.python-version }}
           python-version: ${{ matrix.python-version }}  # Force to installed python minor
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
@@ -179,7 +179,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ needs.cache.outputs.python-version }}
           python-version: ${{ needs.cache.outputs.python-version}}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
@@ -224,7 +224,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ needs.cache.outputs.python-version }}
           python-version: ${{ needs.cache.outputs.python-version}}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
@@ -306,7 +306,7 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
-          cache-key: ${{ needs.cache.outputs.cache-key }}
+          cache-key: ${{ needs.cache.outputs.cache-key }}-${{ needs.cache.outputs.python-version }}
           python-version: ${{ needs.cache.outputs.python-version}}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
