@@ -4,8 +4,8 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 14
-  DEFAULT_PYTHON: "3.13"
+  CACHE_VERSION: 2
+  DEFAULT_PYTHON: "3.14"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
   VENV: venv
 
@@ -23,7 +23,7 @@ jobs:
     name: Cache identify
     outputs:
       cache-key: ${{ steps.set-key.outputs.cache-key }}
-      python-version: ${{ steps.python.outputs.python-version}}  # Ensure all runners use THIS minor version
+      python-version: ${{ steps.python.outputs.python-version }}  # Ensure all runners use THIS minor version
     steps:
       - name: Check out committed code
         uses: actions/checkout@v5
@@ -37,7 +37,7 @@ jobs:
         run: wget -O ha_pyproject.toml "https://raw.githubusercontent.com/home-assistant/core/refs/heads/dev/pyproject.toml"
       - name: Compute cache key
         id: set-key
-        run: echo "cache-key=${{ runner.os }}-venv-cache-${{ env.CACHE_VERSION }}-${{ steps.python.outputs.python-version }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
+        run: echo "cache-key=${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
 
   # Prepare default python version environment
   prepare:
@@ -71,17 +71,17 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ needs.cache.outputs.python-version}}
+          python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Ruff (with fix)
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           ruff check plugwise/ tests/
       - name: If needed, commit ruff changes to the pull request
         if: failure()
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           ruff format plugwise/ tests/
           git config --global user.name 'autoruff'
           git config --global user.email 'plugwise@users.noreply.github.com'
@@ -107,21 +107,21 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ needs.cache.outputs.python-version}}
+          python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Verify commit
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual pylint
       - name: Biome lint
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           mkdir -p ./tmp && curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64" -o ./tmp/biome && chmod +x ./tmp/biome
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual biome
       - name: Lint markdown files
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
 
   pytest:
@@ -133,7 +133,7 @@ jobs:
       - commitcheck
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.14", "3.13"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v5
@@ -146,18 +146,19 @@ jobs:
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v1
         with:
+          fail-on-miss: false  # First time create cache (if not already exists)
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor$
+          python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
         run: |
-          . venv/bin/activate
+          . venv-${{ steps.python.outputs.python-version }}/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.python-version }}
+          name: coverage-${{ steps.python.outputs.python-version }}
           path: .coverage
           if-no-files-found: error
           include-hidden-files: true
@@ -179,12 +180,12 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ needs.cache.outputs.python-version}}
+          python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run mypy
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pip list | grep -i mypy
           mypy plugwise/
 
@@ -224,7 +225,7 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ needs.cache.outputs.python-version}}
+          python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Download all coverage artifacts
@@ -235,7 +236,7 @@ jobs:
           path: ${{ github.workspace }}/artifacts
       - name: Combine coverage results
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           coverage combine artifacts/.coverage*
           coverage report --fail-under=94
           coverage xml
@@ -306,11 +307,11 @@ jobs:
         uses: plugwise/gh-actions/restore-venv@v1
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
-          python-version: ${{ needs.cache.outputs.python-version}}
+          python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run complexity report (click to view details)
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           echo "Showing complexity higher or equal to 'C'"
           radon cc plugwise/ tests/ -s -nc --no-assert

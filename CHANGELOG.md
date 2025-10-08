@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Test/validate for Python 3.14
+
 ## v1.7.8
 
 - Implement fixes related to the select-platform-data provided to the HA Core integrations, part of solving pw-beta issue [#897](https://github.com/plugwise/plugwise-beta/issues/897)

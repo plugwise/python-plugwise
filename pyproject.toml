@@ -13,6 +13,7 @@ classifiers     = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.13",
     "Topic :: Home Automation",
 ]
@@ -56,7 +57,7 @@ include = ["plugwise*"]
 ##
 
 [tool.pylint.MAIN]
-py-version = "3.13"
+py-version = "3.14"
 # Use a conservative default here; 2 should speed up most setups and not hurt
 # any too bad. Override on command line as appropriate.
 jobs = 2
@@ -391,7 +392,7 @@ max-line-length-suggestions = 72
 
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = true
@@ -421,7 +422,7 @@ omit= [
 ]
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 
 lint.select = [
     "B002", # Python does not support the unary prefix increment
