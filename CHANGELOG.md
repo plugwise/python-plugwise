@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Test/validate for Python 3.14
+- Fix entity_item counting, refresh/complete test-data-json files via [#794](https://github.com/plugwise/python-plugwise/pull/794)
 
 ## v1.7.8
 
