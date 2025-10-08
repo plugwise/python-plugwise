@@ -4,7 +4,7 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 16
+  CACHE_VERSION: 1
   DEFAULT_PYTHON: "3.14"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
   VENV: venv
@@ -153,12 +153,12 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
         run: |
-          . venv-${{ matrix.python-version }}/bin/activate
+          . venv-${{ steps.python.outputs.python-version }}/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.python-version }}
+          name: coverage-${{ steps.python.outputs.python-version }}
           path: .coverage
           if-no-files-found: error
           include-hidden-files: true
