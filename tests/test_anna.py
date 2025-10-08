@@ -397,7 +397,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert (
             api._last_active["d3ce834534114348be628b61b26d9220"] == THERMOSTAT_SCHEDULE
         )
-        assert self.entity_items == 71
+        assert self.entity_items == 69
         assert not self.notifications
 
         assert self.cooling_present
