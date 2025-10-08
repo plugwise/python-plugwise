@@ -205,7 +205,7 @@ class SmileCommon:
                     "members": members,
                     "vendor": "Plugwise",
                 }
-                self._count += 4
+                self._count += 5
 
         return switch_groups
 
