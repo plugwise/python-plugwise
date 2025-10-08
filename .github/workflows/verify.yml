@@ -37,7 +37,7 @@ jobs:
         run: wget -O ha_pyproject.toml "https://raw.githubusercontent.com/home-assistant/core/refs/heads/dev/pyproject.toml"
       - name: Compute cache key
         id: set-key
-        run: echo "cache-key=${{ runner.os }}-venv-cache-${{ env.CACHE_VERSION }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
+        run: echo "cache-key=${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pyproject.toml', 'requirements_test.txt', '.pre-commit-config.yaml') }}" >> "$GITHUB_OUTPUT"
 
   # Prepare default python version environment
   prepare:
@@ -76,12 +76,12 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Ruff (with fix)
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           ruff check plugwise/ tests/
       - name: If needed, commit ruff changes to the pull request
         if: failure()
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           ruff format plugwise/ tests/
           git config --global user.name 'autoruff'
           git config --global user.email 'plugwise@users.noreply.github.com'
@@ -112,16 +112,16 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Verify commit
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual pylint
       - name: Biome lint
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           mkdir -p ./tmp && curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64" -o ./tmp/biome && chmod +x ./tmp/biome
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual biome
       - name: Lint markdown files
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
 
   pytest:
@@ -153,7 +153,7 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -185,7 +185,7 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run mypy
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           pip list | grep -i mypy
           mypy plugwise/
 
@@ -236,7 +236,7 @@ jobs:
           path: ${{ github.workspace }}/artifacts
       - name: Combine coverage results
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           coverage combine artifacts/.coverage*
           coverage report --fail-under=94
           coverage xml
@@ -312,6 +312,6 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run complexity report (click to view details)
         run: |
-          . venv/bin/activate
+          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
           echo "Showing complexity higher or equal to 'C'"
           radon cc plugwise/ tests/ -s -nc --no-assert
