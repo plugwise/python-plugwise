@@ -153,7 +153,7 @@ jobs:
           precommit-home: ${{ env.PRE_COMMIT_HOME }}
       - name: Run all tests
         run: |
-          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
+          . venv-${{ matrix.python-version }}/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
