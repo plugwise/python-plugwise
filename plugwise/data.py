@@ -197,11 +197,6 @@ class SmileData(SmileHelper):
         if self.check_name(ADAM):
             self._get_adam_data(entity, data)
 
-        # Thermostat data for Anna (presets, temperatures etc)
-        # if self.check_name(ANNA) and entity["dev_class"] == "thermostat":
-        #     self._climate_data(entity_id, entity, data)
-        #     self._get_anna_control_state(data)
-
         return data
 
     def _check_availability(

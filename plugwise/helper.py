@@ -773,9 +773,9 @@ class SmileHelper(SmileCommon):
                 thermo_loc["secondary"].append(appliance_id)
 
     def _control_state(self, data: GwEntityData, loc_id: str) -> str | bool:
-        """Helper-function for _get_adam_data().
+        """Helper-function for _get_location_data().
 
-        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Adam & Anna: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
