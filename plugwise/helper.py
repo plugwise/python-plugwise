@@ -783,9 +783,10 @@ class SmileHelper(SmileCommon):
         if (ctrl_state := self._domain_objects.find(locator)) is not None:
             return str(ctrl_state.text)
 
-        # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
+        # Adam: handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
+        # TODO issue also present for Anna? Check!
         # In newer firmware versions, default to "off" when control_state is not present
-        if self.smile.version != version.Version("0.0.0"):
+        if self.check_name(ADAM) and self.smile.version != version.Version("0.0.0"):
             if self.smile.version >= version.parse("3.2.0"):
                 return "off"
 
@@ -794,7 +795,15 @@ class SmileHelper(SmileCommon):
             setpoint = data["sensors"]["setpoint"]
             temperature = data["sensors"]["temperature"]
             # No cooling available in older firmware
-            return "heating" if temperature < setpoint else "off"
+            return "heating" if temperature < setpoint else "idle"
+
+        if self.check_name(ANNA):
+            # Older Anna firmware does not have the control_state xml-key
+            # Work around this by comparing the reported temperature and setpoint for a location
+            setpoint = data["sensors"]["setpoint"]
+            temperature = data["sensors"]["temperature"]
+            # No cooling available in older firmware
+            return "heating" if temperature < setpoint else "idle"
 
         return False  # pragma: no cover
 
