@@ -60,14 +60,14 @@
       "active_preset": "home",
       "available_schedules": ["Thermostat schedule", "off"],
       "climate_mode": "auto",
-      "control_state": "idle",
+      "control_state": "heating",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Living room",
       "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
       "select_schedule": "Thermostat schedule",
       "sensors": {
-        "temperature": 24.9
+        "temperature": 18.9
       },
       "thermostat": {
         "lower_bound": 4.0,
