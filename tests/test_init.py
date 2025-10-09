@@ -58,7 +58,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return  # pragma: no cover
 
         path = os.path.join(
-            os.path.dirname(__file__), file_path,
+            os.path.dirname(__file__),
+            file_path,
         )
         datafile = os.path.join(path, call + ".json")
         if not os.path.exists(path):  # pragma: no cover
@@ -591,7 +592,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             prefix = "anna"
         _LOGGER.debug("HOI prefix = %s", prefix)
         _LOGGER.debug("HOI path = %s", f"../tests/data/{prefix}/")
-        await self._write_json(f"../tests/data/{prefix}/", self.smile_setup, {"devices": data})
+        await self._write_json(
+            f"../tests/data/{prefix}/", self.smile_setup, {"devices": data}
+        )
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests-: Requested fixtures only")  # pragma: no cover
