@@ -10,7 +10,6 @@ import datetime as dt
 from typing import Any, cast
 
 from plugwise.constants import (
-    ADAM,
     ANNA,
     APPLIANCES,
     DOMAIN_OBJECTS,
