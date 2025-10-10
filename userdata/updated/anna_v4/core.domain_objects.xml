@@ -647,7 +647,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-01T08:04:13.351+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-02T08:33:05.127+02:00" end_date="2020-04-02T08:33:05.127+02:00">
-					<measurement log_date="2020-04-02T08:33:05.127+02:00">20.50</measurement>
+					<measurement log_date="2020-04-02T08:33:05.127+02:00">19.50</measurement>
 				</period>
 			</point_log>
 			<point_log id='beae032e4725428796d58f609805c299'>
@@ -664,7 +664,7 @@
 			<thermostat_functionality id='50be63f8ab7641e89b90fd64a097c3b5'>
 				<updated_date>2020-04-02T08:33:05.069+02:00</updated_date>
 				<type>thermostat</type>
-				<setpoint>20.5</setpoint>
+				<setpoint>19.5</setpoint>
 				<lower_bound>4</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.1</resolution>

@@ -35,7 +35,7 @@ class SmileData(SmileHelper):
         Collect data for each entity and add to self.gw_entities.
         """
         self._update_gw_entities()
-        if self.check_name(ADAM):
+        if self._is_thermostat:
             self._update_zones()
             self.gw_entities.update(self._zones)
 
@@ -47,6 +47,8 @@ class SmileData(SmileHelper):
         for location_id, zone in self._zones.items():
             data = self._get_location_data(location_id)
             zone.update(data)
+
+            self._update_for_cooling(zone)
 
     def _update_gw_entities(self) -> None:
         """Helper-function for _all_entities_data() and async_update().
@@ -75,8 +77,6 @@ class SmileData(SmileHelper):
             )
             if is_battery_low:
                 entity["binary_sensors"]["low_battery"] = True
-
-            self._update_for_cooling(entity)
 
             remove_empty_platform_dicts(entity)
 
@@ -126,7 +126,7 @@ class SmileData(SmileHelper):
         if (
             self.check_name(ANNA)
             and self._cooling_present
-            and entity["dev_class"] == "thermostat"
+            and entity["dev_class"] == "climate"
         ):
             thermostat = entity["thermostat"]
             sensors = entity["sensors"]
@@ -142,11 +142,9 @@ class SmileData(SmileHelper):
             thermostat.pop("setpoint")
             temp_dict.update(thermostat)
             entity["thermostat"] = temp_dict
-            if "setpoint" in sensors:
-                sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            self._count += 2  # add 4, remove 2
+            self._count += 3  # add 4, remove 1
 
     def _get_location_data(self, loc_id: str) -> GwEntityData:
         """Helper-function for _all_entity_data() and async_update().
@@ -197,11 +195,6 @@ class SmileData(SmileHelper):
         if self.check_name(ADAM):
             self._get_adam_data(entity, data)
 
-        # Thermostat data for Anna (presets, temperatures etc)
-        if self.check_name(ANNA) and entity["dev_class"] == "thermostat":
-            self._climate_data(entity_id, entity, data)
-            self._get_anna_control_state(data)
-
         return data
 
     def _check_availability(
@@ -249,16 +242,12 @@ class SmileData(SmileHelper):
                 self._count += 1
 
     def _climate_data(
-        self, location_id: str, entity: GwEntityData, data: GwEntityData
+        self, loc_id: str, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Helper-function for _get_entity_data().
 
         Determine climate-control entity data.
         """
-        loc_id = location_id
-        if entity.get("location") is not None:
-            loc_id = entity["location"]
-
         # Presets
         data["preset_modes"] = None
         data["active_preset"] = None
@@ -300,20 +289,6 @@ class SmileData(SmileHelper):
         return (
             "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
         )
-
-    def _get_anna_control_state(self, data: GwEntityData) -> None:
-        """Set the thermostat control_state based on the opentherm/onoff device state."""
-        data["control_state"] = "idle"
-        self._count += 1
-        for entity in self.gw_entities.values():
-            if entity["dev_class"] != "heater_central":
-                continue
-
-            binary_sensors = entity["binary_sensors"]
-            if binary_sensors["heating_state"]:
-                data["control_state"] = "heating"
-            if binary_sensors.get("cooling_state"):
-                data["control_state"] = "cooling"
 
     def _get_schedule_states_with_off(
         self, location: str, schedules: list[str], selected: str, data: GwEntityData
