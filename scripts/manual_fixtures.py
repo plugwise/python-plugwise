@@ -235,22 +235,22 @@ m_anna_heatpump_cooling["015ae9ea3f964e668e490fa39da3870b"]["sensors"][
     "outdoor_temperature"
 ] = 28.2
 
-# Go for 3cb7
-m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "cooling"
-m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
+# Go for c784
+m_anna_heatpump_cooling["c784ee9fdab44e1395b8dee7d7a497d5"]["control_state"] = "cooling"
+m_anna_heatpump_cooling["c784ee9fdab44e1395b8dee7d7a497d5"]["thermostat"][
     "setpoint_low"
 ] = 20.5
-m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
+m_anna_heatpump_cooling["c784ee9fdab44e1395b8dee7d7a497d5"]["thermostat"][
     "setpoint_high"
 ] = 30.0
 
-m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
+m_anna_heatpump_cooling["c784ee9fdab44e1395b8dee7d7a497d5"]["sensors"][
     "temperature"
 ] = 26.3
-m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
+m_anna_heatpump_cooling["c784ee9fdab44e1395b8dee7d7a497d5"]["sensors"][
     "setpoint_low"
 ] = 20.5
-m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
+m_anna_heatpump_cooling["c784ee9fdab44e1395b8dee7d7a497d5"]["sensors"][
     "setpoint_high"
 ] = 30.0
 
@@ -287,13 +287,12 @@ m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "outdoor_air_temperature"
 ] = 28.2
 
-
-# Go for 3cb7
-m_anna_heatpump_idle["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "idle"
-m_anna_heatpump_idle["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"]["temperature"] = (
+# Go for c784
+m_anna_heatpump_idle["c784ee9fdab44e1395b8dee7d7a497d5"]["control_state"] = "idle"
+m_anna_heatpump_idle["c784ee9fdab44e1395b8dee7d7a497d5"]["sensors"]["temperature"] = (
     23.0
 )
-m_anna_heatpump_idle["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
+m_anna_heatpump_idle["c784ee9fdab44e1395b8dee7d7a497d5"]["sensors"][
     "cooling_activation_outdoor_temperature"
 ] = 25.0
 
