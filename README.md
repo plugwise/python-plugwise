@@ -62,17 +62,17 @@ Module providing interfacing with the Plugwise devices:
 ### Smile
 
 - [x] Adam
-  - [x] Lisa
+  - [x] Emma (only tested as ZigBee device connected to Adam)
   - [x] Jip
-  - [x] Floor
-  - [x] Tom
+  - [x] Lisa
+  - [x] Tom/Floor
   - [x] Koen (a Koen always comes with a Plug, the Plug is the active part)
   - [x] Plug
   - [x] Aqara Plug
-- [x] Anna
-- [x] Smile P1
-- [x] Stretch
-- [ ] Some of the equipment mentioned in USB when in use via Stretch or Adam
+- [x] Anna (v1.8 and later firmware versions)
+- [ ] Anna P1
+- [x] Smile P1 (v2.0 and later firmware versions)
+- [x] Stretch (only with Circles, please help out with other devices)
 
 - [x] [Home-Assistant](https://home-assistant.io) via
   - [x] Native supporting networked Plugwise products
