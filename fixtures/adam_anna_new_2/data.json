@@ -154,11 +154,7 @@
     },
     "dev_class": "gateway",
     "firmware": "3.9.0",
-    "gateway_modes": [
-      "away",
-      "full",
-      "vacation"
-    ],
+    "gateway_modes": ["away", "full", "vacation"],
     "hardware": "AME Smile 2.0 board",
     "location": "bc93488efab249e5bc54fd7e175a6f91",
     "mac_address": "D40FB2019891",
@@ -166,12 +162,7 @@
     "model_id": "smile_open_therm",
     "name": "Adam",
     "notifications": {},
-    "regulation_modes": [
-      "bleeding_cold",
-      "heating",
-      "off",
-      "bleeding_hot"
-    ],
+    "regulation_modes": ["bleeding_cold", "heating", "off", "bleeding_hot"],
     "select_gateway_mode": "full",
     "select_regulation_mode": "heating",
     "sensors": {
@@ -254,13 +245,7 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
-    "preset_modes": [
-      "vacation",
-      "no_frost",
-      "asleep",
-      "home",
-      "away"
-    ],
+    "preset_modes": ["vacation", "no_frost", "asleep", "home", "away"],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 15.6,
@@ -297,13 +282,7 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Bathroom",
-    "preset_modes": [
-      "vacation",
-      "no_frost",
-      "asleep",
-      "home",
-      "away"
-    ],
+    "preset_modes": ["vacation", "no_frost", "asleep", "home", "away"],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -317,12 +296,8 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": [
-        "e2f4322d57924fa090fbbc48b3a140dc"
-      ],
-      "secondary": [
-        "1772a4ea304041adb83f357b751341ff"
-      ]
+      "primary": ["e2f4322d57924fa090fbbc48b3a140dc"],
+      "secondary": ["1772a4ea304041adb83f357b751341ff"]
     },
     "vendor": "Plugwise"
   }
