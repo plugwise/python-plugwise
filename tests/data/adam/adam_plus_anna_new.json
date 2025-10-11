@@ -115,7 +115,7 @@
         "electricity_produced_interval": 0.0
       },
       "switches": {
-        "lock": true,
+        "lock": false,
         "relay": true
       },
       "vendor": "Plugwise",

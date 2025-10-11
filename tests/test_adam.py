@@ -103,7 +103,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "e8ef2a01ed3b4139a53bf749204fe6b4",
             ["2568cc4b9c1e401495d4741a5f89bee1", "29542b2b6a6a4169acecc15c72a599b8"],
         )
-        assert not switch_change  # both Plugs are locked
+        assert switch_change
         switch_change = await self.tinker_switch(
             api, "056ee145a816487eaa69243c3280f8bf", model="dhw_cm_switch"
         )
