@@ -66,7 +66,7 @@
 						<relationship>neighbor</relationship>
 					</neighbor>
 					<neighbor mac_address='000D6F000D13CBA0'>
-						<lqi>254</lqi>
+						<lqi>253</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
@@ -75,7 +75,7 @@
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000C86CBA0'>
+					<neighbor mac_address='000D6F000C869B61'>
 						<lqi>255</lqi>
 						<depth>2</depth>
 						<relationship>child</relationship>
@@ -439,7 +439,7 @@
 						<relationship>child</relationship>
 					</neighbor>
 					<neighbor mac_address='000D6F000D13CBA0'>
-						<lqi>248</lqi>
+						<lqi>254</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
@@ -1673,13 +1673,13 @@
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000D13CBA0'>
+					<neighbor mac_address='000D6F000D1CBA0'>
 						<lqi>255</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
 					<neighbor mac_address='000D6F000D13CBA0'>
-						<lqi>253</lqi>
+						<lqi>254</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
