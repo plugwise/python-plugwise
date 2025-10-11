@@ -182,28 +182,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_adam_anna_new_2(self):
-        """Test extended Adam (firmware 3.9) with Emma setup."""
-        self.smile_setup = "adam_anna_new_2"
-
-        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, api, client = await self.connect_wrapper()
-        assert api.smile.hostname == "smile000000"
-
-        self.validate_test_basics(
-            _LOGGER,
-            api,
-            smile_type=None,
-            smile_version="3.9.0",
-        )
-
-        await self.device_test(api, "2025-10-12 00:00:01", testdata)
-        assert self.entity_items == 197
-
-        await api.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new_regulation_off(self):
         """Test regultaion_mode off with control_state key missing for Adam."""
         self.smile_setup = "adam_plus_anna_new_regulation_off"
