@@ -18,7 +18,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
-        """Test extended Adam (firmware 3.7) with Anna and a switch-group setup."""
+        """Test extended Adam (firmware 3.9) with Anna, Emma, Jip, and a switch-group setup."""
         self.smile_setup = "adam_plus_anna_new"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
@@ -29,10 +29,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             api,
             smile_type=None,
-            smile_version="3.7.8",
+            smile_version="3.9.0",
         )
 
-        await self.device_test(api, "2023-12-17 00:00:01", testdata)
+        await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
         assert api._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
         assert api._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
