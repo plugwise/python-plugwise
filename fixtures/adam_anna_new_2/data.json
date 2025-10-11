@@ -18,7 +18,7 @@
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 22.5,
-      "water_temperature": 35.0
+      "water_temperature": 43.0
     },
     "switches": {
       "dhw_cm_switch": false
@@ -38,8 +38,8 @@
     "sensors": {
       "battery": 100,
       "humidity": 65.0,
-      "setpoint": 21.0,
-      "temperature": 19.5
+      "setpoint": 20.5,
+      "temperature": 19.7
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -88,7 +88,7 @@
     "name": "Plug MediaTV",
     "sensors": {
       "electricity_consumed": 15.8,
-      "electricity_consumed_interval": 3.0,
+      "electricity_consumed_interval": 4.0,
       "electricity_produced": 0.0,
       "electricity_produced_interval": 0.0
     },
@@ -129,8 +129,8 @@
     "model_id": "160-01",
     "name": "Plug Vloerverwarming",
     "sensors": {
-      "electricity_consumed": 49.0,
-      "electricity_consumed_interval": 0.0,
+      "electricity_consumed": 45.0,
+      "electricity_consumed_interval": 12.0,
       "electricity_produced": 0.0,
       "electricity_produced_interval": 0.0
     },
@@ -147,8 +147,8 @@
     "model_id": "143.1",
     "name": "Anna",
     "sensors": {
-      "setpoint": 21.0,
-      "temperature": 19.9
+      "setpoint": 20.5,
+      "temperature": 20.1
     },
     "vendor": "Plugwise"
   },
@@ -158,7 +158,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.9.0",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "bc93488efab249e5bc54fd7e175a6f91",
     "mac_address": "D40FB201CBA0",
@@ -166,11 +170,16 @@
     "model_id": "smile_open_therm",
     "name": "Adam",
     "notifications": {},
-    "regulation_modes": ["bleeding_cold", "heating", "off", "bleeding_hot"],
+    "regulation_modes": [
+      "bleeding_cold",
+      "heating",
+      "off",
+      "bleeding_hot"
+    ],
     "select_gateway_mode": "full",
     "select_regulation_mode": "heating",
     "sensors": {
-      "outdoor_temperature": 15.6
+      "outdoor_temperature": 15.1
     },
     "vendor": "Plugwise",
     "zigbee_mac_address": "000D6F000D5ACBA0"
@@ -189,9 +198,9 @@
     "name": "Jip",
     "sensors": {
       "battery": 100,
-      "humidity": 63.9,
-      "setpoint": 21.0,
-      "temperature": 19.3
+      "humidity": 65.8,
+      "setpoint": 20.5,
+      "temperature": 20.4
     },
     "vendor": "Plugwise",
     "zigbee_mac_address": "70AC08FFFEE1CBA0"
@@ -244,22 +253,28 @@
       "Test",
       "off"
     ],
-    "climate_mode": "heat",
+    "climate_mode": "auto",
     "control_state": "heating",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
-    "preset_modes": ["vacation", "no_frost", "asleep", "home", "away"],
-    "select_schedule": "off",
+    "preset_modes": [
+      "vacation",
+      "no_frost",
+      "asleep",
+      "home",
+      "away"
+    ],
+    "select_schedule": "Weekschema",
     "sensors": {
-      "electricity_consumed": 64.8,
+      "electricity_consumed": 60.8,
       "electricity_produced": 0.0,
-      "temperature": 19.3
+      "temperature": 19.7
     },
     "thermostat": {
       "lower_bound": 1.0,
       "resolution": 0.01,
-      "setpoint": 21.0,
+      "setpoint": 20.5,
       "upper_bound": 35.0
     },
     "thermostats": {
@@ -286,7 +301,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Bathroom",
-    "preset_modes": ["vacation", "no_frost", "asleep", "home", "away"],
+    "preset_modes": [
+      "vacation",
+      "no_frost",
+      "asleep",
+      "home",
+      "away"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -300,8 +321,12 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["e2f4322d57924fa090fbbc48b3a140dc"],
-      "secondary": ["1772a4ea304041adb83f357b751341ff"]
+      "primary": [
+        "e2f4322d57924fa090fbbc48b3a140dc"
+      ],
+      "secondary": [
+        "1772a4ea304041adb83f357b751341ff"
+      ]
     },
     "vendor": "Plugwise"
   }
