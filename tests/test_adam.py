@@ -35,7 +35,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
         assert api._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
-        assert api._last_active["f871b8c4d63549319221e294e4f88074"] == "Weekschema"  # Badkamer
+        assert (
+            api._last_active["f871b8c4d63549319221e294e4f88074"] == "Weekschema"
+        )  # Badkamer
         assert self.entity_items == 216
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
