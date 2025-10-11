@@ -198,6 +198,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2025-10-12 00:00:01", testdata)
+        assert self.entity_items == 195
 
         await api.close_connection()
         await self.disconnect(server, client)
