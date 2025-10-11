@@ -35,19 +35,19 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
         assert api._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
-        assert api._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
+        assert api._last_active["f871b8c4d63549319221e294e4f88074"] == "Weekschema"  # Badkamer
         assert self.entity_items == 197
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
             "056ee145a816487eaa69243c3280f8bf",
-            "10016900610d4c7481df78c89606ef22",
-            "67d73d0bd469422db25a618a5fb8eeb0",
             "e2f4322d57924fa090fbbc48b3a140dc",
-            "29542b2b6a6a4169acecc15c72a599b8",
-            "ad4838d7d35c4d6ea796ee12ae5aedf8",
-            "1772a4ea304041adb83f357b751341ff",
-            "854f8a9b0e7e425db97f1f110e1ce4b3",
             "2568cc4b9c1e401495d4741a5f89bee1",
+            "1772a4ea304041adb83f357b751341ff",
+            "29542b2b6a6a4169acecc15c72a599b8",
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
+            "ad4838d7d35c4d6ea796ee12ae5aedf8",
+            "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6",
+            "da575e9e09b947e281fb6e3ebce3b174",
             "e8ef2a01ed3b4139a53bf749204fe6b4",
             "f2bf9048bef64cc5b6d5110154e33c81",
             "f871b8c4d63549319221e294e4f88074",
