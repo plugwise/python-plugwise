@@ -24,6 +24,18 @@
       "dhw_cm_switch": false
     }
   },
+  "10016900610d4c7481df78c89606ef22": {
+    "available": true,
+    "dev_class": "valve_actuator_plug",
+    "location": "d9786723dbcf4f19b5c629a54629f9c7",
+    "model_id": "TS0011",
+    "name": "Aanvoer water afsluiter (nous lz3)",
+    "switches": {
+      "relay": false
+    },
+    "vendor": "_TZ3000_abjodzas",
+    "zigbee_mac_address": "A4C13862AF9917B1"
+  },
   "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6": {
     "available": true,
     "binary_sensors": {
@@ -119,6 +131,23 @@
     },
     "vendor": "Plugwise",
     "zigbee_mac_address": "000D6F000D13CBA0"
+  },
+  "67d73d0bd469422db25a618a5fb8eeb0": {
+    "available": true,
+    "dev_class": "heater_central_plug",
+    "location": "b4f211175e124df59603412bafa77a34",
+    "model": "Aqara Smart Plug",
+    "model_id": "lumi.plug.maeu01",
+    "name": "SmartPlug Floor 0",
+    "sensors": {
+      "electricity_consumed_interval": 0.0
+    },
+    "switches": {
+      "lock": false,
+      "relay": true
+    },
+    "vendor": "LUMI",
+    "zigbee_mac_address": "54EF4410002C97F2"
   },
   "854f8a9b0e7e425db97f1f110e1ce4b3": {
     "available": true,
