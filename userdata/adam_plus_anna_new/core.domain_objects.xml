@@ -1261,7 +1261,7 @@
 		<actuator_functionalities>
 			<relay_functionality id='4d03be44b57447bd97797ef47c8e56e8'>
 				<updated_date>2025-10-11T16:59:45.930+02:00</updated_date>
-				<lock>true</lock>
+				<lock>false</lock>
 				<state>on</state>
 				<relay id='fda539a7d5834f6a8f2dc5f5b2f5ea56'/>
 			</relay_functionality>
