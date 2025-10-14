@@ -171,8 +171,8 @@ class SmileHelper(SmileCommon):
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(self._home_location, locator)
         if not module_data["contents"]:
-            LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
-            return  # pragma: no cover
+            return Munch()  # no module-data present means the device has been removed
+
         appl.available = None
         appl.entity_id = self._gateway_id
         appl.firmware = module_data["firmware_version"]

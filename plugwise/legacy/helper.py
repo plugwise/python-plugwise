@@ -214,6 +214,9 @@ class SmileLegacyHelper(SmileCommon):
             module_data = self._get_module_data(
                 appliance, locator, self._modules, legacy=True
             )
+            if not module_data["contents"]:
+                return Munch()  # no module-data present means the device has been removed
+
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             # Filter appliance without zigbee_mac, it's an orphaned device
             if appl.zigbee_mac is None and self.smile.type != "power":
