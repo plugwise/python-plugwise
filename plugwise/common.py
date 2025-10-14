@@ -117,6 +117,9 @@ class SmileCommon:
         locator = "./logs/point_log[type='thermostat']/thermostat"
         xml_2 = return_valid(xml_2, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator, xml_2)
+        if not module_data["contents"]:
+            return Munch()  # no module-data present means the device has been removed
+
         appl.vendor_name = module_data["vendor_name"]
         appl.model = module_data["vendor_model"]
         if (
