@@ -102,6 +102,7 @@ class SmileCommon:
         if not module_data["contents"]:
             module_data = self._get_module_data(xml_1, locator_2, xml_3)
             if not module_data["contents"]:
+                self._heater_id = NONE
                 return (
                     Munch()
                 )  # no module-data present means the device has been removed
