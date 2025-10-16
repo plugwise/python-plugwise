@@ -2,7 +2,7 @@
 
 ## v1.8.1
 
-- Improve detection of orphaned/removed devices via []()
+- Improve detection of orphaned/removed devices via [#802](https://github.com/plugwise/python-plugwise/pull/802)
 
 ## v1.8.0
 
