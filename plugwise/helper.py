@@ -170,8 +170,9 @@ class SmileHelper(SmileCommon):
         appl = Munch()
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(self._home_location, locator)
-        if not module_data["contents"]:
-            return Munch()  # no module-data present means the device has been removed
+        # No module-data present means the device has been removed
+        if not module_data["contents"]:  # pragma: no cover
+            return Munch()  # pragma: no cover
 
         appl.available = None
         appl.entity_id = self._gateway_id
