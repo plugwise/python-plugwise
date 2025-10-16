@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.1
+
+- Improve detection of orphaned/removed devices via []()
+
 ## v1.8.0
 
 - Test/validate for Python 3.14
