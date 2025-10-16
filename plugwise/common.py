@@ -102,7 +102,9 @@ class SmileCommon:
         if not module_data["contents"]:
             module_data = self._get_module_data(xml_1, locator_2, xml_3)
             if not module_data["contents"]:
-                return Munch()  # no module-data present means the device has been removed
+                return (
+                    Munch()
+                )  # no module-data present means the device has been removed
         appl.vendor_name = module_data["vendor_name"]
         appl.hardware = module_data["hardware_version"]
         appl.model_id = module_data["vendor_model"] if not legacy else None
