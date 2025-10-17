@@ -65,10 +65,10 @@
     "name": "Tom Badkamer",
     "sensors": {
       "battery": 60,
-      "setpoint": 12.0,
+      "setpoint": 20.0,
       "temperature": 21.6,
       "temperature_difference": -0.4,
-      "valve_position": 0.0
+      "valve_position": 100.0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
