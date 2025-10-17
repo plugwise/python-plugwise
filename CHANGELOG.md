@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.1
+
+- Improve detection of orphaned/removed devices via [#802](https://github.com/plugwise/python-plugwise/pull/802)
+
 ## v1.8.0
 
 - Test/validate for Python 3.14

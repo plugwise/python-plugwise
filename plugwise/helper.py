@@ -170,9 +170,10 @@ class SmileHelper(SmileCommon):
         appl = Munch()
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(self._home_location, locator)
-        if not module_data["contents"]:
-            LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
-            return  # pragma: no cover
+        # No module-data present means the device has been removed
+        if not module_data["contents"]:  # pragma: no cover
+            return
+
         appl.available = None
         appl.entity_id = self._gateway_id
         appl.firmware = module_data["firmware_version"]
@@ -219,15 +220,16 @@ class SmileHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
                 # Collect heater_central entity info
-                self._appl_heater_central_info(
-                    appl, appliance, False
-                )  # False means non-legacy entity
+                # 251016: the added guarding below also solves Core Issue #104433
+                if not (
+                    appl := self._appl_heater_central_info(
+                        appl, appliance, False
+                    )
+                ):  # False means non-legacy entity
+                    return Munch()
                 self._dhw_allowed_modes = self._get_appl_actuator_modes(
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
-                # Skip orphaned heater_central (Core Issue #104433)
-                if appl.entity_id != self.heater_id:
-                    return Munch()
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
