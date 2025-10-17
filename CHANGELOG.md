@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Refresh adam_plus_anna_new userdata (Emma Pro included), update related test-asserts and files via PR [#799](https://github.com/plugwise/python-plugwise/pull/799)
+
 ## v1.8.1
 
 - Improve detection of orphaned/removed devices via [#802](https://github.com/plugwise/python-plugwise/pull/802)
