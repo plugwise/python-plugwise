@@ -233,12 +233,12 @@
 						<depth>0</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000D13CBA0'>
+					<neighbor mac_address='000D6F000D13CBA1'>
 						<lqi>253</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000D13CBA0'>
+					<neighbor mac_address='000D6F000D13CBA2'>
 						<lqi>255</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
@@ -595,7 +595,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='53819792a4164090863f6f2eed3d9a5e'>
-				<mac_address>000D6F000D13CBA0</mac_address>
+				<mac_address>000D6F000D13CBA1</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -611,7 +611,7 @@
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000D13CBA0'>
+					<neighbor mac_address='000D6F000D13CBA2'>
 						<lqi>254</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
@@ -1846,7 +1846,7 @@
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000D13CBA0'>
+					<neighbor mac_address='000D6F000D13CBA1'>
 						<lqi>254</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
@@ -2146,7 +2146,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='83886db4bd684d19b7b1faf50c5361fa'>
-				<mac_address>000D6F000D13CBA0</mac_address>
+				<mac_address>000D6F000D13CBA2</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -2167,7 +2167,7 @@
 						<depth>0</depth>
 						<relationship>neighbor</relationship>
 					</neighbor>
-					<neighbor mac_address='000D6F000D13CBA0'>
+					<neighbor mac_address='000D6F000D13CBA1'>
 						<lqi>255</lqi>
 						<depth>15</depth>
 						<relationship>neighbor</relationship>
