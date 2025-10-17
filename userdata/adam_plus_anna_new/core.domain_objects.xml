@@ -305,7 +305,7 @@
 				<interval/>
 				<thermostat id='6c27ed100a734d7992a6326e96264658'/>
 				<period start_date="2025-10-11T13:08:46.711+02:00" end_date="2025-10-11T13:08:46.711+02:00">
-					<measurement log_date="2025-10-11T13:08:46.711+02:00">12.00</measurement>
+					<measurement log_date="2025-10-11T13:08:46.711+02:00">20.00</measurement>
 				</period>
 			</point_log>
 		</logs>
@@ -316,7 +316,7 @@
 				<lower_bound>0</lower_bound>
 				<upper_bound>99.9</upper_bound>
 				<resolution>0.01</resolution>
-				<setpoint>12</setpoint>
+				<setpoint>20</setpoint>
 				<regulations><open_therm_regulation id='f47674d5b4fd44778d2e0c9df77e0186'/></regulations>
 				<thermostat id='6c27ed100a734d7992a6326e96264658'/>
 			</thermostat_functionality>
@@ -761,7 +761,7 @@
 				<interval/>
 				<thermostat id='a62cdf51741d46d29410c40874d3f6e2'/>
 				<period start_date="2025-10-05T13:40:12.611+02:00" end_date="2025-10-05T13:40:12.611+02:00">
-					<measurement log_date="2025-10-05T13:40:12.611+02:00">12.00</measurement>
+					<measurement log_date="2025-10-05T13:40:12.611+02:00">20.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='535a101639244ad786ac7dea73be0874'>
@@ -816,7 +816,7 @@
 				<interval/>
 				<valve_position_meter id='0f0081749a2444ea8a94be5da7164220'/>
 				<period start_date="2025-10-11T14:45:38.819+02:00" end_date="2025-10-11T14:45:38.819+02:00">
-					<measurement log_date="2025-10-11T14:45:38.819+02:00">0.00</measurement>
+					<measurement log_date="2025-10-11T14:45:38.819+02:00">100.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='e3b1e0e9dd7848478bf098ec0a303491'>
@@ -844,7 +844,7 @@
 				<lower_bound>7</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.01</resolution>
-				<setpoint>12</setpoint>
+				<setpoint>20</setpoint>
 				<regulations><open_therm_regulation id='f47674d5b4fd44778d2e0c9df77e0186'/></regulations>
 				<thermostat id='a62cdf51741d46d29410c40874d3f6e2'/>
 			</thermostat_functionality>
@@ -2596,7 +2596,7 @@
 				<last_consecutive_log_date>2025-10-08T13:24:00.674+02:00</last_consecutive_log_date>
 				<interval/>
 				<period start_date="2025-10-11T13:08:46.711+02:00" end_date="2025-10-11T13:08:46.711+02:00">
-					<measurement log_date="2025-10-11T13:08:46.711+02:00">12.00</measurement>
+					<measurement log_date="2025-10-11T13:08:46.711+02:00">20.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='ba93b205fae54bc49fa208a5baae2291'>
@@ -2617,7 +2617,7 @@
 				<lower_bound>0</lower_bound>
 				<upper_bound>99.9</upper_bound>
 				<resolution>0.01</resolution>
-				<setpoint>12</setpoint>
+				<setpoint>20</setpoint>
 				<regulations><open_therm_regulation id='f47674d5b4fd44778d2e0c9df77e0186'/></regulations>
 				<cooling_allowed>true</cooling_allowed>
 				<preheating_allowed>true</preheating_allowed>
