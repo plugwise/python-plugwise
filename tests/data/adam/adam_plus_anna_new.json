@@ -65,10 +65,10 @@
       "name": "Tom Badkamer",
       "sensors": {
         "battery": 60,
-        "setpoint": 12.0,
+        "setpoint": 20.0,
         "temperature": 19.0,
         "temperature_difference": -0.4,
-        "valve_position": 0.0
+        "valve_position": 100.0
       },
       "temperature_offset": {
         "lower_bound": -2.0,
@@ -211,7 +211,7 @@
       "name": "Lisa Badkamer",
       "sensors": {
         "battery": 71,
-        "setpoint": 12.0,
+        "setpoint": 20.0,
         "temperature": 18.7
       },
       "temperature_offset": {
@@ -297,7 +297,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint": 12.0,
+        "setpoint": 20.0,
         "upper_bound": 99.9
       },
       "thermostats": {
