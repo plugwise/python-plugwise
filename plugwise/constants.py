@@ -51,6 +51,7 @@ HW_MODELS: Final[dict[str, str]] = {
     "160-01": "Plug",
     "168-01": "Jip",
     "170-01": "Emma",
+    "170.1": "Emma",
     "038500": "Stick",
     "070085": "Stick",
     "120002": "Stick Legrand",
