@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Add support for Emma Pro wired, rename wireless Emma to Emma Pro
+- Add support for Emma Pro wired, rename wireless Emma to Emma Pro via PR [#804](https://github.com/plugwise/python-plugwise/pull/804)
 
 ## v1.8.1
 
