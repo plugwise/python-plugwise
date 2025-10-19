@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Add support for Emma Pro wired, rename wireless Emma to Emma Pro via PR [#804](https://github.com/plugwise/python-plugwise/pull/804)
+
 ## v1.8.1
 
 - Improve detection of orphaned/removed devices via [#802](https://github.com/plugwise/python-plugwise/pull/802)
