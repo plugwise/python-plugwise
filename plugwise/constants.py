@@ -46,7 +46,7 @@ FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 HW_MODELS: Final[dict[str, str]] = {
     "143.1": "ThermoTouch",
     "159.2": "Adam",
-  # "?????": "Emma Essential",
+    # "?????": "Emma Essential",
     "170.1": "Emma Pro wired",
     "106-03": "Tom/Floor",
     "158-01": "Lisa",
