@@ -222,9 +222,7 @@ class SmileHelper(SmileCommon):
                 # Collect heater_central entity info
                 # 251016: the added guarding below also solves Core Issue #104433
                 if not (
-                    appl := self._appl_heater_central_info(
-                        appl, appliance, False
-                    )
+                    appl := self._appl_heater_central_info(appl, appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
                 self._dhw_allowed_modes = self._get_appl_actuator_modes(

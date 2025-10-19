@@ -1,8 +1,9 @@
 # Changelog
 
-## Ongoing
+## v1.8.2
 
 - Add support for Emma Pro wired, rename wireless Emma to Emma Pro via PR [#804](https://github.com/plugwise/python-plugwise/pull/804)
+- Refresh adam_plus_anna_new userdata (Emma Pro included), update related test-asserts and files via PR [#799](https://github.com/plugwise/python-plugwise/pull/799)
 
 ## v1.8.1
 
