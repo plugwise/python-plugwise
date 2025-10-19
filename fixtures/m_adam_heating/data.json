@@ -44,8 +44,8 @@
     "sensors": {
       "battery": 100,
       "humidity": 65.0,
-      "setpoint": 20.5,
-      "temperature": 19.7
+      "setpoint": 20.0,
+      "temperature": 19.5
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -70,7 +70,7 @@
     "name": "Tom Badkamer",
     "sensors": {
       "battery": 60,
-      "setpoint": 20.0,
+      "setpoint": 25.0,
       "temperature": 18.6,
       "temperature_difference": -0.4,
       "valve_position": 100.0
@@ -85,7 +85,6 @@
     "zigbee_mac_address": "000D6F000C8FCBA0"
   },
   "ad4838d7d35c4d6ea796ee12ae5aedf8": {
-    "available": true,
     "dev_class": "thermostat",
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "ThermoTouch",
@@ -135,8 +134,8 @@
     "sensors": {
       "battery": 100,
       "humidity": 65.8,
-      "setpoint": 20.5,
-      "temperature": 20.4
+      "setpoint": 20.0,
+      "temperature": 19.3
     },
     "vendor": "Plugwise",
     "zigbee_mac_address": "70AC08FFFEE1CBA0"
