@@ -347,7 +347,7 @@ class SmileAPI(SmileData):
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
 
-        contexts = self.determine_contexts(loc_id, name, new_state, schedule_rule_id)
+        contexts = self.determine_contexts(loc_id, new_state, schedule_rule_id)
         data = (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
@@ -362,7 +362,7 @@ class SmileAPI(SmileData):
         self._schedule_old_states[loc_id][name] = new_state
 
     def determine_contexts(
-        self, loc_id: str, name: str, state: str, sched_id: str
+        self, loc_id: str, state: str, sched_id: str
     ) -> str:
         """Helper-function for set_schedule_state()."""
         locator = f'.//*[@id="{sched_id}"]/contexts'
