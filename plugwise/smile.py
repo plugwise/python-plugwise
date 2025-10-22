@@ -68,7 +68,6 @@ class SmileAPI(SmileData):
         _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
-        _last_active: dict[str, str | None],
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
@@ -81,7 +80,6 @@ class SmileAPI(SmileData):
         self._cooling_present = _cooling_present
         self._elga = _elga
         self._is_thermostat = _is_thermostat
-        self._last_active = _last_active
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
@@ -309,8 +307,8 @@ class SmileAPI(SmileData):
     async def set_schedule_state(
         self,
         loc_id: str,
-        new_state: str | None,
-        name: str | None,
+        new_state: str,
+        name: str,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
@@ -325,14 +323,6 @@ class SmileAPI(SmileData):
         if name == OFF:
             new_state = STATE_OFF
 
-        # Handle no schedule-name / Off-schedule provided
-        if name is None or name == OFF:
-            if schedule_name := self._last_active[loc_id]:
-                name = schedule_name
-            else:
-                return
-
-        assert isinstance(name, str)
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         # Raise an error when the schedule name does not exist
         if not schedule_rule or schedule_rule is None:
@@ -377,7 +367,6 @@ class SmileAPI(SmileData):
             subject = etree.fromstring(subject)
 
         if state == STATE_OFF:
-            self._last_active[loc_id] = name
             contexts.remove(subject)
         if state == STATE_ON:
             contexts.append(subject)

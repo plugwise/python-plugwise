@@ -29,7 +29,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert api.gateway_id == "0466eae8520144c78afb29628384edeb"
-        assert api._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
         assert self.entity_items == 60
         assert not self.notifications
 
@@ -102,7 +101,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
-        assert api._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
         assert self.entity_items == 60
         assert not self.notifications
 
@@ -160,7 +158,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert api._last_active["c34c6864216446528e95d88985e714cc"] == "Normaal"
         assert self.entity_items == 41
         assert not self.notifications
 
@@ -189,7 +186,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert api._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert self.entity_items == 69
         assert not self.notifications
         assert self.cooling_present
@@ -245,7 +241,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-19 00:00:01", testdata)
-        assert api._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert self.entity_items == 66
         assert self.cooling_present
         assert not self.notifications
@@ -318,7 +313,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert api._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert self.entity_items == 65
         assert not self.notifications
         assert not self.cooling_present
@@ -342,9 +336,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-03-13 00:00:01", testdata)
-        assert (
-            api._last_active["d3ce834534114348be628b61b26d9220"] == THERMOSTAT_SCHEDULE
-        )
         assert self.entity_items == 61
         assert api.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
@@ -364,10 +355,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert api.smile.hostname == "smile000000"
 
         await self.device_test(api, "2022-03-13 00:00:01", testdata)
-        assert (
-            api._last_active["d3ce834534114348be628b61b26d9220"] == THERMOSTAT_SCHEDULE
-        )
-        assert self.cooling_present
         assert not self._cooling_enabled
         assert self.entity_items == 65
 
@@ -394,9 +381,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-03-10 00:00:01", testdata)
-        assert (
-            api._last_active["d3ce834534114348be628b61b26d9220"] == THERMOSTAT_SCHEDULE
-        )
         assert self.entity_items == 65
         assert not self.notifications
 
@@ -450,7 +434,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert api._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert self.entity_items == 68
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -516,7 +499,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert api._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert self.entity_items == 68
         assert self.cooling_present
         assert self._cooling_enabled

@@ -67,7 +67,6 @@ class Smile(SmileComm):
         self._cooling_present = False
         self._elga = False
         self._is_thermostat = False
-        self._last_active: dict[str, str | None] = {}
         self._loc_data: dict[str, ThermoLoc] = {}
         self._on_off_device = False
         self._opentherm_device = False
@@ -156,7 +155,6 @@ class Smile(SmileComm):
                 self._cooling_present,
                 self._elga,
                 self._is_thermostat,
-                self._last_active,
                 self._loc_data,
                 self._on_off_device,
                 self._opentherm_device,
