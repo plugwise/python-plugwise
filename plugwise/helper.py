@@ -5,7 +5,6 @@ Plugwise Smile protocol helpers.
 
 from __future__ import annotations
 
-import datetime as dt
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -50,9 +49,6 @@ from plugwise.util import (
     skip_obsolete_measurements,
 )
 
-# Time related
-from dateutil import tz
-from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging import version
