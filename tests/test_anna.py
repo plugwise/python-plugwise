@@ -359,7 +359,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.entity_items == 65
 
         result = await self.tinker_thermostat(
-            api, "ebd90df1ab334565b5895f37590ccff4", good_schedules=["Thermostat schedule", "off"]
+            api, "d3ce834534114348be628b61b26d9220", good_schedules=["Thermostat schedule", "off"]
         )
         assert result
         await api.close_connection()
