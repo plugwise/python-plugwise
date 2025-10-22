@@ -57,7 +57,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         result = await self.tinker_thermostat(
             api,
             "f2bf9048bef64cc5b6d5110154e33c81",
-            good_schedules=["Weekschema", "Badkamer", "Test"],
+            good_schedules=["Weekschema", "Badkamer", "Test", "off"],
         )
         assert result
 
