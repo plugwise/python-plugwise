@@ -307,8 +307,8 @@ class SmileAPI(SmileData):
     async def set_schedule_state(
         self,
         loc_id: str,
-        new_state: str,
-        name: str,
+        new_state: str | None,
+        name: str | None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
@@ -322,6 +322,12 @@ class SmileAPI(SmileData):
         # Translate selection of Off-schedule-option to disabling the active schedule
         if name == OFF:
             new_state = STATE_OFF
+
+        # Handle no schedule-name / schedule-off requested: find the active schedule
+        if name is None or name == OFF:
+            _, name = self._schedules(loc_id)
+            if name == OFF:  # no active schedule found, nothing to do
+                return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         # Raise an error when the schedule name does not exist
