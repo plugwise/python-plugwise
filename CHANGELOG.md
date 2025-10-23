@@ -1,8 +1,8 @@
 # Changelog
 
-## Ongoing
+## v1.8.3
 
-- Remove storing the last active schedules, to be handled by the HA Integration via PR [#806](https://github.com/plugwise/python-plugwise/pull/806)
+- Remove storing the last active schedule(s) via PR [#806](https://github.com/plugwise/python-plugwise/pull/806), to be handled by the HA Integration
 
 ## v1.8.2
 
