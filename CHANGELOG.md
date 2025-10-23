@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.3
+
+- Remove storing the last active schedule(s) via PR [#806](https://github.com/plugwise/python-plugwise/pull/806), to be handled by the HA Integration
+
 ## v1.8.2
 
 - Add support for Emma Pro wired, rename wireless Emma to Emma Pro via PR [#804](https://github.com/plugwise/python-plugwise/pull/804)

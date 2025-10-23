@@ -5,7 +5,6 @@ Plugwise Smile protocol helpers.
 
 from __future__ import annotations
 
-import datetime as dt
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -50,9 +49,6 @@ from plugwise.util import (
     skip_obsolete_measurements,
 )
 
-# Time related
-from dateutil import tz
-from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging import version
@@ -78,7 +74,6 @@ class SmileHelper(SmileCommon):
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
-        self._last_active: dict[str, str | None]
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
         self._gateway_id: str = NONE
@@ -871,7 +866,7 @@ class SmileHelper(SmileCommon):
         return schedule_ids
 
     def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, dict[str, str]]:
-        """Helper-function for _presets(), _schedules() and _last_active_schedule().
+        """Helper-function for _presets() and _schedules().
 
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
@@ -906,11 +901,6 @@ class SmileHelper(SmileCommon):
         available: list[str] = [NONE]
         rule_ids: dict[str, dict[str, str]] = {}
         selected = NONE
-        # Adam schedules, one schedule can be linked to various locations
-        # self._last_active contains the locations and the active schedule name per location, or None
-        if location not in self._last_active:
-            self._last_active[location] = None
-
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
@@ -927,7 +917,6 @@ class SmileHelper(SmileCommon):
             available.append(name)
             if location == data["location"] and active:
                 selected = name
-                self._last_active[location] = selected
             schedules.append(name)
 
         if schedules:
@@ -935,26 +924,9 @@ class SmileHelper(SmileCommon):
             available.append(OFF)
             if selected == NONE:
                 selected = OFF
-            if self._last_active.get(location) is None:
-                self._last_active[location] = self._last_used_schedule(schedules)
+
 
         return available, selected
-
-    def _last_used_schedule(self, schedules: list[str]) -> str:
-        """Helper-function for _schedules().
-
-        Determine the last-used schedule based on the modified date.
-        """
-        epoch = dt.datetime(1970, 1, 1, tzinfo=tz.tzutc())
-        schedules_dates: dict[str, float] = {}
-
-        for name in schedules:
-            result = self._domain_objects.find(f'./rule[name="{name}"]')
-            schedule_date = result.find("modified_date").text
-            schedule_time = parse(schedule_date)
-            schedules_dates[name] = (schedule_time - epoch).total_seconds()
-
-        return sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
 
     def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().
