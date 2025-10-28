@@ -196,6 +196,12 @@ class Smile(SmileComm):
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
             self.smile.model_id = gateway.find("vendor_model").text
+            if (elec_measurement := gateway.find(
+                "gateway_environment/electricity_consumption_tariff_structure"
+            )) and elec_measurement.text:
+                parts = model.split("_")
+                if len(parts) == 3:
+                    model = parts[0] + parts[1] + "_power" + parts[2]
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 

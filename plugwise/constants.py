@@ -34,6 +34,7 @@ VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
 ADAM: Final = "Adam"
 ANNA: Final = "Smile Anna"
+ANNA_P1: Final = "Smile Anna P1"
 DEFAULT_TIMEOUT: Final = 10
 DEFAULT_LEGACY_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
@@ -220,6 +221,7 @@ SMILES: Final[dict[str, SMILE]] = {
     "smile_thermo_v1": SMILE(THERMOSTAT, ANNA),
     "smile_thermo_v3": SMILE(THERMOSTAT, ANNA),
     "smile_thermo_v4": SMILE(THERMOSTAT, ANNA),
+    "smile_thermo_power_v4": SMILE("thermostat_power", ANNA_P1),
     "stretch_v2": SMILE(STRETCH, "Stretch"),
     "stretch_v3": SMILE(STRETCH, "Stretch"),
 }
