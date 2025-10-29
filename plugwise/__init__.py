@@ -189,19 +189,24 @@ class Smile(SmileComm):
         """
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
-            if (v_model := gateway.find("vendor_model")) is not None:
-                model = v_model.text
+            if (vendor_model := gateway.find("vendor_model")) is not None:
+                model = vendor_model.text
+                if (
+                    elec_measurement := gateway.find(
+                        "gateway_environment/electricity_consumption_tariff_structure"
+                    )
+                ) and elec_measurement.text:
+                    parts = model.split("_")
+                    if len(parts) == 2:  # expecting smile_thermo
+                        model = parts[0] + parts[1] + "_power"
+
+                self.smile.model_id = model
+
             self.smile.version = parse(gateway.find("firmware_version").text)
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
-            self.smile.model_id = gateway.find("vendor_model").text
-            if (elec_measurement := gateway.find(
-                "gateway_environment/electricity_consumption_tariff_structure"
-            )) and elec_measurement.text:
-                parts = model.split("_")
-                if len(parts) == 3:
-                    model = parts[0] + parts[1] + "_power" + parts[2]
+
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
@@ -243,7 +248,7 @@ class Smile(SmileComm):
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
 
-        if self.smile.type == "thermostat":
+        if self.smile.type in ("thermostat", "thermostat_power"):
             self._is_thermostat = True
             # For Adam, Anna, determine the system capabilities:
             # Find the connected heating/cooling device (heater_central),
