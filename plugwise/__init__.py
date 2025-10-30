@@ -197,10 +197,8 @@ class Smile(SmileComm):
                     )
                 ) and elec_measurement.text:
                     parts = model.split("_")
-                    if len(parts) == 2:  # expecting smile_thermo
+                    if len(parts) == 2:  # looking for "smile_thermo"
                         model = parts[0] + parts[1] + "_power"
-
-                self.smile.model_id = model
 
             self.smile.version = parse(gateway.find("firmware_version").text)
             self.smile.hw_version = gateway.find("hardware_version").text
@@ -242,6 +240,7 @@ class Smile(SmileComm):
             raise UnsupportedDeviceError  # pragma: no cover
 
         self.smile.model = "Gateway"
+        self.smile.model_id = model
         self.smile.name = SMILES[self._target_smile].smile_name
         self.smile.type = SMILES[self._target_smile].smile_type
 
