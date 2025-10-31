@@ -361,9 +361,7 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 
-    def determine_contexts(
-        self, loc_id: str, state: str, sched_id: str
-    ) -> str:
+    def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""
         locator = f'.//*[@id="{sched_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
