@@ -925,7 +925,6 @@ class SmileHelper(SmileCommon):
             if selected == NONE:
                 selected = OFF
 
-
         return available, selected
 
     def _thermostat_uri(self, loc_id: str) -> str:
