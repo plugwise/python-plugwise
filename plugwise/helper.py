@@ -170,7 +170,9 @@ class SmileHelper(SmileCommon):
             return
 
         appl.available = None
-        appl.entity_id = self._gateway_id
+        appl.entity_id = self._home_loc_id
+        if not self.smile.anna_p1:
+            appl.entity_id = self._gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
         appl.location = self._home_loc_id
