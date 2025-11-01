@@ -14,7 +14,6 @@ classifiers     = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.14",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Home Automation",
 ]
 authors = [
@@ -24,7 +23,7 @@ maintainers = [
         { name = "bouwew"},
         { name = "CoMPaTech" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies    = [
         "aiofiles",
         "aiohttp",

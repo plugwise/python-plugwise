@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.0
+
+- Formally remove 3.13 compatibility testing
+
 ## v1.8.3
 
 - Remove storing the last active schedule(s) via PR [#806](https://github.com/plugwise/python-plugwise/pull/806), to be handled by the HA Integration
