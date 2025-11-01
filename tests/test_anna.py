@@ -536,6 +536,27 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_p1(self):
+        """Test an Anna v4 connected to a P1 port."""
+        self.smile_setup = "anna_p1"
+
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, api, client = await self.connect_wrapper()
+        assert api.smile.hostname == "smile000000"
+
+        self.validate_test_basics(
+            _LOGGER,
+            api,
+            smile_version=None,
+        )
+
+        await self.device_test(api, "2025-11-2 00:00:01", testdata)
+        assert self.entity_items == 12
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_v4_no_modules(self):
         """Test an Anna v4 with removed Anna and OpenTherm device."""
         self.smile_setup = "anna_v4_no_modules"
