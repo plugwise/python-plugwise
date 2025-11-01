@@ -75,6 +75,7 @@ class Smile(SmileComm):
         self._stretch_v2 = False
         self._target_smile: str = NONE
         self.smile: Munch = Munch()
+        self.smile.anna_p1 = False
         self.smile.hostname = NONE
         self.smile.hw_version = None
         self.smile.legacy = False
@@ -191,20 +192,20 @@ class Smile(SmileComm):
         if (gateway := result.find("./gateway")) is not None:
             if (vendor_model := gateway.find("vendor_model")) is not None:
                 model = vendor_model.text
+                elec_measurement = gateway.find(
+                    "gateway_environment/electricity_consumption_tariff_structure"
+                )
                 if (
-                    elec_measurement := gateway.find(
-                        "gateway_environment/electricity_consumption_tariff_structure"
-                    )
-                ) and elec_measurement.text:
-                    parts = model.split("_")
-                    if len(parts) == 2:  # looking for "smile_thermo"
-                        model = parts[0] + parts[1] + "_power"
+                    elec_measurement is not None
+                    and elec_measurement.text
+                    and model == "smile_thermo"
+                ):
+                    self.smile.anna_p1 = True
 
             self.smile.version = parse(gateway.find("firmware_version").text)
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
-
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
@@ -243,6 +244,8 @@ class Smile(SmileComm):
         self.smile.model_id = model
         self.smile.name = SMILES[self._target_smile].smile_name
         self.smile.type = SMILES[self._target_smile].smile_type
+        if self.smile.name == "Smile Anna" and self.smile.anna_p1:
+            self.smile.name == "Smile Anna P1"
 
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2

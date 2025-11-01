@@ -150,7 +150,7 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        if self.smile.type == "power":
+        if self.smile.type == "power" or self.smile.anna_p1:
             self._get_p1_smartmeter_info()
 
         # Sort the gw_entities

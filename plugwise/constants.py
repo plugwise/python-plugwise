@@ -221,7 +221,6 @@ SMILES: Final[dict[str, SMILE]] = {
     "smile_thermo_v1": SMILE(THERMOSTAT, ANNA),
     "smile_thermo_v3": SMILE(THERMOSTAT, ANNA),
     "smile_thermo_v4": SMILE(THERMOSTAT, ANNA),
-    "smile_thermo_power_v4": SMILE("thermostat_power", ANNA_P1),
     "stretch_v2": SMILE(STRETCH, "Stretch"),
     "stretch_v3": SMILE(STRETCH, "Stretch"),
 }
