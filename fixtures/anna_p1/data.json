@@ -58,7 +58,28 @@
     "available": true,
     "dev_class": "smartmeter",
     "location": "da7be222ab3b420c927f3e49fade0304",
-    "name": "P1"
+    "name": "P1",
+    "sensors": {
+      "electricity_consumed_off_peak_cumulative": 618.001,
+      "electricity_consumed_off_peak_interval": 7,
+      "electricity_consumed_off_peak_point": 393,
+      "electricity_consumed_peak_cumulative": 576.014,
+      "electricity_consumed_peak_interval": 0,
+      "electricity_consumed_peak_point": 0,
+      "electricity_phase_one_consumed": 393,
+      "electricity_phase_one_produced": 0,
+      "electricity_produced_off_peak_cumulative": 246.504,
+      "electricity_produced_off_peak_interval": 0,
+      "electricity_produced_off_peak_point": 0,
+      "electricity_produced_peak_cumulative": 709.442,
+      "electricity_produced_peak_interval": 0,
+      "electricity_produced_peak_point": 0,
+      "gas_consumed_cumulative": 25.37,
+      "gas_consumed_interval": 0.01,
+      "net_electricity_cumulative": 238.069,
+      "net_electricity_point": 393,
+      "voltage_phase_one": 234.6
+    }
   },
   "da7be222ab3b420c927f3e49fade0304": {
     "binary_sensors": {
