@@ -906,8 +906,8 @@
 		</actuator_functionalities>
 	</appliance>
 	<module id='4641927b856f45638df120358f98da9a'>
-		<vendor_name>Plugwise B.V.</vendor_name>
-		<vendor_model>159.2</vendor_model>
+		<vendor_name>Intergas</vendor_name>
+		<vendor_model>HR24</vendor_model>
 		<hardware_version></hardware_version>
 		<firmware_version></firmware_version>
 		<created_date>2021-12-18T11:59:50.712+01:00</created_date>
