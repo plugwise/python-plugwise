@@ -65,7 +65,7 @@ class SmileCommon:
 
     def check_name(self, name: str) -> bool:
         """Helper-function checking the smile-name."""
-        return bool(self.smile.name == name)
+        return bool(name in self.smile.name)
 
     def _appl_heater_central_info(
         self,
