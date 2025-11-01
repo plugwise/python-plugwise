@@ -62,7 +62,7 @@ Module providing interfacing with the Plugwise devices:
 ### Smile
 
 - [x] Adam
-  - [x] Emma (only tested as ZigBee device connected to Adam)
+  - [x] Emma
   - [x] Jip
   - [x] Lisa
   - [x] Tom/Floor
