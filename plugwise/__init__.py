@@ -245,7 +245,7 @@ class Smile(SmileComm):
         self.smile.name = SMILES[self._target_smile].smile_name
         self.smile.type = SMILES[self._target_smile].smile_type
         if self.smile.name == "Smile Anna" and self.smile.anna_p1:
-            self.smile.name == "Smile Anna P1"
+            self.smile.name = "Smile Anna P1"
 
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
