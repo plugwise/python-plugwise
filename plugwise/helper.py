@@ -328,7 +328,8 @@ class SmileHelper(SmileCommon):
             if entity["dev_class"] == "smartmeter":
                 data.update(self._power_data_from_location())
 
-            return data
+            if not self.smile.anna_p1:
+                return data
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
