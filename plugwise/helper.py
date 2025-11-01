@@ -183,8 +183,9 @@ class SmileHelper(SmileCommon):
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
-        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self._gateway_id)
-        self._gateway_id = self._home_loc_id
+        if not self.smile.anna_p1:
+            self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self._gateway_id)
+            self._gateway_id = self._home_loc_id
 
         self._create_gw_entities(appl)
 
