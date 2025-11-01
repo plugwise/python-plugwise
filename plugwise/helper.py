@@ -324,7 +324,7 @@ class SmileHelper(SmileCommon):
         # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
-        if self.smile.type == "power":
+        if self.smile.type == "power" or self.smile.anna_p1:
             if entity["dev_class"] == "smartmeter":
                 data.update(self._power_data_from_location())
 
