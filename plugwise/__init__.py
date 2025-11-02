@@ -250,7 +250,7 @@ class Smile(SmileComm):
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
 
-        if self.smile.type in ("thermostat", "thermostat_power"):
+        if self.smile.type == "thermostat":
             self._is_thermostat = True
             # For Adam, Anna, determine the system capabilities:
             # Find the connected heating/cooling device (heater_central),
