@@ -190,22 +190,23 @@ class Smile(SmileComm):
         """
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
-            if (vendor_model := gateway.find("vendor_model")) is not None:
-                model = vendor_model.text
-                elec_measurement = gateway.find(
-                    "gateway_environment/electricity_consumption_tariff_structure"
-                )
-                if (
-                    elec_measurement is not None
-                    and elec_measurement.text
-                    and model == "smile_thermo"
-                ):
-                    self.smile.anna_p1 = True
-
             self.smile.version = parse(gateway.find("firmware_version").text)
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
+            if (vendor_model := gateway.find("vendor_model")) is None:
+                return
+
+            model = vendor_model.text
+            elec_measurement = gateway.find(
+                "gateway_environment/electricity_consumption_tariff_structure"
+            )
+            if (
+                elec_measurement is not None
+                and elec_measurement.text
+                and model == "smile_thermo"
+            ):
+                self.smile.anna_p1 = True
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
@@ -250,23 +251,29 @@ class Smile(SmileComm):
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
 
-        if self.smile.type == "thermostat":
-            self._is_thermostat = True
-            # For Adam, Anna, determine the system capabilities:
-            # Find the connected heating/cooling device (heater_central),
-            # e.g. heat-pump or gas-fired heater
-            onoff_boiler = result.find("./module/protocols/onoff_boiler")
-            open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
-            self._on_off_device = onoff_boiler is not None
-            self._opentherm_device = open_therm_boiler is not None
+        self._process_for_thermostat(result)
 
-            # Determine the presence of special features
-            locator_1 = "./gateway/features/cooling"
-            locator_2 = "./gateway/features/elga_support"
-            if result.find(locator_1) is not None:
-                self._cooling_present = True
-            if result.find(locator_2) is not None:
-                self._elga = True
+    def _process_for_thermostat(self, result: etree.Element) -> None:
+        """Extra processing for thermostats."""
+        if self.smile.type != "thermostat":
+            return
+
+        self._is_thermostat = True
+        # For Adam, Anna, determine the system capabilities:
+        # Find the connected heating/cooling device (heater_central),
+        # e.g. heat-pump or gas-fired heater
+        onoff_boiler = result.find("./module/protocols/onoff_boiler")
+        open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
+        self._on_off_device = onoff_boiler is not None
+        self._opentherm_device = open_therm_boiler is not None
+
+        # Determine the presence of special features
+        locator_1 = "./gateway/features/cooling"
+        locator_2 = "./gateway/features/elga_support"
+        if result.find(locator_1) is not None:
+            self._cooling_present = True
+        if result.find(locator_2) is not None:
+            self._elga = True
 
     async def _smile_detect_legacy(
         self, result: etree.Element, dsmrmain: etree.Element, model: str
