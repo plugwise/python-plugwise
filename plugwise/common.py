@@ -64,7 +64,10 @@ class SmileCommon:
         return self._heater_id
 
     def check_name(self, name: str) -> bool:
-        """Helper-function checking the smile-name."""
+        """Helper-function checking the smile-name.
+
+        20251101: modified for finding name = `Smile Anna` in `Smile Anna P1`.
+        """
         return bool(name in self.smile.name)
 
     def _appl_heater_central_info(
