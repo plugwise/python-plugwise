@@ -55,7 +55,7 @@
       },
       "vendor": "Intergas"
     },
-    "53130847be2f436cb946b78dedb9053a": {
+    "da7be222ab3b420c927f3e49fade0304": {
       "available": true,
       "dev_class": "smartmeter",
       "location": "da7be222ab3b420c927f3e49fade0304",
@@ -82,7 +82,7 @@
         "voltage_phase_one": 234.6
       }
     },
-    "da7be222ab3b420c927f3e49fade0304": {
+    "53130847be2f436cb946b78dedb9053a": {
       "binary_sensors": {
         "plugwise_notification": false
       },
