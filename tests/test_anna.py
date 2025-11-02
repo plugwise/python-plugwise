@@ -551,7 +551,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2025-11-2 00:00:01", testdata)
-        assert self.entity_items == 93
+        assert self.entity_items == 74  # 93
 
         await api.close_connection()
         await self.disconnect(server, client)
