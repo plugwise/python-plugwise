@@ -195,7 +195,7 @@ class Smile(SmileComm):
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
             if (vendor_model := gateway.find("vendor_model")) is None:
-                return
+                return  # pragma: no cover
 
             model = vendor_model.text
             elec_measurement = gateway.find(
