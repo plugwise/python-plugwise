@@ -550,7 +550,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2025-11-2 00:00:01", testdata)
+        await self.device_test(api, "2025-11-02 00:00:01", testdata)
         assert self.entity_items == 76
 
         await api.close_connection()
