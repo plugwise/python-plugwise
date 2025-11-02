@@ -327,13 +327,13 @@ class SmileHelper(SmileCommon):
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
-        # !! DON'T CHANGE below two if-lines, will break stuff !!
-        if self.smile.type == "power" or self.smile.anna_p1:
-            if entity["dev_class"] == "smartmeter":
-                data.update(self._power_data_from_location())
+        dev_class = entity.get("dev_class")
+        smile_is_power = self.smile.type == "power"
+        if (smile_is_power or self.smile.anna_p1) and dev_class == "smartmeter":
+            data.update(self._power_data_from_location())
 
-            if not self.smile.anna_p1:
-                return data
+        if smile_is_power and not self.smile.anna_p1:
+            return data
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
@@ -345,20 +345,13 @@ class SmileHelper(SmileCommon):
                 # Counting of this item is done in _appliance_measurements()
 
         if (
-            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
+            appliance := self._collect_appliance_data(
+                data, entity, entity_id, measurements
+            )
         ) is not None:
-            self._appliance_measurements(appliance, data, measurements)
-            self._get_lock_state(appliance, data)
-
-            for toggle, name in TOGGLES.items():
-                self._get_toggle_state(appliance, toggle, name, data)
-
-            if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, entity, data)
-
-        self._get_regulation_mode(appliance, entity_id, data)
-        self._get_gateway_mode(appliance, entity_id, data)
-        self._get_gateway_outdoor_temp(entity_id, data)
+            self._get_regulation_mode(appliance, entity_id, data)
+            self._get_gateway_mode(appliance, entity_id, data)
+            self._get_gateway_outdoor_temp(entity_id, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
@@ -372,6 +365,30 @@ class SmileHelper(SmileCommon):
         self._cleanup_data(data)
 
         return data
+
+    def _collect_appliance_data(
+        self,
+        data: GwEntityData,
+        entity: GwEntityData,
+        entity_id: str,
+        measurements: dict[str, DATA | UOM],
+    ) -> etree.Element | None:
+        """Collect initial appliance data."""
+        if (
+            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
+        ) is not None:
+            self._appliance_measurements(appliance, data, measurements)
+            self._get_lock_state(appliance, data)
+
+            for toggle, name in TOGGLES.items():
+                self._get_toggle_state(appliance, toggle, name, data)
+
+            if appliance.find("type").text in ACTUATOR_CLASSES:
+                self._get_actuator_functionalities(appliance, entity, data)
+
+            return appliance
+
+        return None
 
     def _power_data_from_location(self) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().
