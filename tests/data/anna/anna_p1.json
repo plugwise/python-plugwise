@@ -59,6 +59,7 @@
       "available": true,
       "dev_class": "smartmeter",
       "location": "da7be222ab3b420c927f3e49fade0304",
+      "model": "2MS212 SMR5.5",
       "name": "P1",
       "sensors": {
         "electricity_consumed_off_peak_cumulative": 618.001,
@@ -80,7 +81,8 @@
         "net_electricity_cumulative": 238.069,
         "net_electricity_point": 393,
         "voltage_phase_one": 234.6
-      }
+      },
+      "vendor": "SAGEM"
     },
     "53130847be2f436cb946b78dedb9053a": {
       "binary_sensors": {
