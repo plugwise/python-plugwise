@@ -212,7 +212,7 @@ class SmileLegacyHelper(SmileCommon):
         if self.smile.type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
             module_data = self._get_module_data(
-                appliance, locator, self._modules, legacy=True
+                appliance, locator, xml_2=self._modules, legacy=True
             )
             if not module_data["contents"]:
                 return (

@@ -359,7 +359,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.entity_items == 65
 
         result = await self.tinker_thermostat(
-            api, "d3ce834534114348be628b61b26d9220", good_schedules=["Thermostat schedule", "off"]
+            api,
+            "d3ce834534114348be628b61b26d9220",
+            good_schedules=["Thermostat schedule", "off"],
         )
         assert result
         await api.close_connection()
@@ -529,6 +531,27 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.entity_items == 68
         assert self.cooling_present
         assert not self._cooling_enabled
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_anna_p1(self):
+        """Test an Anna v4 connected to a P1 port."""
+        self.smile_setup = "anna_p1"
+
+        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, api, client = await self.connect_wrapper()
+        assert api.smile.hostname == "smile000000"
+
+        self.validate_test_basics(
+            _LOGGER,
+            api,
+            smile_version=None,
+        )
+
+        await self.device_test(api, "2025-11-02 00:00:01", testdata)
+        assert self.entity_items == 76
 
         await api.close_connection()
         await self.disconnect(server, client)

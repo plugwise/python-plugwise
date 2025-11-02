@@ -150,7 +150,7 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        if self.smile.type == "power":
+        if self.smile.type == "power" or self.smile.anna_p1:
             self._get_p1_smartmeter_info()
 
         # Sort the gw_entities
@@ -159,18 +159,21 @@ class SmileHelper(SmileCommon):
     def _get_p1_smartmeter_info(self) -> None:
         """For P1 collect the connected SmartMeter info from the Home/building location.
 
-        Note: For P1, the entity_id for the gateway and smartmeter are
-        switched to maintain backward compatibility with existing implementations.
+        Note: For P1, the entity_id for the gateway and smartmeter are switched to maintain
+        backward compatibility. For Anna P1, the smartmeter uses the home location_id directly.
         """
         appl = Munch()
         locator = MODULE_LOCATOR
-        module_data = self._get_module_data(self._home_location, locator)
+        tag = "electricity"
+        module_data = self._get_module_data(self._home_location, locator, key=tag)
         # No module-data present means the device has been removed
         if not module_data["contents"]:  # pragma: no cover
             return
 
         appl.available = None
-        appl.entity_id = self._gateway_id
+        appl.entity_id = self._home_loc_id
+        if not self.smile.anna_p1:
+            appl.entity_id = self._gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
         appl.location = self._home_loc_id
@@ -183,8 +186,9 @@ class SmileHelper(SmileCommon):
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
-        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self._gateway_id)
-        self._gateway_id = self._home_loc_id
+        if not self.smile.anna_p1:
+            self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self._gateway_id)
+            self._gateway_id = self._home_loc_id
 
         self._create_gw_entities(appl)
 
@@ -323,11 +327,13 @@ class SmileHelper(SmileCommon):
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
-        # !! DON'T CHANGE below two if-lines, will break stuff !!
-        if self.smile.type == "power":
-            if entity["dev_class"] == "smartmeter":
-                data.update(self._power_data_from_location())
+        smile_is_power = self.smile.type == "power"
+        if (smile_is_power or self.smile.anna_p1) and entity.get(
+            "dev_class"
+        ) == "smartmeter":
+            data.update(self._power_data_from_location())
 
+        if smile_is_power and not self.smile.anna_p1:
             return data
 
         # Get non-P1 data from APPLIANCES
@@ -340,20 +346,13 @@ class SmileHelper(SmileCommon):
                 # Counting of this item is done in _appliance_measurements()
 
         if (
-            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
+            appliance := self._collect_appliance_data(
+                data, entity, entity_id, measurements
+            )
         ) is not None:
-            self._appliance_measurements(appliance, data, measurements)
-            self._get_lock_state(appliance, data)
-
-            for toggle, name in TOGGLES.items():
-                self._get_toggle_state(appliance, toggle, name, data)
-
-            if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, entity, data)
-
-        self._get_regulation_mode(appliance, entity_id, data)
-        self._get_gateway_mode(appliance, entity_id, data)
-        self._get_gateway_outdoor_temp(entity_id, data)
+            self._get_regulation_mode(appliance, entity_id, data)
+            self._get_gateway_mode(appliance, entity_id, data)
+            self._get_gateway_outdoor_temp(entity_id, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
@@ -367,6 +366,30 @@ class SmileHelper(SmileCommon):
         self._cleanup_data(data)
 
         return data
+
+    def _collect_appliance_data(
+        self,
+        data: GwEntityData,
+        entity: GwEntityData,
+        entity_id: str,
+        measurements: dict[str, DATA | UOM],
+    ) -> etree.Element | None:
+        """Collect initial appliance data."""
+        if (
+            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
+        ) is not None:
+            self._appliance_measurements(appliance, data, measurements)
+            self._get_lock_state(appliance, data)
+
+            for toggle, name in TOGGLES.items():
+                self._get_toggle_state(appliance, toggle, name, data)
+
+            if appliance.find("type").text in ACTUATOR_CLASSES:
+                self._get_actuator_functionalities(appliance, entity, data)
+
+            return appliance
+
+        return None
 
     def _power_data_from_location(self) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().
@@ -924,7 +947,6 @@ class SmileHelper(SmileCommon):
             available.append(OFF)
             if selected == NONE:
                 selected = OFF
-
 
         return available, selected
 

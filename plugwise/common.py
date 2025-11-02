@@ -64,8 +64,11 @@ class SmileCommon:
         return self._heater_id
 
     def check_name(self, name: str) -> bool:
-        """Helper-function checking the smile-name."""
-        return bool(self.smile.name == name)
+        """Helper-function checking the smile-name.
+
+        20251101: modified for finding name = `Smile Anna` in `Smile Anna P1`.
+        """
+        return bool(name in self.smile.name)
 
     def _appl_heater_central_info(
         self,
@@ -98,9 +101,9 @@ class SmileCommon:
         # xml_1: appliance
         # xml_3: self._modules for legacy, self._domain_objects for actual
         xml_3 = return_valid(xml_3, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator_1, xml_3)
+        module_data = self._get_module_data(xml_1, locator_1, xml_2=xml_3)
         if not module_data["contents"]:
-            module_data = self._get_module_data(xml_1, locator_2, xml_3)
+            module_data = self._get_module_data(xml_1, locator_2, xml_2=xml_3)
             if not module_data["contents"]:
                 self._heater_id = NONE
                 return (
@@ -121,7 +124,7 @@ class SmileCommon:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
         xml_2 = return_valid(xml_2, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator, xml_2)
+        module_data = self._get_module_data(xml_1, locator, xml_2=xml_2)
         if not module_data["contents"]:
             return Munch()  # no module-data present means the device has been removed
 
@@ -239,7 +242,8 @@ class SmileCommon:
         self,
         xml_1: etree.Element,
         locator: str,
-        xml_2: etree.Element = None,
+        key: str | None = None,
+        xml_2: etree.Element | None = None,
         legacy: bool = False,
     ) -> ModuleData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
@@ -256,8 +260,11 @@ class SmileCommon:
             "zigbee_mac_address": None,
         }
 
-        if (appl_search := xml_1.find(locator)) is not None:
+        for appl_search in xml_1.findall(locator):
             link_tag = appl_search.tag
+            if key is not None and key not in link_tag:
+                continue
+
             link_id = appl_search.attrib["id"]
             loc = f".//services/{link_tag}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
@@ -271,5 +278,7 @@ class SmileCommon:
                 module_data["hardware_version"] = module.find("hardware_version").text
                 module_data["firmware_version"] = module.find("firmware_version").text
                 get_zigbee_data(module, module_data, legacy)
+
+            break
 
         return module_data

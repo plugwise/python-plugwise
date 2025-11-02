@@ -62,7 +62,7 @@ Module providing interfacing with the Plugwise devices:
 ### Smile
 
 - [x] Adam
-  - [x] Emma (only tested as ZigBee device connected to Adam)
+  - [x] Emma
   - [x] Jip
   - [x] Lisa
   - [x] Tom/Floor
@@ -70,7 +70,7 @@ Module providing interfacing with the Plugwise devices:
   - [x] Plug
   - [x] Aqara Plug
 - [x] Anna (v1.8 and later firmware versions)
-- [ ] Anna P1
+- [x] Anna P1
 - [x] Smile P1 (v2.0 and later firmware versions)
 - [x] Stretch (only with Circles, please help out with other devices)
 

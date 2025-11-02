@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.0
+
+- Add support for Anna P1 via PR [#809](https://github.com/plugwise/python-plugwise/pull/809)
+
 ## v1.8.3
 
 - Remove storing the last active schedule(s) via PR [#806](https://github.com/plugwise/python-plugwise/pull/806), to be handled by the HA Integration
