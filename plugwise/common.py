@@ -240,7 +240,7 @@ class SmileCommon:
         xml_1: etree.Element,
         locator: str,
         key: str | None = None,
-        xml_2: etree.Element = None,
+        xml_2: etree.Element | None = None,
         legacy: bool = False,
     ) -> ModuleData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
