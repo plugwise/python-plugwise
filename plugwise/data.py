@@ -170,7 +170,7 @@ class SmileData(SmileHelper):
             "heating",
             "preheating",
         ):
-            data["control_state"] = ctrl_state
+            data["control_state"] = str(ctrl_state)
 
         if "setpoint" in data["sensors"]:
             data["sensors"].pop("setpoint")  # remove, only used in _control_state()
