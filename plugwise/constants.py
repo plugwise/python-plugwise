@@ -251,6 +251,7 @@ ActuatorType = Literal[
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
 
 ActuatorDataType = Literal[
+    "control_state",
     "lower_bound",
     "regulation_control",
     "resolution",
@@ -288,6 +289,7 @@ BinarySensorType = Literal[
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
 LIMITS: Final[tuple[str, ...]] = (
+    "control_state",
     "lower_bound",
     "offset",
     "regulation_control",
