@@ -798,7 +798,7 @@ class SmileHelper(SmileCommon):
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         
-        if (ctrl_state := data["thermostat"]["control_state"]) is not None:
+        if (ctrl_state := data["thermostat"].get("control_state")) is not None:
             data["thermostat"].pop("control_state")
             return ctrl_state
 
@@ -839,9 +839,10 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the thermostat regulation_mode of a location.
         """
-        data["regulation_control_modes"] = ["active", "passive", "off"]
-        data["select_regulation_control"] = data["thermostat"]["regulation_control"]
-        data["thermostat"].pop("regulation_control")
+        if (reg_control := data["thermostat"].get("regulation_control")) is not None:
+            data["select_regulation_control"] = reg_control
+            data["regulation_control_modes"] = ["active", "passive", "off"]
+            data["thermostat"].pop("regulation_control")
 
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().
