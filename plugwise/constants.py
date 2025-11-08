@@ -245,7 +245,6 @@ ActuatorType = Literal[
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
-    "regulation_control",
     "temperature_offset",
     "thermostat",
 ]
@@ -253,6 +252,7 @@ ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
 
 ActuatorDataType = Literal[
     "lower_bound",
+    "regulation_control",
     "resolution",
     "setpoint",
     "setpoint_high",
@@ -290,6 +290,7 @@ BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 LIMITS: Final[tuple[str, ...]] = (
     "lower_bound",
     "offset",
+    "regulation_control",
     "resolution",
     "setpoint",
     "upper_bound",
