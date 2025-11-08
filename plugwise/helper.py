@@ -791,9 +791,9 @@ class SmileHelper(SmileCommon):
                 thermo_loc["secondary"].append(appliance_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
-        """Helper-function for _get_adam_data().
+        """Helper-function for _get_location_data().
 
-        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Adam: collect the thermostat control_state of a location.
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
@@ -833,6 +833,15 @@ class SmileHelper(SmileCommon):
                     open_valve_count += 1
 
         return False if loc_found == 0 else open_valve_count
+
+    def _regulation_control(self, data: GwEntityData) -> None:
+        """Helper-function for smile.py: _get_location_data().
+
+        Adam: collect the thermostat regulation_mode of a location.
+        """
+        data["regulation_control_modes"] = ["active", "passive", "off"]
+        data["select_regulation_control"] = data["thermostat"]["regulation_control"]
+        data["thermostat"].pop("regulation_control")
 
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().

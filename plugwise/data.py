@@ -161,6 +161,8 @@ class SmileData(SmileHelper):
         """
         zone = self._zones[loc_id]
         data = self._get_zone_data(loc_id)
+        self._regulation_control(data)
+
         data["control_state"] = "idle"
         self._count += 1
         if (ctrl_state := self._control_state(data)) and ctrl_state in (
