@@ -595,8 +595,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return
 
         # Perform tests and asserts in two steps: devices and zones
-        for data_dict in testdata:
-            test_and_assert(data_dict, data, "devices")
+        local_testdata = {"devices": testdata}
+        for header, data_dict in local_testdata.items():
+            test_and_assert(data_dict, data, header)
 
         # pragma warning restore S3776
 
