@@ -129,7 +129,6 @@ class SmileData(SmileHelper):
             and entity["dev_class"] == "thermostat"
         ):
             thermostat = entity["thermostat"]
-            sensors = entity["sensors"]
             temp_dict: ActuatorData = {
                 "setpoint_low": thermostat["setpoint"],
                 "setpoint_high": MAX_SETPOINT,
@@ -139,15 +138,19 @@ class SmileData(SmileHelper):
                     "setpoint_low": MIN_SETPOINT,
                     "setpoint_high": thermostat["setpoint"],
                 }
-            thermostat.pop("setpoint")
+            thermostat.pop("setpoint")  # Add 2 keys, remove 1
             temp_dict.update(thermostat)
             entity["thermostat"] = temp_dict
+
+            sensors = entity["sensors"]
+            sensors["setpoint_low"] = temp_dict["setpoint_low"]
+            sensors["setpoint_high"] = temp_dict["setpoint_high"]
+            # Add 2 more keys, remove 1 when required
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
                 self._count -= 1
-            sensors["setpoint_low"] = temp_dict["setpoint_low"]
-            sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            self._count += 3  # add 4, remove 1
+
+            self._count += 3  # add 4 total, remove 1, count the conditional remove separately 
 
     def _get_location_data(self, loc_id: str) -> GwEntityData:
         """Helper-function for _all_entity_data() and async_update().
