@@ -1,47 +1,45 @@
 {
-  "devices": {
-    "67d73d0bd469422db25a618a5fb8eeb0": {
-      "switches": {
-        "lock": true
-      }
+  "67d73d0bd469422db25a618a5fb8eeb0": {
+    "switches": {
+      "lock": true
+    }
+  },
+  "29542b2b6a6a4169acecc15c72a599b8": {
+    "switches": {
+      "relay": false,
+      "lock": false
+    }
+  },
+  "2568cc4b9c1e401495d4741a5f89bee1": {
+    "sensors": {
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0
     },
-    "29542b2b6a6a4169acecc15c72a599b8": {
-      "switches": {
-        "relay": false,
-        "lock": false
-      }
-    },
-    "2568cc4b9c1e401495d4741a5f89bee1": {
-      "sensors": {
-        "electricity_consumed": 0.0,
-        "electricity_consumed_interval": 0.0
-      },
-      "switches": {
-        "relay": false,
-        "lock": false
-      }
-    },
-    "1772a4ea304041adb83f357b751341ff": {
-      "available": false
-    },
-    "e2f4322d57924fa090fbbc48b3a140dc": {
-      "binary_sensors": {
-        "low_battery": true
-      }
-    },
-    "da224107914542988a88561b4452b0f6": {
-      "binary_sensors": {
-        "plugwise_notification": true
-      }
-    },
-    "e8ef2a01ed3b4139a53bf749204fe6b4": {
-      "members": [
-        "2568cc4b9c1e401495d4741a5f89bee1",
-        "29542b2b6a6a4169acecc15c72a599b8"
-      ],
-      "switches": {
-        "relay": false
-      }
+    "switches": {
+      "relay": false,
+      "lock": false
+    }
+  },
+  "1772a4ea304041adb83f357b751341ff": {
+    "available": false
+  },
+  "e2f4322d57924fa090fbbc48b3a140dc": {
+    "binary_sensors": {
+      "low_battery": true
+    }
+  },
+  "da224107914542988a88561b4452b0f6": {
+    "binary_sensors": {
+      "plugwise_notification": true
+    }
+  },
+  "e8ef2a01ed3b4139a53bf749204fe6b4": {
+    "members": [
+      "2568cc4b9c1e401495d4741a5f89bee1",
+      "29542b2b6a6a4169acecc15c72a599b8"
+    ],
+    "switches": {
+      "relay": false
     }
   }
 }
