@@ -197,7 +197,7 @@ def format_measure(measure: str, unit: str) -> float | int | str:
     """Format measure to correct type."""
     try:
         float_measure = float(measure)
-    except ValueError as exc:
+    except ValueError:
         return measure  # return string
 
     if unit == PERCENTAGE and 0 < float_measure <= 1:

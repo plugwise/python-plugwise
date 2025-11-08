@@ -797,7 +797,7 @@ class SmileHelper(SmileCommon):
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
-        
+
         if (ctrl_state := data["thermostat"].get("control_state")) is not None:
             data["thermostat"].pop("control_state")
             self._count -= 1
