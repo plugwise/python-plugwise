@@ -323,8 +323,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
 
-        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 519
+        await self.device_test(api, "2022-01-02 00:00:01", testdata)
+        assert self.entity_items == 538
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
@@ -347,8 +347,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 68
+        await self.device_test(api, "2022-01-02 00:00:01", testdata)
+        assert self.entity_items == 69
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
@@ -414,7 +414,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata)
         assert api.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self.entity_items == 261
+        assert self.entity_items == 269
         assert test_items == self.entity_items
 
         # Negative test
