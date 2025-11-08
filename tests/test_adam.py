@@ -323,7 +323,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
 
-        await self.device_test(api, "2022-01-02 00:00:01", testdata)
+        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
         assert self.entity_items == 539
         assert test_items == self.entity_items
         assert self.cooling_present
@@ -347,7 +347,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2022-01-02 00:00:01", testdata)
+        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
         assert self.entity_items == 69
         assert test_items == self.entity_items
         assert self.cooling_present
