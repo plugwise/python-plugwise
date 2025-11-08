@@ -10,6 +10,7 @@ from typing import cast
 from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
+    ACTIVE_KEYS,
     ACTUATOR_CLASSES,
     ADAM,
     ANNA,
@@ -20,7 +21,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     ENERGY_WATT_HOUR,
     HEATER_CENTRAL_MEASUREMENTS,
-    LIMITS,
     LOCATIONS,
     LOGGER,
     MODULE_LOCATOR,
@@ -503,7 +503,7 @@ class SmileHelper(SmileCommon):
             ) is not None and updated_date_key.text is None:
                 continue
 
-            for key in LIMITS:
+            for key in ACTIVE_KEYS:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )

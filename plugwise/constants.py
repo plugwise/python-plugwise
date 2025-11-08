@@ -250,6 +250,16 @@ ActuatorType = Literal[
 ]
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
 
+ACTIVE_KEYS: Final[tuple[str, ...]] = (
+    "control_state",
+    "lower_bound",
+    "offset",
+    "regulation_control",
+    "resolution",
+    "setpoint",
+    "upper_bound",
+)
+
 ActuatorDataType = Literal[
     "control_state",
     "lower_bound",
@@ -287,16 +297,6 @@ BinarySensorType = Literal[
     "secondary_boiler_state",
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
-
-LIMITS: Final[tuple[str, ...]] = (
-    "control_state",
-    "lower_bound",
-    "offset",
-    "regulation_control",
-    "resolution",
-    "setpoint",
-    "upper_bound",
-)
 
 SensorType = Literal[
     "battery",
