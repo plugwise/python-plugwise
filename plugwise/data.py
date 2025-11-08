@@ -10,6 +10,7 @@ import re
 from plugwise.constants import (
     ADAM,
     ANNA,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -79,6 +80,7 @@ class SmileData(SmileHelper):
             self._update_for_cooling(entity)
 
             remove_empty_platform_dicts(entity)
+            LOGGER.debug("HOI count: %s", self._count)
 
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""
