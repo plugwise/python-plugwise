@@ -193,13 +193,9 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure: str, unit: str) -> float | int | str:
+def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
-    try:
-        float_measure = float(measure)
-    except ValueError:
-        return measure  # return string
-
+    float_measure = float(measure)
     if unit == PERCENTAGE and 0 < float_measure <= 1:
         return int(float_measure * 100)
 

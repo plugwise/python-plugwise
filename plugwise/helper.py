@@ -519,8 +519,11 @@ class SmileHelper(SmileCommon):
                         key = "setpoint"
 
                     act_key = cast(ActuatorDataType, key)
-                    temp_dict[act_key] = format_measure(pw_function.text, TEMP_CELSIUS)
                     self._count += 1
+                    try:
+                        temp_dict[act_key] = format_measure(pw_function.text, TEMP_CELSIUS)
+                    except ValueError:
+                        temp_dict[act_key] = str(pw_function.text)
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
