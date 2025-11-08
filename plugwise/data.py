@@ -144,9 +144,10 @@ class SmileData(SmileHelper):
             entity["thermostat"] = temp_dict
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
+                self._count -= 1
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            self._count += 2  # add 4, remove 2
+            self._count += 3  # add 4, remove 1
 
     def _get_location_data(self, loc_id: str) -> GwEntityData:
         """Helper-function for _all_entity_data() and async_update().
@@ -164,8 +165,9 @@ class SmileData(SmileHelper):
         ):
             data["control_state"] = str(ctrl_state)
 
-        data["sensors"].pop("setpoint")  # remove, only used in _control_state()
-        self._count -= 1
+        if "setpoint" in data["sensors"]:
+            data["sensors"].pop("setpoint")  # remove, only used in _control_state()
+            self._count -= 1
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone, data)
@@ -238,6 +240,7 @@ class SmileData(SmileHelper):
                 and self._cooling_present
             ):
                 data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
+                self._count += 1
 
         # Show the allowed regulation_modes and gateway_modes
         if entity["dev_class"] == "gateway":
