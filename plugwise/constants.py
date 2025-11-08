@@ -506,7 +506,9 @@ class ThermoLoc(TypedDict, total=False):
 class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
+    control_state: str
     lower_bound: float
+    regulation_control: str
     resolution: float
     setpoint: float
     setpoint_high: float
@@ -555,6 +557,8 @@ class GwEntityData(TypedDict, total=False):
     select_regulation_mode: str
 
     # Thermostat-related
+    regulation_control_modes: list[str]
+    select_regulation_control: str
     thermostats: dict[str, list[str]]
     # Presets:
     active_preset: str | None
