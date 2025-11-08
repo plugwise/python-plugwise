@@ -39,7 +39,6 @@ CORE_NOTIFICATIONS_TAIL = "/core/notifications{tail:.*}"
 CORE_RULES_TAIL = "/core/rules{tail:.*}"
 EMPTY_XML = "<xml />"
 BOGUS = "!bogus"
-
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
 
@@ -538,6 +537,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert tests == asserts + tested_items
             _LOGGER.debug("Total items tested: %s", tested_items)
             _LOGGER.debug("Total entity test-asserts: %s", asserts)
+            return asserts
 
         # pragma warning disable S3776
 
@@ -596,9 +596,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Perform tests and asserts in two steps: devices and zones
         local_testdata = {"devices": testdata}
-        for header, data_dict in local_testdata.items():
-            test_and_assert(data_dict, data, header)
+        for header, data_dict in local_testdata.items():  # single key, value pair
+            internal_asserts = test_and_assert(data_dict, data, header)
 
+        return internal_asserts
         # pragma warning restore S3776
 
     @pytest.mark.asyncio
