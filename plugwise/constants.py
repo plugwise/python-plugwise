@@ -557,9 +557,9 @@ class GwEntityData(TypedDict, total=False):
     select_regulation_mode: str
 
     # Thermostat-related
-    regulation_control_modes: list[str]
-    select_regulation_control: str
+    select_zone_profile: str
     thermostats: dict[str, list[str]]
+    zone_profiles: list[str]
     # Presets:
     active_preset: str | None
     preset_modes: list[str] | None
