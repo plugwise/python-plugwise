@@ -245,6 +245,7 @@ ActuatorType = Literal[
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
+    "regulation_control",
     "temperature_offset",
     "thermostat",
 ]
