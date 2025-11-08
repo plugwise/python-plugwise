@@ -846,8 +846,8 @@ class SmileHelper(SmileCommon):
         Adam: collect the thermostat regulation_mode of a location.
         """
         if (reg_control := data["thermostat"].get("regulation_control")) is not None:
-            data["select_regulation_control"] = reg_control
-            data["regulation_control_modes"] = ["active", "off", "passive"]
+            data["select_zone_profile"] = reg_control
+            data["zone_profiles"] = ["active", "off", "passive"]
             data["thermostat"].pop("regulation_control")
             self._count += 1
 
