@@ -92,6 +92,7 @@
     "name": "Woonkamer",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
     "select_schedule": "Werkdag schema",
+    "select_zone_profile": "active",
     "sensors": {
       "electricity_consumed": 0.0,
       "electricity_produced": 0.0,
@@ -107,6 +108,7 @@
       "primary": ["ca79d23ae0094120b877558734cff85c"],
       "secondary": []
     },
-    "vendor": "Plugwise"
+    "vendor": "Plugwise",
+    "zone_profiles": ["active", "off", "passive"]
   }
 }
