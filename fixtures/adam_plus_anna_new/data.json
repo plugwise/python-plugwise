@@ -279,6 +279,8 @@
     "model": "ThermoZone",
     "name": "Living room",
     "preset_modes": ["vacation", "no_frost", "asleep", "home", "away"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": "Weekschema",
     "sensors": {
       "electricity_consumed": 60.8,
@@ -316,6 +318,8 @@
     "model": "ThermoZone",
     "name": "Bathroom",
     "preset_modes": ["vacation", "no_frost", "asleep", "home", "away"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,

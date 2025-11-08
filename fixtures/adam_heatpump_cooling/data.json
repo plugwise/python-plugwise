@@ -13,6 +13,8 @@
     "model": "ThermoZone",
     "name": "Slaapkamer SJ",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -131,6 +133,8 @@
     "model": "ThermoZone",
     "name": "Slaapkamer DB",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -245,6 +249,8 @@
     "model": "ThermoZone",
     "name": "Badkamer 2",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -387,6 +393,8 @@
     "model": "ThermoZone",
     "name": "Badkamer 1",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -419,6 +427,8 @@
     "model": "ThermoZone",
     "name": "Slaapkamer RB",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 3.13,
@@ -470,6 +480,8 @@
     "model": "ThermoZone",
     "name": "Slaapkamer SQ",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -522,6 +534,8 @@
     "model": "ThermoZone",
     "name": "Keuken",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 2.13,
@@ -554,6 +568,8 @@
     "model": "ThermoZone",
     "name": "Bijkeuken",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -684,6 +700,8 @@
     "model": "ThermoZone",
     "name": "Slaapkamer JM",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "passive",
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -786,6 +804,8 @@
     "model": "ThermoZone",
     "name": "Woonkamer",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,

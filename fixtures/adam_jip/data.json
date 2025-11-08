@@ -8,6 +8,8 @@
     "model": "ThermoZone",
     "name": "Slaapkamer",
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": null,
     "sensors": {
       "temperature": 24.2
@@ -33,6 +35,8 @@
     "model": "ThermoZone",
     "name": "Woonkamer",
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": null,
     "sensors": {
       "temperature": 27.4
@@ -248,6 +252,8 @@
     "model": "ThermoZone",
     "name": "Kinderkamer",
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": null,
     "sensors": {
       "temperature": 30.0
@@ -297,6 +303,8 @@
     "model": "ThermoZone",
     "name": "Logeerkamer",
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": null,
     "sensors": {
       "temperature": 30.0

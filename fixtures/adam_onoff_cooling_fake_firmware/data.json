@@ -91,6 +91,8 @@
     "model": "ThermoZone",
     "name": "Woonkamer",
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "regulation_control_modes": ["active", "off", "passive"],
+    "select_regulation_control": "active",
     "select_schedule": "Werkdag schema",
     "sensors": {
       "electricity_consumed": 0.0,
