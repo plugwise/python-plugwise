@@ -1,46 +1,44 @@
 {
-  "devices": {
-    "aac7b735042c4832ac9ff33aae4f453b": {
-      "sensors": {
-        "electricity_consumed": 1000.0,
-        "electricity_consumed_interval": 20.7,
-        "electricity_produced": 0.0
-      },
-      "switches": {
-        "relay": true,
-        "lock": true
-      }
+  "aac7b735042c4832ac9ff33aae4f453b": {
+    "sensors": {
+      "electricity_consumed": 1000.0,
+      "electricity_consumed_interval": 20.7,
+      "electricity_produced": 0.0
     },
-    "cfe95cf3de1948c0b8955125bf754614": {
-      "sensors": {
-        "electricity_consumed": 0.0,
-        "electricity_consumed_interval": 0.0,
-        "electricity_produced": 0.0
-      },
-      "switches": {
-        "relay": false,
-        "lock": false
-      }
+    "switches": {
+      "relay": true,
+      "lock": true
+    }
+  },
+  "cfe95cf3de1948c0b8955125bf754614": {
+    "sensors": {
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0
     },
-    "059e4d03c7a34d278add5c7a4a781d19": {
-      "sensors": {
-        "electricity_consumed": 0.0,
-        "electricity_consumed_interval": 0.0,
-        "electricity_produced": 0.0
-      },
-      "switches": {
-        "relay": false,
-        "lock": false
-      }
+    "switches": {
+      "relay": false,
+      "lock": false
+    }
+  },
+  "059e4d03c7a34d278add5c7a4a781d19": {
+    "sensors": {
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0
     },
-    "d03738edfcc947f7b8f4573571d90d2d": {
-      "members": [
-        "059e4d03c7a34d278add5c7a4a781d19",
-        "cfe95cf3de1948c0b8955125bf754614"
-      ],
-      "switches": {
-        "relay": false
-      }
+    "switches": {
+      "relay": false,
+      "lock": false
+    }
+  },
+  "d03738edfcc947f7b8f4573571d90d2d": {
+    "members": [
+      "059e4d03c7a34d278add5c7a4a781d19",
+      "cfe95cf3de1948c0b8955125bf754614"
+    ],
+    "switches": {
+      "relay": false
     }
   }
 }

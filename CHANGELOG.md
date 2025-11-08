@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improve testing: compare internal and code testcounters, line up fixture and test-json format, fix a missed count.
+
 ## v1.9.0
 
 - Add support for Anna P1 via PR [#809](https://github.com/plugwise/python-plugwise/pull/809)

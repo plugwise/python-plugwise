@@ -129,7 +129,6 @@ class SmileData(SmileHelper):
             and entity["dev_class"] == "thermostat"
         ):
             thermostat = entity["thermostat"]
-            sensors = entity["sensors"]
             temp_dict: ActuatorData = {
                 "setpoint_low": thermostat["setpoint"],
                 "setpoint_high": MAX_SETPOINT,
@@ -139,14 +138,21 @@ class SmileData(SmileHelper):
                     "setpoint_low": MIN_SETPOINT,
                     "setpoint_high": thermostat["setpoint"],
                 }
-            thermostat.pop("setpoint")
+            thermostat.pop("setpoint")  # Add 2 keys, remove 1
             temp_dict.update(thermostat)
             entity["thermostat"] = temp_dict
-            if "setpoint" in sensors:
-                sensors.pop("setpoint")
+
+            sensors = entity["sensors"]
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            self._count += 2  # add 4, remove 2
+            # Add 2 more keys, remove 1 when required
+            if "setpoint" in sensors:
+                sensors.pop("setpoint")
+                self._count -= 1
+
+            self._count += (
+                3  # add 4 total, remove 1, count the conditional remove separately
+            )
 
     def _get_location_data(self, loc_id: str) -> GwEntityData:
         """Helper-function for _all_entity_data() and async_update().
@@ -164,8 +170,9 @@ class SmileData(SmileHelper):
         ):
             data["control_state"] = str(ctrl_state)
 
-        data["sensors"].pop("setpoint")  # remove, only used in _control_state()
-        self._count -= 1
+        if "setpoint" in data["sensors"]:
+            data["sensors"].pop("setpoint")  # remove, only used in _control_state()
+            self._count -= 1
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone, data)
@@ -238,6 +245,7 @@ class SmileData(SmileHelper):
                 and self._cooling_present
             ):
                 data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
+                self._count += 1
 
         # Show the allowed regulation_modes and gateway_modes
         if entity["dev_class"] == "gateway":

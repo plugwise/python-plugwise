@@ -32,9 +32,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.9.0",
         )
 
-        await self.device_test(api, "2025-10-12 00:00:01", testdata)
+        test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
         assert self.entity_items == 216
+        assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
             "056ee145a816487eaa69243c3280f8bf",
@@ -210,9 +211,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.0.15",
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata)
+        test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
         assert self.entity_items == 379
+        assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await api.delete_notification()
@@ -284,8 +286,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.0.15",
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata)
+        test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 385
+        assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -320,8 +323,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
 
-        await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 518
+        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
+        assert self.entity_items == 519
+        assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
 
@@ -343,8 +347,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 67
+        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
+        assert self.entity_items == 68
+        assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
 
@@ -366,9 +371,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.0.15",
         )
 
-        await self.device_test(api, "2020-03-22 00:00:01", testdata)
+        test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert self.entity_items == 82
+        assert test_items == self.entity_items
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
@@ -406,9 +412,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
 
-        await self.device_test(api, "2021-06-20 00:00:01", testdata)
+        test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata)
         assert api.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
         assert self.entity_items == 261
+        assert test_items == self.entity_items
 
         # Negative test
         result = await self.tinker_thermostat(
