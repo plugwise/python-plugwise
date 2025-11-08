@@ -797,9 +797,10 @@ class SmileHelper(SmileCommon):
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
-        locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
-        if (ctrl_state := self._domain_objects.find(locator)) is not None:
-            return str(ctrl_state.text)
+        
+        if (ctrl_state := data["thermostat"]["control_state"]) is not None:
+            data["thermostat"].pop("control_state")
+            return ctrl_state
 
         # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
         # In newer firmware versions, default to "off" when control_state is not present
