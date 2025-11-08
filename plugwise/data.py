@@ -150,7 +150,9 @@ class SmileData(SmileHelper):
                 sensors.pop("setpoint")
                 self._count -= 1
 
-            self._count += 3  # add 4 total, remove 1, count the conditional remove separately 
+            self._count += (
+                3  # add 4 total, remove 1, count the conditional remove separately
+            )
 
     def _get_location_data(self, loc_id: str) -> GwEntityData:
         """Helper-function for _all_entity_data() and async_update().
