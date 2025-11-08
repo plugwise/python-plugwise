@@ -790,7 +790,7 @@ class SmileHelper(SmileCommon):
             else:
                 thermo_loc["secondary"].append(appliance_id)
 
-    def _control_state(self, data: GwEntityData, loc_id: str) -> str | bool:
+    def _control_state(self, data: GwEntityData) -> str | bool:
         """Helper-function for _get_adam_data().
 
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
