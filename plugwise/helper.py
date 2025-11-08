@@ -842,7 +842,7 @@ class SmileHelper(SmileCommon):
         """
         if (reg_control := data["thermostat"].get("regulation_control")) is not None:
             data["select_regulation_control"] = reg_control
-            data["regulation_control_modes"] = ["active", "passive", "off"]
+            data["regulation_control_modes"] = ["active", "off", "passive"]
             data["thermostat"].pop("regulation_control")
             self._count += 1
 
