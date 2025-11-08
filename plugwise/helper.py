@@ -800,6 +800,7 @@ class SmileHelper(SmileCommon):
         
         if (ctrl_state := data["thermostat"].get("control_state")) is not None:
             data["thermostat"].pop("control_state")
+            self._count -= 1
             return ctrl_state
 
         # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
@@ -843,6 +844,7 @@ class SmileHelper(SmileCommon):
             data["select_regulation_control"] = reg_control
             data["regulation_control_modes"] = ["active", "passive", "off"]
             data["thermostat"].pop("regulation_control")
+            self._count += 1
 
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().
