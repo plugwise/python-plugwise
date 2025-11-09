@@ -843,7 +843,7 @@ class SmileHelper(SmileCommon):
     def _regulation_control(self, data: GwEntityData) -> None:
         """Helper-function for smile.py: _get_location_data().
 
-        Adam: collect the thermostat regulation_mode of a location.
+        Adam: collect the thermostat regulation_control state of a location.
         """
         if (reg_control := data["thermostat"].get("regulation_control")) is not None:
             data["select_zone_profile"] = reg_control
