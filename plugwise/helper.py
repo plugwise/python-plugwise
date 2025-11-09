@@ -850,7 +850,7 @@ class SmileHelper(SmileCommon):
             data["select_zone_profile"] = reg_control
             data["zone_profiles"] = ALLOWED_ZONE_PROFILES
             data["thermostat"].pop("regulation_control")
-            self._count += 1
+            self._count += 1  # Add 2, remove 1
 
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().
