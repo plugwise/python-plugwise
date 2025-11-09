@@ -242,7 +242,7 @@ class SmileAPI(SmileData):
                 # schedule name corresponds to select option
                 await self.set_schedule_state(loc_id, state, option)
             case "select_zone_profile":
-                await self.set_zone_profile(option)
+                await self.set_zone_profile(loc_id, option)
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
@@ -307,7 +307,7 @@ class SmileAPI(SmileData):
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         await self.call_request(uri, method="put", data=data)
 
-    async def set_zone_profile(self, profile: str) -> None:
+    async def set_zone_profile(self, loc_id: str, profile: str) -> None:
         """Set the Adam thermoszone heating profile."""
         if profile not in ALLOWED_ZONE_PROFILES:
             raise PlugwiseError("Plugwise: invalid zone profile.")
