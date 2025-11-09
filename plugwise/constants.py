@@ -33,7 +33,7 @@ VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
 ADAM: Final = "Adam"
-ALLOWED_ZONE_PROFILES: Final(set) = ("active", "off", "passive")
+ALLOWED_ZONE_PROFILES: Final[tuple[str, str, str]] = ("active", "off", "passive")
 ANNA: Final = "Smile Anna"
 ANNA_P1: Final = "Smile Anna P1"
 DEFAULT_TIMEOUT: Final = 10
