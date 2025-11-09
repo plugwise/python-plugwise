@@ -13,6 +13,7 @@ from plugwise.constants import (
     ACTIVE_KEYS,
     ACTUATOR_CLASSES,
     ADAM,
+    ALLOWED_ZONE_PROFILES,
     ANNA,
     ATTR_NAME,
     DATA,
@@ -847,7 +848,7 @@ class SmileHelper(SmileCommon):
         """
         if (reg_control := data["thermostat"].get("regulation_control")) is not None:
             data["select_zone_profile"] = reg_control
-            data["zone_profiles"] = ["active", "off", "passive"]
+            data["zone_profiles"] = ALLOWED_ZONE_PROFILES
             data["thermostat"].pop("regulation_control")
             self._count += 1
 
