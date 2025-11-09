@@ -11,6 +11,7 @@ from typing import Any, cast
 
 from plugwise.constants import (
     ADAM,
+    ALLOWED_ZONE_PROFILES,
     ANNA,
     APPLIANCES,
     DOMAIN_OBJECTS,
@@ -308,7 +309,7 @@ class SmileAPI(SmileData):
 
     async def set_zone_profile(self, profile: str) -> None:
         """Set the Adam thermoszone heating profile."""
-        if profile not in ("active", "off", "passive"):
+        if profile not in ALLOWED_ZONE_PROFILES:
             raise PlugwiseError("Plugwise: invalid zone profile.")
 
         data = (
