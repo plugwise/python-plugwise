@@ -102,7 +102,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert switch_change
         switch_change = await self.tinker_switch(
-            api, "056ee145a816487eaa69243c3280f8bf", model="dhw_cm_switch"
+            api,
+            "056ee145a816487eaa69243c3280f8bf",
+            model="dhw_cm_switch",
         )
         assert switch_change
         # Test relay without lock-attribute
@@ -112,7 +114,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert not switch_change
         switch_change = await self.tinker_switch(
-            api, "2568cc4b9c1e401495d4741a5f89bee1"
+            api,
+            "2568cc4b9c1e401495d4741a5f89bee1",
         )
         assert not switch_change
         switch_change = await self.tinker_switch(
@@ -135,6 +138,11 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         tinkered = await self.tinker_max_boiler_temp(api)
         assert not tinkered
+
+        assert not await self.tinker_zone_profile(
+            api,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+        )
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
