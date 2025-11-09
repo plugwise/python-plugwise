@@ -317,7 +317,7 @@ class SmileAPI(SmileData):
             f"<regulation_control>{profile}</regulation_control>"
             "</thermostat_functionality>"
         )
-        uri = "{LOCATIONS};id={loc_id}/thermostat"
+        uri = f"{LOCATIONS};id={loc_id}/thermostat"
         await self.call_request(uri, method="post", data=data)
 
     async def set_schedule_state(
