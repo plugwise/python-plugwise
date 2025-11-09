@@ -187,6 +187,12 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         tinkered = await self.tinker_regulation_mode(api, unhappy=True)
         assert tinkered
 
+        assert await self.tinker_zone_profile(
+            api,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            unhappy=True,
+        )
+
         await api.close_connection()
         await self.disconnect(server, client)
 
