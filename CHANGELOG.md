@@ -1,8 +1,9 @@
 # Changelog
 
-## Ongoing
+## v1.10.0 
 
-- Improve testing: compare internal and code testcounters, line up fixture and test-json format, fix a missed count.
+- New feature: implement setting of a ThermoZone zone profile via PR [#814](https://github.com/plugwise/python-plugwise/pull/814)
+- Improve testing: compare internal and code testcounters, line up fixture and test-json format, fix a missed count via PR [#815](https://github.com/plugwise/python-plugwise/pull/815)
 
 ## v1.9.0
 
