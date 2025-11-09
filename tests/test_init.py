@@ -987,7 +987,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_gateway_mode_passed
 
     @staticmethod
-    async def tinker_zone_profile(api, unhappy=False):
+    async def tinker_zone_profile(api, loc_id, unhappy=False):
         """Toggle gateway_mode to test functionality."""
         tinker_zone_profile_passed = False
         for profile in ["active", "off", "passive", "!bogus"]:
