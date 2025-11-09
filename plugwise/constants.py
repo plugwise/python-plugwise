@@ -33,6 +33,7 @@ VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
 ADAM: Final = "Adam"
+ALLOWED_ZONE_PROFILES: Final[list[str]] = ["active", "off", "passive"]
 ANNA: Final = "Smile Anna"
 ANNA_P1: Final = "Smile Anna P1"
 DEFAULT_TIMEOUT: Final = 10
@@ -250,8 +251,20 @@ ActuatorType = Literal[
 ]
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
 
-ActuatorDataType = Literal[
+ACTIVE_KEYS: Final[tuple[str, ...]] = (
+    "control_state",
     "lower_bound",
+    "offset",
+    "regulation_control",
+    "resolution",
+    "setpoint",
+    "upper_bound",
+)
+
+ActuatorDataType = Literal[
+    "control_state",
+    "lower_bound",
+    "regulation_control",
     "resolution",
     "setpoint",
     "setpoint_high",
@@ -285,14 +298,6 @@ BinarySensorType = Literal[
     "secondary_boiler_state",
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
-
-LIMITS: Final[tuple[str, ...]] = (
-    "lower_bound",
-    "offset",
-    "resolution",
-    "setpoint",
-    "upper_bound",
-)
 
 SensorType = Literal[
     "battery",
@@ -502,7 +507,9 @@ class ThermoLoc(TypedDict, total=False):
 class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
+    control_state: str
     lower_bound: float
+    regulation_control: str
     resolution: float
     setpoint: float
     setpoint_high: float
@@ -551,7 +558,9 @@ class GwEntityData(TypedDict, total=False):
     select_regulation_mode: str
 
     # Thermostat-related
+    select_zone_profile: str
     thermostats: dict[str, list[str]]
+    zone_profiles: list[str]
     # Presets:
     active_preset: str | None
     preset_modes: list[str] | None

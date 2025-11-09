@@ -117,6 +117,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if not raise_timeout:
             app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_http_accept)
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
+            app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route(
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
@@ -125,6 +126,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         else:
             app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route("DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout)
@@ -985,6 +987,35 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     return False
 
         return tinker_gateway_mode_passed
+
+    @staticmethod
+    async def tinker_zone_profile(api, loc_id, unhappy=False):
+        """Toggle gateway_mode to test functionality."""
+        tinker_zone_profile_passed = False
+        for profile in ["active", "off", "passive", "!bogus"]:
+            warning = ""
+            if profile[0] == "!":
+                warning = " Negative test"
+                profile = profile[1:]
+            _LOGGER.info("%s", f"- Adjusting zone_profile to {profile}{warning}")
+            try:
+                await api.set_select("select_zone_profile", loc_id, profile)
+                _LOGGER.info("  + worked as intended")
+                tinker_zone_profile_passed = True
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid mode, as expected")
+                tinker_zone_profile_passed = False
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
+                if unhappy:
+                    _LOGGER.info("  + failed as expected before intended failure")
+                    return True
+                else:  # pragma: no cover
+                    _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
+
+        return tinker_zone_profile_passed
 
     @staticmethod
     def validate_test_basics(

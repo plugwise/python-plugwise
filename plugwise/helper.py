@@ -10,8 +10,10 @@ from typing import cast
 from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
+    ACTIVE_KEYS,
     ACTUATOR_CLASSES,
     ADAM,
+    ALLOWED_ZONE_PROFILES,
     ANNA,
     ATTR_NAME,
     DATA,
@@ -20,7 +22,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     ENERGY_WATT_HOUR,
     HEATER_CENTRAL_MEASUREMENTS,
-    LIMITS,
     LOCATIONS,
     LOGGER,
     MODULE_LOCATOR,
@@ -503,7 +504,7 @@ class SmileHelper(SmileCommon):
             ) is not None and updated_date_key.text is None:
                 continue
 
-            for key in LIMITS:
+            for key in ACTIVE_KEYS:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
@@ -519,8 +520,13 @@ class SmileHelper(SmileCommon):
                         key = "setpoint"
 
                     act_key = cast(ActuatorDataType, key)
-                    temp_dict[act_key] = format_measure(pw_function.text, TEMP_CELSIUS)
                     self._count += 1
+                    try:
+                        temp_dict[act_key] = format_measure(
+                            pw_function.text, TEMP_CELSIUS
+                        )
+                    except ValueError:
+                        temp_dict[act_key] = str(pw_function.text)
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
@@ -790,16 +796,18 @@ class SmileHelper(SmileCommon):
             else:
                 thermo_loc["secondary"].append(appliance_id)
 
-    def _control_state(self, data: GwEntityData, loc_id: str) -> str | bool:
-        """Helper-function for _get_adam_data().
+    def _control_state(self, data: GwEntityData) -> str | bool:
+        """Helper-function for _get_location_data().
 
-        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Adam: collect the thermostat control_state of a location.
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
-        locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
-        if (ctrl_state := self._domain_objects.find(locator)) is not None:
-            return str(ctrl_state.text)
+
+        if (ctrl_state := data["thermostat"].get("control_state")) is not None:
+            data["thermostat"].pop("control_state")
+            self._count -= 1
+            return ctrl_state
 
         # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
         # In newer firmware versions, default to "off" when control_state is not present
@@ -832,6 +840,17 @@ class SmileHelper(SmileCommon):
                     open_valve_count += 1
 
         return False if loc_found == 0 else open_valve_count
+
+    def _regulation_control(self, data: GwEntityData) -> None:
+        """Helper-function for smile.py: _get_location_data().
+
+        Adam: collect the thermostat regulation_control state of a location.
+        """
+        if (reg_control := data["thermostat"].get("regulation_control")) is not None:
+            data["select_zone_profile"] = reg_control
+            data["zone_profiles"] = ALLOWED_ZONE_PROFILES
+            data["thermostat"].pop("regulation_control")
+            self._count += 1  # Add 2, remove 1
 
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().

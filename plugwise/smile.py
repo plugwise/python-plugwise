@@ -11,6 +11,7 @@ from typing import Any, cast
 
 from plugwise.constants import (
     ADAM,
+    ALLOWED_ZONE_PROFILES,
     ANNA,
     APPLIANCES,
     DOMAIN_OBJECTS,
@@ -240,6 +241,8 @@ class SmileAPI(SmileData):
             case "select_schedule":
                 # schedule name corresponds to select option
                 await self.set_schedule_state(loc_id, state, option)
+            case "select_zone_profile":
+                await self.set_zone_profile(loc_id, option)
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
@@ -303,6 +306,19 @@ class SmileAPI(SmileData):
         )
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         await self.call_request(uri, method="put", data=data)
+
+    async def set_zone_profile(self, loc_id: str, profile: str) -> None:
+        """Set the Adam thermoszone heating profile."""
+        if profile not in ALLOWED_ZONE_PROFILES:
+            raise PlugwiseError("Plugwise: invalid zone profile.")
+
+        data = (
+            "<thermostat_functionality>"
+            f"<regulation_control>{profile}</regulation_control>"
+            "</thermostat_functionality>"
+        )
+        uri = f"{LOCATIONS};id={loc_id}/thermostat"
+        await self.call_request(uri, method="post", data=data)
 
     async def set_schedule_state(
         self,
