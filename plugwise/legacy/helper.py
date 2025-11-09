@@ -10,6 +10,7 @@ from typing import cast
 from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
+    ACTIVE_KEYS,
     ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
@@ -19,7 +20,6 @@ from plugwise.constants import (
     FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
-    LIMITS,
     NONE,
     OFF,
     P1_LEGACY_MEASUREMENTS,
@@ -365,7 +365,7 @@ class SmileLegacyHelper(SmileCommon):
             ) is not None and updated_date_key.text is None:
                 continue  # pragma: no cover
 
-            for key in LIMITS:
+            for key in ACTIVE_KEYS:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
