@@ -176,9 +176,11 @@ class Zone(DeviceBase):
     control_state: str
     preset_modes: list[str]
     select_schedule: str
+    select_zone_profile: str
     sensors: ZoneSensors
     thermostat: ThermostatDict
     thermostats: ThermostatsDict
+    zone_profiles: list[str]
 
 
 @dataclass
