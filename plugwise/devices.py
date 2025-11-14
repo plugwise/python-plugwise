@@ -6,8 +6,12 @@ from dataclasses import dataclass
 
 
 @dataclass
-class BaseClass:
-    """Plugwise Base Gateway data class."""
+class DeviceBase:
+    """Plugwise Device Base class.
+
+    Every device will have most of these data points.
+    """
+
 
     available: bool | None  # not for gateway, should always be available
     dev_class: str
@@ -22,7 +26,7 @@ class BaseClass:
 
 
 @dataclass
-class AdamGateway(BaseClass):
+class AdamGateway(DeviceBase):
     """Plugwise Adam HA Gateway data class."""
 
     binary_sensors: GatewayBinarySensors
@@ -35,7 +39,7 @@ class AdamGateway(BaseClass):
 
 
 @dataclass
-class SmileTGateway(BaseClass):
+class SmileTGateway(DeviceBase):
     """Plugwise Anna Smile-T Gateway data class."""
 
     binary_sensors: GatewayBinarySensors
@@ -43,26 +47,26 @@ class SmileTGateway(BaseClass):
 
 
 @dataclass
-class SmileTLegacyGateway(BaseClass):
+class SmileTLegacyGateway(DeviceBase):
     """Plugwise legacy Anna Smile-T Gateway data class."""
 
     sensors: Weather
 
 
 @dataclass
-class SmileP1Gateway(BaseClass):
+class SmileP1Gateway(DeviceBase):
     """Plugwise Smile P1 Gateway data class."""
 
     binary_sensors: GatewayBinarySensors
 
 
 @dataclass
-class SmileP1LegacyGateway(BaseClass):
+class SmileP1LegacyGateway(DeviceBase):
     """Plugwise legacy Smile P1 Gateway data class."""
 
 
 @dataclass
-class StretchGateway(BaseClass):
+class StretchGateway(DeviceBase):
     """Plugwise Stretch Gateway data class."""
 
     zigbee_mac_address: str
@@ -83,7 +87,7 @@ class Weather:
 
 
 @dataclass
-class SmartEnergyMeter(BaseClass):
+class SmartEnergyMeter(DeviceBase):
     """DSMR Energy Meter data class."""
 
     sensors: SmartEnergySensors
@@ -141,7 +145,7 @@ class SmartEnergyLegacySensors:
 
 
 @dataclass
-class Anna(BaseClass):
+class Anna(DeviceBase):
     """Plugwise Anna class, also for legacy Anna."""
 
     climate_mode: str
@@ -163,7 +167,7 @@ class AnnaSensors:
 
 
 @dataclass
-class Zone(BaseClass):
+class Zone(DeviceBase):
     """Plugwise climate Zone data class."""
 
     active_preset: str | None
@@ -187,14 +191,14 @@ class ZoneSensors:
 
 
 @dataclass
-class AnnaAdamData(BaseClass):
+class AnnaAdamData(DeviceBase):
     """Plugwise Anna-connected-to-Adam data class."""
 
     sensors: AnnaSensors
 
 
 @dataclass
-class JipLisaTomData(BaseClass):
+class JipLisaTomData(DeviceBase):
     """JipLisaTomData data class.
 
     Covering Plugwise Jip, Lisa and Tom/Floor devices.
@@ -263,7 +267,7 @@ class ThermostatsDict:
 
 
 @dataclass
-class OnOff(BaseClass):
+class OnOff(DeviceBase):
     """On-off climate device class."""
 
     binary_sensors: OnOffBinarySensors
@@ -287,7 +291,7 @@ class OnOffSensors:
 
 
 @dataclass
-class OpenTherm(BaseClass):
+class OpenTherm(DeviceBase):
     """OpenTherm climate device class."""
 
     binary_sensors: OpenThermBinarySensors
@@ -333,7 +337,7 @@ class OpenThermSwitches:
 
 
 @dataclass
-class PlugData(BaseClass):
+class PlugData(DeviceBase):
     """Plug data class covering Plugwise Adam/Stretch and Aqara Plugs, and generic ZigBee type Switches."""
 
     sensors: PlugSensors | None
