@@ -91,7 +91,7 @@ class SmartEnergyMeter(DeviceBase):
     """DSMR Energy Meter data class."""
 
     sensors: SmartEnergySensors
-SmartEnergyMeterSmartEnergyMeter
+
 
 @dataclass
 class SmartEnergySensors:
@@ -200,10 +200,10 @@ class AnnaAdamData(DeviceBase):
 
 
 @dataclass
-class JipLisaTomData(DeviceBase):
+class EmmaJipLisaTomData(DeviceBase):
     """JipLisaTomData data class.
 
-    Covering Plugwise Jip, Lisa and Tom/Floor devices.
+    Covering Plugwise Emma, Jip, Lisa and Tom/Floor devices.
     """
 
     binary_sensors: (
@@ -215,11 +215,11 @@ class JipLisaTomData(DeviceBase):
 
 
 @dataclass
-class JipLisaTomSensors:
-    """Tom sensors class."""
+class EmmaJipLisaTomSensors:
+    """Emma-Jip_lisa-Tom sensors class."""
 
     battery: int | None  # not when AC powered, Lisa/Tom
-    humidity: int | None  # Jip only
+    humidity: int | None  # Emma and Jip only
     setpoint: float | None  # heat or cool
     setpoint_high: float | None  # heat_cool
     setpoint_low: float | None  # heat_cool
@@ -351,7 +351,7 @@ class PlugData(DeviceBase):
 class PlugSensors:
     """Plug sensors class."""
 
-    electricity_consumed: float | None
+    electricity_consumed: float | None  # why None?
     electricity_consumed_interval: float
     electricity_produced: float | None
     electricity_produced_interval: float | None
