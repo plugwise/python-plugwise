@@ -13,14 +13,11 @@ class DeviceBase:
     Every device will have most of these data points.
     """
 
-    available: Optional[bool] = None  # not for gateway, should always be available
     dev_class: str
     firmware: str
-    hardware: Optional[str] = None
     location: str
     mac_address: str
     model: str
-    model_id: Optional[str] = None
     name: str
     vendor: str
 
@@ -31,6 +28,8 @@ class AdamGateway(DeviceBase):
 
     binary_sensors: GatewayBinarySensors
     gateway_modes: list[str]
+    hardware: str
+    model_id: str
     regulation_modes: list[str]
     select_gateway_mode: str
     select_regulation_mode: str
@@ -43,6 +42,8 @@ class SmileTGateway(DeviceBase):
     """Plugwise Anna Smile-T Gateway data class."""
 
     binary_sensors: GatewayBinarySensors
+    hardware: str
+    model_id: str
     sensors: Weather
 
 
@@ -58,6 +59,8 @@ class SmileP1Gateway(DeviceBase):
     """Plugwise Smile P1 Gateway data class."""
 
     binary_sensors: GatewayBinarySensors
+    hardware: str
+    model_id: str
 
 
 @dataclass
@@ -90,6 +93,7 @@ class Weather:
 class SmartEnergyMeter(DeviceBase):
     """DSMR Energy Meter data class."""
 
+    available: bool
     sensors: SmartEnergySensors
 
 
@@ -105,20 +109,20 @@ class SmartEnergySensors:
     electricity_consumed_peak_point: int
     electricity_phase_one_consumed: int
     electricity_phase_one_produced: int
-    electricity_phase_three_consumed: Optional[int] = None
-    electricity_phase_three_produced: Optional[int] = None
-    electricity_phase_two_consumed: Optional[int] = None
-    electricity_phase_two_produced: Optional[int] = None
     electricity_produced_off_peak_cumulative: float
     electricity_produced_off_peak_interval: int
     electricity_produced_off_peak_point: int
     electricity_produced_peak_cumulative: float
     electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
-    gas_consumed_cumulative: Optional[float] = None
-    gas_consumed_interval: Optional[float] = None
     net_electricity_cumulative: float
     net_electricity_point: int
+    electricity_phase_three_consumed: Optional[int] = None
+    electricity_phase_three_produced: Optional[int] = None
+    electricity_phase_two_consumed: Optional[int] = None
+    electricity_phase_two_produced: Optional[int] = None
+    gas_consumed_cumulative: Optional[float] = None
+    gas_consumed_interval: Optional[float] = None
     voltage_phase_one: Optional[float] = None
     voltage_phase_three: Optional[float] = None
     voltage_phase_two: Optional[float] = None
@@ -138,21 +142,23 @@ class SmartEnergyLegacySensors:
     electricity_produced_peak_cumulative: float
     electricity_produced_peak_interval: int
     electricity_produced_point: int
-    gas_consumed_cumulative: Optional[float] = None
-    gas_consumed_interval: Optional[float] = None
     net_electricity_cumulative: float
     net_electricity_point: int
+    gas_consumed_cumulative: Optional[float] = None
+    gas_consumed_interval: Optional[float] = None
 
 
 @dataclass
 class Anna(DeviceBase):
     """Plugwise Anna class, also for legacy Anna."""
 
+    available: bool
     climate_mode: str
     control_state: str
+    hardware: str
     sensors: AnnaSensors
-    temperature_offset: Optional[SetpointDict] = None  # not for legacy
     thermostat: ThermostatDict
+    temperature_offset: Optional[SetpointDict] = None  # not for legacy
 
 
 @dataclass
@@ -160,17 +166,16 @@ class AnnaSensors:
     """Anna sensors class."""
 
     illuminance: float
+    temperature: float
     setpoint: Optional[float] = None
     setpoint_high: Optional[float] = None
     setpoint_low: Optional[float] = None
-    temperature: float
 
 
 @dataclass
 class Zone(DeviceBase):
     """Plugwise climate Zone data class."""
 
-    active_preset: Optional[str] = None
     available_schedules: list[str]
     climate_mode: str
     control_state: str
@@ -181,7 +186,9 @@ class Zone(DeviceBase):
     thermostat: ThermostatDict
     thermostats: ThermostatsDict
     zone_profiles: list[str]
-
+    active_preset: Optional[str] = None
+    hardware: Optional[str] = None
+    model_id: Optional[str] = None
 
 @dataclass
 class ZoneSensors:
@@ -196,6 +203,8 @@ class ZoneSensors:
 class AnnaAdam(DeviceBase):
     """Plugwise Anna-connected-to-Adam data class."""
 
+    available: bool
+    model_id: str
     sensors: AnnaSensors
 
 
@@ -206,24 +215,28 @@ class EmmaJipLisaTom(DeviceBase):
     Covering Plugwise Emma, Jip, Lisa and Tom/Floor devices.
     """
 
-    binary_sensors: Optional[WirelessThermostatBinarySensors] = (
-        None  # Not for AC powered Lisa/Tom
-    )
+    available: bool
+    hardware: str
+    model_id: str
     sensors: EmmaJipLisaTomSensors
     temperature_offset: SetpointDict
     zigbee_mac_address: str
+
+    binary_sensors: Optional[WirelessThermostatBinarySensors] = (
+        None  # Not for AC powered Lisa/Tom
+    )
 
 
 @dataclass
 class EmmaJipLisaTomSensors:
     """Emma-Jip_lisa-Tom sensors class."""
 
+    temperature: float
     battery: Optional[int] = None  # not when AC powered, Lisa/Tom
     humidity: Optional[int] = None  # Emma and Jip only
     setpoint: Optional[float] = None  # heat or cool
     setpoint_high: Optional[float] = None  # heat_cool
     setpoint_low: Optional[float] = None  # heat_cool
-    temperature: float
     temperature_difference: Optional[float] = None  # Tom only
     valve_position: Optional[float] = None  # Tom only
 
@@ -254,10 +267,10 @@ class ThermostatDict:
 
     lower_bound: float
     resolution: float
+    upper_bound: float
     setpoint: Optional[float] = None  # heat or cool
     setpoint_high: Optional[float] = None  # heat_cool
     setpoint_low: Optional[float] = None  # heat_cool
-    upper_bound: float
 
 
 @dataclass
@@ -272,6 +285,7 @@ class ThermostatsDict:
 class OnOff(DeviceBase):
     """On-off climate device class."""
 
+    available: bool
     binary_sensors: OnOffBinarySensors
     sensors: OnOffSensors
 
@@ -287,32 +301,34 @@ class OnOffBinarySensors:
 class OnOffSensors:
     """Heater-central sensors class."""
 
+    water_temperature: float
     intended_boiler_temperature: Optional[float] = None
     modulation_level: Optional[float] = None
-    water_temperature: float
 
 
 @dataclass
 class OpenTherm(DeviceBase):
     """OpenTherm climate device class."""
 
+    available: bool
     binary_sensors: OpenThermBinarySensors
-    maximum_boiler_temperature: Optional[SetpointDict] = None
-    max_dhw_temperature: Optional[SetpointDict] = None
     sensors: OpenThermSensors
     switches: OpenThermSwitches
+    maximum_boiler_temperature: Optional[SetpointDict] = None
+    max_dhw_temperature: Optional[SetpointDict] = None
+    model_id: Optional[str] = None
 
 
 @dataclass
 class OpenThermBinarySensors:
     """OpenTherm binary_sensors class."""
 
+    dhw_state: bool
+    heating_state: bool
     compressor_state: Optional[bool] = None
     cooling_enabled: Optional[bool] = None
     cooling_state: Optional[bool] = None
-    dhw_state: bool
     flame_state: Optional[bool] = None
-    heating_state: bool
     secondary_boiler_state: Optional[bool] = None
 
 
@@ -320,39 +336,42 @@ class OpenThermBinarySensors:
 class OpenThermSensors:
     """OpenTherm sensors class."""
 
+    return_temperature: float
+    water_temperature: float
     dhw_temperature: Optional[float] = None
     domestic_hot_water_setpoint: Optional[float] = None
     intended_boiler_temperature: Optional[float] = None
     modulation_level: Optional[float] = None
     outdoor_air_temperature: Optional[float] = None
-    return_temperature: float
     water_pressure: Optional[float] = None
-    water_temperature: float
 
 
 @dataclass
 class OpenThermSwitches:
     """OpenTherm switches class."""
 
-    cooling_ena_switch: Optional[bool] = None
     dhw_cm_switch: bool
+    cooling_ena_switch: Optional[bool] = None
 
 
 @dataclass
-class PlugData(DeviceBase):
+class Plug(DeviceBase):
     """Plug data class covering Plugwise Adam/Stretch and Aqara Plugs, and generic ZigBee type Switches."""
 
-    sensors: Optional[PlugSensors] = None
+    available: bool
     switches: PlugSwitches
     zigbee_mac_address: str
+    sensors: Optional[PlugSensors] = None
+    hardware: Optional[str] = None
+    model_id: Optional[str] = None
 
 
 @dataclass
 class PlugSensors:
     """Plug sensors class."""
 
-    electricity_consumed: Optional[float] = None  # Not present for Aqara Plug
     electricity_consumed_interval: float
+    electricity_consumed: Optional[float] = None  # Not present for Aqara Plug
     electricity_produced: Optional[float] = None
     electricity_produced_interval: Optional[float] = None
 
@@ -361,9 +380,8 @@ class PlugSensors:
 class PlugSwitches:
     """Plug switches class."""
 
-    lock: Optional[bool] = None
     relay: bool
-
+    lock: Optional[bool] = None
 
 ##################################################
 class PlugwiseData:
@@ -419,7 +437,7 @@ class PlugwiseData:
     adam: AdamGateway
     smile_t: SmileTGateway
     smile_t_legacy: SmileTLegacyGateway
-    smile_t_p1: SmileTGatewayGateway
+    smile_t_p1: SmileTGateway
     smile_p1: SmileP1Gateway
     smile_p1_legacy: SmileP1LegacyGateway
     stretch: StretchGateway
