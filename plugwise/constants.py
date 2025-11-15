@@ -9,18 +9,18 @@ from typing import Final, Literal, TypedDict, get_args
 
 from plugwise.devices import (
     AdamGateway,
-    AnnaAdamData,
-    AnnaData,
-    JipLisaTomData,
-    OnOffTherm,
+    AnnaAdam,
+    Anna,
+    EmmaJipLisaTom,
+    OnOff,
     OpenTherm,
-    PlugData,
+    Plug,
     SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
     SmileTGateway,
     StretchGateway,
-    ThermoZone,
+    Zone,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -548,9 +548,9 @@ class GwEntityData:
 
 @dataclass
 class PlugwiseAnnaData(
-    AnnaData,
+    Anna,
     GwEntityData,
-    OnOffTherm,
+    OnOff,
     OpenTherm,
     SmileTGateway,
 ):
@@ -560,13 +560,13 @@ class PlugwiseAnnaData(
 @dataclass
 class PlugwiseAdamData(
     AdamGateway,
-    AnnaAdamData,
+    AnnaAdam,
     GwEntityData,
-    JipLisaTomData,
-    PlugData,
-    OnOffTherm,
+    EmmaJipLisaTom,
+    Plug,
+    OnOff,
     OpenTherm,
-    ThermoZone,
+    Zone,
 ):
     """The Plugwise Adam Data class."""
 
@@ -582,7 +582,7 @@ class PlugwiseP1Data(
 
 @dataclass
 class PlugwiseStretchData(
-    PlugData,
+    Plug,
     StretchGateway,
 ):
     """The Plugwise Stretch Data class."""
