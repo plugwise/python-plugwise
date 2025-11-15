@@ -549,7 +549,6 @@ class GwEntityData:
 @dataclass
 class PlugwiseAnnaData(
     Anna,
-    GwEntityData,
     OnOff,
     OpenTherm,
     SmileTGateway,
@@ -561,7 +560,6 @@ class PlugwiseAnnaData(
 class PlugwiseAdamData(
     AdamGateway,
     AnnaAdam,
-    GwEntityData,
     EmmaJipLisaTom,
     Plug,
     OnOff,
@@ -573,7 +571,6 @@ class PlugwiseAdamData(
 
 @dataclass
 class PlugwiseP1Data(
-    SmartEnergyLegacySensors,
     SmartEnergyMeter,
     SmileP1Gateway,
 ):
