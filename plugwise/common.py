@@ -146,12 +146,14 @@ class SmileCommon:
 
     def _create_gw_entities(self, appl: Munch) -> None:
         """Helper-function for creating/updating gw_entities."""
+        appl.device = self.device_name(pw_class, model_id or name)
         self.gw_entities[appl.entity_id] = {"dev_class": appl.pwclass}
         self._count += 1
         for key, value in {
             "available": appl.available,
             "firmware": appl.firmware,
             "hardware": appl.hardware,
+            "id": appl.entity_id,
             "location": appl.location,
             "mac_address": appl.mac,
             "model": appl.model,
@@ -162,8 +164,48 @@ class SmileCommon:
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
-                self.gw_entities[appl.entity_id][appl_key] = value
+                self.gw_entities[appl.device][appl_key] = value
                 self._count += 1
+
+    def device_name(self, pw_type: str, model): None
+        """Returns device name/type based on pw_type and optionally model.."""
+        match pw_type:
+            case "smartmeter":
+                return "smartmeter"
+            case "thermostat":
+                match "143.1":
+                    return "anna_adam"
+                match: "Anna":
+                    return "anna"
+            case "zone_thermostat":
+                match "158-01":
+                    return "lisa"
+                match "170-01":
+                    return "emma"
+                match "106-03":
+                    return "tom_floor"
+            case "zone_thermometer":
+                match "168-01":
+                    return "jip"
+            case "heater_central"
+                match "Opentherm":
+                    return "opentherm"
+                match "OnOff":
+                    return "onoff"
+            case "gateway":
+                match model_id:
+                    case: "smile_open_therm":
+                        return "adam"
+                    case: "smile_thermo":
+                        if self.smile.anna_p1:
+                            return "smile_t_p1"
+                        return "smile_t"
+                    case: "smile":
+                        return "smile_p1"
+                    case: "stretch":
+                        return "stretch"
+            case s if s.endswith("_plug"):
+                return "plug"
 
     def _reorder_devices(self) -> None:
         """Place the gateway and optional heater_central devices as 1st and 2nd."""
