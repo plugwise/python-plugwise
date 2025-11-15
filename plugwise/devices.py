@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -194,23 +194,21 @@ class ZoneSensors:
 
 
 @dataclass
-class AnnaAdamData(DeviceBase):
+class AnnaAdam(DeviceBase):
     """Plugwise Anna-connected-to-Adam data class."""
 
     sensors: AnnaSensors
 
 
 @dataclass
-class EmmaJipLisaTomData(DeviceBase):
-    """JipLisaTomData data class.
+class EmmaJipLisaTom(DeviceBase):
+    """JipLisaTom data class.
 
     Covering Plugwise Emma, Jip, Lisa and Tom/Floor devices.
     """
 
-    binary_sensors: (
-        Optional[WirelessThermostatBinarySensors] = None
-    )  # Not for AC powered Lisa/Tom
-    sensors: JipLisaTomSensors
+    binary_sensors: Optional[WirelessThermostatBinarySensors] = None  # Not for AC powered Lisa/Tom
+    sensors: EmmaJipLisaTomSensors
     temperature_offset: SetpointDict
     zigbee_mac_address: str
 
@@ -278,7 +276,7 @@ class OnOff(DeviceBase):
 
 
 @dataclass
-class OpOffBinarySensors:
+class OnOffBinarySensors:
     """OpenTherm binary_sensors class."""
 
     heating_state: bool
@@ -308,7 +306,7 @@ class OpenTherm(DeviceBase):
 class OpenThermBinarySensors:
     """OpenTherm binary_sensors class."""
 
-    compressor_state: Optional[lbool] = None
+    compressor_state: Optional[bool] = None
     cooling_enabled: Optional[bool] = None
     cooling_state: Optional[bool] = None
     dhw_state: bool
@@ -366,7 +364,7 @@ class PlugSwitches:
     relay: bool
 
 ##################################################
-class PlugwiseData
+class PlugwiseData:
     """
     Overview of existing options:
 
@@ -411,28 +409,28 @@ class PlugwiseData
         - ??
     """
 
-    adam: AdamGateway()
-    smile_t: SmileTGateway()
-    smile_t_legacy: SmileTLegacyGateway()
+    adam: AdamGateway
+    smile_t: SmileTGateway
+    smile_t_legacy: SmileTLegacyGateway
     # smile_t_p1: AnnaP1Gateway()  # double?
-    smile_p1: SmileP1Gateway()
-    smile_p1_legacy: SmileP1LegacyGateway()
+    smile_p1: SmileP1Gateway
+    smile_p1_legacy: SmileP1LegacyGateway
     stretch: StretchGateway
-    onoff: OnOff()
-    opentherm: OpenTherm()
-    zones: list[Zone()]
-    weather: Weather()
-    anna: Anna()
-    anna_legacy: AnnaLegacy()
-    anna_adam: AnnaAdam()
-    lisa: Lisa()
-    jip: Jip()
-    tom_floor: TomFloor()
-    plug: Plug()
-    plug_legacy: PlugLegacy()
-    aqara_plug: AqaraPlug()
-    misc_plug: MiscPlug()
-    p1_dsmr: P1_DSMR()
+    onoff: OnOff
+    opentherm: OpenTherm
+    zones: list[Zone]
+    weather: Weather
+    anna: Anna
+    anna_legacy: Anna
+    anna_adam: AnnaAdam
+    lisa: EmmaJipLisaTom
+    jip: EmmaJipLisaTom
+    tom_floor: EmmaJipLisaTom
+    plug: Plug
+    plug_legacy: Plug
+    aqara_plug: Plug
+    misc_plug: Plug
+    p1_dsmr: SmartEnergyMeter
 
     def update_from_dict(self, data: dict[str, Any]) -> PlugwiseData:
         """Update the status object with data received from the Plugwise API."""
@@ -444,7 +442,7 @@ class PlugwiseData
         #     self.smile_t_p1.update_from_dict(data["smile_t_p1"])
         if "smile_p1" in data:
             self.smile_p1.update_from_dict(data["smile_p1"])
-         if "stretch" in data:
+        if "stretch" in data:
             self.stretch.update_from_dict(data["stretch"])
         if "onoff" in data:
             self.onoff.update_from_dict(data["onoff"])
