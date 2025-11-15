@@ -190,6 +190,7 @@ class Zone(DeviceBase):
     hardware: Optional[str] = None
     model_id: Optional[str] = None
 
+
 @dataclass
 class ZoneSensors:
     """Climate Zone sensors class."""
@@ -382,6 +383,7 @@ class PlugSwitches:
 
     relay: bool
     lock: Optional[bool] = None
+
 
 ##################################################
 class PlugwiseData:
