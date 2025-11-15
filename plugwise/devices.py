@@ -378,6 +378,9 @@ class PlugwiseData:
         - Location (Home) with weather data - only outdoor_temp used
         - Single devices (appliances) assigned to a Zone, or not
             - Anna (wired thermostat)
+            - Emma Pro (ZigBee thermostat)
+            - Emma Pro wired (wired thermostat)
+            - (Emma Essential (wired thermostat))
             - Lisa (ZigBee thermostat)
             - Jip (ZigBee thermostat)
             - Tom/Floor (ZigBee valve/thermostat)
@@ -385,18 +388,20 @@ class PlugwiseData:
             - Aqara Plug (energy switch/meter)
             - Noname switch (energy switch)
 
-    - Gateway SmileT
+    - Gateway SmileT (Anna, Anna P1)
         - Climate device
             - OnOff
             - OpenTherm
-        - Zone (Living room) with with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
+        - (Zone (Living room) with with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter)
         - Location (Home) with weather data - only outdoor_temp used
         - Single devices (appliances)
             - Anna (wired thermostat)
-            - P1-DSMR device (new Anna P1) (?)
+            - P1-DSMR device (Anna P1)
 
-    - Gateway SmileT legacy
-        - OnOff/OpenTherm device
+    - Gateway SmileT (Anna) legacy
+        - Climate device
+            - OnOff
+            - Opentherm
         - Anna (wired thermostat)
         - Location (Home) with weather data (optional?) - only outdoor_temp used
 
@@ -414,7 +419,7 @@ class PlugwiseData:
     adam: AdamGateway
     smile_t: SmileTGateway
     smile_t_legacy: SmileTLegacyGateway
-    # smile_t_p1: AnnaP1Gateway()  # double?
+    smile_t_p1: SmileTGatewayGateway
     smile_p1: SmileP1Gateway
     smile_p1_legacy: SmileP1LegacyGateway
     stretch: StretchGateway
