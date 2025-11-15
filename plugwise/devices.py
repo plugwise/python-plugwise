@@ -13,13 +13,12 @@ class DeviceBase:
     Every device will have most of these data points.
     """
 
-
     available: Optional[bool] = None  # not for gateway, should always be available
     dev_class: str
     firmware: str
     hardware: Optional[str] = None
     location: str
-    mac_address: str 
+    mac_address: str
     model: str
     model_id: Optional[str] = None
     name: str
@@ -186,7 +185,7 @@ class Zone(DeviceBase):
 
 @dataclass
 class ZoneSensors:
-    """ Climate Zone sensors class."""
+    """Climate Zone sensors class."""
 
     electricity_consumed: Optional[float] = None
     electricity_produced: Optional[float] = None
@@ -207,7 +206,9 @@ class EmmaJipLisaTom(DeviceBase):
     Covering Plugwise Emma, Jip, Lisa and Tom/Floor devices.
     """
 
-    binary_sensors: Optional[WirelessThermostatBinarySensors] = None  # Not for AC powered Lisa/Tom
+    binary_sensors: Optional[WirelessThermostatBinarySensors] = (
+        None  # Not for AC powered Lisa/Tom
+    )
     sensors: EmmaJipLisaTomSensors
     temperature_offset: SetpointDict
     zigbee_mac_address: str
@@ -363,6 +364,7 @@ class PlugSwitches:
     lock: Optional[bool] = None
     relay: bool
 
+
 ##################################################
 class PlugwiseData:
     """
@@ -398,7 +400,7 @@ class PlugwiseData:
         - Anna (wired thermostat)
         - Location (Home) with weather data (optional?) - only outdoor_temp used
 
-    - Gateway P1 
+    - Gateway P1
         - P1-DSMR device (in Home location)
 
     - Gateway P1 legacy
