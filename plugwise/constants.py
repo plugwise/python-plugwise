@@ -3,25 +3,8 @@
 from __future__ import annotations
 
 from collections import namedtuple
-from dataclasses import dataclass
 import logging
 from typing import Final, Literal, TypedDict, get_args
-
-from plugwise.devices import (
-    AdamGateway,
-    AnnaAdam,
-    Anna,
-    EmmaJipLisaTom,
-    OnOff,
-    OpenTherm,
-    Plug,
-    SmartEnergyLegacySensors,
-    SmartEnergyMeter,
-    SmileP1Gateway,
-    SmileTGateway,
-    StretchGateway,
-    Zone,
-)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -541,9 +524,24 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-@dataclass
-class GwEntityData:
-    """The base Gateway Entity data class."""
+class GwEntityData(TypedDict, total=False):
+    """The Gateway Entity data class.
+
+    Covering the collected output-data per device or location.
+    """
+
+    # Appliance base data
+    dev_class: str
+    firmware: str
+    hardware: str
+    location: str
+    mac_address: str
+    members: list[str]
+    model: str
+    model_id: str | None
+    name: str
+    vendor: str
+    zigbee_mac_address: str
 
     # For temporary use
     cooling_enabled: bool
@@ -552,44 +550,40 @@ class GwEntityData:
     c_heating_state: bool
     thermostat_supports_cooling: bool
 
+    # Device availability
+    available: bool | None
 
-@dataclass
-class PlugwiseAnnaData(
-    Anna,
-    GwEntityData,
-    OnOff,
-    OpenTherm,
-    SmileTGateway,
-):
-    """The Plugwise Anna Data class."""
+    # Loria
+    select_dhw_mode: str
+    dhw_modes: list[str]
 
+    # Gateway
+    gateway_modes: list[str]
+    notifications: dict[str, dict[str, str]]
+    regulation_modes: list[str]
+    select_gateway_mode: str
+    select_regulation_mode: str
 
-@dataclass
-class PlugwiseAdamData(
-    AdamGateway,
-    AnnaAdam,
-    GwEntityData,
-    EmmaJipLisaTom,
-    Plug,
-    OnOff,
-    OpenTherm,
-    Zone,
-):
-    """The Plugwise Adam Data class."""
+    # Thermostat-related
+    select_zone_profile: str
+    thermostats: dict[str, list[str]]
+    zone_profiles: list[str]
+    # Presets:
+    active_preset: str | None
+    preset_modes: list[str] | None
+    # Schedules:
+    available_schedules: list[str]
+    select_schedule: str | None
 
+    climate_mode: str
+    # Extra for Adam Master Thermostats
+    control_state: str
 
-@dataclass
-class PlugwiseP1Data(
-    SmartEnergyLegacySensors,
-    SmartEnergyMeter,
-    SmileP1Gateway,
-):
-    """The Plugwise P1 Data class."""
-
-
-@dataclass
-class PlugwiseStretchData(
-    Plug,
-    StretchGateway,
-):
-    """The Plugwise Stretch Data class."""
+    # Dict-types
+    binary_sensors: SmileBinarySensors
+    max_dhw_temperature: ActuatorData
+    maximum_boiler_temperature: ActuatorData
+    sensors: SmileSensors
+    switches: SmileSwitches
+    temperature_offset: ActuatorData
+    thermostat: ActuatorData
