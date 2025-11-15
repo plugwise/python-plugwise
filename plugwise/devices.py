@@ -391,39 +391,28 @@ class PlugwiseData:
     Overview of existing options:
 
     - Gateway Adam
-        - Climate device
-            - OnOff
-            - Opentherm
+        - Climate device: OnOff or Opentherm
         - Zones (1 to many) with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
-        - Location (Home) with weather data - only outdoor_temp used
         - Single devices (appliances) assigned to a Zone, or not
             - Anna (wired thermostat)
-            - Emma Pro (ZigBee thermostat)
             - Emma Pro wired (wired thermostat)
             - (Emma Essential (wired thermostat))
+            - Emma Pro (ZigBee thermostat)
             - Lisa (ZigBee thermostat)
             - Jip (ZigBee thermostat)
             - Tom/Floor (ZigBee valve/thermostat)
-            - Plug (energy switch/meter)
-            - Aqara Plug (energy switch/meter)
-            - Noname switch (energy switch)
+            - Plug (energy switch/meter) / Aqara Plug (energy switch/meter) / Noname switch (energy switch)
 
     - Gateway SmileT (Anna, Anna P1)
-        - Climate device
-            - OnOff
-            - OpenTherm
+        - Climate device: OnOff or OpenTherm
         - (Zone (Living room) with with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter)
-        - Location (Home) with weather data - only outdoor_temp used
         - Single devices (appliances)
             - Anna (wired thermostat)
             - P1-DSMR device (Anna P1)
 
     - Gateway SmileT (Anna) legacy
-        - Climate device
-            - OnOff
-            - Opentherm
+        - Climate device: OnOff or Opentherm
         - Anna (wired thermostat)
-        - Location (Home) with weather data (optional?) - only outdoor_temp used
 
     - Gateway P1
         - P1-DSMR device (in Home location)
@@ -438,25 +427,18 @@ class PlugwiseData:
 
     adam: AdamGateway
     smile_t: SmileTGateway
-    smile_t_legacy: SmileTLegacyGateway
-    smile_t_p1: SmileTGateway
     smile_p1: SmileP1Gateway
-    smile_p1_legacy: SmileP1LegacyGateway
     stretch: StretchGateway
     onoff: OnOff
     opentherm: OpenTherm
     zones: list[Zone]
     weather: Weather
     anna: Anna
-    anna_legacy: Anna
     anna_adam: AnnaAdam
     lisa: EmmaJipLisaTom
     jip: EmmaJipLisaTom
     tom_floor: EmmaJipLisaTom
     plug: Plug
-    plug_legacy: Plug
-    aqara_plug: Plug
-    misc_plug: Plug
     p1_dsmr: SmartEnergyMeter
 
     def update_from_dict(self, data: dict[str, Any]) -> PlugwiseData:
@@ -489,9 +471,9 @@ class PlugwiseData:
             self.tom_floor.update_from_dict(data["tom_floor"])
         if "plug" in data:
             self.plug.update_from_dict(data["plug"])
-        if "aqara_plug" in data:
-            self.opentherm.update_from_dict(data["aqara_plug"])
-        if "misc_plug" in data:
-            self.misc_plug.update_from_dict(data["misc_plug"])
+        # if "aqara_plug" in data:
+        #     self.opentherm.update_from_dict(data["aqara_plug"])
+        # if "misc_plug" in data:
+        #     self.misc_plug.update_from_dict(data["misc_plug"])
         if "p1_dsmr" in data:
             self.p1_dsmr.update_from_dict(data["p1_dsmr"])
