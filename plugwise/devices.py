@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 from .constants import ZONE_THERMOSTATS
 
@@ -17,10 +17,7 @@ def process_key(data: dict[str, Any], key: str) -> Any | None:
     return None
 
 
-def process_dict(
-    data: dict[str, Any],
-    dict_type: str,
-    key: str) -> Any | None:
+def process_dict(data: dict[str, Any], dict_type: str, key: str) -> Any | None:
     """Return the key value from the data dict, when present."""
 
     if dict_type in data and key in data[dict_type]:
@@ -36,13 +33,13 @@ class DeviceBase:
     Every device will have most of these data points.
     """
 
-    dev_class: Optional[str] = None
-    firmware: Optional[str] = None
-    location: Optional[str] = None
-    mac_address: Optional[str] = None
-    model: Optional[str] = None
-    name: Optional[str] = None
-    vendor: Optional[str] = None
+    dev_class: str | None = None
+    firmware: str | None = None
+    location: str | None = None
+    mac_address: str | None = None
+    model: str | None = None
+    name: str | None = None
+    vendor: str | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this DeviceBase object with data from a dictionary."""
@@ -61,15 +58,15 @@ class Gateway(DeviceBase):
     """Plugwise Gateway class."""
 
     super().__init__()
-    binary_sensors: Optional[GatewayBinarySensors] = None
-    gateway_modes: Optional[list[str]] = None
-    hardware: Optional[str] = None
-    model_id: Optional[str] = None
-    regulation_modes: Optional[list[str]] = None
-    select_gateway_mode: Optional[str] = None
-    select_regulation_mode: Optional[str] = None
-    sensors: Optional[Weather]= None
-    zigbee_mac_address: Optional[str] = None
+    binary_sensors: GatewayBinarySensors | None = None
+    gateway_modes: list[str] | None = None
+    hardware: str | None = None
+    model_id: str | None = None
+    regulation_modes: list[str] | None = None
+    select_gateway_mode: str | None = None
+    select_regulation_mode: str | None = None
+    sensors: Weather | None = None
+    zigbee_mac_address: str | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Gateway object with data from a dictionary."""
@@ -103,7 +100,7 @@ class GatewayBinarySensors:
 class Weather:
     """Gateway weather sensor class."""
 
-    outdoor_temperature: Optional[float] = None
+    outdoor_temperature: float | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this GatewayBinarySensors object with data from a dictionary."""
@@ -116,8 +113,8 @@ class SmartEnergyMeter(DeviceBase):
     """DSMR Energy Meter data class."""
 
     super().__init__()
-    available: Optional[bool] = None
-    sensors: Optional[SmartEnergySensors] = None
+    available: bool | None = None
+    sensors: SmartEnergySensors | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this SmartEnergyMeter object with data from a dictionary."""
@@ -133,59 +130,107 @@ class SmartEnergySensors:
 
     electricity_consumed_off_peak_cumulative: float = 0.0
     electricity_consumed_off_peak_interval: int = 0
-    electricity_consumed_off_peak_point: Optional[int] = None
+    electricity_consumed_off_peak_point: int | None = None
     electricity_consumed_peak_cumulative: float = 0.0
     electricity_consumed_peak_interval: int = 0
-    electricity_consumed_peak_point: Optional[int] = None
-    electricity_consumed_point: Optional[int] = None
+    electricity_consumed_peak_point: int | None = None
+    electricity_consumed_point: int | None = None
     electricity_phase_one_consumed: int = 0
     electricity_phase_one_produced: int = 0
     electricity_produced_off_peak_cumulative: float = 0.0
     electricity_produced_off_peak_interval: int = 0
-    electricity_produced_off_peak_point: Optional[int] = None
+    electricity_produced_off_peak_point: int | None = None
     electricity_produced_peak_cumulative: float = 0.0
     electricity_produced_peak_interval: int = 0
-    electricity_produced_peak_point: Optional[int] = None
-    electricity_produced_point: Optional[int] = None
+    electricity_produced_peak_point: int | None = None
+    electricity_produced_point: int | None = None
     net_electricity_cumulative: float = 0.0
     net_electricity_point: int = 0
-    electricity_phase_three_consumed: Optional[int] = None
-    electricity_phase_three_produced: Optional[int] = None
-    electricity_phase_two_consumed: Optional[int] = None
-    electricity_phase_two_produced: Optional[int] = None
-    gas_consumed_cumulative: Optional[float] = None
-    gas_consumed_interval: Optional[float] = None
-    voltage_phase_one: Optional[float] = None
-    voltage_phase_three: Optional[float] = None
-    voltage_phase_two: Optional[float] = None
+    electricity_phase_three_consumed: int | None = None
+    electricity_phase_three_produced: int | None = None
+    electricity_phase_two_consumed: int | None = None
+    electricity_phase_two_produced: int | None = None
+    gas_consumed_cumulative: float | None = None
+    gas_consumed_interval: float | None = None
+    voltage_phase_one: float | None = None
+    voltage_phase_three: float | None = None
+    voltage_phase_two: float | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this SmartEnergySensors object with data from a dictionary."""
 
-        self.electricity_consumed_off_peak_cumulative.process_dict(data, "sensors", "electricity_consumed_off_peak_cumulative")
-        self.electricity_consumed_off_peak_interval.process_dict(data, "sensors", "electricity_consumed_off_peak_interval")
-        self.electricity_consumed_off_peak_point.process_dict(data, "sensors", "electricity_consumed_off_peak_point")
-        self.electricity_consumed_peak_cumulative.process_dict(data, "sensors", "electricity_consumed_peak_cumulative")
-        self.electricity_consumed_peak_interval.process_dict(data, "sensors", "electricity_consumed_peak_interval")
-        self.electricity_consumed_peak_point.process_dict(data, "sensors", "electricity_consumed_peak_point")
-        self.electricity_consumed_point.process_dict(data, "sensors", "electricity_consumed_point")
-        self.electricity_phase_one_consumed.process_dict(data, "sensors", "electricity_phase_one_consumed")
-        self.electricity_phase_one_produced.process_dict(data, "sensors", "electricity_phase_one_produced")
-        self.electricity_produced_off_peak_cumulative.process_dict(data, "sensors", "electricity_produced_off_peak_cumulative")
-        self.electricity_produced_off_peak_interval.process_dict(data, "sensors", "electricity_produced_off_peak_interval")
-        self.electricity_produced_off_peak_point.process_dict(data, "sensors", "electricity_produced_off_peak_point")
-        self.electricity_produced_peak_cumulative.process_dict(data, "sensors", "electricity_produced_peak_cumulative")
-        self.electricity_produced_peak_interval.process_dict(data, "sensors", "electricity_produced_peak_interval")
-        self.electricity_produced_peak_point.process_dict(data, "sensors", "electricity_produced_peak_point")
-        self.electricity_produced_point.process_dict(data, "sensors", "electricity_produced_point")
-        self.net_electricity_cumulative.process_dict(data, "sensors", "net_electricity_cumulative")
-        self.net_electricity_point.process_dict(data, "sensors", "net_electricity_point")
-        self.electricity_phase_three_consumed.process_dict(data, "sensors", "electricity_phase_three_consumed")
-        self.electricity_phase_three_produced.process_dict(data, "sensors", "electricity_phase_three_produced")
-        self.electricity_phase_two_consumed.process_dict(data, "sensors", "electricity_phase_two_consumed")
-        self.electricity_phase_two_produced.process_dict(data, "sensors", "electricity_phase_two_produced")
-        self.gas_consumed_cumulative.process_dict(data, "sensors", "gas_consumed_cumulative")
-        self.gas_consumed_interval.process_dict(data, "sensors", "gas_consumed_interval")
+        self.electricity_consumed_off_peak_cumulative.process_dict(
+            data, "sensors", "electricity_consumed_off_peak_cumulative"
+        )
+        self.electricity_consumed_off_peak_interval.process_dict(
+            data, "sensors", "electricity_consumed_off_peak_interval"
+        )
+        self.electricity_consumed_off_peak_point.process_dict(
+            data, "sensors", "electricity_consumed_off_peak_point"
+        )
+        self.electricity_consumed_peak_cumulative.process_dict(
+            data, "sensors", "electricity_consumed_peak_cumulative"
+        )
+        self.electricity_consumed_peak_interval.process_dict(
+            data, "sensors", "electricity_consumed_peak_interval"
+        )
+        self.electricity_consumed_peak_point.process_dict(
+            data, "sensors", "electricity_consumed_peak_point"
+        )
+        self.electricity_consumed_point.process_dict(
+            data, "sensors", "electricity_consumed_point"
+        )
+        self.electricity_phase_one_consumed.process_dict(
+            data, "sensors", "electricity_phase_one_consumed"
+        )
+        self.electricity_phase_one_produced.process_dict(
+            data, "sensors", "electricity_phase_one_produced"
+        )
+        self.electricity_produced_off_peak_cumulative.process_dict(
+            data, "sensors", "electricity_produced_off_peak_cumulative"
+        )
+        self.electricity_produced_off_peak_interval.process_dict(
+            data, "sensors", "electricity_produced_off_peak_interval"
+        )
+        self.electricity_produced_off_peak_point.process_dict(
+            data, "sensors", "electricity_produced_off_peak_point"
+        )
+        self.electricity_produced_peak_cumulative.process_dict(
+            data, "sensors", "electricity_produced_peak_cumulative"
+        )
+        self.electricity_produced_peak_interval.process_dict(
+            data, "sensors", "electricity_produced_peak_interval"
+        )
+        self.electricity_produced_peak_point.process_dict(
+            data, "sensors", "electricity_produced_peak_point"
+        )
+        self.electricity_produced_point.process_dict(
+            data, "sensors", "electricity_produced_point"
+        )
+        self.net_electricity_cumulative.process_dict(
+            data, "sensors", "net_electricity_cumulative"
+        )
+        self.net_electricity_point.process_dict(
+            data, "sensors", "net_electricity_point"
+        )
+        self.electricity_phase_three_consumed.process_dict(
+            data, "sensors", "electricity_phase_three_consumed"
+        )
+        self.electricity_phase_three_produced.process_dict(
+            data, "sensors", "electricity_phase_three_produced"
+        )
+        self.electricity_phase_two_consumed.process_dict(
+            data, "sensors", "electricity_phase_two_consumed"
+        )
+        self.electricity_phase_two_produced.process_dict(
+            data, "sensors", "electricity_phase_two_produced"
+        )
+        self.gas_consumed_cumulative.process_dict(
+            data, "sensors", "gas_consumed_cumulative"
+        )
+        self.gas_consumed_interval.process_dict(
+            data, "sensors", "gas_consumed_interval"
+        )
         self.voltage_phase_one.process_dict(data, "sensors", "voltage_phase_one")
         self.voltage_phase_three.process_dict(data, "sensors", "voltage_phase_three")
         self.voltage_phase_two.process_dict(data, "sensors", "voltage_phase_two")
@@ -202,14 +247,13 @@ class Zone(DeviceBase):
     preset_modes: list[str] = []
     select_zone_profile: str = "off"
     zone_profiles: list[str] = []
-    active_preset: Optional[str] = None
-    hardware: Optional[str] = None
-    model_id: Optional[str] = None
-    select_schedule: Optional[str] = None
-    sensors: Optional[ZoneSensors] = None
-    thermostat: Optional[ThermostatDict] = None
-    thermostats: Optional[ThermostatsDict] = None
-
+    active_preset: str | None = None
+    hardware: str | None = None
+    model_id: str | None = None
+    select_schedule: str | None = None
+    sensors: ZoneSensors | None = None
+    thermostat: ThermostatDict | None = None
+    thermostats: ThermostatsDict | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this climate Zone object with data from a dictionary."""
@@ -234,9 +278,9 @@ class Zone(DeviceBase):
 class ZoneSensors:
     """Climate Zone sensors class."""
 
-    electricity_consumed: Optional[float] | None = None
-    electricity_produced: Optional[float] | None = None
-    temperature: Optional[float] | None = None
+    electricity_consumed: float | None = None
+    electricity_produced: float | None = None
+    temperature: float | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ZoneSensors object with data from a dictionary."""
@@ -248,25 +292,22 @@ class ZoneSensors:
 
 @dataclass
 class Thermostat(DeviceBase):
-    """Plugwise Thermostat class, covering Anna (legacy) standalone or wired to Adam,
-    
-    Emma Essential/Pro standalone, or Emma Pro, Jip, Lisa and Tom/Floor connected to Adam.
-    """
+    """Plugwise Thermostat class, covering Anna (legacy) standalone or wired to Adam, Emma Essential/Pro standalone, or Emma Pro, Jip, Lisa and Tom/Floor connected to Adam."""
 
     super().__init__()
     available_schedules: list[str] = []
     control_state: str = "heating"
     preset_modes: list[str] = []
-    active_preset: Optional[str] = None
-    binary_sensors: Optional[WirelessThermostatBinarySensors] = None
-    climate_mode: Optional[str] = None
-    hardware: Optional[str] = None
-    model_id: Optional[str] = None
-    select_schedule: Optional[str] = None
-    sensors: Optional[ThermostatSensors] = None
-    temperature_offset: Optional[SetpointDict] = None  # not for legacy
-    thermostat: Optional[ThermostatDict] = None
-    zigbee_mac_address: Optional[str] = None
+    active_preset: str | None = None
+    binary_sensors: WirelessThermostatBinarySensors | None = None
+    climate_mode: str | None = None
+    hardware: str | None = None
+    model_id: str | None = None
+    select_schedule: str | None = None
+    sensors: ThermostatSensors | None = None
+    temperature_offset: SetpointDict | None = None  # not for legacy
+    thermostat: ThermostatDict | None = None
+    zigbee_mac_address: str | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Thermostat object with data from a dictionary."""
@@ -281,7 +322,7 @@ class Thermostat(DeviceBase):
         self.hardware.process_key(data, "hardware")
         self.model_id.process_key(data, "model_id")
         self.select_schedule.process_key(data, "select_schedule")
-        self.sensors.update_from_dict(data)        
+        self.sensors.update_from_dict(data)
         self.temperature_offset.process_key(data, "temperature_offset")
         self.thermostat.process_key(data, "thermostat")
         self.zigbee_mac_address.process_key(data, "zigbee_mac_address")
@@ -291,15 +332,15 @@ class Thermostat(DeviceBase):
 class ThermostatSensors:
     """Thermostat sensors class."""
 
-    battery: Optional[int] = None  # not when AC powered, Lisa/Tom/Floor
-    humidity: Optional[int] = None  # Emma and Jip
-    illuminance: Optional[float] = None  # Anna
+    battery: int | None = None  # not when AC powered, Lisa/Tom/Floor
+    humidity: int | None = None  # Emma and Jip
+    illuminance: float | None = None  # Anna
     temperature: float = 0.0
-    setpoint: Optional[float] = None  # heat or cool
-    setpoint_high: Optional[float] = None  # heat_cool
-    setpoint_low: Optional[float] = None  # heat_cool
-    temperature_difference: Optional[float] = None  # Tom/Floor
-    valve_position: Optional[float] = None  # Tom/Floor
+    setpoint: float | None = None  # heat or cool
+    setpoint_high: float | None = None  # heat_cool
+    setpoint_low: float | None = None  # heat_cool
+    temperature_difference: float | None = None  # Tom/Floor
+    valve_position: float | None = None  # Tom/Floor
 
 
 @dataclass
@@ -329,9 +370,9 @@ class ThermostatDict:
     lower_bound: float = 0.0
     resolution: float = 0.0
     upper_bound: float = 0.0
-    setpoint: Optional[float] = None  # heat or cool
-    setpoint_high: Optional[float] = None  # heat_cool
-    setpoint_low: Optional[float] = None  # heat_cool
+    setpoint: float | None = None  # heat or cool
+    setpoint_high: float | None = None  # heat_cool
+    setpoint_low: float | None = None  # heat_cool
 
 
 @dataclass
@@ -350,13 +391,13 @@ class ClimateDevice(DeviceBase):
     """
 
     super().__init__()
-    available: Optional[bool] = None
-    binary_sensors: Optional[ClimateDeviceBinarySensors] = None
-    maximum_boiler_temperature: Optional[SetpointDict] = None
-    max_dhw_temperature: Optional[SetpointDict] = None
-    model_id: Optional[str] = None
-    sensors: Optional[ClimateDeviceSensors] = None
-    switches: Optional[ClimateDeviceSwitches] = None
+    available: bool | None = None
+    binary_sensors: ClimateDeviceBinarySensors | None = None
+    maximum_boiler_temperature: SetpointDict | None = None
+    max_dhw_temperature: SetpointDict | None = None
+    model_id: str | None = None
+    sensors: ClimateDeviceSensors | None = None
+    switches: ClimateDeviceSwitches | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDevice object with data from a dictionary."""
@@ -367,43 +408,43 @@ class ClimateDevice(DeviceBase):
         self.maximum_boiler_temperature.process_key(data, "maximum_boiler_temperature")
         self.max_dhw_temperature.process_key(data, "max_dhw_temperature")
         self.model_id.process_key(data, "model_id")
-        self.sensors.update_from_dict(data)   
-        self.switches.update_from_dict(data) 
+        self.sensors.update_from_dict(data)
+        self.switches.update_from_dict(data)
 
 
 @dataclass
 class ClimateDeviceBinarySensors:
     """Climate-device binary_sensors class."""
 
-    compressor_state: Optional[bool] = None
-    cooling_enabled: Optional[bool] = None
-    cooling_state: Optional[bool] = None
-    dhw_state: Optional[bool] = None
-    flame_state: Optional[bool] = None
+    compressor_state: bool | None = None
+    cooling_enabled: bool | None = None
+    cooling_state: bool | None = None
+    dhw_state: bool | None = None
+    flame_state: bool | None = None
     heating_state: bool = False
-    secondary_boiler_state: Optional[bool] = None
+    secondary_boiler_state: bool | None = None
 
 
 @dataclass
 class ClimateDeviceSensors:
     """Climate-device sensors class."""
 
-    dhw_temperature: Optional[float] = None
-    domestic_hot_water_setpoint: Optional[float] = None
-    intended_boiler_temperature: Optional[float] = None
-    modulation_level: Optional[float] = None
-    outdoor_air_temperature: Optional[float] = None
-    return_temperature: Optional[float] = None
-    water_temperature: Optional[float] = None
-    water_pressure: Optional[float] = None
+    dhw_temperature: float | None = None
+    domestic_hot_water_setpoint: float | None = None
+    intended_boiler_temperature: float | None = None
+    modulation_level: float | None = None
+    outdoor_air_temperature: float | None = None
+    return_temperature: float | None = None
+    water_temperature: float | None = None
+    water_pressure: float | None = None
 
 
 @dataclass
 class ClimateDeviceSwitches:
     """Climate-device switches class."""
 
-    dhw_cm_switch: Optional[bool] = None
-    cooling_ena_switch: Optional[bool] = None
+    dhw_cm_switch: bool | None = None
+    cooling_ena_switch: bool | None = None
 
 
 @dataclass
@@ -413,10 +454,10 @@ class Plug(DeviceBase):
     super().__init__()
     zigbee_mac_address: str = ""
     available: bool = False
-    hardware: Optional[str] = None
-    model_id: Optional[str] = None
-    sensors: Optional[PlugSensors] = None
-    switches: Optional[PlugSwitches] = None
+    hardware: str | None = None
+    model_id: str | None = None
+    sensors: PlugSensors | None = None
+    switches: PlugSwitches | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Plug object with data from a dictionary."""
@@ -435,9 +476,9 @@ class PlugSensors:
     """Plug sensors class."""
 
     electricity_consumed_interval: float = 0.0
-    electricity_consumed: Optional[float] = None  # Not present for Aqara Plug
-    electricity_produced: Optional[float] = None
-    electricity_produced_interval: Optional[float] = None
+    electricity_consumed: float | None = None  # Not present for Aqara Plug
+    electricity_produced: float | None = None
+    electricity_produced_interval: float | None = None
 
 
 @dataclass
@@ -445,13 +486,12 @@ class PlugSwitches:
     """Plug switches class."""
 
     relay: bool
-    lock: Optional[bool] = None
+    lock: bool | None = None
 
 
 ##################################################
 class PlugwiseData:
-    """
-    Overview of existing options:
+    """Overview of existing PlugwiseData options.
 
     - Gateway Adam
         - Climate device: OnOff or Opentherm
@@ -485,7 +525,7 @@ class PlugwiseData:
 
     - Gateway Stretch (legacy)
         - Single devices (Zigbee)
-        - ??.
+        - ??
     """
 
     gateway: Gateway = Gateway()
