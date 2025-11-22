@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from munch import Munch
 from typing import Any
 
 from .constants import ZONE_THERMOSTATS
@@ -70,6 +71,8 @@ class Gateway(DeviceBase):
     def __init__(self) -> None:
         """Init Gateway class and inherited functions."""
         super().__init__()
+        self.binary_sensors = GatewayBinarySensors()
+        self.sensors = Weather()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Gateway object with data from a dictionary."""
@@ -263,6 +266,7 @@ class Zone(DeviceBase):
     def __init__(self) -> None:
         """Init Zone class and inherited functions."""
         super().__init__()
+        self.sensors = ZoneSensors()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this climate Zone object with data from a dictionary."""
@@ -324,6 +328,8 @@ class Thermostat(DeviceBase):
     def __init__(self) -> None:
         """Init Thermostat class and inherited functions."""
         super().__init__()
+        self.binary_sensors = WirelessThermostatBinarySensors()
+        self.sensors = ThermostatSensors()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Thermostat object with data from a dictionary."""
@@ -446,6 +452,9 @@ class ClimateDevice(DeviceBase):
     def __init__(self) -> None:
         """Init ClimateDevice class and inherited functions."""
         super().__init__()
+        self.binary_sensors = ClimateDeviceBinarySensors()
+        self.sensors = ClimateDeviceSensors()
+        self.switches = ClimateDeviceSwitches()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDevice object with data from a dictionary."""
@@ -548,6 +557,8 @@ class Plug(DeviceBase):
     def __init__(self) -> None:
         """Init Plug class and inherited functions."""
         super().__init__()
+        self.sensors = PlugSensors()
+        self. switches = PlugSwitches()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Plug object with data from a dictionary."""
@@ -647,49 +658,74 @@ class PlugwiseData:
     plugs: list[Plug] | None = None
     p1_dsmr: SmartEnergyMeter | None = None
 
-    def __init__(self, smile) -> None:
+    def __init__(self, data: Any) -> None:
         """Initialize PlugwiseData class."""
         self.climate_device = None
-        self.zones = None
-        self.thermostats = None
-        self.plugs = None
+        self.gateway = None
         self.p1_dsmr = None
-        self.smile = smile
+        self.plugs = None
+        self.thermostats = None
+        self.zones = None
 
-        if self.smile.type == "Adam":
+        for device_id, device in data.items():
+            self.gateway = Gateway()
+            if device["dev_class"] == "gateway":
+                self.gateway.update_from_dict(device)
+
             self.climate_device = ClimateDevice()
+            if device["dev_class"] == "heater_central":
+                self.climate_device.update_from_dict(device)
+
             self.zones = list[Zone()]
+            if device["dev_class"] == "climate":
+                for zone in self.zones:
+                    zone.update_from_dict(device)
+                    self.zones.append(zone)
+
             self.thermostats = list[Thermostat()]
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                for thermostat in self.thermostats:
+                    thermostat.update_from_dict(device)
+                    self.thermostats.append(thermostat)
+
             self.plugs = list[Plug()]
-        if self.smile.type == "Smile Anna":
-            self.climate_device = ClimateDevice()
-        if self.smile.type == "Smile Anna P1":
-            self.climate_device = ClimateDevice()
+            if device["dev_class"].endswith("_plug"):
+                for plug in self.plugs:
+                    plug.update_from_dict(device)
+                    self.plugs.append(plug)
+
             self.p1_dsmr = SmartEnergyMeter()
-        if self.smile.type == "Smile P1":
-            self.p1_dsmr = SmartEnergyMeter()
-        if self.smile.type == "Stretch":
-            self.plugs = list[Plug()]
+            if device["dev_class"] == "smartmeter":
+                self.p1_dsmr.update_from_dict(device)
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update the status object with data received from the Plugwise API."""
 
         for device_id, device in data.items():
-            if device["device_class"] == "gateway":
+            if device["dev_class"] == "gateway":
+                self.gateway = Gateway()
                 self.gateway.update_from_dict(device)
-            if device["device_class"] == "heater_central":
+            if device["dev_class"] == "heater_central":
+                self.climate_device = ClimateDevice()
                 self.climate_device.update_from_dict(device)
-            if device["device_class"] == "climate":
+            if device["dev_class"] == "climate":
+                self.zones = list[Zone()]
                 for zone in self.zones:
                     if zone.location == device_id:
                         zone.update_from_dict(device)
-            if device["device_class"] in ZONE_THERMOSTATS:
+                        self.zones.append(zone)
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                self.thermostats = list[Thermostat()]
                 for thermostat in self.thermostats:
                     if thermostat.location == device["location"]:
                         thermostat.update_from_dict(device)
-            if device["device_class"].endswith("_plug"):
+                        self.thermostats.append(thermostat)
+            if device["dev_class"].endswith("_plug"):
+                self.plugs = list[Plug()]
                 for plug in self.plugs:
                     if plug.location == device["location"]:
                         plug.update_from_dict(device)
-            if device["device_class"] == "smartmeter":
+                        self.plugs.append(plug)
+            if device["dev_class"] == "smartmeter":
+                self.p1_dsmr = SmartEnergyMeter()
                 self.p1_dsmr.update_from_dict(device)

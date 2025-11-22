@@ -23,6 +23,7 @@ from plugwise.constants import (
     GwEntityData,
     ThermoLoc,
 )
+from plugwise.devices import PlugwiseData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
@@ -52,6 +53,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._plugwise_data: PlugwiseData | None = None
         self._request = _request
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
@@ -123,6 +125,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._first_update = False
         self._previous_day_number = day_number
+        self._plugwise_data = PlugwiseData(self.gw_entities)
         return self.gw_entities
 
     ########################################################################################################
