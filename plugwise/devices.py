@@ -485,7 +485,7 @@ class PlugwiseData:
 
     - Gateway Stretch (legacy)
         - Single devices (Zigbee)
-        - ??
+        - ??.
     """
 
     gateway: Gateway = Gateway()
