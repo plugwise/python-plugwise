@@ -30,6 +30,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
+from plugwise.devices import PlugwiseData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 
 from defusedxml import ElementTree as etree
@@ -84,6 +85,7 @@ class SmileAPI(SmileData):
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._plugwise_data: PlugwiseData | None = None
         self._request = _request
         self._schedule_old_states = _schedule_old_states
         self.smile = smile
@@ -146,6 +148,7 @@ class SmileAPI(SmileData):
         except KeyError as err:
             raise DataMissingError("No Plugwise actual data received") from err
 
+        self._plugwise_data = PlugwiseData(self.gw_entities)
         return self.gw_entities
 
     ########################################################################################################
