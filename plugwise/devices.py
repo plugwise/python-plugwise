@@ -44,13 +44,13 @@ class DeviceBase:
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this DeviceBase object with data from a dictionary."""
 
-        self.dev_class.process_key(data, "dev_class")
-        self.firmware.process_key(data, "firmware")
-        self.location.process_key(data, "location")
-        self.mac_address.process_key(data, "mac_address")
-        self.model.process_key(data, "model")
-        self.name.process_key(data, "name")
-        self.vendor.process_key(data, "vendor")
+        self.dev_class = process_key(data, "dev_class")
+        self.firmware = process_key(data, "firmware")
+        self.location = process_key(data, "location")
+        self.mac_address = process_key(data, "mac_address")
+        self.model = process_key(data, "model")
+        self.name = process_key(data, "name")
+        self.vendor = process_key(data, "vendor")
 
 
 @dataclass
@@ -73,13 +73,13 @@ class Gateway(DeviceBase):
 
         super().update_from_dict(data)
         self.binary_sensors.update_from_dict(data)
-        self.gateway_modes.process_key(data, "gateway_mode")
-        self.hardware.process_key(data, "gateway_mode")
-        self.model_id.process_key(data, "gateway_mode")
-        self.regulation_modes.process_key(data, "gateway_mode")
-        self.select_gateway_mode.process_key(data, "gateway_mode")
+        self.gateway_modes = process_key(data, "gateway_mode")
+        self.hardware = process_key(data, "gateway_mode")
+        self.model_id = process_key(data, "gateway_mode")
+        self.regulation_modes = process_key(data, "gateway_mode")
+        self.select_gateway_mode = process_key(data, "gateway_mode")
         self.sensors.update_from_dict(data)
-        self.zigbee_mac_address.process_key(data, "gateway_mode")
+        self.zigbee_mac_address = process_key(data, "gateway_mode")
 
 
 @dataclass
@@ -91,7 +91,7 @@ class GatewayBinarySensors:
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this GatewayBinarySensors object with data from a dictionary."""
 
-        self.plugwise_notification.process_dict(
+        self.plugwise_notification = process_dict(
             data, "binary_sensors", "plugwise_notification"
         )
 
@@ -105,7 +105,7 @@ class Weather:
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this GatewayBinarySensors object with data from a dictionary."""
 
-        self.outdoor_temperature.process_dict(data, "sensors", "outdoor_temperature")
+        self.outdoor_temperature = process_dict(data, "sensors", "outdoor_temperature")
 
 
 @dataclass
@@ -120,7 +120,7 @@ class SmartEnergyMeter(DeviceBase):
         """Update this SmartEnergyMeter object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.available.process_key(data, "available")
+        self.available = process_key(data, "available")
         self.sensors.update_from_dict(data)
 
 
@@ -159,81 +159,81 @@ class SmartEnergySensors:
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this SmartEnergySensors object with data from a dictionary."""
 
-        self.electricity_consumed_off_peak_cumulative.process_dict(
+        self.electricity_consumed_off_peak_cumulative = process_dict(
             data, "sensors", "electricity_consumed_off_peak_cumulative"
         )
-        self.electricity_consumed_off_peak_interval.process_dict(
+        self.electricity_consumed_off_peak_interval = process_dict(
             data, "sensors", "electricity_consumed_off_peak_interval"
         )
-        self.electricity_consumed_off_peak_point.process_dict(
+        self.electricity_consumed_off_peak_point = process_dict(
             data, "sensors", "electricity_consumed_off_peak_point"
         )
-        self.electricity_consumed_peak_cumulative.process_dict(
+        self.electricity_consumed_peak_cumulative = process_dict(
             data, "sensors", "electricity_consumed_peak_cumulative"
         )
-        self.electricity_consumed_peak_interval.process_dict(
+        self.electricity_consumed_peak_interval = process_dict(
             data, "sensors", "electricity_consumed_peak_interval"
         )
-        self.electricity_consumed_peak_point.process_dict(
+        self.electricity_consumed_peak_point = process_dict(
             data, "sensors", "electricity_consumed_peak_point"
         )
-        self.electricity_consumed_point.process_dict(
+        self.electricity_consumed_point = process_dict(
             data, "sensors", "electricity_consumed_point"
         )
-        self.electricity_phase_one_consumed.process_dict(
+        self.electricity_phase_one_consumed = process_dict(
             data, "sensors", "electricity_phase_one_consumed"
         )
-        self.electricity_phase_one_produced.process_dict(
+        self.electricity_phase_one_produced = process_dict(
             data, "sensors", "electricity_phase_one_produced"
         )
-        self.electricity_produced_off_peak_cumulative.process_dict(
+        self.electricity_produced_off_peak_cumulative = process_dict(
             data, "sensors", "electricity_produced_off_peak_cumulative"
         )
-        self.electricity_produced_off_peak_interval.process_dict(
+        self.electricity_produced_off_peak_interval = process_dict(
             data, "sensors", "electricity_produced_off_peak_interval"
         )
-        self.electricity_produced_off_peak_point.process_dict(
+        self.electricity_produced_off_peak_point = process_dict(
             data, "sensors", "electricity_produced_off_peak_point"
         )
-        self.electricity_produced_peak_cumulative.process_dict(
+        self.electricity_produced_peak_cumulative = process_dict(
             data, "sensors", "electricity_produced_peak_cumulative"
         )
-        self.electricity_produced_peak_interval.process_dict(
+        self.electricity_produced_peak_interval = process_dict(
             data, "sensors", "electricity_produced_peak_interval"
         )
-        self.electricity_produced_peak_point.process_dict(
+        self.electricity_produced_peak_point = process_dict(
             data, "sensors", "electricity_produced_peak_point"
         )
-        self.electricity_produced_point.process_dict(
+        self.electricity_produced_point = process_dict(
             data, "sensors", "electricity_produced_point"
         )
-        self.net_electricity_cumulative.process_dict(
+        self.net_electricity_cumulative = process_dict(
             data, "sensors", "net_electricity_cumulative"
         )
-        self.net_electricity_point.process_dict(
+        self.net_electricity_point = process_dict(
             data, "sensors", "net_electricity_point"
         )
-        self.electricity_phase_three_consumed.process_dict(
+        self.electricity_phase_three_consumed = process_dict(
             data, "sensors", "electricity_phase_three_consumed"
         )
-        self.electricity_phase_three_produced.process_dict(
+        self.electricity_phase_three_produced = process_dict(
             data, "sensors", "electricity_phase_three_produced"
         )
-        self.electricity_phase_two_consumed.process_dict(
+        self.electricity_phase_two_consumed = process_dict(
             data, "sensors", "electricity_phase_two_consumed"
         )
-        self.electricity_phase_two_produced.process_dict(
+        self.electricity_phase_two_produced = process_dict(
             data, "sensors", "electricity_phase_two_produced"
         )
-        self.gas_consumed_cumulative.process_dict(
+        self.gas_consumed_cumulative = process_dict(
             data, "sensors", "gas_consumed_cumulative"
         )
-        self.gas_consumed_interval.process_dict(
+        self.gas_consumed_interval = process_dict(
             data, "sensors", "gas_consumed_interval"
         )
-        self.voltage_phase_one.process_dict(data, "sensors", "voltage_phase_one")
-        self.voltage_phase_three.process_dict(data, "sensors", "voltage_phase_three")
-        self.voltage_phase_two.process_dict(data, "sensors", "voltage_phase_two")
+        self.voltage_phase_one = process_dict(data, "sensors", "voltage_phase_one")
+        self.voltage_phase_three = process_dict(data, "sensors", "voltage_phase_three")
+        self.voltage_phase_two = process_dict(data, "sensors", "voltage_phase_two")
 
 
 @dataclass
@@ -259,19 +259,19 @@ class Zone(DeviceBase):
         """Update this climate Zone object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.available_schedules.process_key(data, "available_schedules")
-        self.climate_mode.process_key(data, "climate_mode")
-        self.control_state.process_key(data, "control_state")
-        self.preset_modes.process_key(data, "preset_modes")
-        self.select_zone_profile.process_key(data, "select_zone_profile")
-        self.zone_profiles.process_key(data, "zone_profiles")
-        self.active_preset.process_key(data, "active_preset")
-        self.hardware.process_key(data, "hardware")
-        self.model_id.process_key(data, "model_id")
-        self.select_schedule.process_key(data, "select_schedule")
+        self.available_schedules = process_key(data, "available_schedules")
+        self.climate_mode = process_key(data, "climate_mode")
+        self.control_state = process_key(data, "control_state")
+        self.preset_modes = process_key(data, "preset_modes")
+        self.select_zone_profile = process_key(data, "select_zone_profile")
+        self.zone_profiles = process_key(data, "zone_profiles")
+        self.active_preset = process_key(data, "active_preset")
+        self.hardware = process_key(data, "hardware")
+        self.model_id = process_key(data, "model_id")
+        self.select_schedule = process_key(data, "select_schedule")
         self.sensors.update_from_dict(data)
-        self.thermostat.process_key(data, "thermostat")
-        self.thermostats.process_key(data, "thermostats")
+        self.thermostat = process_key(data, "thermostat")
+        self.thermostats = process_key(data, "thermostats")
 
 
 @dataclass
@@ -285,9 +285,9 @@ class ZoneSensors:
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ZoneSensors object with data from a dictionary."""
 
-        self.electricity_consumed.process_dict(data, "sensors", "electricity_consumed")
-        self.electricity_produced.process_dict(data, "sensors", "electricity_produced")
-        self.temperature.process_dict(data, "sensors", "temperature")
+        self.electricity_consumed = process_dict(data, "sensors", "electricity_consumed")
+        self.electricity_produced = process_dict(data, "sensors", "electricity_produced")
+        self.temperature = process_dict(data, "sensors", "temperature")
 
 
 @dataclass
@@ -313,19 +313,19 @@ class Thermostat(DeviceBase):
         """Update this Thermostat object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.available_schedules.process_key(data, "available_schedules")
-        self.control_state.process_key(data, "control_state")
-        self.preset_modes.process_key(data, "preset_modes")
-        self.active_preset.process_key(data, "active_preset")
+        self.available_schedules = process_key(data, "available_schedules")
+        self.control_state = process_key(data, "control_state")
+        self.preset_modes = process_key(data, "preset_modes")
+        self.active_preset = process_key(data, "active_preset")
         self.binary_sensors.update_from_dict(data)
-        self.climate_mode.process_key(data, "climate_mode")
-        self.hardware.process_key(data, "hardware")
-        self.model_id.process_key(data, "model_id")
-        self.select_schedule.process_key(data, "select_schedule")
+        self.climate_mode = process_key(data, "climate_mode")
+        self.hardware = process_key(data, "hardware")
+        self.model_id = process_key(data, "model_id")
+        self.select_schedule = process_key(data, "select_schedule")
         self.sensors.update_from_dict(data)
-        self.temperature_offset.process_key(data, "temperature_offset")
-        self.thermostat.process_key(data, "thermostat")
-        self.zigbee_mac_address.process_key(data, "zigbee_mac_address")
+        self.temperature_offset = process_key(data, "temperature_offset")
+        self.thermostat = process_key(data, "thermostat")
+        self.zigbee_mac_address = process_key(data, "zigbee_mac_address")
 
 
 @dataclass
@@ -403,11 +403,11 @@ class ClimateDevice(DeviceBase):
         """Update this ClimateDevice object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.available.process_key(data, "available")
+        self.available = process_key(data, "available")
         self.binary_sensors.update_from_dict(data)
-        self.maximum_boiler_temperature.process_key(data, "maximum_boiler_temperature")
-        self.max_dhw_temperature.process_key(data, "max_dhw_temperature")
-        self.model_id.process_key(data, "model_id")
+        self.maximum_boiler_temperature = process_key(data, "maximum_boiler_temperature")
+        self.max_dhw_temperature = process_key(data, "max_dhw_temperature")
+        self.model_id = process_key(data, "model_id")
         self.sensors.update_from_dict(data)
         self.switches.update_from_dict(data)
 
@@ -463,10 +463,10 @@ class Plug(DeviceBase):
         """Update this Plug object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.zigbee_mac_address.process_key(data, "zigbee_mac_address")
-        self.available.process_key(data, "available")
-        self.hardware.process_key(data, "hardware")
-        self.model_id.process_key(data, "model_id")
+        self.zigbee_mac_address = process_key(data, "zigbee_mac_address")
+        self.available = process_key(data, "available")
+        self.hardware = process_key(data, "hardware")
+        self.model_id = process_key(data, "model_id")
         self.sensors.update_from_dict(data)
         self.switches.update_from_dict(data)
 
