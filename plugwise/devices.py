@@ -57,7 +57,6 @@ class DeviceBase:
 class Gateway(DeviceBase):
     """Plugwise Gateway class."""
 
-    super().__init__()
     binary_sensors: GatewayBinarySensors | None = None
     gateway_modes: list[str] | None = None
     hardware: str | None = None
@@ -68,17 +67,23 @@ class Gateway(DeviceBase):
     sensors: Weather | None = None
     zigbee_mac_address: str | None = None
 
+    def __init__(self) -> None:
+        """Init Gateway class and inherited functions."""
+        super().__init__()
+
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Gateway object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.binary_sensors.update_from_dict(data)
+        if self.binary_sensors:
+            self.binary_sensors.update_from_dict(data)
         self.gateway_modes = process_key(data, "gateway_mode")
         self.hardware = process_key(data, "gateway_mode")
         self.model_id = process_key(data, "gateway_mode")
         self.regulation_modes = process_key(data, "gateway_mode")
         self.select_gateway_mode = process_key(data, "gateway_mode")
-        self.sensors.update_from_dict(data)
+        if self.sensors:
+            self.sensors.update_from_dict(data)
         self.zigbee_mac_address = process_key(data, "gateway_mode")
 
 
@@ -86,7 +91,7 @@ class Gateway(DeviceBase):
 class GatewayBinarySensors:
     """Gateway binary_sensors class."""
 
-    plugwise_notification: bool = False
+    plugwise_notification: bool | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this GatewayBinarySensors object with data from a dictionary."""
@@ -285,8 +290,12 @@ class ZoneSensors:
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ZoneSensors object with data from a dictionary."""
 
-        self.electricity_consumed = process_dict(data, "sensors", "electricity_consumed")
-        self.electricity_produced = process_dict(data, "sensors", "electricity_produced")
+        self.electricity_consumed = process_dict(
+            data, "sensors", "electricity_consumed"
+        )
+        self.electricity_produced = process_dict(
+            data, "sensors", "electricity_produced"
+        )
         self.temperature = process_dict(data, "sensors", "temperature")
 
 
@@ -405,7 +414,9 @@ class ClimateDevice(DeviceBase):
         super().update_from_dict(data)
         self.available = process_key(data, "available")
         self.binary_sensors.update_from_dict(data)
-        self.maximum_boiler_temperature = process_key(data, "maximum_boiler_temperature")
+        self.maximum_boiler_temperature = process_key(
+            data, "maximum_boiler_temperature"
+        )
         self.max_dhw_temperature = process_key(data, "max_dhw_temperature")
         self.model_id = process_key(data, "model_id")
         self.sensors.update_from_dict(data)
