@@ -26,7 +26,7 @@ def process_dict(data: dict[str, Any], dict_type: str, key: str) -> Any | None:
     return None
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DeviceBase:
     """Plugwise Device Base class.
 
@@ -53,18 +53,18 @@ class DeviceBase:
         self.vendor = process_key(data, "vendor")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Gateway(DeviceBase):
     """Plugwise Gateway class."""
 
-    binary_sensors: GatewayBinarySensors | None = None
+    binary_sensors: GatewayBinarySensors
     gateway_modes: list[str] | None = None
     hardware: str | None = None
     model_id: str | None = None
     regulation_modes: list[str] | None = None
     select_gateway_mode: str | None = None
     select_regulation_mode: str | None = None
-    sensors: Weather | None = None
+    sensors: Weather
     zigbee_mac_address: str | None = None
 
     def __init__(self) -> None:
@@ -75,19 +75,17 @@ class Gateway(DeviceBase):
         """Update this Gateway object with data from a dictionary."""
 
         super().update_from_dict(data)
-        if self.binary_sensors:
-            self.binary_sensors.update_from_dict(data)
+        self.binary_sensors.update_from_dict(data)
         self.gateway_modes = process_key(data, "gateway_mode")
         self.hardware = process_key(data, "gateway_mode")
         self.model_id = process_key(data, "gateway_mode")
         self.regulation_modes = process_key(data, "gateway_mode")
         self.select_gateway_mode = process_key(data, "gateway_mode")
-        if self.sensors:
-            self.sensors.update_from_dict(data)
+        self.sensors.update_from_dict(data)
         self.zigbee_mac_address = process_key(data, "gateway_mode")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GatewayBinarySensors:
     """Gateway binary_sensors class."""
 
@@ -101,7 +99,7 @@ class GatewayBinarySensors:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Weather:
     """Gateway weather sensor class."""
 
@@ -113,44 +111,47 @@ class Weather:
         self.outdoor_temperature = process_dict(data, "sensors", "outdoor_temperature")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SmartEnergyMeter(DeviceBase):
     """DSMR Energy Meter data class."""
 
-    super().__init__()
+    sensors: SmartEnergySensors
     available: bool | None = None
-    sensors: SmartEnergySensors | None = None
+
+    def __init__(self) -> None:
+        """Init SmartEnergyMeter class and inherited functions."""
+        super().__init__()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this SmartEnergyMeter object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.available = process_key(data, "available")
         self.sensors.update_from_dict(data)
+        self.available = process_key(data, "available")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SmartEnergySensors:
     """DSMR Energy Meter sensors class (P1 v4)."""
 
-    electricity_consumed_off_peak_cumulative: float = 0.0
-    electricity_consumed_off_peak_interval: int = 0
+    electricity_consumed_off_peak_cumulative: float | None = None
+    electricity_consumed_off_peak_interval: int | None = None
     electricity_consumed_off_peak_point: int | None = None
-    electricity_consumed_peak_cumulative: float = 0.0
-    electricity_consumed_peak_interval: int = 0
+    electricity_consumed_peak_cumulative: float | None = None
+    electricity_consumed_peak_interval: int | None = None
     electricity_consumed_peak_point: int | None = None
     electricity_consumed_point: int | None = None
-    electricity_phase_one_consumed: int = 0
-    electricity_phase_one_produced: int = 0
-    electricity_produced_off_peak_cumulative: float = 0.0
-    electricity_produced_off_peak_interval: int = 0
+    electricity_phase_one_consumed: int | None = None
+    electricity_phase_one_produced: int | None = None
+    electricity_produced_off_peak_cumulative: float | None = None
+    electricity_produced_off_peak_interval: int | None = None
     electricity_produced_off_peak_point: int | None = None
-    electricity_produced_peak_cumulative: float = 0.0
-    electricity_produced_peak_interval: int = 0
+    electricity_produced_peak_cumulative: float | None = None
+    electricity_produced_peak_interval: int | None = None
     electricity_produced_peak_point: int | None = None
     electricity_produced_point: int | None = None
-    net_electricity_cumulative: float = 0.0
-    net_electricity_point: int = 0
+    net_electricity_cumulative: float | None = None
+    net_electricity_point: int | None = None
     electricity_phase_three_consumed: int | None = None
     electricity_phase_three_produced: int | None = None
     electricity_phase_two_consumed: int | None = None
@@ -241,29 +242,33 @@ class SmartEnergySensors:
         self.voltage_phase_two = process_dict(data, "sensors", "voltage_phase_two")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Zone(DeviceBase):
     """Plugwise climate Zone data class."""
 
-    super().__init__()
-    available_schedules: list[str] = []
-    climate_mode: str = "heat"
-    control_state: str = "heating"
-    preset_modes: list[str] = []
-    select_zone_profile: str = "off"
-    zone_profiles: list[str] = []
+    sensors: ZoneSensors
+    available_schedules: list[str] | None = None
+    climate_mode: str | None = None
+    control_state: str | None = None
+    preset_modes: list[str] | None = None
+    select_zone_profile: str | None = None
+    zone_profiles: list[str] | None = None
     active_preset: str | None = None
     hardware: str | None = None
     model_id: str | None = None
     select_schedule: str | None = None
-    sensors: ZoneSensors | None = None
     thermostat: ThermostatDict | None = None
     thermostats: ThermostatsDict | None = None
+
+    def __init__(self) -> None:
+        """Init Zone class and inherited functions."""
+        super().__init__()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this climate Zone object with data from a dictionary."""
 
         super().update_from_dict(data)
+        self.sensors.update_from_dict(data)
         self.available_schedules = process_key(data, "available_schedules")
         self.climate_mode = process_key(data, "climate_mode")
         self.control_state = process_key(data, "control_state")
@@ -274,12 +279,11 @@ class Zone(DeviceBase):
         self.hardware = process_key(data, "hardware")
         self.model_id = process_key(data, "model_id")
         self.select_schedule = process_key(data, "select_schedule")
-        self.sensors.update_from_dict(data)
         self.thermostat = process_key(data, "thermostat")
         self.thermostats = process_key(data, "thermostats")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ZoneSensors:
     """Climate Zone sensors class."""
 
@@ -299,131 +303,166 @@ class ZoneSensors:
         self.temperature = process_dict(data, "sensors", "temperature")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Thermostat(DeviceBase):
     """Plugwise Thermostat class, covering Anna (legacy) standalone or wired to Adam, Emma Essential/Pro standalone, or Emma Pro, Jip, Lisa and Tom/Floor connected to Adam."""
 
-    super().__init__()
-    available_schedules: list[str] = []
-    control_state: str = "heating"
-    preset_modes: list[str] = []
+    binary_sensors: WirelessThermostatBinarySensors
+    sensors: ThermostatSensors
+    available_schedules: list[str] | None = None
+    control_state: str | None = None
+    preset_modes: list[str] | None = None
     active_preset: str | None = None
-    binary_sensors: WirelessThermostatBinarySensors | None = None
     climate_mode: str | None = None
     hardware: str | None = None
     model_id: str | None = None
     select_schedule: str | None = None
-    sensors: ThermostatSensors | None = None
     temperature_offset: SetpointDict | None = None  # not for legacy
     thermostat: ThermostatDict | None = None
     zigbee_mac_address: str | None = None
+
+    def __init__(self) -> None:
+        """Init Thermostat class and inherited functions."""
+        super().__init__()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Thermostat object with data from a dictionary."""
 
         super().update_from_dict(data)
+        self.binary_sensors.update_from_dict(data)
+        self.sensors.update_from_dict(data)
         self.available_schedules = process_key(data, "available_schedules")
         self.control_state = process_key(data, "control_state")
         self.preset_modes = process_key(data, "preset_modes")
         self.active_preset = process_key(data, "active_preset")
-        self.binary_sensors.update_from_dict(data)
         self.climate_mode = process_key(data, "climate_mode")
         self.hardware = process_key(data, "hardware")
         self.model_id = process_key(data, "model_id")
         self.select_schedule = process_key(data, "select_schedule")
-        self.sensors.update_from_dict(data)
         self.temperature_offset = process_key(data, "temperature_offset")
         self.thermostat = process_key(data, "thermostat")
         self.zigbee_mac_address = process_key(data, "zigbee_mac_address")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ThermostatSensors:
     """Thermostat sensors class."""
 
     battery: int | None = None  # not when AC powered, Lisa/Tom/Floor
     humidity: int | None = None  # Emma and Jip
     illuminance: float | None = None  # Anna
-    temperature: float = 0.0
     setpoint: float | None = None  # heat or cool
     setpoint_high: float | None = None  # heat_cool
     setpoint_low: float | None = None  # heat_cool
+    temperature: float | None = None
     temperature_difference: float | None = None  # Tom/Floor
     valve_position: float | None = None  # Tom/Floor
 
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
 
-@dataclass
+        self.battery = process_dict(data, "sensors", "battery")
+        self.humidity = process_dict(data, "sensors", "humidity")
+        self.illuminance = process_dict(data, "sensors", "illuminance")
+        self.setpoint = process_dict(data, "sensors", "battsetpointery")
+        self.setpoint_high = process_dict(data, "sensors", "setpoint_high")
+        self.setpoint_low = process_dict(data, "sensors", "setpoint_low")
+        self.temperature = process_dict(data, "sensors", "temperature")
+        self.temperature_difference = process_dict(
+            data, "sensors", "temperature_difference"
+        )
+        self.valve_position = process_dict(data, "sensors", "valve_position")
+
+
+@dataclass(kw_only=True)
 class WirelessThermostatBinarySensors:
     """Wireless thermostat sensors class."""
 
-    low_battery: bool = False
+    low_battery: bool | None = None
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
+
+        self.electricity_consumed = process_dict(
+            data, "sensors", "electricity_consumed"
+        )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SetpointDict:
     """Generic setpoint dict class.
 
     Used for temperature_offset, max_dhw_temperature,maximum_boiler_temperature.
     """
 
-    lower_bound: float = 0.0
-    resolution: float = 0.0
-    setpoint: float = 0.0
-    upper_bound: float = 0.0
+    lower_bound: float | None = None
+    resolution: float | None = None
+    setpoint: float | None = None
+    upper_bound: float | None = None
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
+
+        self.electricity_consumed = process_dict(
+            data, "sensors", "electricity_consumed"
+        )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ThermostatDict:
     """Thermostat dict class."""
 
-    lower_bound: float = 0.0
-    resolution: float = 0.0
-    upper_bound: float = 0.0
+    lower_bound: float | None = None
+    resolution: float | None = None
+    upper_bound: float | None = None
     setpoint: float | None = None  # heat or cool
     setpoint_high: float | None = None  # heat_cool
     setpoint_low: float | None = None  # heat_cool
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ThermostatsDict:
     """Thermostats dict class."""
 
-    primary: list[str] = []
-    secondary: list[str] = []
+    primary: list[str] | None = None
+    secondary: list[str] | None = None
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ClimateDevice(DeviceBase):
     """Climate-device class.
 
     Representing both OnOff and OpenTherm types.
     """
 
-    super().__init__()
+    binary_sensors: ClimateDeviceBinarySensors
+    sensors: ClimateDeviceSensors
+    switches: ClimateDeviceSwitches
     available: bool | None = None
-    binary_sensors: ClimateDeviceBinarySensors | None = None
     maximum_boiler_temperature: SetpointDict | None = None
     max_dhw_temperature: SetpointDict | None = None
     model_id: str | None = None
-    sensors: ClimateDeviceSensors | None = None
-    switches: ClimateDeviceSwitches | None = None
+
+    def __init__(self) -> None:
+        """Init ClimateDevice class and inherited functions."""
+        super().__init__()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDevice object with data from a dictionary."""
 
         super().update_from_dict(data)
-        self.available = process_key(data, "available")
         self.binary_sensors.update_from_dict(data)
+        self.sensors.update_from_dict(data)
+        self.switches.update_from_dict(data)
+        self.available = process_key(data, "available")
         self.maximum_boiler_temperature = process_key(
             data, "maximum_boiler_temperature"
         )
         self.max_dhw_temperature = process_key(data, "max_dhw_temperature")
         self.model_id = process_key(data, "model_id")
-        self.sensors.update_from_dict(data)
-        self.switches.update_from_dict(data)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ClimateDeviceBinarySensors:
     """Climate-device binary_sensors class."""
 
@@ -432,11 +471,24 @@ class ClimateDeviceBinarySensors:
     cooling_state: bool | None = None
     dhw_state: bool | None = None
     flame_state: bool | None = None
-    heating_state: bool = False
+    heating_state: bool | None = None
     secondary_boiler_state: bool | None = None
 
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
 
-@dataclass
+        self.compressor_state = process_dict(data, "binary_sensors", "compressor_state")
+        self.cooling_enabled = process_dict(data, "binary_sensors", "cooling_enabled")
+        self.cooling_state = process_dict(data, "binary_sensors", "cooling_state")
+        self.dhw_state = process_dict(data, "binary_sensors", "dhw_state")
+        self.flame_state = process_dict(data, "binary_sensors", "flame_state")
+        self.heating_state = process_dict(data, "binary_sensors", "heating_state")
+        self.secondary_boiler_state = process_dict(
+            data, "binary_sensors", "secondary_boiler_state"
+        )
+
+
+@dataclass(kw_only=True)
 class ClimateDeviceSensors:
     """Climate-device sensors class."""
 
@@ -449,55 +501,104 @@ class ClimateDeviceSensors:
     water_temperature: float | None = None
     water_pressure: float | None = None
 
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
 
-@dataclass
+        self.dhw_temperature = process_dict(data, "sensors", "dhw_temperature")
+        self.domestic_hot_water_setpoint = process_dict(
+            data, "sensors", "domestic_hot_water_setpoint"
+        )
+        self.intended_boiler_temperature = process_dict(
+            data, "sensors", "intended_boiler_temperature"
+        )
+        self.modulation_level = process_dict(data, "sensors", "modulation_level")
+        self.outdoor_air_temperature = process_dict(
+            data, "sensors", "outdoor_air_temperature"
+        )
+        self.return_temperature = process_dict(data, "sensors", "return_temperature")
+        self.water_temperature = process_dict(data, "sensors", "water_temperature")
+        self.water_pressure = process_dict(data, "sensors", "water_pressure")
+
+
+@dataclass(kw_only=True)
 class ClimateDeviceSwitches:
     """Climate-device switches class."""
 
-    dhw_cm_switch: bool | None = None
     cooling_ena_switch: bool | None = None
+    dhw_cm_switch: bool | None = None
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
+
+        self.cooling_ena_switch = process_dict(data, "switches", "cooling_ena_switch")
+        self.dhw_cm_switch = process_dict(data, "switches", "dhw_cm_switch")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Plug(DeviceBase):
     """Plug data class covering Plugwise Adam/Stretch and Aqara Plugs, and generic ZigBee type Switches."""
 
-    super().__init__()
-    zigbee_mac_address: str = ""
-    available: bool = False
+    sensors: PlugSensors
+    switches: PlugSwitches
+    available: bool | None = None
     hardware: str | None = None
     model_id: str | None = None
-    sensors: PlugSensors | None = None
-    switches: PlugSwitches | None = None
+    zigbee_mac_address: str | None = None
+
+    def __init__(self) -> None:
+        """Init Plug class and inherited functions."""
+        super().__init__()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Plug object with data from a dictionary."""
 
         super().update_from_dict(data)
+        self.sensors.update_from_dict(data)
+        self.switches.update_from_dict(data)
         self.zigbee_mac_address = process_key(data, "zigbee_mac_address")
         self.available = process_key(data, "available")
         self.hardware = process_key(data, "hardware")
         self.model_id = process_key(data, "model_id")
-        self.sensors.update_from_dict(data)
-        self.switches.update_from_dict(data)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PlugSensors:
     """Plug sensors class."""
 
-    electricity_consumed_interval: float = 0.0
     electricity_consumed: float | None = None  # Not present for Aqara Plug
+    electricity_consumed_interval: float | None = None
     electricity_produced: float | None = None
     electricity_produced_interval: float | None = None
 
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
 
-@dataclass
+        self.electricity_consumed = process_dict(
+            data, "sensors", "electricity_consumed"
+        )
+        self.electricity_consumed_interval = process_dict(
+            data, "sensors", "electricity_consumed_interval"
+        )
+        self.electricity_produced = process_dict(
+            data, "sensors", "electricity_produced"
+        )
+        self.electricity_produced_interval = process_dict(
+            data, "sensors", "electricity_produced_interval"
+        )
+
+
+@dataclass(kw_only=True)
 class PlugSwitches:
     """Plug switches class."""
 
-    relay: bool
     lock: bool | None = None
+    relay: bool | None = None
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this ZoneSensors object with data from a dictionary."""
+
+        self.lock = process_dict(data, "switches", "lock")
+        self.relay = process_dict(data, "switches", "relay")
 
 
 ##################################################
@@ -541,15 +642,15 @@ class PlugwiseData:
 
     gateway: Gateway = Gateway()
     climate_device: ClimateDevice = ClimateDevice()
-    zones: list[Zone] = []
-    thermostats: list[Thermostat] = []
-    plugs: list[Plug] = []
+    zones: list[Zone] | None = None
+    thermostats: list[Thermostat] | None = None
+    plugs: list[Plug] | None = None
     p1_dsmr: SmartEnergyMeter = SmartEnergyMeter()
 
-    def update_from_dict(self, data: dict[str, Any]) -> PlugwiseData:
+    def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update the status object with data received from the Plugwise API."""
 
-        for device_id, device in data:
+        for device_id, device in data.items():
             if device["device_class"] == "gateway":
                 self.gateway.update_from_dict(device)
             if device["device_class"] == "heater_central":
