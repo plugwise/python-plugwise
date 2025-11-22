@@ -641,11 +641,35 @@ class PlugwiseData:
     """
 
     gateway: Gateway = Gateway()
-    climate_device: ClimateDevice = ClimateDevice()
+    climate_device: ClimateDevice | None = None
     zones: list[Zone] | None = None
     thermostats: list[Thermostat] | None = None
     plugs: list[Plug] | None = None
-    p1_dsmr: SmartEnergyMeter = SmartEnergyMeter()
+    p1_dsmr: SmartEnergyMeter | None = None
+
+    def __init__(self, smile) -> None:
+        """Initialize PlugwiseData class."""
+        self.climate_device = None
+        self.zones = None
+        self.thermostats = None
+        self.plugs = None
+        self.p1_dsmr = None
+        self.smile = smile
+
+        if self.smile.type == "Adam":
+            self.climate_device = ClimateDevice()
+            self.zones = list[Zone()]
+            self.thermostats = list[Thermostat()]
+            self.plugs = list[Plug()]
+        if self.smile.type == "Smile Anna":
+            self.climate_device = ClimateDevice()
+        if self.smile.type == "Smile Anna P1":
+            self.climate_device = ClimateDevice()
+            self.p1_dsmr = SmartEnergyMeter()
+        if self.smile.type == "Smile P1":
+            self.p1_dsmr = SmartEnergyMeter()
+        if self.smile.type == "Stretch":
+            self.plugs = list[Plug()]
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update the status object with data received from the Plugwise API."""
