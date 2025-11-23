@@ -1,4 +1,4 @@
-"""Plugwise Device classes."""
+"""Plugwise Device model classes."""
 
 from __future__ import annotations
 
