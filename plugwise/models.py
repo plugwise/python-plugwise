@@ -10,7 +10,6 @@ from plugwise.constants import ZONE_THERMOSTATS
 
 def process_key(data: dict[str, Any], key: str) -> Any | None:
     """Return the key value from the data dict, when present."""
-
     if key in data:
         return data[key]
 
@@ -19,7 +18,6 @@ def process_key(data: dict[str, Any], key: str) -> Any | None:
 
 def process_dict(data: dict[str, Any], dict_type: str, key: str) -> Any | None:
     """Return the key value from the data dict, when present."""
-
     if dict_type in data and key in data[dict_type]:
         return data[dict_type][key]
 
@@ -46,7 +44,6 @@ class DeviceBase:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this DeviceBase object with data from a dictionary."""
-
         self.available = process_key(data, "available")
         self.dev_class = process_key(data, "dev_class")
         self.firmware = process_key(data, "firmware")
@@ -79,7 +76,6 @@ class Gateway(DeviceBase):
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Gateway object with data from a dictionary."""
-
         super().update_from_dict(data)
         self.binary_sensors.update_from_dict(data)
         self.gateway_modes = process_key(data, "gateway_modes")
@@ -97,7 +93,6 @@ class GatewayBinarySensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this GatewayBinarySensors object with data from a dictionary."""
-
         self.plugwise_notification = process_dict(
             data, "binary_sensors", "plugwise_notification"
         )
@@ -111,7 +106,6 @@ class Weather:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Weather object with data from a dictionary."""
-
         self.outdoor_temperature = process_dict(data, "sensors", "outdoor_temperature")
 
 
@@ -128,7 +122,6 @@ class SmartEnergyMeter(DeviceBase):
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this SmartEnergyMeter object with data from a dictionary."""
-
         super().update_from_dict(data)
         self.sensors.update_from_dict(data)
 
@@ -167,7 +160,6 @@ class SmartEnergySensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this SmartEnergySensors object with data from a dictionary."""
-
         self.electricity_consumed_off_peak_cumulative = process_dict(
             data, "sensors", "electricity_consumed_off_peak_cumulative"
         )
@@ -268,7 +260,6 @@ class Zone(DeviceBase):
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this climate Zone object with data from a dictionary."""
-
         super().update_from_dict(data)
         self.sensors.update_from_dict(data)
         self.available_schedules = process_key(data, "available_schedules")
@@ -293,7 +284,6 @@ class ZoneSensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ZoneSensors object with data from a dictionary."""
-
         self.electricity_consumed = process_dict(
             data, "sensors", "electricity_consumed"
         )
@@ -327,7 +317,6 @@ class Thermostat(DeviceBase):
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Thermostat object with data from a dictionary."""
-
         super().update_from_dict(data)
         self.binary_sensors.update_from_dict(data)
         self.sensors.update_from_dict(data)
@@ -358,7 +347,6 @@ class ThermostatSensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ThermostatSensors object with data from a dictionary."""
-
         self.battery = process_dict(data, "sensors", "battery")
         self.humidity = process_dict(data, "sensors", "humidity")
         self.illuminance = process_dict(data, "sensors", "illuminance")
@@ -380,7 +368,6 @@ class WirelessThermostatBinarySensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this WirelessThermostatBinarySensors object with data from a dictionary."""
-
         self.low_battery = process_dict(data, "binary_sensors", "low_battery")
 
 
@@ -440,7 +427,6 @@ class ClimateDevice(DeviceBase):
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDevice object with data from a dictionary."""
-
         super().update_from_dict(data)
         self.binary_sensors.update_from_dict(data)
         self.sensors.update_from_dict(data)
@@ -466,7 +452,6 @@ class ClimateDeviceBinarySensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDeviceBinarySensors object with data from a dictionary."""
-
         self.compressor_state = process_dict(data, "binary_sensors", "compressor_state")
         self.cooling_enabled = process_dict(data, "binary_sensors", "cooling_enabled")
         self.cooling_state = process_dict(data, "binary_sensors", "cooling_state")
@@ -493,7 +478,6 @@ class ClimateDeviceSensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDeviceSensors object with data from a dictionary."""
-
         self.dhw_temperature = process_dict(data, "sensors", "dhw_temperature")
         self.domestic_hot_water_setpoint = process_dict(
             data, "sensors", "domestic_hot_water_setpoint"
@@ -519,7 +503,6 @@ class ClimateDeviceSwitches:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ClimateDeviceSwitches object with data from a dictionary."""
-
         self.cooling_ena_switch = process_dict(data, "switches", "cooling_ena_switch")
         self.dhw_cm_switch = process_dict(data, "switches", "dhw_cm_switch")
 
@@ -540,7 +523,6 @@ class Plug(DeviceBase):
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this Plug object with data from a dictionary."""
-
         super().update_from_dict(data)
         self.sensors.update_from_dict(data)
         self.switches.update_from_dict(data)
@@ -558,7 +540,6 @@ class PlugSensors:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this PlugSensors object with data from a dictionary."""
-
         self.electricity_consumed = process_dict(
             data, "sensors", "electricity_consumed"
         )
@@ -582,7 +563,6 @@ class PlugSwitches:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this PlugSwitches object with data from a dictionary."""
-
         self.lock = process_dict(data, "switches", "lock")
         self.relay = process_dict(data, "switches", "relay")
 
@@ -673,7 +653,6 @@ class PlugwiseData:
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update the status object with data received from the Plugwise API."""
-
         for device_id, device in data.items():
             if device["dev_class"] == "gateway":
                 self.gateway.update_from_dict(device)
