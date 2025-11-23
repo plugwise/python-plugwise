@@ -23,9 +23,9 @@ from plugwise.constants import (
     GwEntityData,
     ThermoLoc,
 )
-from plugwise.devices import PlugwiseData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
+from plugwise.models import PlugwiseData
 
 from munch import Munch
 
