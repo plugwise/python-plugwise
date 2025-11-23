@@ -30,8 +30,8 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.devices import PlugwiseData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
+from plugwise.models import PlugwiseData
 
 from defusedxml import ElementTree as etree
 
