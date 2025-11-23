@@ -33,22 +33,28 @@ class DeviceBase:
     Every device will have most of these data points.
     """
 
+    available: bool | None = None
     dev_class: str | None = None
     firmware: str | None = None
+    hardware: str | None = None
     location: str | None = None
     mac_address: str | None = None
     model: str | None = None
+    model_id: str | None = None
     name: str | None = None
     vendor: str | None = None
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this DeviceBase object with data from a dictionary."""
 
+        self.available = process_key(data, "available")
         self.dev_class = process_key(data, "dev_class")
         self.firmware = process_key(data, "firmware")
+        self.hardware = process_key(data, "hardware")
         self.location = process_key(data, "location")
         self.mac_address = process_key(data, "mac_address")
         self.model = process_key(data, "model")
+        self.model_id = process_key(data, "model_id")
         self.name = process_key(data, "name")
         self.vendor = process_key(data, "vendor")
 
@@ -59,8 +65,6 @@ class Gateway(DeviceBase):
 
     binary_sensors: GatewayBinarySensors
     gateway_modes: list[str] | None = None
-    hardware: str | None = None
-    model_id: str | None = None
     regulation_modes: list[str] | None = None
     select_gateway_mode: str | None = None
     select_regulation_mode: str | None = None
@@ -79,8 +83,6 @@ class Gateway(DeviceBase):
         super().update_from_dict(data)
         self.binary_sensors.update_from_dict(data)
         self.gateway_modes = process_key(data, "gateway_modes")
-        self.hardware = process_key(data, "hardware")
-        self.model_id = process_key(data, "model_id")
         self.regulation_modes = process_key(data, "regulation_modes")
         self.select_gateway_mode = process_key(data, "select_gateway_mode")
         self.sensors.update_from_dict(data)
@@ -117,13 +119,11 @@ class Weather:
 class SmartEnergyMeter(DeviceBase):
     """DSMR Energy Meter data class."""
 
-    available: bool | None
     sensors: SmartEnergySensors
 
     def __init__(self) -> None:
         """Init SmartEnergyMeter class and inherited functions."""
         super().__init__()
-        self.available = None
         self.sensors = SmartEnergySensors()
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
@@ -131,7 +131,6 @@ class SmartEnergyMeter(DeviceBase):
 
         super().update_from_dict(data)
         self.sensors.update_from_dict(data)
-        self.available = process_key(data, "available")
 
 
 @dataclass(kw_only=True)
@@ -258,8 +257,6 @@ class Zone(DeviceBase):
     select_zone_profile: str | None = None
     zone_profiles: list[str] | None = None
     active_preset: str | None = None
-    hardware: str | None = None
-    model_id: str | None = None
     select_schedule: str | None = None
     thermostat: ThermostatDict | None = None
     thermostats: ThermostatsDict | None = None
@@ -281,8 +278,6 @@ class Zone(DeviceBase):
         self.select_zone_profile = process_key(data, "select_zone_profile")
         self.zone_profiles = process_key(data, "zone_profiles")
         self.active_preset = process_key(data, "active_preset")
-        self.hardware = process_key(data, "hardware")
-        self.model_id = process_key(data, "model_id")
         self.select_schedule = process_key(data, "select_schedule")
         self.thermostat = process_key(data, "thermostat")
         self.thermostats = process_key(data, "thermostats")
@@ -319,8 +314,6 @@ class Thermostat(DeviceBase):
     preset_modes: list[str] | None = None
     active_preset: str | None = None
     climate_mode: str | None = None
-    hardware: str | None = None
-    model_id: str | None = None
     select_schedule: str | None = None
     temperature_offset: SetpointDict | None = None  # not for legacy
     thermostat: ThermostatDict | None = None
@@ -343,8 +336,6 @@ class Thermostat(DeviceBase):
         self.preset_modes = process_key(data, "preset_modes")
         self.active_preset = process_key(data, "active_preset")
         self.climate_mode = process_key(data, "climate_mode")
-        self.hardware = process_key(data, "hardware")
-        self.model_id = process_key(data, "model_id")
         self.select_schedule = process_key(data, "select_schedule")
         self.temperature_offset = process_key(data, "temperature_offset")
         self.thermostat = process_key(data, "thermostat")
@@ -436,7 +427,6 @@ class ClimateDevice(DeviceBase):
     binary_sensors: ClimateDeviceBinarySensors
     sensors: ClimateDeviceSensors
     switches: ClimateDeviceSwitches
-    available: bool | None = None
     maximum_boiler_temperature: SetpointDict | None = None
     max_dhw_temperature: SetpointDict | None = None
     model_id: str | None = None
@@ -455,7 +445,6 @@ class ClimateDevice(DeviceBase):
         self.binary_sensors.update_from_dict(data)
         self.sensors.update_from_dict(data)
         self.switches.update_from_dict(data)
-        self.available = process_key(data, "available")
         self.maximum_boiler_temperature = process_key(
             data, "maximum_boiler_temperature"
         )
@@ -541,9 +530,6 @@ class Plug(DeviceBase):
 
     sensors: PlugSensors
     switches: PlugSwitches
-    available: bool | None = None
-    hardware: str | None = None
-    model_id: str | None = None
     zigbee_mac_address: str | None = None
 
     def __init__(self) -> None:
@@ -559,9 +545,6 @@ class Plug(DeviceBase):
         self.sensors.update_from_dict(data)
         self.switches.update_from_dict(data)
         self.zigbee_mac_address = process_key(data, "zigbee_mac_address")
-        self.available = process_key(data, "available")
-        self.hardware = process_key(data, "hardware")
-        self.model_id = process_key(data, "model_id")
 
 
 @dataclass(kw_only=True)
