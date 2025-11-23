@@ -400,38 +400,30 @@ class SetpointDict:
     Used for temperature_offset, max_dhw_temperature,maximum_boiler_temperature.
     """
 
-    lower_bound: float | None = None
-    resolution: float | None = None
-    setpoint: float | None = None
-    upper_bound: float | None = None
-
-    def update_from_dict(self, data: dict[str, Any]) -> None:
-        """Update this SetpointDict object with data from a dictionary."""
-
-        self.lower_bound = process_key(data, "lower_bound")
-        self.resolution = process_key(data, "resolution")
-        self.setpoint = process_key(data, "setpoint")
-        self.upper_bound = process_key(data, "upper_bound")
+    lower_bound: float
+    resolution: float
+    setpoint: float
+    upper_bound: float
 
 
 @dataclass(kw_only=True)
 class ThermostatDict:
     """Thermostat dict class."""
 
-    lower_bound: float | None = None
-    resolution: float | None = None
-    upper_bound: float | None = None
-    setpoint: float | None = None  # heat or cool
-    setpoint_high: float | None = None  # heat_cool
-    setpoint_low: float | None = None  # heat_cool
+    lower_bound: float
+    resolution: float
+    upper_bound: float
+    setpoint: float | None  # heat or cool
+    setpoint_high: float | None  # heat_cool
+    setpoint_low: float | None  # heat_cool
 
 
 @dataclass(kw_only=True)
 class ThermostatsDict:
     """Thermostats dict class."""
 
-    primary: list[str] | None = None
-    secondary: list[str] | None = None
+    primary: list[str]
+    secondary: list[str]
 
 
 @dataclass(kw_only=True)
