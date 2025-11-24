@@ -508,6 +508,60 @@ class ClimateDeviceSwitches:
 
 
 @dataclass(kw_only=True)
+class Group(DeviceBase):
+    """Group class covering switch-groups, pump-groups, for Adam and Stretch."""
+
+    members: list[str] | None = None
+    sensors: GroupSensors
+    switches: GroupSwitch
+
+    def __init__(self) -> None:
+        """Init Group class and inherited functions."""
+        super().__init__()
+        self.sensors = GroupSensors()
+        self.switches = GroupSwitch()
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this Group object with data from a dictionary."""
+        super().update_from_dict(data)
+        self.members = process_key(data, "members")
+        self.sensors.update_from_dict(data)
+        self.switches.update_from_dict(data)
+
+
+@dataclass(kw_only=True)
+class GroupSensors:
+    """Group sensors class."""
+
+    electricity_consumed: float | None = None
+    electricity_produced: float | None = None
+    temperature: float | None = None
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this GroupSensors object with data from a dictionary."""
+        self.electricity_consumed = process_dict(
+            data, "sensors", "electricity_consumed"
+        )
+        self.electricity_produced = process_dict(
+            data, "sensors", "electricity_produced"
+        )
+        self.temperature = process_dict(data, "sensors", "temperature")
+
+
+@dataclass(kw_only=True)
+class GroupSwitch:
+    """Group switch class."""
+
+    lock: bool | None = None
+    relay: bool | None = None
+
+    def update_from_dict(self, data: dict[str, Any]) -> None:
+        """Update this GroupSwitch object with data from a dictionary."""
+        self.lock = process_dict(data, "switches", "lock")
+        self.relay = process_dict(data, "switches", "relay")
+
+
+@dataclass(kw_only=True)
 class Plug(DeviceBase):
     """Plug data class covering Plugwise Adam/Stretch and Aqara Plugs, and generic ZigBee type Switches."""
 
@@ -574,6 +628,7 @@ class PlugwiseData:
     - Gateway Adam
         - Climate device: OnOff or Opentherm
         - Zones (1 to many) with thermostatic and energy sensors summary, with thermostat setpoint- and mode-, preset- & schedule-setter
+        - Groups - switching type
         - Single devices (appliances) assigned to a Zone, or not
             - Anna (wired thermostat)
             - Emma Pro wired (wired thermostat)
@@ -603,43 +658,40 @@ class PlugwiseData:
 
     - Gateway Stretch (legacy)
         - Single devices (Zigbee)
+        - Groups: switching and reporting types
         - ??
     """
 
     gateway: Gateway = Gateway()
     climate_device: ClimateDevice | None
-    zones: list[Zone] | None
-    thermostats: list[Thermostat] | None
+    groups: list[Group] | None
     plugs: list[Plug] | None
     p1_dsmr: SmartEnergyMeter | None
+    thermostats: list[Thermostat] | None
+    zones: list[Zone] | None
 
     def __init__(self, data: Any) -> None:
         """Initialize PlugwiseData class."""
         self.climate_device = None
-        self.p1_dsmr = None
+        self.groups = None
         self.plugs = None
+        self.p1_dsmr = None
         self.thermostats = None
         self.zones = None
 
         for _, device in data.items():
             if device["dev_class"] == "gateway":
                 self.gateway.update_from_dict(device)
+            if device["dev_class"] in ("pumping", "report", "switching"):
+                if self.groups is None:
+                    self.groups = []
+                group = Group()
+                group.update_from_dict(device)
+                self.groups.append(group)
             if device["dev_class"] == "heater_central":
                 if self.climate_device is None:
                     self.climate_device = ClimateDevice()
                 self.climate_device.update_from_dict(device)
-            if device["dev_class"] == "climate":
-                if self.zones is None:
-                    self.zones = []
-                zone = Zone()
-                zone.update_from_dict(device)
-                self.zones.append(zone)
-            if device["dev_class"] in ZONE_THERMOSTATS:
-                if self.thermostats is None:
-                    self.thermostats = []
-                thermostat = Thermostat()
-                thermostat.update_from_dict(device)
-                self.thermostats.append(thermostat)
             if device["dev_class"].endswith("_plug"):
                 if self.plugs is None:
                     self.plugs = []
@@ -650,6 +702,18 @@ class PlugwiseData:
                 if self.p1_dsmr is None:
                     self.p1_dsmr = SmartEnergyMeter()
                     self.p1_dsmr.update_from_dict(device)
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                if self.thermostats is None:
+                    self.thermostats = []
+                thermostat = Thermostat()
+                thermostat.update_from_dict(device)
+                self.thermostats.append(thermostat)
+            if device["dev_class"] == "climate":
+                if self.zones is None:
+                    self.zones = []
+                zone = Zone()
+                zone.update_from_dict(device)
+                self.zones.append(zone)
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update the status object with data received from the Plugwise API."""
