@@ -9,6 +9,7 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
+    GROUP_TYPES,
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
@@ -187,15 +188,15 @@ class SmileCommon:
             data["switches"]["relay"] = counter != 0
             self._count += 1
 
-    def _get_group_switches(self) -> dict[str, GwEntityData]:
+    def _get_groups(self) -> dict[str, GwEntityData]:
         """Helper-function for smile.py: get_all_gateway_entities().
 
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str, GwEntityData] = {}
-        # P1 and Anna don't have switchgroups
+        groups: dict[str, GwEntityData] = {}
+        # P1 and Anna don't have groups
         if self.smile.type == "power" or self.check_name(ANNA):
-            return switch_groups
+            return groups
 
         for group in self._domain_objects.findall("./group"):
             members: list[str] = []
@@ -208,17 +209,17 @@ class SmileCommon:
                 if item.attrib["id"] in self.gw_entities:
                     members.append(item.attrib["id"])
 
-            if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups[group_id] = {
+            if group_type in GROUP_TYPES and members:
+                groups[group_id] = {
                     "dev_class": group_type,
-                    "model": "Switchgroup",
+                    "model": "Group",
                     "name": group_name,
                     "members": members,
                     "vendor": "Plugwise",
                 }
                 self._count += 5
 
-        return switch_groups
+        return groups
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
