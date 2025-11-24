@@ -31,6 +31,7 @@ dependencies    = [
         "defusedxml",
         "munch",
         "python-dateutil",
+        "xmltodict",
 ]
 
 [project.urls]
