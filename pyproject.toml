@@ -29,6 +29,7 @@ dependencies    = [
         "aiofiles",
         "aiohttp",
         "defusedxml",
+        "json",
         "munch",
         "python-dateutil",
         "xmltodict",
