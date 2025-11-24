@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core.
 
 from __future__ import annotations
 
+import json
 import xmltodict
 from typing import cast
 
