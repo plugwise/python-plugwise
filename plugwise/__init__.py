@@ -119,8 +119,8 @@ class Smile(SmileComm):
     async def connect(self) -> Version:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
         result = await self._request(DOMAIN_OBJECTS)
-        LOGGER.debug("HOI result: %s", result)        
-        result_dict = xmltodict.parse(DOMAIN_OBJECTS)
+        result_str = etree.tostring(result, encoding='utf-8', method='xml') 
+        result_dict = dict(xmltodict.parse(result_str))
         LOGGER.debug("HOI result_dict: %s", result_dict)
         # Work-around for Stretch fw 2.7.18
         if not (vendor_names := result.findall("./module/vendor_name")):
