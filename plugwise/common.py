@@ -229,9 +229,10 @@ class SmileCommon:
                 locator = f'logs/point_log[type="{measurement}"]/period/measurement'
                 if (group_meas_loc := group.find(locator)) is not None:
                     common_match_cases(measurement, attrs, group_meas_loc, groups[group_id])
+                    self._count += 1
 
-            LOGGER.debug("HOI groups-id: %s", groups[group_id])
 
+        LOGGER.debug("HOI groups: %s", groups)
         return groups
 
     def _get_lock_state(
