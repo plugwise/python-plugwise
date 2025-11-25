@@ -10,6 +10,7 @@ from typing import cast
 from plugwise.constants import (
     ANNA,
     GROUP_TYPES,
+    LOGGER,
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
@@ -213,6 +214,7 @@ class SmileCommon:
             group_sensors = {}
             group_logs = group.findall("logs")
             for log in group_logs:
+                LOGGER.debug("HOI log: %s", etree.tostring(log))
                 log_type = log.find("type").text
                 measurement = log.find("period/measurement")
                 if measurement is not None:
