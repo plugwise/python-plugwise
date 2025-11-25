@@ -21,6 +21,7 @@ from plugwise.constants import (
 from plugwise.util import (
     check_heater_central,
     check_model,
+    format_measure,
     get_vendor_name,
     return_valid,
 )
@@ -209,12 +210,22 @@ class SmileCommon:
                 if item.attrib["id"] in self.gw_entities:
                     members.append(item.attrib["id"])
 
+            group_sensors = {}
+            group_logs = group.findall("logs")
+            for log in group_logs:
+                log_type = log.find("type").text
+                measurement = log.find("period/measurement")
+                if measurement is not None:
+                    group_sensors[log_type] = format_measure(measurement)
+                    self._count += 1
+
             if group_type in GROUP_TYPES and members:
                 groups[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
                     "name": group_name,
                     "members": members,
+                    "sensors": group_sensors,
                     "vendor": "Plugwise",
                 }
                 self._count += 5
