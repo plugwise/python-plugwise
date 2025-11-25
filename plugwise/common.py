@@ -212,7 +212,7 @@ class SmileCommon:
                     members.append(item.attrib["id"])
 
             group_sensors = {}
-            group_logs = group.findall("logs")
+            group_logs = group.findall("logs/point_log")
             for log in group_logs:
                 LOGGER.debug("HOI log: %s", etree.tostring(log))
                 log_type = log.find("type").text
