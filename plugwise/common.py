@@ -9,6 +9,7 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
+    GROUP_MEASUREMENTS,
     GROUP_TYPES,
     LOGGER,
     NONE,
@@ -22,6 +23,7 @@ from plugwise.constants import (
 from plugwise.util import (
     check_heater_central,
     check_model,
+    common_match_cases,
     format_measure,
     get_vendor_name,
     return_valid,
@@ -201,6 +203,7 @@ class SmileCommon:
             return groups
 
         for group in self._domain_objects.findall("./group"):
+            group_sensors = {}
             members: list[str] = []
             group_id = group.attrib["id"]
             group_name = group.find("name").text
@@ -210,16 +213,6 @@ class SmileCommon:
                 # Check if members are not orphaned - stretch
                 if item.attrib["id"] in self.gw_entities:
                     members.append(item.attrib["id"])
-
-            group_sensors = {}
-            group_logs = group.findall("logs/point_log")
-            for log in group_logs:
-                LOGGER.debug("HOI log: %s", etree.tostring(log))
-                log_type = log.find("type").text
-                measurement = log.find("period/measurement")
-                if measurement is not None:
-                    group_sensors[log_type] = format_measure(measurement)
-                    self._count += 1
 
             if group_type in GROUP_TYPES and members:
                 groups[group_id] = {
@@ -231,6 +224,11 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
+
+            for measurement, attrs in GROUP_MEASUREMENTS.items():
+                locator = f'logs/point_log[type="{measurement}"]/period/measurement'
+                if (group_meas_loc := group.find(locator)) is not None:
+                    common_match_cases(measurement, attrs, group_meas_loc, groups[group_id])
 
         return groups
 
