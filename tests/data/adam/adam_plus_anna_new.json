@@ -189,6 +189,11 @@
     ],
     "model": "Group",
     "name": "Vloerverwarming",
+    "sensors": {
+      "electricity_consumed": 45.0,
+      "electricity_produced": 0.0,
+      "temperature": 20.1
+    },
     "vendor": "Plugwise"
   },
   "da224107914542988a88561b4452b0f6": {
