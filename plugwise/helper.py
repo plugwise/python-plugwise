@@ -387,7 +387,7 @@ class SmileHelper(SmileCommon):
             for measurement, attrs in measurements.items():
                 locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
                 if (group_meas_loc := group.find(locator)) is None:
-                    return
+                    continue
 
                 common_match_cases(measurement, attrs, group_meas_loc, data)
                 self._count += 1
