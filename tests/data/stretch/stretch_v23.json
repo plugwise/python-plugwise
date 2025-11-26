@@ -305,7 +305,7 @@
   "f7b145c8492f4dd7a4de760456fdef3e": {
     "dev_class": "switching",
     "members": ["407aa1c1099d463c9137a3a9eda787fd"],
-    "model": "Switchgroup",
+    "model": "Group",
     "name": "Test",
     "switches": {
       "relay": false
