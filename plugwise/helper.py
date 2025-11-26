@@ -341,7 +341,7 @@ class SmileHelper(SmileCommon):
 
         # Get group data
         if "members" in entity:
-            self._collect_group_sensors(data, entity, entity_id, GROUP_MEASUREMENTS)
+            self._collect_group_sensors(data, entity_id, GROUP_MEASUREMENTS)
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
@@ -377,7 +377,6 @@ class SmileHelper(SmileCommon):
     def _collect_group_sensors(
         self,
         data: GwEntityData,
-        entity: GwEntityData,
         entity_id: str,
         measurements: dict[str, UOM],
     ) -> None:
