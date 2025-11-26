@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.11.0
+
+- Extend feature: support pumping group, add group sensors
+
 ## v1.10.0
 
 - New feature: implement setting Adam zone profile via PR [#814](https://github.com/plugwise/python-plugwise/pull/814)
