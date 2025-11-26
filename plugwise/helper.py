@@ -326,8 +326,10 @@ class SmileHelper(SmileCommon):
         Collect the appliance-data based on entity_id.
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
+        LOGGER.debug("HOI entity: %s", entity)
+
+        # Get P1 smartmeter data from LOCATIONS
         smile_is_power = self.smile.type == "power"
         if (smile_is_power or self.smile.anna_p1) and entity.get(
             "dev_class"
