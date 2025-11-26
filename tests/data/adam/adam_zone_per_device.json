@@ -518,7 +518,8 @@
     "model": "Group",
     "name": "Vloerverwarming Woonkamer",
     "sensors": {
-      "electricity_consumed": 35.8
+      "electricity_consumed": 35.8,
+      "temperature": 21.1
     },
     "vendor": "Plugwise"
   },
