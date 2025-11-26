@@ -9,9 +9,7 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
-    GROUP_MEASUREMENTS,
     GROUP_TYPES,
-    LOGGER,
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
@@ -23,8 +21,6 @@ from plugwise.constants import (
 from plugwise.util import (
     check_heater_central,
     check_model,
-    common_match_cases,
-    format_measure,
     get_vendor_name,
     return_valid,
 )
@@ -195,7 +191,7 @@ class SmileCommon:
     def _get_groups(self) -> dict[str, GwEntityData]:
         """Helper-function for smile.py: get_all_gateway_entities().
 
-        Collect switching- or pump-group info.
+        Collect switching-, pumping- or report-group info.
         """
         groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have groups
@@ -203,7 +199,6 @@ class SmileCommon:
             return groups
 
         for group in self._domain_objects.findall("./group"):
-            group_sensors = {}
             members: list[str] = []
             group_id = group.attrib["id"]
             group_name = group.find("name").text

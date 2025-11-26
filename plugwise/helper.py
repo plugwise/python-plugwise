@@ -328,7 +328,6 @@ class SmileHelper(SmileCommon):
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         entity = self.gw_entities[entity_id]
-        LOGGER.debug("HOI entity: %s", entity)
 
         # Get P1 smartmeter data from LOCATIONS
         smile_is_power = self.smile.type == "power"
@@ -385,7 +384,7 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Collect group sensors."""
         if (group := self._domain_objects.find(f'./group[@id="{entity_id}"]')) is None:
-            return None
+            return
 
         for measurement, attrs in measurements.items():
             locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
