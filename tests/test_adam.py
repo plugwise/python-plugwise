@@ -228,7 +228,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self.entity_items == 379
+        assert self.entity_items == 385
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
