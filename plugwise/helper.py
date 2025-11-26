@@ -384,13 +384,11 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Collect group sensors."""
-        if (
-            group := self._domain_objects.find(f'./group[@id="{entity_id}"]')
-        ) is None:
+        if (group := self._domain_objects.find(f'./group[@id="{entity_id}"]')) is None:
             return None
 
         for measurement, attrs in measurements.items():
-            locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'   
+            locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (group_meas_loc := group.find(locator)) is None:
                 return
 
