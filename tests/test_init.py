@@ -382,20 +382,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
             return await self.connect(self.setup_app, raise_timeout=True)
 
-        #try:
+        # try:
         #    _LOGGER.warning("Connecting to device exceeding timeout in response:")
         #    await self.connect(self.setup_app, timeout_happened=True)
         #    _LOGGER.error(" - timeout not handled")  # pragma: no cover
         #    raise self.ConnectError  # pragma: no cover
-        #except pw_exceptions.ConnectionFailedError:
+        # except pw_exceptions.ConnectionFailedError:
         #    _LOGGER.info(" + successfully passed timeout handling.")
 
-        #try:
+        # try:
         #    _LOGGER.warning("Connecting to device with missing data:")
         #    await self.connect(self.setup_app, broken=True)
         #    _LOGGER.error(" - broken information not handled")  # pragma: no cover
         #    raise self.ConnectError  # pragma: no cover
-        #except pw_exceptions.InvalidXMLError:
+        # except pw_exceptions.InvalidXMLError:
         #    _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
