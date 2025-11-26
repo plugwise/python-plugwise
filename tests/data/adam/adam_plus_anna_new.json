@@ -274,6 +274,10 @@
     ],
     "model": "Group",
     "name": "Test",
+    "sensors": {
+      "electricity_consumed": 16.5,
+      "electricity_produced": 0.0
+    },
     "switches": {
       "relay": true
     },
