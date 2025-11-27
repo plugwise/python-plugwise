@@ -191,7 +191,7 @@ class SmileCommon:
             group_type = group.find("type").text
             if group_type != "pumping":
                 continue
-            
+
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 # Check if members are not orphaned - stretch
