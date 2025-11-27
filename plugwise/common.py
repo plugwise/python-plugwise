@@ -176,7 +176,7 @@ class SmileCommon:
     def _get_groups(self) -> dict[str, GwEntityData]:
         """Helper-function for smile.py: get_all_gateway_entities().
 
-        Collect pumping-groups info.
+        Collect info for pumping-group(s).
         """
         groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have groups
@@ -184,14 +184,14 @@ class SmileCommon:
             return groups
 
         for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
             group_type = group.find("type").text
             if group_type != "pumping":
                 continue
 
             group_appliances = group.findall("appliances/appliance")
+            group_id = group.attrib["id"]
+            group_name = group.find("name").text
+            members: list[str] = []
             for item in group_appliances:
                 # Check if members are not orphaned - stretch
                 if item.attrib["id"] in self.gw_entities:
