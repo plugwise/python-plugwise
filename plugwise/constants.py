@@ -106,6 +106,11 @@ STATUS: Final = "/system/status.xml"
 UOM = namedtuple("UOM", "unit_of_measurement")
 DATA = namedtuple("DATA", "name unit_of_measurement")
 
+GROUP_MEASUREMENTS: Final[dict[str, UOM]] = {
+    "electricity_consumed": UOM(POWER_WATT),
+    "electricity_produced": UOM(POWER_WATT),
+    "temperature": UOM(TEMP_CELSIUS),
+}
 # P1 related measurements:
 P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
@@ -298,6 +303,8 @@ BinarySensorType = Literal[
     "secondary_boiler_state",
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
+
+GROUP_TYPES: Final[tuple[str, ...]] = ("pumping", "report", "switching")
 
 SensorType = Literal[
     "battery",

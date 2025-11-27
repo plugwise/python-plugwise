@@ -82,7 +82,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Finally, collect the data and states for each entity.
         """
         self._all_appliances()
-        if group_data := self._get_group_switches():
+        if group_data := self._get_groups():
             self.gw_entities.update(group_data)
 
         self._all_entity_data()

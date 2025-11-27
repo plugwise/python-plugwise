@@ -115,7 +115,7 @@ class SmileAPI(SmileData):
             if self.check_name(ADAM):
                 self._scan_thermostats()
 
-        if group_data := self._get_group_switches():
+        if group_data := self._get_groups():
             self.gw_entities.update(group_data)
 
         self._all_entity_data()

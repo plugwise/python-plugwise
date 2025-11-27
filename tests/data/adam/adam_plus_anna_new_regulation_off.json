@@ -178,6 +178,16 @@
     "vendor": "Plugwise",
     "zigbee_mac_address": "000D6F000D5A168D"
   },
+  "c9293d1d68ee48fc8843c6f0dee2b6be": {
+    "dev_class": "pumping",
+    "members": [
+      "854f8a9b0e7e425db97f1f110e1ce4b3",
+      "ad4838d7d35c4d6ea796ee12ae5aedf8"
+    ],
+    "model": "Group",
+    "name": "Vloerverwarming",
+    "vendor": "Plugwise"
+  },
   "e2f4322d57924fa090fbbc48b3a140dc": {
     "available": true,
     "binary_sensors": {
@@ -210,7 +220,7 @@
       "2568cc4b9c1e401495d4741a5f89bee1",
       "29542b2b6a6a4169acecc15c72a599b8"
     ],
-    "model": "Switchgroup",
+    "model": "Group",
     "name": "Test",
     "switches": {
       "relay": true

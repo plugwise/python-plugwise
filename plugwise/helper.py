@@ -21,6 +21,7 @@ from plugwise.constants import (
     DHW_SETPOINT,
     DOMAIN_OBJECTS,
     ENERGY_WATT_HOUR,
+    GROUP_MEASUREMENTS,
     HEATER_CENTRAL_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
@@ -326,8 +327,9 @@ class SmileHelper(SmileCommon):
         Collect the appliance-data based on entity_id.
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
+
+        # Get P1 smartmeter data from LOCATIONS
         smile_is_power = self.smile.type == "power"
         if (smile_is_power or self.smile.anna_p1) and entity.get(
             "dev_class"
@@ -336,6 +338,10 @@ class SmileHelper(SmileCommon):
 
         if smile_is_power and not self.smile.anna_p1:
             return data
+
+        # Get group data
+        if "members" in entity:
+            self._collect_group_sensors(data, entity_id, GROUP_MEASUREMENTS)
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
@@ -367,6 +373,24 @@ class SmileHelper(SmileCommon):
         self._cleanup_data(data)
 
         return data
+
+    def _collect_group_sensors(
+        self,
+        data: GwEntityData,
+        entity_id: str,
+        measurements: dict[str, UOM],
+    ) -> None:
+        """Collect group sensors."""
+        if (
+            group := self._domain_objects.find(f'./group[@id="{entity_id}"]')
+        ) is not None:
+            for measurement, attrs in measurements.items():
+                locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
+                if (group_meas_loc := group.find(locator)) is None:
+                    continue
+
+                common_match_cases(measurement, attrs, group_meas_loc, data)
+                self._count += 1
 
     def _collect_appliance_data(
         self,
