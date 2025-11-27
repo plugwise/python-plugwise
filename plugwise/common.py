@@ -12,7 +12,6 @@ from plugwise.constants import (
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
-    SWITCH_GROUP_TYPES,
     ApplianceType,
     GwEntityData,
     ModuleData,
