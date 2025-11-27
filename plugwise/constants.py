@@ -382,8 +382,6 @@ SwitchType = Literal[
 ]
 SWITCHES: Final[tuple[str, ...]] = get_args(SwitchType)
 
-SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("report", "switching")
-
 THERMOSTAT_CLASSES: Final[tuple[str, ...]] = (
     "thermostat",
     "thermostatic_radiator_valve",
