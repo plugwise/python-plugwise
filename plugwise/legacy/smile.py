@@ -216,7 +216,7 @@ class SmileLegacyAPI(SmileLegacyData):
         await self.call_request(uri, method="put", data=data)
 
     async def set_switch_state(
-        self, appl_id: str, members: list[str] | None, model: str, state: str
+        self, appl_id: str, model: str, state: str
     ) -> bool:
         """Set the given state of the relevant switch.
 

@@ -622,7 +622,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_switch(
-        self, api, dev_id=None, members=None, model="relay", unhappy=False
+        self, api, dev_id=None, model="relay", unhappy=False
     ):
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
@@ -632,7 +632,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for new_state in ["off", "on", "off"]:
             _LOGGER.info("- Switching %s", new_state)
             try:
-                result = await api.set_switch_state(dev_id, members, model, new_state)
+                result = await api.set_switch_state(dev_id, model, new_state)
                 if result == convert[new_state]:
                     tinker_switch_passed = True
                     _LOGGER.info("  + tinker_switch worked as intended")
@@ -653,14 +653,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_switch_bad_input(
-        self, api, dev_id=None, members=None, model="relay", unhappy=False
+        self, api, dev_id=None, model="relay", unhappy=False
     ):
         """Enter a wrong state as input to toggle a Switch."""
         _LOGGER.info("Test entering bad input set_switch_state:")
         _LOGGER.info("- Devices (%s):", dev_id)
         new_state = "false"
         try:
-            await api.set_switch_state(dev_id, members, model, new_state)
+            await api.set_switch_state(dev_id, model, new_state)
         except pw_exceptions.PlugwiseError:
             _LOGGER.info("  + failed input-check as expected")
             return True  # test is pass!

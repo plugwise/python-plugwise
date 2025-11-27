@@ -409,7 +409,7 @@ class Smile(SmileComm):
             ) from exc  # pragma no cover
 
     async def set_switch_state(
-        self, appl_id: str, members: list[str] | None, model: str, state: str
+        self, appl_id: str, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch.
 
@@ -423,7 +423,7 @@ class Smile(SmileComm):
 
         try:
             return await self._smile_api.set_switch_state(
-                appl_id, members, model, state
+                appl_id, model, state
             )
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
