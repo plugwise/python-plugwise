@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Remove switching groups
+
 ## v1.11.0
 
 - Extend feature: support pumping group, add group sensors
