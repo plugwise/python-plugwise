@@ -304,8 +304,6 @@ BinarySensorType = Literal[
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
-GROUP_TYPES: Final[tuple[str, ...]] = ("pumping", "report", "switching")
-
 SensorType = Literal[
     "battery",
     "cooling_activation_outdoor_temperature",

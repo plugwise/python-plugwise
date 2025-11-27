@@ -9,7 +9,6 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
-    GROUP_TYPES,
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
@@ -175,23 +174,10 @@ class SmileCommon:
                     break
         self.gw_entities = {**reordered, **self.gw_entities}
 
-    def _entity_switching_group(self, entity: GwEntityData, data: GwEntityData) -> None:
-        """Helper-function for _get_device_zone_data().
-
-        Determine switching group device data.
-        """
-        if entity["dev_class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in entity["members"]:
-                if self.gw_entities[member]["switches"].get("relay"):
-                    counter += 1
-            data["switches"]["relay"] = counter != 0
-            self._count += 1
-
     def _get_groups(self) -> dict[str, GwEntityData]:
         """Helper-function for smile.py: get_all_gateway_entities().
 
-        Collect switching-, pumping- or report-group info.
+        Collect pumping-groups info.
         """
         groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have groups
@@ -203,13 +189,16 @@ class SmileCommon:
             group_id = group.attrib["id"]
             group_name = group.find("name").text
             group_type = group.find("type").text
+            if group_type != "pumping":
+                continue
+            
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 # Check if members are not orphaned - stretch
                 if item.attrib["id"] in self.gw_entities:
                     members.append(item.attrib["id"])
 
-            if group_type in GROUP_TYPES and members:
+            if members:
                 groups[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",

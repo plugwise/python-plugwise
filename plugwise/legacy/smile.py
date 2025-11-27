@@ -78,13 +78,9 @@ class SmileLegacyAPI(SmileLegacyData):
         """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
 
         First, collect all the connected entities and their initial data.
-        Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
         self._all_appliances()
-        if group_data := self._get_groups():
-            self.gw_entities.update(group_data)
-
         self._all_entity_data()
 
     async def async_update(self) -> dict[str, GwEntityData]:
@@ -225,7 +221,6 @@ class SmileLegacyAPI(SmileLegacyData):
         """Set the given state of the relevant switch.
 
         For individual switches, sets the state directly.
-        For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
         Return the requested state when succesful, the current state otherwise.
         """
@@ -261,13 +256,6 @@ class SmileLegacyAPI(SmileLegacyData):
             await self.call_request(APPLIANCES, method="post", data=data)
             return requested_state
 
-        # Handle group of switches
-        data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
-        if members is not None:
-            return await self._set_groupswitch_member_state(
-                appl_id, data, members, state, switch
-            )
-
         # Handle individual relay switches
         uri = f"{APPLIANCES};id={appl_id}/relay"
         if model == "relay" and self.gw_entities[appl_id]["switches"]["lock"]:
@@ -276,28 +264,6 @@ class SmileLegacyAPI(SmileLegacyData):
 
         await self.call_request(uri, method="put", data=data)
         return requested_state
-
-    async def _set_groupswitch_member_state(
-        self, appl_id: str, data: str, members: list[str], state: str, switch: Munch
-    ) -> bool:
-        """Helper-function for set_switch_state().
-
-        Set the requested state of the relevant switch within a group of switches.
-        Return the current group-state when none of the switches has changed its state, the requested state otherwise.
-        """
-        current_state = self.gw_entities[appl_id]["switches"]["relay"]
-        requested_state = state == STATE_ON
-        switched = 0
-        for member in members:
-            if not self.gw_entities[member]["switches"]["lock"]:
-                uri = f"{APPLIANCES};id={member}/relay"
-                await self.call_request(uri, method="put", data=data)
-                switched += 1
-
-        if switched > 0:
-            return requested_state
-
-        return current_state  # pragma: no cover
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""

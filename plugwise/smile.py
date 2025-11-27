@@ -104,7 +104,7 @@ class SmileAPI(SmileData):
 
         First, collect all the connected entities and their initial data.
         If a thermostat-gateway, collect a list of thermostats with offset-capability.
-        Collect and add switching- and/or pump-group entities.
+        Collect and add pumping-group entities.
         Finally, collect the data and states for each entity.
         """
         self._all_appliances()
@@ -399,7 +399,6 @@ class SmileAPI(SmileData):
         """Set the given state of the relevant Switch.
 
         For individual switches, sets the state directly.
-        For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
         Return the requested state when succesful, the current state otherwise.
         """
@@ -417,11 +416,6 @@ class SmileAPI(SmileData):
             f"<{switch.func}>{state}</{switch.func}>"
             f"</{switch.func_type}>"
         )
-
-        if members is not None:
-            return await self._set_groupswitch_member_state(
-                appl_id, data, members, state, switch
-            )
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found = self._domain_objects.findall(locator)
@@ -444,32 +438,6 @@ class SmileAPI(SmileData):
 
         await self.call_request(uri, method="put", data=data)
         return requested_state
-
-    async def _set_groupswitch_member_state(
-        self, appl_id: str, data: str, members: list[str], state: str, switch: Munch
-    ) -> bool:
-        """Helper-function for set_switch_state().
-
-        Set the requested state of the relevant switch within a group of switches.
-        Return the current group-state when none of the switches has changed its state, the requested state otherwise.
-        """
-        current_state = self.gw_entities[appl_id]["switches"]["relay"]
-        requested_state = state == STATE_ON
-        switched = 0
-        for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._domain_objects.find(locator).attrib["id"]
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            lock_blocked = self.gw_entities[member]["switches"].get("lock")
-            # Assume Plugs under Plugwise control are not part of a group
-            if lock_blocked is not None and not lock_blocked:
-                await self.call_request(uri, method="put", data=data)
-                switched += 1
-
-        if switched > 0:
-            return requested_state
-
-        return current_state
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""

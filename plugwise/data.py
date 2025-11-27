@@ -194,14 +194,13 @@ class SmileData(SmileHelper):
         self._check_availability(
             entity, "smartmeter", data, "P1 does not seem to be connected"
         )
+
         # OpenTherm entity
         if entity["name"] != "OnOff":
             self._check_availability(
                 entity, "heater_central", data, "no OpenTherm communication"
             )
 
-        # Switching groups data
-        self._entity_switching_group(entity, data)
         # Adam data
         if self.check_name(ADAM):
             self._get_adam_data(entity, data)

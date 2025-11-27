@@ -40,9 +40,6 @@ class SmileLegacyData(SmileLegacyHelper):
         entity = self.gw_entities[entity_id]
         data = self._get_measurement_data(entity_id)
 
-        # Switching groups data
-        self._entity_switching_group(entity, data)
-
         # Skip obtaining data when not a thermostat
         if entity["dev_class"] != "thermostat":
             return data
