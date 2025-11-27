@@ -85,35 +85,6 @@
     "vendor": "Plugwise",
     "zigbee_mac_address": "ABCD012345670A04"
   },
-  "d03738edfcc947f7b8f4573571d90d2d": {
-    "dev_class": "switching",
-    "members": [
-      "059e4d03c7a34d278add5c7a4a781d19",
-      "cfe95cf3de1948c0b8955125bf754614"
-    ],
-    "model": "Group",
-    "name": "Schakel",
-    "switches": {
-      "relay": true
-    },
-    "vendor": "Plugwise"
-  },
-  "d950b314e9d8499f968e6db8d82ef78c": {
-    "dev_class": "report",
-    "members": [
-      "059e4d03c7a34d278add5c7a4a781d19",
-      "5871317346d045bc9f6b987ef25ee638",
-      "aac7b735042c4832ac9ff33aae4f453b",
-      "cfe95cf3de1948c0b8955125bf754614",
-      "e1c884e7dede431dadee09506ec4f859"
-    ],
-    "model": "Group",
-    "name": "Stroomvreters",
-    "switches": {
-      "relay": true
-    },
-    "vendor": "Plugwise"
-  },
   "e1c884e7dede431dadee09506ec4f859": {
     "dev_class": "refrigerator",
     "firmware": "2011-06-27T10:47:37+02:00",
