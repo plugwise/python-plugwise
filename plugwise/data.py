@@ -190,12 +190,11 @@ class SmileData(SmileHelper):
         data = self._get_measurement_data(entity_id)
 
         # Check availability of wired-connected entities
-        # Smartmeter
+        # Smartmeter entity:
         self._check_availability(
             entity, "smartmeter", data, "P1 does not seem to be connected"
         )
-
-        # OpenTherm entity
+        # OpenTherm entity:
         if entity["name"] != "OnOff":
             self._check_availability(
                 entity, "heater_central", data, "no OpenTherm communication"
