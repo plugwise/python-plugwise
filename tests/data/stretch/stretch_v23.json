@@ -302,16 +302,6 @@
     "vendor": "Plugwise",
     "zigbee_mac_address": "ABCD012345670A11"
   },
-  "f7b145c8492f4dd7a4de760456fdef3e": {
-    "dev_class": "switching",
-    "members": ["407aa1c1099d463c9137a3a9eda787fd"],
-    "model": "Group",
-    "name": "Test",
-    "switches": {
-      "relay": false
-    },
-    "vendor": "Plugwise"
-  },
   "fd1b74f59e234a9dae4e23b2b5cf07ed": {
     "dev_class": "dryer",
     "firmware": "2011-06-27T10:52:18+02:00",

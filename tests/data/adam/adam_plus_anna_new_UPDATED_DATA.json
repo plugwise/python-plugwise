@@ -32,14 +32,5 @@
     "binary_sensors": {
       "plugwise_notification": true
     }
-  },
-  "e8ef2a01ed3b4139a53bf749204fe6b4": {
-    "members": [
-      "2568cc4b9c1e401495d4741a5f89bee1",
-      "29542b2b6a6a4169acecc15c72a599b8"
-    ],
-    "switches": {
-      "relay": false
-    }
   }
 }

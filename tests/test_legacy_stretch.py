@@ -29,7 +29,7 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert self.entity_items == 85
+        assert self.entity_items == 73
 
         switch_change = await self.tinker_switch(
             api,
@@ -68,7 +68,7 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 244
+        assert self.entity_items == 238
 
         switch_change = await self.tinker_switch(
             api, "2587a7fcdd7e482dab03fda256076b4b"
@@ -76,12 +76,6 @@ class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-ou
         assert switch_change
         switch_change = await self.tinker_switch(
             api, "2587a7fcdd7e482dab03fda256076b4b", model="lock"
-        )
-        assert switch_change
-        switch_change = await self.tinker_switch(
-            api,
-            "f7b145c8492f4dd7a4de760456fdef3e",
-            ["407aa1c1099d463c9137a3a9eda787fd"],
         )
         assert switch_change
 

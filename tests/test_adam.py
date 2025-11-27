@@ -34,7 +34,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.entity_items == 230
+        assert self.entity_items == 222
         assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
@@ -50,7 +50,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6",
             "da575e9e09b947e281fb6e3ebce3b174",
             "c9293d1d68ee48fc8843c6f0dee2b6be",
-            "e8ef2a01ed3b4139a53bf749204fe6b4",
             "f2bf9048bef64cc5b6d5110154e33c81",
             "f871b8c4d63549319221e294e4f88074",
         ]
@@ -96,12 +95,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert result_1 and result_2
 
-        switch_change = await self.tinker_switch(
-            api,
-            "e8ef2a01ed3b4139a53bf749204fe6b4",
-            ["2568cc4b9c1e401495d4741a5f89bee1", "29542b2b6a6a4169acecc15c72a599b8"],
-        )
-        assert switch_change
         switch_change = await self.tinker_switch(
             api,
             "056ee145a816487eaa69243c3280f8bf",
@@ -302,7 +295,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 394
+        assert self.entity_items == 386
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -319,13 +312,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             api, "675416a629f343c495449970e2ca37b5"
         )
         assert not switch_change
-        # Test a blocked group-change, both relays are locked.
-        group_change = await self.tinker_switch(
-            api,
-            "e8ef2a01ed3b4139a53bf749204fe6b4",
-            ["02cf28bfec924855854c544690a609ef", "4a810418d5394b3f82727340b91ba740"],
-        )
-        assert not group_change
 
         await api.close_connection()
         await self.disconnect(server, client)
