@@ -621,9 +621,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 return False
 
     @pytest.mark.asyncio
-    async def tinker_switch(
-        self, api, dev_id=None, model="relay", unhappy=False
-    ):
+    async def tinker_switch(self, api, dev_id=None, model="relay", unhappy=False):
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)

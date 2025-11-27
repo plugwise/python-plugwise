@@ -408,9 +408,7 @@ class Smile(SmileComm):
                 f"Failed to set temperature offset: {str(exc)}"
             ) from exc  # pragma no cover
 
-    async def set_switch_state(
-        self, appl_id: str, model: str, state: str
-    ) -> bool:
+    async def set_switch_state(self, appl_id: str, model: str, state: str) -> bool:
         """Set the given State of the relevant Switch.
 
         Return the result:
@@ -422,9 +420,7 @@ class Smile(SmileComm):
             raise PlugwiseError("Invalid state supplied to set_switch_state")
 
         try:
-            return await self._smile_api.set_switch_state(
-                appl_id, model, state
-            )
+            return await self._smile_api.set_switch_state(appl_id, model, state)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set switch state: {str(exc)}"

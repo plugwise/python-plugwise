@@ -393,9 +393,7 @@ class SmileAPI(SmileData):
 
         return str(etree.tostring(contexts, encoding="unicode").rstrip())
 
-    async def set_switch_state(
-        self, appl_id: str, model: str, state: str
-    ) -> bool:
+    async def set_switch_state(self, appl_id: str, model: str, state: str) -> bool:
         """Set the given state of the relevant Switch.
 
         For individual switches, sets the state directly.
