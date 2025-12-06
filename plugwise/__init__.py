@@ -125,6 +125,23 @@ class Smile(SmileComm):
         for key in ["ame_regulation", "template"]:
             result_dict["domain_objects"].pop(key, None)
         LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
+        for module in result_dict["domain_objects"]["module"]:
+            LOGGER.debug("HOI vendor_name: %s", module["vendor_name"] or "null")
+            LOGGER.debug("HOI vendor_model: %s", module["vendor_model"] or "null")
+            LOGGER.debug("HOI hardware_version: %s", module["hardware_version"] or "null")
+            LOGGER.debug("HOI firmware_version: %s", module["firmware_version"] or "null")
+            if module["services"] is not None:
+                for value in module["services"].values():
+                    if isinstance(value, list):
+                        for item in value:
+                            for value_2 in item.values():
+                                LOGGER.debug("HOI id: %s", value_2)
+                                break
+                            break
+                    else:
+                        LOGGER.debug("HOI id: %s", value["id"])
+                    break
+
         # Work-around for Stretch fw 2.7.18
         if not (vendor_names := result.findall("./module/vendor_name")):
             result = await self._request(MODULES)
