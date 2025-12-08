@@ -128,8 +128,12 @@ class Smile(SmileComm):
         for module in result_dict["domain_objects"]["module"]:
             LOGGER.debug("HOI vendor_name: %s", module["vendor_name"] or "null")
             LOGGER.debug("HOI vendor_model: %s", module["vendor_model"] or "null")
-            LOGGER.debug("HOI hardware_version: %s", module["hardware_version"] or "null")
-            LOGGER.debug("HOI firmware_version: %s", module["firmware_version"] or "null")
+            LOGGER.debug(
+                "HOI hardware_version: %s", module["hardware_version"] or "null"
+            )
+            LOGGER.debug(
+                "HOI firmware_version: %s", module["firmware_version"] or "null"
+            )
             if module["services"] is not None:
                 for value in module["services"].values():
                     if isinstance(value, list):
