@@ -46,7 +46,7 @@ import xmltodict
 
 def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
     """Collect the module data and link to a service id."""
-    modules:dict[str, dict[str, str]] = {}
+    modules:dict[str, dict[str, str | None]] = {}
     for module in result["domain_objects"]["module"]:
         link_id: str | None = None
         if module["services"] is not None:
@@ -61,10 +61,9 @@ def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
                     link_id = value["id"]
                     if count == 1:
                         break
-                    else:  # find the 2nd id
+                    else:  # find the 2nd id when count=2
                         link_id = value["id"]
                         break
-
 
         if link_id is not None:
             modules[link_id] = {
@@ -78,19 +77,20 @@ def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
 
 
 def add_module_to_appliance(
-    appliance: dict[str, Any],
-    modules: dict[str, Any]
+    appliance: list[dict[str, Any]],
+    modules: list[dict[str, Any]]
 ) -> tuple[dict[str, Any], bool]:
     """Add module data to appliance."""
+    module_set = False
     for module in modules:
-        for log in appliance["logs"]["point_log"]:
-            for _, item in log.items():
-                if isinstance(item, dict) and "id" in item:
-                    if item["id"] == module:
+        for log in appliance["logs"]["point_log"]:  # list-type
+            for value in log.values():
+                if isinstance(value, dict) and "id" in value:
+                    if value["id"] == module:
                         appliance["module"] = modules[module]
                         module_set = True
 
-    return appliance, module_set
+    return (appliance, module_set)
 
 
 class Smile(SmileComm):
@@ -175,11 +175,8 @@ class Smile(SmileComm):
             result_dict["domain_objects"].pop(key, None)
 
         modules = collect_module_data(result_dict)
-
-        
-        for appliance in result_dict["domain_objects"]["appliance"]:
-            module_set = False
-            appliance, module_set = add_module_to_appliance(appliance, modules)
+        for appliance in result_dict["domain_objects"]["appliance"]:  # list-type
+            (appliance, module_set) = add_module_to_appliance(appliance, modules)
             # Set gateway firmwware_version
             if appliance["type"] == "gateway":
                 appliance["module"]["firmware_version"] = result_dict["domain_objects"]["gateway"]["firmware_version"]
@@ -187,8 +184,7 @@ class Smile(SmileComm):
             if not module_set:
                 modules = collect_module_data(result, count=2)  # repeat trying with 2nd id
                 for appliance in result_dict["domain_objects"]["appliance"]:
-                    module_set = False
-                    appliance, module_set = add_module_to_appliance(appliance, modules)
+                    (appliance, module_set) = add_module_to_appliance(appliance, modules)
                 if not module_set:
                     appliance["module"] = {
                         "firmware_version": None,
@@ -197,7 +193,7 @@ class Smile(SmileComm):
                         "vendor_name": None,
                     }
 
-        result_dict["domain_objects"].pop("module")
+        result_dict["domain_objects"].pop("module", None)
         LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
 
         # Work-around for Stretch fw 2.7.18
