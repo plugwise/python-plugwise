@@ -6,7 +6,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import json
-from typing import cast
+from typing import Any, cast
 
 from plugwise.constants import (
     DEFAULT_LEGACY_TIMEOUT,
@@ -42,6 +42,55 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging.version import Version, parse
 import xmltodict
+
+
+def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
+    """Collect the module data and link to a service id."""
+    modules:dict[str, dict[str, str]] = {}
+    for module in result["domain_objects"]["module"]:
+        link_id: str | None = None
+        if module["services"] is not None:
+            for value in module["services"].values():
+                if isinstance(value, list):
+                    for item in value:
+                        for value_2 in item.values():
+                            link_id = value_2
+                            break
+                        break
+                else:
+                    link_id = value["id"]
+                    if count == 1:
+                        break
+                    else:  # find the 2nd id
+                        link_id = value["id"]
+                        break
+
+
+        if link_id is not None:
+            modules[link_id] = {
+                "firmware_version": module["firmware_version"],
+                "hardware_version": module["hardware_version"],
+                "vendor_model": module["vendor_model"],
+                "vendor_name": module["vendor_name"],
+            }
+
+    return modules
+
+
+def add_module_to_appliance(
+    appliance: dict[str, Any],
+    modules: dict[str, Any]
+) -> tuple[dict[str, Any], bool]:
+    """Add module data to appliance."""
+    for module in modules:
+        for log in appliance["logs"]["point_log"]:
+            for _, item in log.items():
+                if isinstance(item, dict) and "id" in item:
+                    if item["id"] == module:
+                        appliance["module"] = modules[module]
+                        module_set = True
+
+    return appliance, module_set
 
 
 class Smile(SmileComm):
@@ -124,45 +173,25 @@ class Smile(SmileComm):
         result_dict = dict(xmltodict.parse(result_str, attr_prefix=""))
         for key in ["ame_regulation", "template"]:
             result_dict["domain_objects"].pop(key, None)
-        modules:dict[str, dict[str, str]] = {}
-        for module in result_dict["domain_objects"]["module"]:
-            link_id: str | None = None
-            if module["services"] is not None:
-                for value in module["services"].values():
-                    if isinstance(value, list):
-                        for item in value:
-                            for value_2 in item.values():
-                                link_id = value_2
-                                break
-                            break
-                    else:
-                        link_id = value["id"]
-                    break
 
-            if link_id is not None:
-                modules[link_id] = {
-                    "firmware_version": module["firmware_version"],
-                    "hardware_version": module["hardware_version"],
-                    "vendor_model": module["vendor_model"],
-                    "vendor_name": module["vendor_name"],
-                }
+        modules = collect_module_data(result_dict)
 
+        
         for appliance in result_dict["domain_objects"]["appliance"]:
             module_set = False
-            for module in modules:
-                for log in appliance["logs"]["point_log"]:
-                    for _, item in log.items():
-                        if isinstance(item, dict) and "id" in item:
-                            if item["id"] == module:
-                                appliance["module"] = modules[module]
-                                module_set = True
+            appliance, module_set = add_module_to_appliance(appliance, modules)
             if not module_set:
-                appliance["module"] = {
-                    "firmware_version": None,
-                    "hardware_version": None,
-                    "vendor_model": None,
-                    "vendor_name": None,
-                }
+                modules = collect_module_data(result, count=2)  # repeat for 2nd id
+                for appliance in result_dict["domain_objects"]["appliance"]:
+                    module_set = False
+                    appliance, module_set = add_module_to_appliance(appliance, modules)
+                if not module_set:
+                    appliance["module"] = {
+                        "firmware_version": None,
+                        "hardware_version": None,
+                        "vendor_model": None,
+                        "vendor_name": None,
+                    }
 
         result_dict["domain_objects"].pop("module")
         LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
