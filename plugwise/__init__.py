@@ -6,7 +6,6 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import json
-import xmltodict
 from typing import cast
 
 from plugwise.constants import (
@@ -42,6 +41,7 @@ import aiohttp
 from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging.version import Version, parse
+import xmltodict
 
 
 class Smile(SmileComm):
@@ -124,7 +124,6 @@ class Smile(SmileComm):
         result_dict = dict(xmltodict.parse(result_str, attr_prefix=""))
         for key in ["ame_regulation", "template"]:
             result_dict["domain_objects"].pop(key, None)
-        LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
         modules: dict[str, dict[str, str]] = {}
         for module in result_dict["domain_objects"]["module"]:
             link_id: str | None = None
@@ -148,7 +147,16 @@ class Smile(SmileComm):
                     "vendor_name": module["vendor_name"],
                 }
 
-        LOGGER.debug ("HOI modules: %s", modules)
+        for appliance in result_dict["domain_objects"]["appliance"]:
+            for module in modules:
+                for log in appliance["logs"]["point_log"]:
+                    for _, item in log.items():
+                        if isinstance(item, dict) and "id" in item:
+                            if item["id"] == module:
+                                appliance["module"] = modules[module]
+
+        result_dict["domain_objects"].pop("module")
+        LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
 
         # Work-around for Stretch fw 2.7.18
         if not (vendor_names := result.findall("./module/vendor_name")):
