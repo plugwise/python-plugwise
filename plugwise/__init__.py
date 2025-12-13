@@ -125,26 +125,30 @@ class Smile(SmileComm):
         for key in ["ame_regulation", "template"]:
             result_dict["domain_objects"].pop(key, None)
         LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
+        modules: dict[str, dict[str, str]] = {}
         for module in result_dict["domain_objects"]["module"]:
-            LOGGER.debug("HOI vendor_name: %s", module["vendor_name"] or "null")
-            LOGGER.debug("HOI vendor_model: %s", module["vendor_model"] or "null")
-            LOGGER.debug(
-                "HOI hardware_version: %s", module["hardware_version"] or "null"
-            )
-            LOGGER.debug(
-                "HOI firmware_version: %s", module["firmware_version"] or "null"
-            )
+            link_id: str | None = None
             if module["services"] is not None:
                 for value in module["services"].values():
                     if isinstance(value, list):
                         for item in value:
                             for value_2 in item.values():
-                                LOGGER.debug("HOI id: %s", value_2)
+                                link_id = value_2
                                 break
                             break
                     else:
-                        LOGGER.debug("HOI id: %s", value["id"])
+                        link_id = value["id"]
                     break
+
+            if link_id is not None:
+                modules[link_id] = {
+                    "firmware_version": module["firmware_version"],
+                    "hardware_version": module["hardware_version"],
+                    "vendor_model": module["vendor_model"],
+                    "vendor_name": module["vendor_name"],
+                }
+
+        LOGGER.debug ("HOI modules: %s", modules)
 
         # Work-around for Stretch fw 2.7.18
         if not (vendor_names := result.findall("./module/vendor_name")):
