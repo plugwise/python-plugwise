@@ -180,8 +180,10 @@ class Smile(SmileComm):
         for appliance in result_dict["domain_objects"]["appliance"]:
             module_set = False
             appliance, module_set = add_module_to_appliance(appliance, modules)
+            if appliance["type"] == "gateway":
+                appliance["module"]["firmware_version"] = result_dict["domain_objects"]["gateway"]["firmware_version"]
             if not module_set:
-                modules = collect_module_data(result, count=2)  # repeat for 2nd id
+                modules = collect_module_data(result, count=2)  # repeat trying with 2nd id
                 for appliance in result_dict["domain_objects"]["appliance"]:
                     module_set = False
                     appliance, module_set = add_module_to_appliance(appliance, modules)
