@@ -77,17 +77,18 @@ def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
 
 
 def add_module_to_appliance(
-    appliance: list[dict[str, Any]],
+    appliance: dict[str, Any],
     modules: list[dict[str, Any]]
 ) -> tuple[dict[str, Any], bool]:
     """Add module data to appliance."""
     module_set = False
+    new_appliance: dict[str, Any] = {}
     for module in modules:
-        for log in appliance["logs"]["point_log"]:  # list-type
+        for log in appliance["logs"]["point_log"]:
             for value in log.values():
                 if isinstance(value, dict) and "id" in value:
                     if value["id"] == module:
-                        appliance["module"] = modules[module]
+                        appliance.update( modules[module])
                         module_set = True
 
     return (appliance, module_set)
@@ -175,23 +176,25 @@ class Smile(SmileComm):
             result_dict["domain_objects"].pop(key, None)
 
         modules = collect_module_data(result_dict)
-        for appliance in result_dict["domain_objects"]["appliance"]:  # list-type
+        for appliance in result_dict["domain_objects"]["appliance"]:
             (appliance, module_set) = add_module_to_appliance(appliance, modules)
             # Set gateway firmwware_version
             if appliance["type"] == "gateway":
-                appliance["module"]["firmware_version"] = result_dict["domain_objects"]["gateway"]["firmware_version"]
+                appliance["firmware_version"] = result_dict["domain_objects"]["gateway"]["firmware_version"]         
             # TODO set zigbee mac(s)
             if not module_set:
                 modules = collect_module_data(result, count=2)  # repeat trying with 2nd id
                 for appliance in result_dict["domain_objects"]["appliance"]:
                     (appliance, module_set) = add_module_to_appliance(appliance, modules)
                 if not module_set:
-                    appliance["module"] = {
-                        "firmware_version": None,
-                        "hardware_version": None,
-                        "vendor_model": None,
-                        "vendor_name": None,
-                    }
+                    appliance.update(
+                        {
+                            "firmware_version": None,
+                            "hardware_version": None,
+                            "vendor_model": None,
+                            "vendor_name": None,
+                        }
+                    )
 
         result_dict["domain_objects"].pop("module", None)
         LOGGER.debug("HOI result_dict: %s", json.dumps(result_dict, indent=4))
