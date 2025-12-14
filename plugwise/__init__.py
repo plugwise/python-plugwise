@@ -44,9 +44,9 @@ from packaging.version import Version, parse
 import xmltodict
 
 
-def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
+def collect_module_data(result: dict[str, Any], count=1) -> dict[str, Any]:
     """Collect the module data and link to a service id."""
-    modules:dict[str, dict[str, str | None]] = {}
+    modules: dict[str, dict[str, str | None]] = {}
     for module in result["domain_objects"]["module"]:
         link_id: str | None = None
         if module["services"] is not None:
@@ -77,8 +77,7 @@ def collect_module_data(result: dict[str, Any] , count=1) -> dict[str, Any]:
 
 
 def add_module_to_appliance(
-    appliance: dict[str, Any],
-    modules: list[dict[str, Any]]
+    appliance: dict[str, Any], modules: list[dict[str, Any]]
 ) -> tuple[dict[str, Any], bool]:
     """Add module data to appliance."""
     module_set = False
@@ -88,7 +87,7 @@ def add_module_to_appliance(
             for value in log.values():
                 if isinstance(value, dict) and "id" in value:
                     if value["id"] == module:
-                        appliance.update( modules[module])
+                        appliance.update(modules[module])
                         module_set = True
 
     return (appliance, module_set)
@@ -180,12 +179,18 @@ class Smile(SmileComm):
             (appliance, module_set) = add_module_to_appliance(appliance, modules)
             # Set gateway firmwware_version
             if appliance["type"] == "gateway":
-                appliance["firmware_version"] = result_dict["domain_objects"]["gateway"]["firmware_version"]         
+                appliance["firmware_version"] = result_dict["domain_objects"][
+                    "gateway"
+                ]["firmware_version"]
             # TODO set zigbee mac(s)
             if not module_set:
-                modules = collect_module_data(result, count=2)  # repeat trying with 2nd id
+                modules = collect_module_data(
+                    result, count=2
+                )  # repeat trying with 2nd id
                 for appliance in result_dict["domain_objects"]["appliance"]:
-                    (appliance, module_set) = add_module_to_appliance(appliance, modules)
+                    (appliance, module_set) = add_module_to_appliance(
+                        appliance, modules
+                    )
                 if not module_set:
                     appliance.update(
                         {
