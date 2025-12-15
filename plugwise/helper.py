@@ -145,7 +145,7 @@ class SmileHelper(SmileCommon):
             elif appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_loc_id
 
-            # Don't show orphaned thermostat-types
+            # Don't show orphaned (no location) thermostat-types
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
@@ -157,8 +157,8 @@ class SmileHelper(SmileCommon):
                 "ZigBee protocol" in description or "smart plug" in description
             ):
                 appl.pwclass = f"{appl.pwclass}_plug"
-            # Collect appliance info, skip orphaned/removed devices
 
+            # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
@@ -166,13 +166,13 @@ class SmileHelper(SmileCommon):
 
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
-            self._get_p1_smartmeter_info()
+            self._add_p1_smartmeter_info()
 
         # Sort the gw_entities
         self._reorder_devices()
 
-    def _get_p1_smartmeter_info(self) -> None:
-        """For P1 collect the connected SmartMeter info from the Home/building location.
+    def _add_p1_smartmeter_info(self) -> None:
+        """For P1 collect the smartmeter info from the Home/building location and add it as an entity.
 
         Note: For P1, the entity_id for the gateway and smartmeter are switched to maintain
         backward compatibility. For Anna P1, the smartmeter uses the home location_id directly.
