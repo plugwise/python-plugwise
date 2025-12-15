@@ -174,10 +174,10 @@ class SmileHelper(SmileCommon):
 
         LOGGER.debug("HOI existing: %s", self._existing_appliances)
         LOGGER.debug("HOI new: %s", self._new_appliances)
-        if self._existing_appliances and not (
-            set(self._new_appliances) <= set(self._existing_appliances)
-        ):
-            LOGGER.debug("HOI unknown appliance(s) found.")
+        is_subset = set(self._new_appliances) <= set(self._existing_appliances)
+        LOGGER.debug("HOI is_subset: %s", is_subset)
+        if self._existing_appliances and is_subset:
+            LOGGER.debug("HOI no unknown appliance(s) found.")
             return False
 
         # A smartmeter is not present as an appliance, add it specifically
