@@ -172,6 +172,8 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
+        LOGGER.debug("HOI existing: %s", self._existing_appliances)
+        LOGGER.debug("HOI new: %s", self._new_appliances)
         if self._existing_appliances == self._new_appliances:
             return False
 
