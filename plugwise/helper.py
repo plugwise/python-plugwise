@@ -172,7 +172,7 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        if not self._new_appliances:
+        if self._existing_appliances == self._new_appliances:
             return False
 
         # A smartmeter is not present as an appliance, add it specifically
@@ -182,7 +182,6 @@ class SmileHelper(SmileCommon):
         # Sort the gw_entities
         self._reorder_devices()
 
-        LOGGER.debug("HOI new: %s", self._new_appliances)
         self._existing_appliances = self._new_appliances
         self._new_appliances = []
         return True
