@@ -85,6 +85,8 @@ class SmileHelper(SmileCommon):
     def __init__(self) -> None:
         """Set the constructor for this class."""
         super().__init__()
+        self._existing_appliances: list[str] = []
+        self._new_appliances: list[str] = []
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
@@ -162,7 +164,15 @@ class SmileHelper(SmileCommon):
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
+            if appl.entity_id in self._existing_appliances:
+                continue
+            else:
+                self._new_appliances.append(appl.entity_id)
+
             self._create_gw_entities(appl)
+
+        if not self._new_appliances:
+            return False
 
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
@@ -170,6 +180,7 @@ class SmileHelper(SmileCommon):
 
         # Sort the gw_entities
         self._reorder_devices()
+        return True
 
     def _add_p1_smartmeter_info(self) -> None:
         """For P1 collect the smartmeter info from the Home/building location and add it as an entity.
