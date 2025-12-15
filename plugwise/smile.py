@@ -88,6 +88,9 @@ class SmileAPI(SmileData):
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
 
+        self._zones = {}
+        self.gw_entities = {}
+
     @property
     def cooling_present(self) -> bool:
         """Return the cooling capability."""
@@ -121,8 +124,6 @@ class SmileAPI(SmileData):
 
         Any change in the connected entities will be detected immediately.
         """
-        self._zones = {}
-        self.gw_entities = {}
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
