@@ -165,6 +165,7 @@ class SmileHelper(SmileCommon):
                 continue
 
             if appl.entity_id in self._existing_appliances:
+                self._new_appliances.append((appl.entity_id))
                 continue
             else:
                 self._new_appliances.append(appl.entity_id)
@@ -180,6 +181,9 @@ class SmileHelper(SmileCommon):
 
         # Sort the gw_entities
         self._reorder_devices()
+
+        self._existing_appliances = self._new_appliances
+        self._new_appliances = []
         return True
 
     def _add_p1_smartmeter_info(self) -> None:
