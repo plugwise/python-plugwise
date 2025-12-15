@@ -182,6 +182,7 @@ class SmileHelper(SmileCommon):
         # Sort the gw_entities
         self._reorder_devices()
 
+        LOGGER.debug("HOI new: %s", self._new_appliances)
         self._existing_appliances = self._new_appliances
         self._new_appliances = []
         return True
