@@ -196,6 +196,10 @@ class SmileData(SmileHelper):
                 entity, "heater_central", "no OpenTherm communication"
             )
 
+        if "module_id" ind entity:
+            locator = "module/protocolszig_bee_node"
+            
+
         # Switching groups data
         self._entity_switching_group(entity)
         # Adam data
