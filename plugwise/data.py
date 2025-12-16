@@ -195,10 +195,8 @@ class SmileData(SmileHelper):
             self._check_availability(
                 entity, "heater_central", "no OpenTherm communication"
             )
-
-        if "module_id" ind entity:
-            locator = "module/protocolszig_bee_node"
-            
+        # Zigbee node availability
+        self._get_zigbee_availability(data, entity)
 
         # Switching groups data
         self._entity_switching_group(entity)
