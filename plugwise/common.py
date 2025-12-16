@@ -116,6 +116,7 @@ class SmileCommon:
         appl.model = (
             "Generic heater/cooler" if self._cooling_present else "Generic heater"
         )
+        appl.module_id = module_data["module_id"]
 
         return appl
 
@@ -140,6 +141,7 @@ class SmileCommon:
         appl.available = module_data["reachable"]
         appl.hardware = module_data["hardware_version"]
         appl.firmware = module_data["firmware_version"]
+        appl.module_id = module_data["module_id"]
         appl.zigbee_mac = module_data["zigbee_mac_address"]
 
         return appl
@@ -156,6 +158,7 @@ class SmileCommon:
             "mac_address": appl.mac,
             "model": appl.model,
             "model_id": appl.model_id,
+            "module_id": appl.module_id,
             "name": appl.name,
             "vendor": appl.vendor_name,
             "zigbee_mac_address": appl.zigbee_mac,
@@ -252,6 +255,7 @@ class SmileCommon:
             "contents": False,
             "firmware_version": None,
             "hardware_version": None,
+            "module_id": None,
             "reachable": None,
             "vendor_name": None,
             "vendor_model": None,
@@ -275,6 +279,7 @@ class SmileCommon:
                 module_data["vendor_model"] = module.find("vendor_model").text
                 module_data["hardware_version"] = module.find("hardware_version").text
                 module_data["firmware_version"] = module.find("firmware_version").text
+                module_data["module_id"] = module.attrib["id"]
                 get_zigbee_data(module, module_data, legacy)
 
             break

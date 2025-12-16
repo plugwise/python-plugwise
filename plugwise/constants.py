@@ -294,6 +294,7 @@ ApplianceType = Literal[
     "members",
     "model",
     "model_id",
+    "module_id",
     "name",
     "vendor",
     "zigbee_mac_address",
@@ -425,6 +426,7 @@ class ModuleData(TypedDict):
     contents: bool
     firmware_version: str | None
     hardware_version: str | None
+    module_id: str | None
     reachable: bool | None
     vendor_model: str | None
     vendor_name: str | None
@@ -547,6 +549,7 @@ class GwEntityData(TypedDict, total=False):
     members: list[str]
     model: str
     model_id: str | None
+    module_id: str | None
     name: str
     vendor: str
     zigbee_mac_address: str

@@ -215,6 +215,7 @@ class SmileHelper(SmileCommon):
         appl.mac = None
         appl.model = module_data["vendor_model"]
         appl.model_id = None  # don't use model_id for SmartMeter
+        appl.module_id = module_data["module_id"]
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.vendor_name = module_data["vendor_name"]
@@ -290,6 +291,7 @@ class SmileHelper(SmileCommon):
                 appl.firmware = module_data["firmware_version"]
                 appl.hardware = module_data["hardware_version"]
                 appl.model_id = module_data["vendor_model"]
+                appl.module_id = module_data["module_id"]
                 appl.vendor_name = module_data["vendor_name"]
                 appl.model = check_model(appl.model_id, appl.vendor_name)
                 appl.zigbee_mac = module_data["zigbee_mac_address"]
