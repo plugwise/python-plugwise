@@ -164,11 +164,9 @@ class SmileHelper(SmileCommon):
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
+            self._new_appliances.append(appl.entity_id)
             if appl.entity_id in self._existing_appliances:
-                self._new_appliances.append((appl.entity_id))
                 continue
-            else:  # add nnew appliance
-                self._new_appliances.append(appl.entity_id)
 
             self._create_gw_entities(appl)
 
