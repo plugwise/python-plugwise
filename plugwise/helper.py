@@ -107,7 +107,7 @@ class SmileHelper(SmileCommon):
         """Return the item-count."""
         return self._count
 
-    def _get_appliances(self) -> None:
+    def _get_appliances(self) -> bool:
         """Collect all appliances with relevant info.
 
         Also, collect the P1 smartmeter info from a location
