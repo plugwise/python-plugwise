@@ -167,18 +167,23 @@ class SmileHelper(SmileCommon):
             if appl.entity_id in self._existing_appliances:
                 self._new_appliances.append((appl.entity_id))
                 continue
-            else:
+            else:  # add nnew appliance
                 self._new_appliances.append(appl.entity_id)
 
             self._create_gw_entities(appl)
 
         LOGGER.debug("HOI existing: %s", self._existing_appliances)
         LOGGER.debug("HOI new: %s", self._new_appliances)
-        is_subset = set(self._new_appliances) <= set(self._existing_appliances)
-        LOGGER.debug("HOI is_subset: %s", is_subset)
-        if self._existing_appliances and is_subset:
-            LOGGER.debug("HOI no unknown appliance(s) found.")
-            return False
+        removed = list(set(self._existing_appliances) - set(self._new_appliances))
+        if self._existing_appliances:
+            if not removed:
+                LOGGER.debug("HOI no removed appliance(s).")
+                return False
+            else:
+                LOGGER.debug("HOI removed appliance(s): %s", removed)
+                for appliance in removed:
+                    self.gw_entities.pop(appliance)
+                return False
 
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
