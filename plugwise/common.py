@@ -54,7 +54,9 @@ class SmileCommon:
         self._cooling_present: bool
         self._count: int
         self._domain_objects: etree.Element
+        self._existing_groups: list[str] = []
         self._heater_id: str = NONE
+        self._new_groups: list[st] = []
         self._on_off_device: bool
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile: Munch
@@ -220,6 +222,14 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
+
+        removed = list(set(self._existing_groups) - set(self._new_groups))
+        if self._existing_groups and removed:
+            for group in removed:
+                self.gw_entities.pop(group)
+
+        self._existing_groups = self._new_groups
+        self._new_groups = []
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
