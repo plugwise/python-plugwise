@@ -172,12 +172,10 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        LOGGER.debug("HOI existing: %s", self._existing_appliances)
-        LOGGER.debug("HOI new: %s", self._new_appliances)
         removed = list(set(self._existing_appliances) - set(self._new_appliances))
         if self._existing_appliances:
             if not removed:
-                LOGGER.debug("HOI no removed appliance(s).")
+                LOGGER.debug("HOI no new or removed appliance(s).")
                 return False
             else:
                 LOGGER.debug("HOI removed appliance(s): %s", removed)
@@ -186,7 +184,9 @@ class SmileHelper(SmileCommon):
                 return False
 
         # A smartmeter is not present as an appliance, add it specifically
-        if self.smile.type == "power" or self.smile.anna_p1:
+        if not self._existing_appliances and (
+            self.smile.type == "power" or self.smile.anna_p1
+        ):
             self._add_p1_smartmeter_info()
 
         # Sort the gw_entities

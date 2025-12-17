@@ -110,11 +110,7 @@ class SmileAPI(SmileData):
         Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
-        execute = self._all_appliances()
-        LOGGER.debug("HOI self._all_appliances() = %s", execute)
-        if not execute:
-            LOGGER.debug("HOI no new appliances found, skipping")
-        else:
+        if self._all_appliances():
             if self._is_thermostat:
                 self.therms_with_offset_func = (
                     self._get_appliances_with_offset_functionality()
