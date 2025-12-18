@@ -42,7 +42,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "eedadcb297564f1483faa509179aebed",
     "mac_address": "012345670001",
@@ -70,6 +74,7 @@
     "location": "fa5fa6b34f6b40a0972988b20e888ed4",
     "model": "ThermoTouch",
     "model_id": "143.1",
+    "module_id": "e2d52aece0524fde9c346953e5e1acb2",
     "name": "Thermostaat WK",
     "sensors": {
       "setpoint": 21.5,
@@ -90,7 +95,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "active",
     "sensors": {
@@ -105,10 +116,16 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": ["ca79d23ae0094120b877558734cff85c"],
+      "primary": [
+        "ca79d23ae0094120b877558734cff85c"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   }
 }

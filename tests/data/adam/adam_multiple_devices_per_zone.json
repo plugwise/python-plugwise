@@ -6,6 +6,7 @@
     "location": "cd143c07248f491493cea0533bc3d669",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "4e1da90f22384bc691fe0282e02d272f",
     "name": "NVR",
     "sensors": {
       "electricity_consumed": 34.0,
@@ -35,7 +36,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Badkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "Badkamer Schema",
     "sensors": {
       "temperature": 18.9
@@ -70,7 +77,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Bios",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "off",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -84,8 +97,12 @@
       "upper_bound": 100.0
     },
     "thermostats": {
-      "primary": ["df4a4a8169904cdb9c03d61a21f42140"],
-      "secondary": ["a2c3583e0a6349358998b760cea82d2a"]
+      "primary": [
+        "df4a4a8169904cdb9c03d61a21f42140"
+      ],
+      "secondary": [
+        "a2c3583e0a6349358998b760cea82d2a"
+      ]
     },
     "vendor": "Plugwise"
   },
@@ -96,6 +113,7 @@
     "location": "cd143c07248f491493cea0533bc3d669",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "a03128e5e9334b088c724fd96947c765",
     "name": "Playstation Smart Plug",
     "sensors": {
       "electricity_consumed": 84.1,
@@ -125,7 +143,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Garage",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "off",
     "sensors": {
       "temperature": 15.6
@@ -137,7 +161,9 @@
       "upper_bound": 100.0
     },
     "thermostats": {
-      "primary": ["e7693eb9582644e5b865dba8d4447cf1"],
+      "primary": [
+        "e7693eb9582644e5b865dba8d4447cf1"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -149,6 +175,7 @@
     "location": "cd143c07248f491493cea0533bc3d669",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "822e635587994817a76599ea1190f9ee",
     "name": "USG Smart Plug",
     "sensors": {
       "electricity_consumed": 8.5,
@@ -170,6 +197,7 @@
     "location": "cd143c07248f491493cea0533bc3d669",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "a5a8713dd3f94f2a9d63db8a521af6b2",
     "name": "Ziggo Modem",
     "sensors": {
       "electricity_consumed": 12.2,
@@ -195,6 +223,7 @@
     "location": "08963fec7c53423ca5680aa4cb502c63",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "b622e3c6a32544f8a4d83e3385592e36",
     "name": "Thermostatic Radiator Badkamer 1",
     "sensors": {
       "battery": 51,
@@ -223,6 +252,7 @@
     "location": "82fa13f017d240daa0d0ea1775420f24",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "f887b0af3d1e45c794057ee606b21db8",
     "name": "Zone Thermostat Jessie",
     "sensors": {
       "battery": 37,
@@ -245,6 +275,7 @@
     "location": "c50f167537524366a5af7aa3942feb1e",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "800d5287643c4fd89dfcfbf336d4f7ec",
     "name": "CV Pomp",
     "sensors": {
       "electricity_consumed": 35.6,
@@ -273,7 +304,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Jessie",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "CV Jessie",
     "sensors": {
       "temperature": 17.2
@@ -285,8 +322,12 @@
       "upper_bound": 100.0
     },
     "thermostats": {
-      "primary": ["6a3bf693d05e48e0b460c815a4fdd09d"],
-      "secondary": ["d3da73bde12a47d5a6b8f9dad971f2ec"]
+      "primary": [
+        "6a3bf693d05e48e0b460c815a4fdd09d"
+      ],
+      "secondary": [
+        "d3da73bde12a47d5a6b8f9dad971f2ec"
+      ]
     },
     "vendor": "Plugwise"
   },
@@ -311,6 +352,7 @@
     "location": "cd143c07248f491493cea0533bc3d669",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "5ccda7375b0f467e88499a636450dc91",
     "name": "Fibaro HC2",
     "sensors": {
       "electricity_consumed": 12.5,
@@ -336,6 +378,7 @@
     "location": "12493538af164a409c6a1c79e38afe1c",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "39e077a2eb224dcea3415471de00823c",
     "name": "Bios Cv Thermostatic Radiator ",
     "sensors": {
       "battery": 62,
@@ -361,6 +404,7 @@
     "location": "c50f167537524366a5af7aa3942feb1e",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "02d1299fdbab4f7b93765e0af1c250d8",
     "name": "Floor kraan",
     "sensors": {
       "setpoint": 21.5,
@@ -388,6 +432,7 @@
     "location": "c50f167537524366a5af7aa3942feb1e",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "dd68d0641eb04571be62b9940aae363a",
     "name": "Zone Lisa WK",
     "sensors": {
       "battery": 34,
@@ -418,7 +463,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "GF7  Woonkamer",
     "sensors": {
       "electricity_consumed": 35.6,
@@ -432,8 +483,12 @@
       "upper_bound": 100.0
     },
     "thermostats": {
-      "primary": ["b59bcebaf94b499ea7d46e4a66fb62d8"],
-      "secondary": ["b310b72a0e354bfab43089919b9a88bf"]
+      "primary": [
+        "b59bcebaf94b499ea7d46e4a66fb62d8"
+      ],
+      "secondary": [
+        "b310b72a0e354bfab43089919b9a88bf"
+      ]
     },
     "vendor": "Plugwise"
   },
@@ -444,6 +499,7 @@
     "location": "cd143c07248f491493cea0533bc3d669",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "3e4e2fa7fa2a4cf18b1be5ed32a978a1",
     "name": "NAS",
     "sensors": {
       "electricity_consumed": 16.5,
@@ -469,6 +525,7 @@
     "location": "82fa13f017d240daa0d0ea1775420f24",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "468bbe14853f4fb18a8860333cecc42a",
     "name": "Thermostatic Radiator Jessie",
     "sensors": {
       "battery": 62,
@@ -497,6 +554,7 @@
     "location": "12493538af164a409c6a1c79e38afe1c",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "e5f81fd832d844e5bd46219831468a62",
     "name": "Zone Lisa Bios",
     "sensors": {
       "battery": 67,
@@ -537,6 +595,7 @@
     "location": "446ac08dd04d4eff8ac57489757b7314",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "d00e1ba75ed14b2388971b32abc94cde",
     "name": "CV Kraan Garage",
     "sensors": {
       "battery": 68,
@@ -582,6 +641,7 @@
     "location": "08963fec7c53423ca5680aa4cb502c63",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "ebd9f53ab3894bee91e36350c1fbb6c7",
     "name": "Thermostatic Radiator Badkamer 2",
     "sensors": {
       "battery": 92,
