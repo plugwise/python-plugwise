@@ -321,13 +321,12 @@ class SmileHelper(SmileCommon):
 
         return data
 
-    def _get_measurement_data(self, entity_id: str) -> GwEntityData:
+    def _get_measurement_data(self, entity_id: str, entity: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
 
         Collect the appliance-data based on entity_id.
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        entity = self.gw_entities[entity_id]
 
         # Get P1 smartmeter data from LOCATIONS
         smile_is_power = self.smile.type == "power"
@@ -337,7 +336,8 @@ class SmileHelper(SmileCommon):
             data.update(self._power_data_from_location())
 
         if smile_is_power and not self.smile.anna_p1:
-            return data
+            entity.update(data)
+            return
 
         # Get group data
         if "members" in entity:
@@ -372,7 +372,8 @@ class SmileHelper(SmileCommon):
 
         self._cleanup_data(data)
 
-        return data
+        entity.update(data)
+        return
 
     def _collect_group_sensors(
         self,

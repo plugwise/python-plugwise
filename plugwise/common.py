@@ -175,7 +175,7 @@ class SmileCommon:
                     break
         self.gw_entities = {**reordered, **self.gw_entities}
 
-    def _entity_switching_group(self, entity: GwEntityData, data: GwEntityData) -> None:
+    def _entity_switching_group(self, entity: GwEntityData) -> None:
         """Helper-function for _get_device_zone_data().
 
         Determine switching group device data.
@@ -185,7 +185,7 @@ class SmileCommon:
             for member in entity["members"]:
                 if self.gw_entities[member]["switches"].get("relay"):
                     counter += 1
-            data["switches"]["relay"] = counter != 0
+            entity["switches"]["relay"] = counter != 0
             self._count += 1
 
     def _get_groups(self) -> dict[str, GwEntityData]:
