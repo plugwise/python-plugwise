@@ -114,7 +114,6 @@ class SmileAPI(SmileData):
                 self.therms_with_offset_func = (
                     self._get_appliances_with_offset_functionality()
                 )
-            self._scan_thermostats()
 
         self._get_groups()
         self._all_entity_data()
