@@ -699,6 +699,7 @@ class SmileHelper(SmileCommon):
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
                 value = format_measure(found.text, NONE)
+                LOGGER.debug("HOI outdoor_temp = %s", value)
                 data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
 
