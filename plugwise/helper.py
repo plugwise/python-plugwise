@@ -86,7 +86,9 @@ class SmileHelper(SmileCommon):
         """Set the constructor for this class."""
         super().__init__()
         self._existing_appliances: list[str] = []
+        self._existing_locations: list[str] = []
         self._new_appliances: list[str] = []
+        self._new_locations: list[str] = []
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
@@ -261,6 +263,15 @@ class SmileHelper(SmileCommon):
             raise KeyError(
                 "Error, location Home (building) not found!"
             )  # pragma: no cover
+
+        removed = list(set(self._existing_locations) - set(self._new_locations))
+        if self._existing_locations and removed:
+            for location_id in removed:
+                self._loc_data.pop(location_id)
+                self._zones.pop(location_id)
+
+        self._existing_locations = self._new_locations
+        self._new_locations = []
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Collect info for all appliances found."""
@@ -810,7 +821,8 @@ class SmileHelper(SmileCommon):
             return
 
         self._match_and_rank_thermostats()
-        for location_id, location in self._loc_data.items():
+        for location_id in self._new_locations:
+            location = self._loc_data[location_id]
             if location["primary_prio"] != 0:
                 self._zones[location_id] = {
                     "dev_class": "climate",
