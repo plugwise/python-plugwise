@@ -56,7 +56,7 @@ class SmileCommon:
         self._domain_objects: etree.Element
         self._existing_groups: list[str] = []
         self._heater_id: str = NONE
-        self._new_groups: list[st] = []
+        self._new_groups: list[str] = []
         self._on_off_device: bool
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile: Munch
