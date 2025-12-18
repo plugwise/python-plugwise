@@ -207,8 +207,8 @@ class SmileHelper(SmileCommon):
 
         module_id = module_data["module_id"]
         if module_id in (
-            self.gw_entities[self._home_loc_id]["module_id"],
-            self.gw_entities[self._gateway_id]["module_id"],
+            self.gw_entities[self._gateway_id].get("module_id"),
+            self.gw_entities.get(self._home_loc_id, {}).get("module_id"),
         ):
             return
 
