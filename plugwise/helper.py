@@ -268,7 +268,6 @@ class SmileHelper(SmileCommon):
         if self._existing_locations and removed:
             for location_id in removed:
                 self._loc_data.pop(location_id)
-                self._zones.pop(location_id)
 
         self._existing_locations = self._new_locations
         self._new_locations = []
