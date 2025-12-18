@@ -176,12 +176,9 @@ class SmileHelper(SmileCommon):
 
         removed = list(set(self._existing_appliances) - set(self._new_appliances))
         if self._existing_appliances:
-            if not removed:
-                return False
-            else:
-                for appliance in removed:
-                    self.gw_entities.pop(appliance)
-                return False
+            for appliance in removed:
+                self.gw_entities.pop(appliance)
+            return False
 
         # A smartmeter is not present as an appliance, add it specifically
         if not self._existing_appliances and (
