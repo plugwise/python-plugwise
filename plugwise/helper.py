@@ -245,6 +245,13 @@ class SmileHelper(SmileCommon):
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
+            self._new_locations.append(loc.loc_id)
+            if (
+                loc.loc_id in self._existing_locations
+                and self._loc_data[loc.loc_id]["name"] == loc.name
+            ):
+                continue
+
             self._loc_data[loc.loc_id] = {
                 "name": loc.name,
                 "primary": [],
