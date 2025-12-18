@@ -232,7 +232,7 @@ class SmileCommon:
         self._existing_groups = self._new_groups
         self._new_groups = []
 
-    def _add_member(element: etree.Element, members: list[str]) -> None:
+    def _add_member(self, element: etree.Element, members: list[str]) -> None:
         """Check and add member to list."""
         if element.attrib["id"] in self.gw_entities:
             members.append(item.attrib["id"])
