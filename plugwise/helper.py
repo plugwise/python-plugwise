@@ -823,8 +823,6 @@ class SmileHelper(SmileCommon):
             return
 
         self._match_and_rank_thermostats()
-        # for location_id in self._new_locations:
-        #     location = self._loc_data[location_id]
         for location_id, location in self._loc_data.items():
             if location["primary_prio"] != 0:
                 self._new_zones.append(location_id)
