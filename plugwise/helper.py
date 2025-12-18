@@ -177,10 +177,8 @@ class SmileHelper(SmileCommon):
         removed = list(set(self._existing_appliances) - set(self._new_appliances))
         if self._existing_appliances:
             if not removed:
-                LOGGER.debug("HOI no new or removed appliance(s).")
                 return False
             else:
-                LOGGER.debug("HOI removed appliance(s): %s", removed)
                 for appliance in removed:
                     self.gw_entities.pop(appliance)
                 return False

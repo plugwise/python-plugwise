@@ -205,6 +205,9 @@ class SmileCommon:
         for group in self._domain_objects.findall("./group"):
             members: list[str] = []
             group_id = group.get("id")
+            self._new_groups.append(group_id)
+            if group_id in self._existing_groups:
+                continue
             group_name = group.find("name").text
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
