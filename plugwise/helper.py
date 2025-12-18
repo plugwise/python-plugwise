@@ -206,9 +206,9 @@ class SmileHelper(SmileCommon):
             return
 
         module_id = module_data["module_id"]
-        if (
-            self.gw_entities[self._home_loc_id]["module_id"] == module_id
-            or self.gw_entities[self._gateway_id]["module_id"] == module_id
+        if module_id in (
+            self.gw_entities[self._home_loc_id]["module_id"],
+            self.gw_entities[self._gateway_id]["module_id"],
         ):
             return
 
