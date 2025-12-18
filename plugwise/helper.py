@@ -174,20 +174,18 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
+        # A smartmeter is not present as an appliance, add it specifically
+        if self.smile.type == "power" or self.smile.anna_p1:
+            self._add_p1_smartmeter_info()
+
+        # Sort the gw_entities
+        self._reorder_devices()
+
         removed = list(set(self._existing_appliances) - set(self._new_appliances))
         if self._existing_appliances:
             for appliance in removed:
                 self.gw_entities.pop(appliance)
             return False
-
-        # A smartmeter is not present as an appliance, add it specifically
-        if not self._existing_appliances and (
-            self.smile.type == "power" or self.smile.anna_p1
-        ):
-            self._add_p1_smartmeter_info()
-
-        # Sort the gw_entities
-        self._reorder_devices()
 
         self._existing_appliances = self._new_appliances
         self._new_appliances = []
@@ -207,6 +205,13 @@ class SmileHelper(SmileCommon):
         if not module_data["contents"]:  # pragma: no cover
             return
 
+        module_id = module_data["module_id"]
+        if (
+            self.gw_entities[self._home_loc_id]["module_id"] == module_id
+            or self.gw_entities[self._gateway_id]["module_id"] == module_id
+        ):
+            return
+
         appl.available = None
         appl.entity_id = self._home_loc_id
         if not self.smile.anna_p1:
@@ -217,7 +222,7 @@ class SmileHelper(SmileCommon):
         appl.mac = None
         appl.model = module_data["vendor_model"]
         appl.model_id = None  # don't use model_id for SmartMeter
-        appl.module_id = module_data["module_id"]
+        appl.module_id = module_id
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.vendor_name = module_data["vendor_name"]
