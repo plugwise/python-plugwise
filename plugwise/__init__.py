@@ -328,7 +328,6 @@ class Smile(SmileComm):
 
     async def async_update(self) -> dict[str, GwEntityData]:
         """Update the Plughwise Gateway entities and their data and states."""
-        data: dict[str, GwEntityData] = {}
         try:
             data = await self._smile_api.async_update()
         except (DataMissingError, KeyError) as err:
