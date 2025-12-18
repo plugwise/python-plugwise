@@ -212,9 +212,7 @@ class SmileCommon:
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.get("id") in self.gw_entities:
-                    members.append(item.get("id"))
+                self._add_member(item)
 
             if group_type in GROUP_TYPES and members and group_id:
                 self.gw_entities[group_id] = {
@@ -228,11 +226,16 @@ class SmileCommon:
 
         removed = list(set(self._existing_groups) - set(self._new_groups))
         if self._existing_groups and removed:
-            for group in removed:
-                self.gw_entities.pop(group)
+            for group_id in removed:
+                self.gw_entities.pop(group_id)
 
         self._existing_groups = self._new_groups
         self._new_groups = []
+
+    def _add_member(element: etree.Element, members: list[str]) -> None:
+        """Check and add member to list."""
+        if element.attrib["id"] in self.gw_entities:
+            members.append(item.attrib["id"])
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False

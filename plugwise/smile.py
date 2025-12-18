@@ -109,11 +109,10 @@ class SmileAPI(SmileData):
         Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
-        if self._get_appliances():
-            if self._is_thermostat:
-                self.therms_with_offset_func = (
-                    self._get_appliances_with_offset_functionality()
-                )
+        if self._get_appliances() and self._is_thermostat:
+            self.therms_with_offset_func = (
+                self._get_appliances_with_offset_functionality()
+            )
 
         self._get_groups()
         self._all_entity_data()
