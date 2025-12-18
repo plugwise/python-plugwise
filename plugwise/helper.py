@@ -87,8 +87,10 @@ class SmileHelper(SmileCommon):
         super().__init__()
         self._existing_appliances: list[str] = []
         self._existing_locations: list[str] = []
+        self._existing_zones: list[str] = []
         self._new_appliances: list[str] = []
         self._new_locations: list[str] = []
+        self._new_zones: list[str] = []
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
@@ -821,9 +823,14 @@ class SmileHelper(SmileCommon):
             return
 
         self._match_and_rank_thermostats()
-        for location_id in self._new_locations:
-            location = self._loc_data[location_id]
+        # for location_id in self._new_locations:
+        #     location = self._loc_data[location_id]
+        for location_id, location in self._loc_data.items():
             if location["primary_prio"] != 0:
+                self._new_zones.append(location_id)
+                if location_id in self._existing_zones:
+                    continue
+
                 self._zones[location_id] = {
                     "dev_class": "climate",
                     "model": "ThermoZone",
@@ -836,7 +843,15 @@ class SmileHelper(SmileCommon):
                 }
                 self._count += 5
 
-    def _match_and_rank_thermostats(self) -> None:
+        removed = list(set(self._existing_zones) - set(self._new_zones))
+        if self._existing_zones and removed:
+            for location_id in removed:
+                self._zones.pop(location_id)
+
+        self._existing_zones = self._new_zones
+        self._new_zones = []
+
+    def _match_and_rank_thermostats(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
 
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
