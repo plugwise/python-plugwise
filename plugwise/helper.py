@@ -826,9 +826,6 @@ class SmileHelper(SmileCommon):
         for location_id, location in self._loc_data.items():
             if location["primary_prio"] != 0:
                 self._new_zones.append(location_id)
-                if location_id in self._existing_zones:
-                    continue
-
                 self._zones[location_id] = {
                     "dev_class": "climate",
                     "model": "ThermoZone",
