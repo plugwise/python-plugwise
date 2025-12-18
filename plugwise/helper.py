@@ -439,8 +439,8 @@ class SmileHelper(SmileCommon):
 
     def _get_zigbee_availability(
         self, data: GwEntityData, entity: GwEntityData
-    ) -> GwEntityData:
-        # Check zigbee device availabilty
+    ) -> None:
+        # Check zigbee device availability
         if "module_id" in entity:
             module_id = entity["module_id"]
             locator = f'./module[@id="{module_id}"]/protocols/zig_bee_node'
