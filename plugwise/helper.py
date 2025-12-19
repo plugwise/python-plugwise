@@ -169,7 +169,10 @@ class SmileHelper(SmileCommon):
                 continue
 
             self._new_appliances.append(appl.entity_id)
-            if appl.entity_id in self._existing_appliances:
+            if (
+                appl.entity_id in self._existing_appliances
+                and self.gw_entities[appl.entity_id]["name"] == appl.name
+            ):
                 continue
 
             self._create_gw_entities(appl)
