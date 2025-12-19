@@ -115,7 +115,9 @@ class SmileData(SmileHelper):
             "binary_sensors" in entity
             and "plugwise_notification" in entity["binary_sensors"]
         ):
-            entity["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
+            entity["binary_sensors"]["plugwise_notification"] = bool(
+                self._notifications
+            )
             entity["notifications"] = self._notifications
             self._count += 2
 
@@ -254,9 +256,7 @@ class SmileData(SmileHelper):
                 entity["gateway_modes"] = self._gw_allowed_modes
                 self._count += 1
 
-    def _climate_data(
-        self, location_id: str, entity: GwEntityData
-    ) -> None:
+    def _climate_data(self, location_id: str, entity: GwEntityData) -> None:
         """Helper-function for _get_entity_data().
 
         Determine climate-control entity data.
