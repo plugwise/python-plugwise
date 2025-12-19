@@ -19,6 +19,7 @@
       "upper_bound": 100.0
     },
     "model": "Generic heater/cooler",
+    "module_id": "c53888603af34264bbed2a05998ee572",
     "name": "OpenTherm",
     "sensors": {
       "domestic_hot_water_setpoint": 60.0,
@@ -36,7 +37,10 @@
   },
   "ebd90df1ab334565b5895f37590ccff4": {
     "active_preset": "home",
-    "available_schedules": ["Thermostat schedule", "off"],
+    "available_schedules": [
+      "Thermostat schedule",
+      "off"
+    ],
     "climate_mode": "heat_cool",
     "control_state": "idle",
     "dev_class": "thermostat",
@@ -44,8 +48,15 @@
     "hardware": "6539-1301-5002",
     "location": "d3ce834534114348be628b61b26d9220",
     "model": "ThermoTouch",
+    "module_id": "3b36454dda794c6faaed4053a89e80ce",
     "name": "Anna",
-    "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+    "preset_modes": [
+      "away",
+      "no_frost",
+      "vacation",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "off",
     "sensors": {
       "cooling_activation_outdoor_temperature": 26.0,

@@ -15,6 +15,7 @@
       "upper_bound": 95.0
     },
     "model": "Generic heater",
+    "module_id": "c043b48fa65b4292b5579d5550f19dd2",
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 0.0,
@@ -29,6 +30,7 @@
     "dev_class": "valve_actuator_plug",
     "location": "d9786723dbcf4f19b5c629a54629f9c7",
     "model_id": "TS0011",
+    "module_id": "c1f98356f09346b28e26a6ebc0f69275",
     "name": "Aanvoer water afsluiter (nous lz3)",
     "switches": {
       "relay": false
@@ -47,6 +49,7 @@
     "location": "f871b8c4d63549319221e294e4f88074",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "86937b43514d44e090903d72e53d01b3",
     "name": "Tom Badkamer",
     "sensors": {
       "battery": 99,
@@ -71,6 +74,7 @@
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "fe0bb67baa774960a41ca3148137d646",
     "name": "Plug MediaTV",
     "sensors": {
       "electricity_consumed": 14.8,
@@ -92,6 +96,7 @@
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "118ccd70e8fa4b1fa746c504a47d95e0",
     "name": "Plug Werkplek",
     "sensors": {
       "electricity_consumed": 91.3,
@@ -112,6 +117,7 @@
     "location": "b4f211175e124df59603412bafa77a34",
     "model": "Aqara Smart Plug",
     "model_id": "lumi.plug.maeu01",
+    "module_id": "6fe74ec044bd44d88ac0412df67f188f",
     "name": "SmartPlug Floor 0",
     "sensors": {
       "electricity_consumed_interval": 0.0
@@ -130,6 +136,7 @@
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "0251fb339b564a378009fcc3049f023c",
     "name": "Plug Vloerverwarming",
     "sensors": {
       "electricity_consumed": 43.8,
@@ -148,6 +155,7 @@
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "ThermoTouch",
     "model_id": "143.1",
+    "module_id": "f7727a516f974a7e8bf8ae95b4531a7a",
     "name": "Anna",
     "sensors": {
       "setpoint": 18.5,
@@ -176,7 +184,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.7.8",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "bc93488efab249e5bc54fd7e175a6f91",
     "mac_address": "012345679891",
@@ -184,7 +196,12 @@
     "model_id": "smile_open_therm",
     "name": "Adam",
     "notifications": {},
-    "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
+    "regulation_modes": [
+      "bleeding_hot",
+      "bleeding_cold",
+      "off",
+      "heating"
+    ],
     "select_gateway_mode": "full",
     "select_regulation_mode": "off",
     "sensors": {
@@ -204,6 +221,7 @@
     "location": "f871b8c4d63549319221e294e4f88074",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "a9df3f54db5d4c0c84b6bf6804d41632",
     "name": "Lisa Badkamer",
     "sensors": {
       "battery": 14,
@@ -250,7 +268,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
-    "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
+    "preset_modes": [
+      "no_frost",
+      "asleep",
+      "vacation",
+      "home",
+      "away"
+    ],
     "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
@@ -265,11 +289,17 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": ["ad4838d7d35c4d6ea796ee12ae5aedf8"],
+      "primary": [
+        "ad4838d7d35c4d6ea796ee12ae5aedf8"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "f871b8c4d63549319221e294e4f88074": {
     "active_preset": "home",
@@ -285,7 +315,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Bathroom",
-    "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
+    "preset_modes": [
+      "no_frost",
+      "asleep",
+      "vacation",
+      "home",
+      "away"
+    ],
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -300,10 +336,18 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["e2f4322d57924fa090fbbc48b3a140dc"],
-      "secondary": ["1772a4ea304041adb83f357b751341ff"]
+      "primary": [
+        "e2f4322d57924fa090fbbc48b3a140dc"
+      ],
+      "secondary": [
+        "1772a4ea304041adb83f357b751341ff"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   }
 }

@@ -7,7 +7,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": null,
     "select_zone_profile": "active",
     "sensors": {
@@ -20,11 +26,19 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["1346fbd8498d4dbcab7e18d51b771f3d"],
-      "secondary": ["356b65335e274d769c338223e7af9c33"]
+      "primary": [
+        "1346fbd8498d4dbcab7e18d51b771f3d"
+      ],
+      "secondary": [
+        "356b65335e274d769c338223e7af9c33"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "13228dab8ce04617af318a2888b3c548": {
     "active_preset": "home",
@@ -34,7 +48,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": null,
     "select_zone_profile": "active",
     "sensors": {
@@ -47,11 +67,19 @@
       "upper_bound": 30.0
     },
     "thermostats": {
-      "primary": ["f61f1a2535f54f52ad006a3d18e459ca"],
-      "secondary": ["833de10f269c4deab58fb9df69901b4e"]
+      "primary": [
+        "f61f1a2535f54f52ad006a3d18e459ca"
+      ],
+      "secondary": [
+        "833de10f269c4deab58fb9df69901b4e"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "1346fbd8498d4dbcab7e18d51b771f3d": {
     "available": true,
@@ -64,6 +92,7 @@
     "location": "06aecb3d00354375924f50c47af36bd2",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "9a08c0d05ffd4f02be9a9bdeb3d01175",
     "name": "Slaapkamer",
     "sensors": {
       "battery": 92,
@@ -87,6 +116,7 @@
     "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "e71d43382a894c9e888d379368aafba9",
     "name": "Tom Logeerkamer",
     "sensors": {
       "setpoint": 13.0,
@@ -111,6 +141,7 @@
     "location": "06aecb3d00354375924f50c47af36bd2",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "ccc140dafdc5416dab052bffc465a770",
     "name": "Tom Slaapkamer",
     "sensors": {
       "setpoint": 13.0,
@@ -133,6 +164,7 @@
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
     "model": "Aqara Smart Plug",
     "model_id": "lumi.plug.maeu01",
+    "module_id": "2ddb4057a8fd46aba92e23c770f3297d",
     "name": "Plug",
     "sensors": {
       "electricity_consumed_interval": 0.0
@@ -155,6 +187,7 @@
     "location": "d27aede973b54be484f6842d1b2802ad",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "3f91eab3749349799b17f04873bde07e",
     "name": "Kinderkamer",
     "sensors": {
       "battery": 79,
@@ -178,6 +211,7 @@
     "location": "13228dab8ce04617af318a2888b3c548",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "fc657e19ee7442ab8bfe66df62cb40b3",
     "name": "Tom Woonkamer",
     "sensors": {
       "setpoint": 9.0,
@@ -205,6 +239,7 @@
     "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "1814d63fb9824aa8aae4d4329d84dfa3",
     "name": "Logeerkamer",
     "sensors": {
       "battery": 80,
@@ -226,7 +261,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
     "mac_address": "012345670001",
@@ -234,7 +273,12 @@
     "model_id": "smile_open_therm",
     "name": "Adam",
     "notifications": {},
-    "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
+    "regulation_modes": [
+      "heating",
+      "off",
+      "bleeding_cold",
+      "bleeding_hot"
+    ],
     "select_gateway_mode": "full",
     "select_regulation_mode": "heating",
     "sensors": {
@@ -251,7 +295,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Kinderkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": null,
     "select_zone_profile": "active",
     "sensors": {
@@ -264,11 +314,19 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["6f3e9d7084214c21b9dfa46f6eeb8700"],
-      "secondary": ["d4496250d0e942cfa7aea3476e9070d5"]
+      "primary": [
+        "6f3e9d7084214c21b9dfa46f6eeb8700"
+      ],
+      "secondary": [
+        "d4496250d0e942cfa7aea3476e9070d5"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "d4496250d0e942cfa7aea3476e9070d5": {
     "available": true,
@@ -278,6 +336,7 @@
     "location": "d27aede973b54be484f6842d1b2802ad",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "5785d8678bed443ea72b52a1c8a7108d",
     "name": "Tom Kinderkamer",
     "sensors": {
       "setpoint": 13.0,
@@ -302,7 +361,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Logeerkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": null,
     "select_zone_profile": "active",
     "sensors": {
@@ -315,11 +380,19 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["a6abc6a129ee499c88a4d420cc413b47"],
-      "secondary": ["1da4d325838e4ad8aac12177214505c9"]
+      "primary": [
+        "a6abc6a129ee499c88a4d420cc413b47"
+      ],
+      "secondary": [
+        "1da4d325838e4ad8aac12177214505c9"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "e4684553153b44afbef2200885f379dc": {
     "available": true,
@@ -344,6 +417,7 @@
     },
     "model": "Generic heater",
     "model_id": "10.20",
+    "module_id": "2bd6e83f0ae340058606c33503202c72",
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 0.0,
@@ -368,6 +442,7 @@
     "location": "13228dab8ce04617af318a2888b3c548",
     "model": "Jip",
     "model_id": "168-01",
+    "module_id": "73a5e7c19d3744ad96dfad74142d2db4",
     "name": "Woonkamer",
     "sensors": {
       "battery": 100,

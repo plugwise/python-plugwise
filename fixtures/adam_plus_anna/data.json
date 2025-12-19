@@ -1,13 +1,22 @@
 {
   "009490cc2f674ce6b576863fbb64f867": {
     "active_preset": "home",
-    "available_schedules": ["Weekschema", "off"],
+    "available_schedules": [
+      "Weekschema",
+      "off"
+    ],
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "Weekschema",
     "sensors": {
       "electricity_consumed": 74.2,
@@ -21,7 +30,9 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": ["ee62cad889f94e8ca3d09021f03a660b"],
+      "primary": [
+        "ee62cad889f94e8ca3d09021f03a660b"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise"
@@ -42,6 +53,7 @@
       "upper_bound": 100.0
     },
     "model": "Generic heater",
+    "module_id": "94c63e8b46284f6ab2f40d19619afcba",
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 0.0,
@@ -58,6 +70,7 @@
     "location": "45d410adf8fd461e85cebf16d5ead542",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "0fd8411d0bc446a08c336a7bba029e22",
     "name": "MediaCenter",
     "sensors": {
       "electricity_consumed": 10.3,
@@ -100,6 +113,7 @@
     "location": "009490cc2f674ce6b576863fbb64f867",
     "model": "ThermoTouch",
     "model_id": "143.1",
+    "module_id": "bb2fc3da88144d018ee51861e13f505d",
     "name": "Anna",
     "sensors": {
       "setpoint": 20.5,
@@ -112,6 +126,7 @@
     "dev_class": "computer_desktop_plug",
     "firmware": "2019-06-21T02:00:00+02:00",
     "location": "5ccb6c41a7d9403988d261ceee04239f",
+    "module_id": "72b2aa43d2ea4a33b23ade5e6629de8d",
     "name": "Work-PC",
     "sensors": {
       "electricity_consumed": 80.5,

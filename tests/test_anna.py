@@ -158,7 +158,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 43
+        assert self.entity_items == 42
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -216,7 +216,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(
             api, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert self.entity_items == 68
+        assert self.entity_items == 45
         await api.close_connection()
         await self.disconnect(server, client)
 
@@ -551,7 +551,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2025-11-02 00:00:01", testdata)
-        assert self.entity_items == 78
+        assert self.entity_items == 79
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -572,7 +572,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 14
+        assert self.entity_items == 12
 
         await api.close_connection()
         await self.disconnect(server, client)

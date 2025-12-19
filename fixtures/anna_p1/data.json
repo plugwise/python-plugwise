@@ -1,7 +1,10 @@
 {
   "1e5e55b958ac445583602f767cb45942": {
     "active_preset": "home",
-    "available_schedules": ["Thermostat schedule", "off"],
+    "available_schedules": [
+      "Thermostat schedule",
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "thermostat",
@@ -9,8 +12,15 @@
     "hardware": "6539-1301-500",
     "location": "5b13651d79c4454684fd268850b1bff8",
     "model": "ThermoTouch",
+    "module_id": "4cac351dd8494d0fb4adbb75f4cdf89c",
     "name": "Anna",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "off",
     "sensors": {
       "illuminance": 2.0,
@@ -42,6 +52,7 @@
     "location": "da7be222ab3b420c927f3e49fade0304",
     "model": "Generic heater",
     "model_id": "HR24",
+    "module_id": "4641927b856f45638df120358f98da9a",
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 0.0,
@@ -77,6 +88,7 @@
     "dev_class": "smartmeter",
     "location": "da7be222ab3b420c927f3e49fade0304",
     "model": "2MS212 SMR5.5",
+    "module_id": "0caec7b5fac2419bbb3aea7bc93170f1",
     "name": "P1",
     "sensors": {
       "electricity_consumed_off_peak_cumulative": 618.001,

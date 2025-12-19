@@ -1,7 +1,11 @@
 {
   "582dfbdace4d4aeb832923ce7d1ddda0": {
     "active_preset": "home",
-    "available_schedules": ["Winter", "Test ", "off"],
+    "available_schedules": [
+      "Winter",
+      "Test ",
+      "off"
+    ],
     "climate_mode": "auto",
     "control_state": "cooling",
     "dev_class": "thermostat",
@@ -9,8 +13,15 @@
     "hardware": "6539-1301-5002",
     "location": "15da035090b847e7a21f93e08c015ebc",
     "model": "ThermoTouch",
+    "module_id": "734af4309ab3417499e85d16e5750015",
     "name": "Anna",
-    "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
+    "preset_modes": [
+      "away",
+      "vacation",
+      "no_frost",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Winter",
     "sensors": {
       "illuminance": 45.0,
@@ -61,7 +72,13 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
-    "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
+    "dhw_modes": [
+      "off",
+      "auto",
+      "boost",
+      "eco",
+      "comfort"
+    ],
     "location": "674b657c138a41a291d315d7471deb06",
     "max_dhw_temperature": {
       "lower_bound": 35.0,
@@ -77,6 +94,7 @@
     },
     "model": "Generic heater/cooler",
     "model_id": "173",
+    "module_id": "f3b09d3f16964c18a55ee7614afc3437",
     "name": "OpenTherm",
     "select_dhw_mode": "auto",
     "sensors": {
