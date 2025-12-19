@@ -28,67 +28,63 @@ class SmileLegacyData(SmileLegacyHelper):
         Collect data for each entity and add to self.gw_entities.
         """
         for entity_id, entity in self.gw_entities.items():
-            data = self._get_entity_data(entity_id)
-            entity.update(data)
+            self._get_entity_data(entity_id, entity)
             remove_empty_platform_dicts(entity)
 
-    def _get_entity_data(self, entity_id: str) -> GwEntityData:
+    def _get_entity_data(self, entity_id: str, entity: GwEntityData) -> None:
         """Helper-function for _all_entity_data() and async_update().
 
         Provide entity-data, based on Location ID (= entity_id), from APPLIANCES.
         """
-        entity = self.gw_entities[entity_id]
-        data = self._get_measurement_data(entity_id)
+        self._get_measurement_data(entity_id, entity)
 
         # Switching groups data
-        self._entity_switching_group(entity, data)
+        self._entity_switching_group(entity)
 
         # Skip obtaining data when not a thermostat
         if entity["dev_class"] != "thermostat":
-            return data
+            return
 
         # Thermostat data (presets, temperatures etc)
-        self._climate_data(entity, data)
-        self._get_anna_control_state(data)
+        self._climate_data(entity)
+        self._get_anna_control_state(entity)
 
-        return data
-
-    def _climate_data(self, entity: GwEntityData, data: GwEntityData) -> None:
+    def _climate_data(self, entity: GwEntityData) -> None:
         """Helper-function for _get_entity_data().
 
         Determine climate-control entity data.
         """
         # Presets
-        data["preset_modes"] = None
-        data["active_preset"] = None
+        entity["preset_modes"] = None
+        entity["active_preset"] = None
         self._count += 2
         if presets := self._presets():
-            data["preset_modes"] = list(presets)
-            data["active_preset"] = self._preset()
+            entity["preset_modes"] = list(presets)
+            entity["active_preset"] = self._preset()
 
         # Schedule
-        data["available_schedules"] = []
-        data["select_schedule"] = None
+        entity["available_schedules"] = []
+        entity["select_schedule"] = None
         self._count += 2
         avail_schedules, sel_schedule = self._schedules()
         if avail_schedules != [NONE]:
-            data["available_schedules"] = avail_schedules
-            data["select_schedule"] = sel_schedule
+            entity["available_schedules"] = avail_schedules
+            entity["select_schedule"] = sel_schedule
 
         # Set HA climate HVACMode: auto, heat
-        data["climate_mode"] = "auto"
+        entity["climate_mode"] = "auto"
         self._count += 1
         if sel_schedule in (NONE, OFF):
-            data["climate_mode"] = "heat"
+            entity["climate_mode"] = "heat"
 
-    def _get_anna_control_state(self, data: GwEntityData) -> None:
+    def _get_anna_control_state(self, entity: GwEntityData) -> None:
         """Set the thermostat control_state based on the opentherm/onoff device state."""
-        data["control_state"] = "idle"
+        entity["control_state"] = "idle"
         self._count += 1
-        for entity in self.gw_entities.values():
-            if entity["dev_class"] != "heater_central":
+        for device in self.gw_entities.values():
+            if device["dev_class"] != "heater_central":
                 continue
 
-            binary_sensors = entity["binary_sensors"]
+            binary_sensors = device["binary_sensors"]
             if binary_sensors["heating_state"]:
-                data["control_state"] = "heating"
+                entity["control_state"] = "heating"

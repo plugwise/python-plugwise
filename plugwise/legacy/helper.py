@@ -249,20 +249,20 @@ class SmileLegacyHelper(SmileCommon):
 
         self._create_gw_entities(appl)
 
-    def _get_measurement_data(self, entity_id: str) -> GwEntityData:
+    def _get_measurement_data(self, entity_id: str, entity: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
 
         Collect the appliance-data based on entity_id.
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from MODULES
-        entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile.type == "power":
             if entity["dev_class"] == "smartmeter":
                 data.update(self._power_data_from_modules())
 
-            return data
+            entity.update(data)
+            return
 
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.heater_id:
@@ -290,7 +290,8 @@ class SmileLegacyHelper(SmileCommon):
             data.pop("c_heating_state")
             self._count -= 1
 
-        return data
+        entity.update(data)
+        return
 
     def _power_data_from_modules(self) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().
