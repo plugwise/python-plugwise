@@ -239,6 +239,7 @@ class SmileLegacyHelper(SmileCommon):
         appl.mac = None
         appl.model = self.smile.model
         appl.model_id = None
+        appl.module_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
