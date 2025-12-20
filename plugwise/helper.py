@@ -30,6 +30,7 @@ from plugwise.constants import (
     OFF,
     P1_MEASUREMENTS,
     TEMP_CELSIUS,
+    THERMO_MATCHING,
     THERMOSTAT_CLASSES,
     TOGGLES,
     UOM,
@@ -193,7 +194,7 @@ class SmileHelper(SmileCommon):
 
         self._create_gw_entities(appl)
 
-    def _all_locations(self) -> None:
+    def _get_locations(self) -> None:
         """Collect all locations."""
         loc = Munch()
         locations = self._domain_objects.findall("./location")
