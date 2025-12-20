@@ -305,13 +305,12 @@ class SmileHelper(SmileCommon):
 
         return therm_list
 
-    def _get_zone_data(self, loc_id: str) -> GwEntityData:
+    def _get_zone_data(self, loc_id: str, zone: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
 
-        Collect the location-data based on location id.
+        Collect the location/zone-data based on location id.
         """
         data: GwEntityData = {"sensors": {}}
-        zone = self._zones[loc_id]
         measurements = ZONE_MEASUREMENTS
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
@@ -319,25 +318,24 @@ class SmileHelper(SmileCommon):
             self._appliance_measurements(location, data, measurements)
             self._get_actuator_functionalities(location, zone, data)
 
-        return data
+        zone.update(data)
 
-    def _get_measurement_data(self, entity_id: str) -> GwEntityData:
+    def _get_measurement_data(self, entity_id: str, entity: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
 
         Collect the appliance-data based on entity_id.
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        entity = self.gw_entities[entity_id]
 
         # Get P1 smartmeter data from LOCATIONS
+        is_smartmeter = entity.get("dev_class") == "smartmeter"
         smile_is_power = self.smile.type == "power"
-        if (smile_is_power or self.smile.anna_p1) and entity.get(
-            "dev_class"
-        ) == "smartmeter":
+        if is_smartmeter and (smile_is_power or self.smile.anna_p1):
             data.update(self._power_data_from_location())
 
         if smile_is_power and not self.smile.anna_p1:
-            return data
+            entity.update(data)
+            return
 
         # Get group data
         if "members" in entity:
@@ -372,7 +370,7 @@ class SmileHelper(SmileCommon):
 
         self._cleanup_data(data)
 
-        return data
+        entity.update(data)
 
     def _collect_group_sensors(
         self,

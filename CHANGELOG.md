@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Code optimizations via PR [#837](https://github.com/plugwise/python-plugwise/pull/837)
+
 ## v1.11.0
 
 - Extend feature: support pumping group, add group sensors
