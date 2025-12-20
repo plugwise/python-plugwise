@@ -448,15 +448,13 @@ class SmileHelper(SmileCommon):
 
         entity.update(data)
 
-    def _get_zigbee_availability(
-        self, data: GwEntityData, entity: GwEntityData
-    ) -> None:
+    def _get_zigbee_availability(self, entity: GwEntityData) -> None:
         # Check zigbee device availability
         if "module_id" in entity:
             module_id = entity["module_id"]
             locator = f'./module[@id="{module_id}"]/protocols/zig_bee_node'
             if (module := self._domain_objects.find(locator)) is not None:
-                data["available"] = module.find("reachable").text == "true"
+                entity["available"] = module.find("reachable").text == "true"
 
     def _collect_group_sensors(
         self,
