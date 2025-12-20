@@ -258,7 +258,7 @@ class SmileLegacyHelper(SmileCommon):
         # Get P1 smartmeter data from MODULES
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile.type == "power":
-            if entity["dev_class"] == "smartmeter":
+            if entity.get("dev_class") == "smartmeter":
                 data.update(self._power_data_from_modules())
 
             entity.update(data)
