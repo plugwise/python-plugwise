@@ -93,20 +93,48 @@ class SmileHelper(SmileCommon):
         """Return the item-count."""
         return self._count
 
-    def _all_appliances(self) -> None:
+    def _get_appliances(self) -> None:
         """Collect all appliances with relevant info.
 
         Also, collect the P1 smartmeter info from a location
         as this one is not available as an appliance.
         """
         self._count = 0
-        self._all_locations()
+        self._get_locations()
 
         for appliance in self._domain_objects.findall("./appliance"):
             appl = Munch()
+            appl.available = None
+            appl.entity_id = appliance.attrib["id"]
+            appl.location = None
+            appl.name = appliance.find("name").text
+            appl.model = None
+            appl.model_id = None
+            appl.module_id = None
+            appl.firmware = None
+            appl.hardware = None
+            appl.mac = None
             appl.pwclass = appliance.find("type").text
-            # Don't collect data for the OpenThermGateway appliance
-            if appl.pwclass == "open_therm_gateway":
+            appl.zigbee_mac = None
+            appl.vendor_name = None
+
+            # Don't collect data for the OpenThermGateway appliance, skip thermostat(s)
+            # without actuator_functionalities, should be an orphaned device(s) (Core #81712)
+            if appl.pwclass == "open_therm_gateway" or (
+                appl.pwclass == "thermostat"
+                and appliance.find("actuator_functionalities/") is None
+            ):
+                continue
+
+            if (appl_loc := appliance.find("location")) is not None:
+                appl.location = appl_loc.attrib["id"]
+            # Set location to the _home_loc_id when the appliance-location is not found,
+            # except for thermostat-devices without a location, they are not active
+            elif appl.pwclass not in THERMOSTAT_CLASSES:
+                appl.location = self._home_loc_id
+
+            # Don't show orphaned thermostat-types
+            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
             # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
@@ -116,44 +144,15 @@ class SmileHelper(SmileCommon):
             ):
                 appl.pwclass = f"{appl.pwclass}_plug"
 
-            # Skip thermostats that have this key, should be an orphaned device (Core #81712)
-            if (
-                appl.pwclass == "thermostat"
-                and appliance.find("actuator_functionalities/") is None
-            ):
-                continue
-
-            appl.location = None
-            if (appl_loc := appliance.find("location")) is not None:
-                appl.location = appl_loc.attrib["id"]
-            # Don't assign the _home_loc_id to thermostat-devices without a location,
-            # they are not active
-            elif appl.pwclass not in THERMOSTAT_CLASSES:
-                appl.location = self._home_loc_id
-
-            # Don't show orphaned thermostat-types
-            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
-                continue
-
-            appl.available = None
-            appl.entity_id = appliance.attrib["id"]
-            appl.name = appliance.find("name").text
-            appl.model = None
-            appl.model_id = None
-            appl.firmware = None
-            appl.hardware = None
-            appl.mac = None
-            appl.zigbee_mac = None
-            appl.vendor_name = None
-
             # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
             self._create_gw_entities(appl)
 
+        # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
-            self._get_p1_smartmeter_info()
+            self._add_p1_smartmeter_info()
 
         # Sort the gw_entities
         self._reorder_devices()
