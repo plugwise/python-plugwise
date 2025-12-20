@@ -19,6 +19,7 @@
     "dev_class": "smartmeter",
     "location": "a455b61e52394b2db5081ce025a430f3",
     "model": "KFM5KAIFA-METER",
+    "module_id": "f2f7c257a0c8405f9a56582d3a22982d",
     "name": "P1",
     "sensors": {
       "electricity_consumed_off_peak_cumulative": 17643.423,

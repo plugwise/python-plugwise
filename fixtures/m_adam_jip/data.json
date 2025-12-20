@@ -63,6 +63,7 @@
     "location": "06aecb3d00354375924f50c47af36bd2",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "9a08c0d05ffd4f02be9a9bdeb3d01175",
     "name": "Slaapkamer",
     "sensors": {
       "battery": 92,
@@ -86,6 +87,7 @@
     "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "e71d43382a894c9e888d379368aafba9",
     "name": "Tom Logeerkamer",
     "sensors": {
       "setpoint": 13.0,
@@ -110,6 +112,7 @@
     "location": "06aecb3d00354375924f50c47af36bd2",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "ccc140dafdc5416dab052bffc465a770",
     "name": "Tom Slaapkamer",
     "sensors": {
       "setpoint": 13.0,
@@ -132,6 +135,7 @@
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
     "model": "Aqara Smart Plug",
     "model_id": "lumi.plug.maeu01",
+    "module_id": "2ddb4057a8fd46aba92e23c770f3297d",
     "name": "Plug",
     "sensors": {
       "electricity_consumed_interval": 0.0
@@ -154,6 +158,7 @@
     "location": "d27aede973b54be484f6842d1b2802ad",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "3f91eab3749349799b17f04873bde07e",
     "name": "Kinderkamer",
     "sensors": {
       "battery": 79,
@@ -177,6 +182,7 @@
     "location": "13228dab8ce04617af318a2888b3c548",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "fc657e19ee7442ab8bfe66df62cb40b3",
     "name": "Tom Woonkamer",
     "sensors": {
       "setpoint": 9.0,
@@ -204,6 +210,7 @@
     "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "1814d63fb9824aa8aae4d4329d84dfa3",
     "name": "Logeerkamer",
     "sensors": {
       "battery": 80,
@@ -277,6 +284,7 @@
     "location": "d27aede973b54be484f6842d1b2802ad",
     "model": "Tom",
     "model_id": "106-03",
+    "module_id": "5785d8678bed443ea72b52a1c8a7108d",
     "name": "Tom Kinderkamer",
     "sensors": {
       "setpoint": 13.0,
@@ -343,6 +351,7 @@
     },
     "model": "Generic heater",
     "model_id": "10.20",
+    "module_id": "2bd6e83f0ae340058606c33503202c72",
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 0.0,
@@ -367,6 +376,7 @@
     "location": "13228dab8ce04617af318a2888b3c548",
     "model": "Jip",
     "model_id": "168-01",
+    "module_id": "73a5e7c19d3744ad96dfad74142d2db4",
     "name": "Woonkamer",
     "sensors": {
       "battery": 100,

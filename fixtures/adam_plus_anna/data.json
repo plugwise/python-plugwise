@@ -1,22 +1,13 @@
 {
   "009490cc2f674ce6b576863fbb64f867": {
     "active_preset": "home",
-    "available_schedules": [
-      "Weekschema",
-      "off"
-    ],
+    "available_schedules": ["Weekschema", "off"],
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
-    "preset_modes": [
-      "home",
-      "asleep",
-      "away",
-      "vacation",
-      "no_frost"
-    ],
+    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "select_schedule": "Weekschema",
     "sensors": {
       "electricity_consumed": 74.2,
@@ -30,9 +21,7 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": [
-        "ee62cad889f94e8ca3d09021f03a660b"
-      ],
+      "primary": ["ee62cad889f94e8ca3d09021f03a660b"],
       "secondary": []
     },
     "vendor": "Plugwise"

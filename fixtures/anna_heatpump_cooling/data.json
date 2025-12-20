@@ -56,10 +56,7 @@
   },
   "3cb70739631c4d17a86b8b12e8a5161b": {
     "active_preset": "home",
-    "available_schedules": [
-      "standaard",
-      "off"
-    ],
+    "available_schedules": ["standaard", "off"],
     "climate_mode": "heat_cool",
     "control_state": "cooling",
     "dev_class": "thermostat",
@@ -69,13 +66,7 @@
     "model": "ThermoTouch",
     "module_id": "e3204a14c278431a8890525dd83edf9d",
     "name": "Anna",
-    "preset_modes": [
-      "no_frost",
-      "home",
-      "away",
-      "asleep",
-      "vacation"
-    ],
+    "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
     "select_schedule": "off",
     "sensors": {
       "cooling_activation_outdoor_temperature": 21.0,
