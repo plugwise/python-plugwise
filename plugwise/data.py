@@ -45,8 +45,7 @@ class SmileData(SmileHelper):
         Collect data for each zone/location and add to self._zones.
         """
         for location_id, zone in self._zones.items():
-            data = self._get_location_data(location_id)
-            zone.update(data)
+            self._get_location_data(location_id, zone)
 
     def _update_gw_entities(self) -> None:
         """Helper-function for _all_entities_data() and async_update().
@@ -155,32 +154,29 @@ class SmileData(SmileHelper):
                 3  # add 4 total, remove 1, count the conditional remove separately
             )
 
-    def _get_location_data(self, loc_id: str) -> GwEntityData:
+    def _get_location_data(self, loc_id: str, zone: GwEntityData) -> None:
         """Helper-function for _all_entity_data() and async_update().
 
         Provide entity-data, based on Location ID (= loc_id).
         """
-        zone = self._zones[loc_id]
-        data = self._get_zone_data(loc_id)
-        self._regulation_control(data)
+        self._get_zone_data(loc_id, zone)
+        self._regulation_control(zone)
 
-        data["control_state"] = "idle"
+        zone["control_state"] = "idle"
         self._count += 1
-        if (ctrl_state := self._control_state(data)) and ctrl_state in (
+        if (ctrl_state := self._control_state(zone)) and ctrl_state in (
             "cooling",
             "heating",
             "preheating",
         ):
-            data["control_state"] = str(ctrl_state)
+            zone["control_state"] = str(ctrl_state)
 
-        if "setpoint" in data["sensors"]:
-            data["sensors"].pop("setpoint")  # remove, only used in _control_state()
+        if "setpoint" in zone["sensors"]:
+            zone["sensors"].pop("setpoint")  # remove, only used in _control_state()
             self._count -= 1
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone)
-
-        return data
 
     def _get_entity_data(self, entity_id: str, entity: GwEntityData) -> None:
         """Helper-function for _update_gw_entities() and async_update().

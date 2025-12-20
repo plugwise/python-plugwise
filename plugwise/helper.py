@@ -305,13 +305,12 @@ class SmileHelper(SmileCommon):
 
         return therm_list
 
-    def _get_zone_data(self, loc_id: str) -> GwEntityData:
+    def _get_zone_data(self, loc_id: str, zone: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
 
-        Collect the location-data based on location id.
+        Collect the location/zone-data based on location id.
         """
         data: GwEntityData = {"sensors": {}}
-        zone = self._zones[loc_id]
         measurements = ZONE_MEASUREMENTS
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
@@ -319,7 +318,7 @@ class SmileHelper(SmileCommon):
             self._appliance_measurements(location, data, measurements)
             self._get_actuator_functionalities(location, zone, data)
 
-        return data
+        zone.update(data)
 
     def _get_measurement_data(self, entity_id: str, entity: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
