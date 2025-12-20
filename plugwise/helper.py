@@ -742,17 +742,9 @@ class SmileHelper(SmileCommon):
         the result to update the device_class of secondary thermostats.
         """
         self._thermo_locs = self._match_locations()
-
-        thermo_matching: dict[str, int] = {
-            "thermostat": 2,
-            "zone_thermometer": 2,
-            "zone_thermostat": 2,
-            "thermostatic_radiator_valve": 1,
-        }
-
         for loc_id in self._thermo_locs:
             for entity_id, entity in self.gw_entities.items():
-                self._rank_thermostat(thermo_matching, loc_id, entity_id, entity)
+                self._rank_thermostat(THERMO_MATCHING, loc_id, entity_id, entity)
 
         for loc_id, loc_data in self._thermo_locs.items():
             if loc_data["primary_prio"] != 0:
