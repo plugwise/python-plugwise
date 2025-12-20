@@ -856,7 +856,7 @@ class SmileHelper(SmileCommon):
         self._existing_zones = self._new_zones
         self._new_zones = []
 
-    def _match_and_rank_thermostats(self) -> dict[str, ThermoLoc]:
+    def _match_and_rank_thermostats(self) -> None:
         """Helper-function for _scan_thermostats().
 
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
