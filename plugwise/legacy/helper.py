@@ -291,7 +291,6 @@ class SmileLegacyHelper(SmileCommon):
             self._count -= 1
 
         entity.update(data)
-        return
 
     def _power_data_from_modules(self) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().

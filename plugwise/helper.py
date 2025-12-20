@@ -371,7 +371,6 @@ class SmileHelper(SmileCommon):
         self._cleanup_data(data)
 
         entity.update(data)
-        return
 
     def _collect_group_sensors(
         self,
