@@ -329,10 +329,9 @@ class SmileHelper(SmileCommon):
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
 
         # Get P1 smartmeter data from LOCATIONS
+        is_smartmeter = entity.get("dev_class") == "smartmeter"
         smile_is_power = self.smile.type == "power"
-        if (smile_is_power or self.smile.anna_p1) and entity.get(
-            "dev_class"
-        ) == "smartmeter":
+        if is_smartmeter and (smile_is_power or self.smile.anna_p1):
             data.update(self._power_data_from_location())
 
         if smile_is_power and not self.smile.anna_p1:
