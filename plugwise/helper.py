@@ -202,22 +202,31 @@ class SmileHelper(SmileCommon):
 
     def _get_locations(self) -> None:
         """Collect all locations."""
+        counter = 0
         loc = Munch()
         locations = self._domain_objects.findall("./location")
         for location in locations:
             loc.loc_id = location.attrib["id"]
             loc.name = location.find("name").text
+            loc._type = location.find("type").text
             self._loc_data[loc.loc_id] = {
                 "name": loc.name,
                 "primary": [],
                 "primary_prio": 0,
                 "secondary": [],
             }
-            if loc.name == "Home":
+            # Home location is of type building
+            if loc._type == "building":
+                counter += 1
                 self._home_loc_id = loc.loc_id
                 self._home_location = self._domain_objects.find(
                     f"./location[@id='{loc.loc_id}']"
                 )
+
+        if counter == 0:
+            raise KeyError(
+                "Error, location Home (building) not found!"
+            )  # pragma: no cover
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Collect info for all appliances found."""
