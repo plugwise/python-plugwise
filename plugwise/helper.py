@@ -59,7 +59,7 @@ from packaging import version
 
 def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
     """Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739."""
-    
+
     if (
         (search := appliance.find("description")) is not None
         and (description := search.text) is not None
@@ -774,8 +774,16 @@ class SmileHelper(SmileCommon):
 
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
+        # Build location index
+        entities_by_location: dict[str, list[tuple[str, GwEntityData]]] = {}
+        for entity_id, entity in self.gw_entities.items():
+            if "location" in entity:
+                loc = entity["location"]
+                entities_by_location.setdefault(loc, []).append((entity_id, entity))
+
+        # Rank thermostats per location
         for location_id, location in self._loc_data.items():
-            for entity_id, entity in self.gw_entities.items():
+            for entity_id, entity in entities_by_location.get(location_id, []):
                 self._rank_thermostat(
                     entity_id, entity, location_id, location, THERMO_MATCHING
                 )
