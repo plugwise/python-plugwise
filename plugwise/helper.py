@@ -783,22 +783,17 @@ class SmileHelper(SmileCommon):
 
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
-        # Build location index
-        entities_by_location: dict[str, list[tuple[str, GwEntityData]]] = {}
-        for entity_id, entity in self.gw_entities.items():
-            if "location" in entity:
-                loc = entity["location"]
-                entities_by_location.setdefault(loc, []).append((entity_id, entity))
-
-        # Rank thermostats per location
         for location_id, location in self._loc_data.items():
-            for entity_id, entity in entities_by_location.get(location_id, []):
-                self._rank_thermostat(entity_id, entity, location, THERMO_MATCHING)
+            for entity_id, entity in self.gw_entities.items():
+                self._rank_thermostat(
+                    entity_id, entity, location_id, location, THERMO_MATCHING
+                )
 
     def _rank_thermostat(
         self,
         entity_id: str,
         entity: GwEntityData,
+        location_id: str,
         location: ThermoLoc,
         thermo_matching: dict[str, int],
     ) -> None:
@@ -807,15 +802,17 @@ class SmileHelper(SmileCommon):
         Rank the thermostat based on entity-thermostat-type: primary or secondary.
         There can be several primary and secondary thermostats per location.
         """
-        if (appl_class := entity["dev_class"]) not in thermo_matching:
+        if not (
+            "location" in entity
+            and location_id == entity["location"]
+            and (appl_class := entity["dev_class"]) in thermo_matching
+        ):
             return None
 
         # Pre-elect new primary
         if thermo_matching[appl_class] == location["primary_prio"]:
             location["primary"].append(entity_id)
-        elif (thermo_rank := thermo_matching[appl_class]) > location[
-            "primary_prio"
-        ]:
+        elif (thermo_rank := thermo_matching[appl_class]) > location["primary_prio"]:
             location["primary_prio"] = thermo_rank
             # Demote former primary
             if tl_primary := location["primary"]:
