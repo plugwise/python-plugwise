@@ -86,7 +86,7 @@ def check_heater_central(xml: etree.Element) -> str:
     hc_list: list[dict[str, bool]] = []
     for heater_central in xml.findall(locator):
         hc_count += 1
-        hc_id: str = heater_central.attrib["id"]
+        hc_id: str = heater_central.get("id")
         has_actuators: bool = (
             heater_central.find("actuator_functionalities/") is not None
         )

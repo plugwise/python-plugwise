@@ -160,7 +160,7 @@ class SmileLegacyAPI(SmileLegacyData):
             raise PlugwiseError("Plugwise: invalid preset.")
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule_id = self._domain_objects.find(locator).attrib["id"]
+        rule_id = self._domain_objects.find(locator).get("id")
         data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
         await self.call_request(RULES, method="put", data=data)
 
@@ -192,7 +192,7 @@ class SmileLegacyAPI(SmileLegacyData):
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
-                schedule_rule_id = rule.attrib["id"]
+                schedule_rule_id = rule.get("id")
                 break
 
         if schedule_rule_id is None:
@@ -205,7 +205,7 @@ class SmileLegacyAPI(SmileLegacyData):
             new_state = "true"
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
-        template_id = self._domain_objects.find(locator).attrib["id"]
+        template_id = self._domain_objects.find(locator).get("id")
 
         data = (
             "<rules>"

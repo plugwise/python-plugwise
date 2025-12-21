@@ -200,14 +200,14 @@ class SmileCommon:
 
         for group in self._domain_objects.findall("./group"):
             members: list[str] = []
-            group_id = group.attrib["id"]
+            group_id = group.get("id")
             group_name = group.find("name").text
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 # Check if members are not orphaned - stretch
-                if item.attrib["id"] in self.gw_entities:
-                    members.append(item.attrib["id"])
+                if item.get("id") in self.gw_entities:
+                    members.append(item.get("id"))
 
             if group_type in GROUP_TYPES and members:
                 groups[group_id] = {
@@ -266,7 +266,7 @@ class SmileCommon:
             if key is not None and key not in link_tag:
                 continue
 
-            link_id = appl_search.attrib["id"]
+            link_id = appl_search.get("id")
             loc = f".//services/{link_tag}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
             # xml_2: self._modules for legacy, self._domain_objects for actual

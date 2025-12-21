@@ -117,7 +117,7 @@ class SmileHelper(SmileCommon):
         for appliance in self._domain_objects.findall("./appliance"):
             appl = Munch()
             appl.available = None
-            appl.entity_id = appliance.attrib["id"]
+            appl.entity_id = appliance.get("id")
             appl.location = None
             appl.name = appliance.find("name").text
             appl.model = None
@@ -139,7 +139,7 @@ class SmileHelper(SmileCommon):
                 continue
 
             if (appl_loc := appliance.find("location")) is not None:
-                appl.location = appl_loc.attrib["id"]
+                appl.location = appl_loc.get("id")
             # Set location to the _home_loc_id when the appliance-location is not found,
             # except for thermostat-devices without a location, they are not active
             elif appl.pwclass not in THERMOSTAT_CLASSES:
@@ -206,7 +206,7 @@ class SmileHelper(SmileCommon):
         loc = Munch()
         locations = self._domain_objects.findall("./location")
         for location in locations:
-            loc.loc_id = location.attrib["id"]
+            loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
             self._loc_data[loc.loc_id] = {
@@ -269,7 +269,7 @@ class SmileHelper(SmileCommon):
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
-        self._gateway_id = appliance.attrib["id"]
+        self._gateway_id = appliance.get("id")
         appl.firmware = str(self.smile.version)
         appl.hardware = self.smile.hw_version
         appl.mac = self.smile.mac_address
@@ -319,7 +319,7 @@ class SmileHelper(SmileCommon):
             './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
         )
         for item in offset_appls:
-            therm_list.append(item.attrib["id"])
+            therm_list.append(item.get("id"))
 
         return therm_list
 
@@ -502,7 +502,7 @@ class SmileHelper(SmileCommon):
         self._notifications = {}
         for notification in self._domain_objects.findall("./notification"):
             try:
-                msg_id = notification.attrib["id"]
+                msg_id = notification.get("id")
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
                 self._notifications[msg_id] = {msg_type: msg}
@@ -903,7 +903,7 @@ class SmileHelper(SmileCommon):
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
             for directive in directives:
                 preset = directive.find("then").attrib
-                presets[directive.attrib["preset"]] = [
+                presets[directive.get("preset")] = [
                     float(preset["heating_setpoint"]),
                     float(preset["cooling_setpoint"]),
                 ]
@@ -920,13 +920,13 @@ class SmileHelper(SmileCommon):
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             active = rule.find("active").text
             if rule.find(locator) is not None:
-                schedule_ids[rule.attrib["id"]] = {
+                schedule_ids[rule.get("id")] = {
                     "location": loc_id,
                     "name": name,
                     "active": active,
                 }
             else:
-                schedule_ids[rule.attrib["id"]] = {
+                schedule_ids[rule.get("id")] = {
                     "location": NONE,
                     "name": name,
                     "active": active,
@@ -947,13 +947,13 @@ class SmileHelper(SmileCommon):
                 name = rule.find("name").text
                 active = rule.find("active").text
                 if rule.find(locator2) is not None:
-                    schedule_ids[rule.attrib["id"]] = {
+                    schedule_ids[rule.get("id")] = {
                         "location": loc_id,
                         "name": name,
                         "active": active,
                     }
                 else:
-                    schedule_ids[rule.attrib["id"]] = {
+                    schedule_ids[rule.get("id")] = {
                         "location": NONE,
                         "name": name,
                         "active": active,
@@ -1002,6 +1002,6 @@ class SmileHelper(SmileCommon):
         Determine the location-set_temperature uri - from LOCATIONS.
         """
         locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-        thermostat_functionality_id = self._domain_objects.find(locator).attrib["id"]
+        thermostat_functionality_id = self._domain_objects.find(locator).get("id")
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
