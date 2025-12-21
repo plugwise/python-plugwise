@@ -801,12 +801,7 @@ class SmileHelper(SmileCommon):
         Rank the thermostat based on entity-thermostat-type: primary or secondary.
         There can be several primary and secondary thermostats per location.
         """
-        appl_class = entity["dev_class"]
-        if (
-            "location" in entity
-            and location_id == entity["location"]
-            and appl_class in thermo_matching
-        ):
+        if (appl_class := entity["dev_class"]) in thermo_matching:
             # Pre-elect new primary
             if thermo_matching[appl_class] == location["primary_prio"]:
                 location["primary"].append(entity_id)
