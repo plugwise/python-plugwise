@@ -57,6 +57,17 @@ from munch import Munch
 from packaging import version
 
 
+def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
+    """Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739."""
+    
+    if (
+        (search := appliance.find("description")) is not None
+        and (description := search.text) is not None
+        and ("ZigBee protocol" in description or "smart plug" in description)
+    ):
+        appl.pwclass = f"{appl.pwclass}_plug"
+
+
 def search_actuator_functionalities(
     appliance: etree.Element, actuator: str
 ) -> etree.Element | None:
@@ -138,12 +149,7 @@ class SmileHelper(SmileCommon):
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
-            # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
-            description = appliance.find("description").text
-            if description is not None and (
-                "ZigBee protocol" in description or "smart plug" in description
-            ):
-                appl.pwclass = f"{appl.pwclass}_plug"
+            extend_plug_device_class(appl, appliance)
 
             # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
