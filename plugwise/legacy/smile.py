@@ -82,9 +82,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Finally, collect the data and states for each entity.
         """
         self._all_appliances()
-        if group_data := self._get_groups():
-            self.gw_entities.update(group_data)
-
+        self._get_groups()
         self._all_entity_data()
 
     async def async_update(self) -> dict[str, GwEntityData]:

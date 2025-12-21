@@ -188,7 +188,7 @@ class SmileCommon:
             entity["switches"]["relay"] = counter != 0
             self._count += 1
 
-    def _get_groups(self) -> dict[str, GwEntityData]:
+    def _get_groups(self) -> None:
         """Helper-function for smile.py: get_all_gateway_entities().
 
         Collect switching-, pumping- or report-group info.
@@ -196,7 +196,7 @@ class SmileCommon:
         groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have groups
         if self.smile.type == "power" or self.check_name(ANNA):
-            return groups
+            return
 
         for group in self._domain_objects.findall("./group"):
             members: list[str] = []
@@ -210,7 +210,7 @@ class SmileCommon:
                     members.append(item.get("id"))
 
             if group_type in GROUP_TYPES and members:
-                groups[group_id] = {
+                self.gw_entities[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
                     "name": group_name,
@@ -218,8 +218,6 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
-
-        return groups
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False

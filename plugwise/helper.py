@@ -393,12 +393,12 @@ class SmileHelper(SmileCommon):
     def _collect_group_sensors(
         self,
         data: GwEntityData,
-        entity_id: str,
+        group_id: str,
         measurements: dict[str, UOM],
     ) -> None:
         """Collect group sensors."""
         if (
-            group := self._domain_objects.find(f'./group[@id="{entity_id}"]')
+            group := self._domain_objects.find(f'./group[@id="{group_id}"]')
         ) is not None:
             for measurement, attrs in measurements.items():
                 locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'

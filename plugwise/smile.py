@@ -113,9 +113,7 @@ class SmileAPI(SmileData):
             )
             self._scan_thermostats()
 
-        if group_data := self._get_groups():
-            self.gw_entities.update(group_data)
-
+        self._get_groups()
         self._all_entity_data()
 
     async def async_update(self) -> dict[str, GwEntityData]:
