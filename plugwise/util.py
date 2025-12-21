@@ -84,10 +84,7 @@ def check_heater_central(xml: etree.Element) -> str:
     locator = "./appliance[type='heater_central']"
     heater_central_count = 0
     heater_central_list: list[dict[str, bool]] = []
-    if not (result := xml.findall(locator)):
-        return NONE   # pragma: no cover
-
-    for heater_central in result:
+    for heater_central in xml.findall(locator):
         if (heater_central_id := heater_central.get("id")) is None:
             continue  # pragma: no cover
 

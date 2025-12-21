@@ -208,7 +208,7 @@ class SmileCommon:
                 if item.get("id") in self.gw_entities:
                     members.append(item.get("id"))
 
-            if group_type in GROUP_TYPES and members:
+            if group_type in GROUP_TYPES and members and group_id:
                 self.gw_entities[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
