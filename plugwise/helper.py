@@ -199,16 +199,19 @@ class SmileHelper(SmileCommon):
         loc = Munch()
         locations = self._domain_objects.findall("./location")
         for location in locations:
-            loc.name = location.find("name").text
             loc.loc_id = location.attrib["id"]
-            self._loc_data[loc.loc_id] = {"name": loc.name}
-            if loc.name != "Home":
-                continue
-
-            self._home_loc_id = loc.loc_id
-            self._home_location = self._domain_objects.find(
-                f"./location[@id='{loc.loc_id}']"
-            )
+            loc.name = location.find("name").text
+            self._loc_data[loc.loc_id] = {
+                "name": loc.name,
+                "primary": [],
+                "primary_prio": 0,
+                "secondary": [],
+            }
+            if loc.name == "Home":
+                self._home_loc_id = loc.loc_id
+                self._home_location = self._domain_objects.find(
+                    f"./location[@id='{loc.loc_id}']"
+                )
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Collect info for all appliances found."""
@@ -739,76 +742,72 @@ class SmileHelper(SmileCommon):
     def _scan_thermostats(self) -> None:
         """Helper-function for smile.py: get_all_entities().
 
-        Update locations with thermostat ranking results and use
+        Adam only: update locations with thermostat ranking results and use
         the result to update the device_class of secondary thermostats.
         """
-        self._thermo_locs = self._match_locations()
-        for loc_id in self._thermo_locs:
-            for entity_id, entity in self.gw_entities.items():
-                self._rank_thermostat(THERMO_MATCHING, loc_id, entity_id, entity)
+        if not self.check_name(ADAM):
+            return
 
-        for loc_id, loc_data in self._thermo_locs.items():
-            if loc_data["primary_prio"] != 0:
-                self._zones[loc_id] = {
+        self._match_and_rank_thermostats()
+        for location_id, location in self._loc_data.items():
+            if location["primary_prio"] != 0:
+                self._zones[location_id] = {
                     "dev_class": "climate",
                     "model": "ThermoZone",
-                    "name": loc_data["name"],
+                    "name": location["name"],
                     "thermostats": {
-                        "primary": loc_data["primary"],
-                        "secondary": loc_data["secondary"],
+                        "primary": location["primary"],
+                        "secondary": location["secondary"],
                     },
                     "vendor": "Plugwise",
                 }
                 self._count += 5
 
-    def _match_locations(self) -> dict[str, ThermoLoc]:
+    def _match_and_rank_thermostats(self) -> None:
         """Helper-function for _scan_thermostats().
 
-        Match appliances with locations.
+        Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
-        matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self._loc_data.items():
-            for appliance_details in self.gw_entities.values():
-                if appliance_details["location"] == location_id:
-                    location_details.update(
-                        {"primary": [], "primary_prio": 0, "secondary": []}
-                    )
-                    matched_locations[location_id] = location_details
-
-        return matched_locations
+        for location_id, location in self._loc_data.items():
+            for entity_id, entity in self.gw_entities.items():
+                self._rank_thermostat(
+                    entity_id, entity, location_id, location, THERMO_MATCHING
+                )
 
     def _rank_thermostat(
         self,
+        entity_id: str,
+        entity: GwEntityData,
+        location_id: str,
+        location: ThermoLoc,
         thermo_matching: dict[str, int],
-        loc_id: str,
-        appliance_id: str,
-        appliance_details: GwEntityData,
     ) -> None:
         """Helper-function for _scan_thermostats().
 
-        Rank the thermostat based on appliance_details: primary or secondary.
-        Note: there can be several primary and secondary thermostats.
+        Rank the thermostat based on entity-thermostat-type: primary or secondary.
+        There can be several primary and secondary thermostats per location.
         """
-        appl_class = appliance_details["dev_class"]
-        appl_d_loc = appliance_details["location"]
-        thermo_loc = self._thermo_locs[loc_id]
-        if loc_id == appl_d_loc and appl_class in thermo_matching:
-            if thermo_matching[appl_class] == thermo_loc["primary_prio"]:
-                thermo_loc["primary"].append(appliance_id)
+        appl_class = entity["dev_class"]
+        if (
+            "location" in entity
+            and location_id == entity["location"]
+            and appl_class in thermo_matching
+        ):
             # Pre-elect new primary
-            elif (thermo_rank := thermo_matching[appl_class]) > thermo_loc[
+            if thermo_matching[appl_class] == location["primary_prio"]:
+                location["primary"].append(entity_id)
+            elif (thermo_rank := thermo_matching[appl_class]) > location[
                 "primary_prio"
             ]:
-                thermo_loc["primary_prio"] = thermo_rank
+                location["primary_prio"] = thermo_rank
                 # Demote former primary
-                if tl_primary := thermo_loc["primary"]:
-                    thermo_loc["secondary"] += tl_primary
-                    thermo_loc["primary"] = []
-
+                if tl_primary := location["primary"]:
+                    location["secondary"] += tl_primary
+                    location["primary"] = []
                 # Crown primary
-                thermo_loc["primary"].append(appliance_id)
+                location["primary"].append(entity_id)
             else:
-                thermo_loc["secondary"].append(appliance_id)
+                location["secondary"].append(entity_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
         """Helper-function for _get_location_data().
