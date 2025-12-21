@@ -205,6 +205,9 @@ class SmileHelper(SmileCommon):
         counter = 0
         loc = Munch()
         locations = self._domain_objects.findall("./location")
+        if not locations:
+            raise KeyError("No location data present!")
+
         for location in locations:
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
