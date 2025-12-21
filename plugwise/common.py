@@ -193,7 +193,6 @@ class SmileCommon:
 
         Collect switching-, pumping- or report-group info.
         """
-        groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have groups
         if self.smile.type == "power" or self.check_name(ANNA):
             return
