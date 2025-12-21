@@ -807,22 +807,24 @@ class SmileHelper(SmileCommon):
         Rank the thermostat based on entity-thermostat-type: primary or secondary.
         There can be several primary and secondary thermostats per location.
         """
-        if (appl_class := entity["dev_class"]) in thermo_matching:
-            # Pre-elect new primary
-            if thermo_matching[appl_class] == location["primary_prio"]:
-                location["primary"].append(entity_id)
-            elif (thermo_rank := thermo_matching[appl_class]) > location[
-                "primary_prio"
-            ]:
-                location["primary_prio"] = thermo_rank
-                # Demote former primary
-                if tl_primary := location["primary"]:
-                    location["secondary"] += tl_primary
-                    location["primary"] = []
-                # Crown primary
-                location["primary"].append(entity_id)
-            else:
-                location["secondary"].append(entity_id)
+        if (appl_class := entity["dev_class"]) not in thermo_matching:
+            return None
+
+        # Pre-elect new primary
+        if thermo_matching[appl_class] == location["primary_prio"]:
+            location["primary"].append(entity_id)
+        elif (thermo_rank := thermo_matching[appl_class]) > location[
+            "primary_prio"
+        ]:
+            location["primary_prio"] = thermo_rank
+            # Demote former primary
+            if tl_primary := location["primary"]:
+                location["secondary"] += tl_primary
+                location["primary"] = []
+            # Crown primary
+            location["primary"].append(entity_id)
+        else:
+            location["secondary"].append(entity_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
         """Helper-function for _get_location_data().
