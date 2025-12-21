@@ -158,9 +158,9 @@ class SmileLegacyAPI(SmileLegacyData):
             raise PlugwiseError("Plugwise: invalid preset.")
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        if (rule_id := self._domain_objects.find(locator)) is None:
+        if (rule := self._domain_objects.find(locator)) is None:
             raise PlugwiseError("Plugwise: no preset rule found.")  # pragma: no cover
-        if rule_id.get("id") is None:
+        if (rule_id := rule.get("id")) is None:
             raise PlugwiseError("Plugwise: no preset id found.")  # pragma: no cover
 
         data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
