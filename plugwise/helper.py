@@ -793,15 +793,12 @@ class SmileHelper(SmileCommon):
         # Rank thermostats per location
         for location_id, location in self._loc_data.items():
             for entity_id, entity in entities_by_location.get(location_id, []):
-                self._rank_thermostat(
-                    entity_id, entity, location_id, location, THERMO_MATCHING
-                )
+                self._rank_thermostat(entity_id, entity, location, THERMO_MATCHING)
 
     def _rank_thermostat(
         self,
         entity_id: str,
         entity: GwEntityData,
-        location_id: str,
         location: ThermoLoc,
         thermo_matching: dict[str, int],
     ) -> None:
