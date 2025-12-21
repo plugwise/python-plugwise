@@ -393,7 +393,11 @@ class SmileLegacyHelper(SmileCommon):
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         presets: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
-            if directive is not None and directive.get("icon") is not None:
+            if (
+                directive is not None
+                and directive.get("icon") is not None
+                and directive.get("temperature") is not None
+            ):
                 # Ensure list of heating_setpoint, cooling_setpoint
                 presets[directive.get("icon")] = [
                     float(directive.get("temperature")),
