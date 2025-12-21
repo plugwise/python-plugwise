@@ -148,18 +148,15 @@ class SmileLegacyHelper(SmileCommon):
             return
 
         for location in locations:
-            loc.name = location.find("name").text
             loc.loc_id = location.attrib["id"]
+            loc.name = location.find("name").text
+            loc._type = location.find("type").text
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if self.smile.type == "power" and len(location.find(locator)) == 0:
                 continue
 
-            if loc.name == "Home":
-                self._home_loc_id = loc.loc_id
-            # Replace location-name for P1 legacy, can contain privacy-related info
-            if self.smile.type == "power":
-                loc.name = "Home"
+            if loc._type == "building":
                 self._home_loc_id = loc.loc_id
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
