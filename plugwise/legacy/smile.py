@@ -82,9 +82,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Finally, collect the data and states for each entity.
         """
         self._all_appliances()
-        if group_data := self._get_groups():
-            self.gw_entities.update(group_data)
-
+        self._get_groups()
         self._all_entity_data()
 
     async def async_update(self) -> dict[str, GwEntityData]:
@@ -154,13 +152,17 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        if (presets := self._presets()) is None:
+        if not (presets := self._presets()):
             raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
         if preset not in list(presets):
             raise PlugwiseError("Plugwise: invalid preset.")
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule_id = self._domain_objects.find(locator).attrib["id"]
+        if (rule := self._domain_objects.find(locator)) is None:
+            raise PlugwiseError("Plugwise: no preset rule found.")  # pragma: no cover
+        if (rule_id := rule.get("id")) is None:
+            raise PlugwiseError("Plugwise: no preset id found.")  # pragma: no cover
+
         data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
         await self.call_request(RULES, method="put", data=data)
 
@@ -192,7 +194,7 @@ class SmileLegacyAPI(SmileLegacyData):
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
-                schedule_rule_id = rule.attrib["id"]
+                schedule_rule_id = rule.get("id")
                 break
 
         if schedule_rule_id is None:
@@ -205,7 +207,7 @@ class SmileLegacyAPI(SmileLegacyData):
             new_state = "true"
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
-        template_id = self._domain_objects.find(locator).attrib["id"]
+        template_id = self._domain_objects.find(locator).get("id")
 
         data = (
             "<rules>"

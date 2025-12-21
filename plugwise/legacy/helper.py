@@ -107,7 +107,7 @@ class SmileLegacyHelper(SmileCommon):
                 continue  # pragma: no cover
 
             appl.location = self._home_loc_id
-            appl.entity_id = appliance.attrib["id"]
+            appl.entity_id = appliance.get("id")
             appl.name = appliance.find("name").text
             # Extend device_class name when a Circle/Stealth is type heater_central -- Pw-Beta Issue #739
             if (
@@ -148,7 +148,7 @@ class SmileLegacyHelper(SmileCommon):
             return
 
         for location in locations:
-            loc.loc_id = location.attrib["id"]
+            loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
             # Filter the valid single location for P1 legacy: services not empty
@@ -393,10 +393,14 @@ class SmileLegacyHelper(SmileCommon):
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         presets: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
-            if directive is not None and directive.get("icon") is not None:
+            if (
+                directive is not None
+                and directive.get("icon") is not None
+                and directive.get("temperature") is not None
+            ):
                 # Ensure list of heating_setpoint, cooling_setpoint
-                presets[directive.attrib["icon"]] = [
-                    float(directive.attrib["temperature"]),
+                presets[directive.get("icon")] = [
+                    float(directive.get("temperature")),
                     0,
                 ]
 
@@ -411,7 +415,7 @@ class SmileLegacyHelper(SmileCommon):
         search = self._domain_objects
         if (result := search.find("./rule[name='Thermostat schedule']")) is not None:
             name = "Thermostat schedule"
-            rule_id = result.attrib["id"]
+            rule_id = result.get("id")
 
         log_type = "schedule_state"
         locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
@@ -432,5 +436,5 @@ class SmileLegacyHelper(SmileCommon):
     def _thermostat_uri(self) -> str:
         """Determine the location-set_temperature uri - from APPLIANCES."""
         locator = "./appliance[type='thermostat']"
-        appliance_id = self._appliances.find(locator).attrib["id"]
+        appliance_id = self._appliances.find(locator).get("id")
         return f"{APPLIANCES};id={appliance_id}/thermostat"

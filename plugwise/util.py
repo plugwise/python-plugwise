@@ -82,30 +82,33 @@ def check_heater_central(xml: etree.Element) -> str:
     for a system that has two heater_central appliances.
     """
     locator = "./appliance[type='heater_central']"
-    hc_count = 0
-    hc_list: list[dict[str, bool]] = []
+    heater_central_count = 0
+    heater_central_list: list[dict[str, bool]] = []
     for heater_central in xml.findall(locator):
-        hc_count += 1
-        hc_id: str = heater_central.attrib["id"]
-        has_actuators: bool = (
-            heater_central.find("actuator_functionalities/") is not None
-        )
-        # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
-        if heater_central.find("name").text == "Central heating boiler":
-            hc_list.append({hc_id: has_actuators})
+        if (heater_central_id := heater_central.get("id")) is None:
+            continue  # pragma: no cover
 
-    if not hc_list:
+        if (heater_central_name := heater_central.find("name")) is None:
+            continue  # pragma: no cover
+
+        has_actuators = heater_central.find("actuator_functionalities/") is not None
+        # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
+        if heater_central_name.text == "Central heating boiler":
+            heater_central_list.append({heater_central_id: has_actuators})
+            heater_central_count += 1
+
+    if not heater_central_list:
         return NONE  # pragma: no cover
 
-    heater_central_id = list(hc_list[0].keys())[0]
-    if hc_count > 1:
-        for item in hc_list:
-            hc_id, has_actuators = next(iter(item.items()))
+    heater_id = list(heater_central_list[0].keys())[0]
+    if heater_central_count > 1:
+        for item in heater_central_list:
+            heater_central_id, has_actuators = next(iter(item.items()))
             if has_actuators:
-                heater_central_id = hc_id
+                heater_id = heater_central_id
                 break
 
-    return heater_central_id
+    return heater_id
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:

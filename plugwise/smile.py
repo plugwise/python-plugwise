@@ -113,9 +113,7 @@ class SmileAPI(SmileData):
             )
             self._scan_thermostats()
 
-        if group_data := self._get_groups():
-            self.gw_entities.update(group_data)
-
+        self._get_groups()
         self._all_entity_data()
 
     async def async_update(self) -> dict[str, GwEntityData]:
@@ -178,7 +176,7 @@ class SmileAPI(SmileData):
         if th_func_list := self._domain_objects.findall(locator):
             for th_func in th_func_list:
                 if th_func.find("type").text == key:
-                    thermostat_id = th_func.attrib["id"]
+                    thermostat_id = th_func.get("id")
 
         if thermostat_id is None:
             raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
@@ -358,7 +356,7 @@ class SmileAPI(SmileData):
         )
         if self.check_name(ANNA):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
-            template_id = self._domain_objects.find(locator).attrib["id"]
+            template_id = self._domain_objects.find(locator).get("id")
             template = f'<template id="{template_id}" />'
 
         contexts = self.determine_contexts(loc_id, new_state, schedule_rule_id)
@@ -427,10 +425,10 @@ class SmileAPI(SmileData):
             # multiple types of e.g. toggle_functionality present
             if (sw_type := item.find("type")) is not None:
                 if sw_type.text == switch.act_type:
-                    switch_id = item.attrib["id"]
+                    switch_id = item.get("id")
                     break
             else:  # actuators with a single item like relay_functionality
-                switch_id = item.attrib["id"]
+                switch_id = item.get("id")
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay":
@@ -456,7 +454,7 @@ class SmileAPI(SmileData):
         switched = 0
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._domain_objects.find(locator).attrib["id"]
+            switch_id = self._domain_objects.find(locator).get("id")
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             lock_blocked = self.gw_entities[member]["switches"].get("lock")
             # Assume Plugs under Plugwise control are not part of a group
