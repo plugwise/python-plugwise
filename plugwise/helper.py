@@ -30,6 +30,7 @@ from plugwise.constants import (
     OFF,
     P1_MEASUREMENTS,
     TEMP_CELSIUS,
+    THERMO_MATCHING,
     THERMOSTAT_CLASSES,
     TOGGLES,
     UOM,
@@ -54,6 +55,17 @@ from plugwise.util import (
 from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging import version
+
+
+def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
+    """Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739."""
+
+    if (
+        (search := appliance.find("description")) is not None
+        and (description := search.text) is not None
+        and ("ZigBee protocol" in description or "smart plug" in description)
+    ):
+        appl.pwclass = f"{appl.pwclass}_plug"
 
 
 def search_actuator_functionalities(
@@ -93,41 +105,43 @@ class SmileHelper(SmileCommon):
         """Return the item-count."""
         return self._count
 
-    def _all_appliances(self) -> None:
+    def _get_appliances(self) -> None:
         """Collect all appliances with relevant info.
 
         Also, collect the P1 smartmeter info from a location
         as this one is not available as an appliance.
         """
         self._count = 0
-        self._all_locations()
+        self._get_locations()
 
         for appliance in self._domain_objects.findall("./appliance"):
             appl = Munch()
+            appl.available = None
+            appl.entity_id = appliance.attrib["id"]
+            appl.location = None
+            appl.name = appliance.find("name").text
+            appl.model = None
+            appl.model_id = None
+            appl.module_id = None
+            appl.firmware = None
+            appl.hardware = None
+            appl.mac = None
             appl.pwclass = appliance.find("type").text
-            # Don't collect data for the OpenThermGateway appliance
-            if appl.pwclass == "open_therm_gateway":
-                continue
+            appl.zigbee_mac = None
+            appl.vendor_name = None
 
-            # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
-            description = appliance.find("description").text
-            if description is not None and (
-                "ZigBee protocol" in description or "smart plug" in description
-            ):
-                appl.pwclass = f"{appl.pwclass}_plug"
-
-            # Skip thermostats that have this key, should be an orphaned device (Core #81712)
-            if (
+            # Don't collect data for the OpenThermGateway appliance, skip thermostat(s)
+            # without actuator_functionalities, should be an orphaned device(s) (Core #81712)
+            if appl.pwclass == "open_therm_gateway" or (
                 appl.pwclass == "thermostat"
                 and appliance.find("actuator_functionalities/") is None
             ):
                 continue
 
-            appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
-            # Don't assign the _home_loc_id to thermostat-devices without a location,
-            # they are not active
+            # Set location to the _home_loc_id when the appliance-location is not found,
+            # except for thermostat-devices without a location, they are not active
             elif appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_loc_id
 
@@ -135,16 +149,7 @@ class SmileHelper(SmileCommon):
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
-            appl.available = None
-            appl.entity_id = appliance.attrib["id"]
-            appl.name = appliance.find("name").text
-            appl.model = None
-            appl.model_id = None
-            appl.firmware = None
-            appl.hardware = None
-            appl.mac = None
-            appl.zigbee_mac = None
-            appl.vendor_name = None
+            extend_plug_device_class(appl, appliance)
 
             # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
@@ -152,6 +157,7 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
+        # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
             self._get_p1_smartmeter_info()
 
@@ -194,21 +200,33 @@ class SmileHelper(SmileCommon):
 
         self._create_gw_entities(appl)
 
-    def _all_locations(self) -> None:
+    def _get_locations(self) -> None:
         """Collect all locations."""
+        counter = 0
         loc = Munch()
         locations = self._domain_objects.findall("./location")
         for location in locations:
-            loc.name = location.find("name").text
             loc.loc_id = location.attrib["id"]
-            self._loc_data[loc.loc_id] = {"name": loc.name}
-            if loc.name != "Home":
-                continue
+            loc.name = location.find("name").text
+            loc._type = location.find("type").text
+            self._loc_data[loc.loc_id] = {
+                "name": loc.name,
+                "primary": [],
+                "primary_prio": 0,
+                "secondary": [],
+            }
+            # Home location is of type building
+            if loc._type == "building":
+                counter += 1
+                self._home_loc_id = loc.loc_id
+                self._home_location = self._domain_objects.find(
+                    f"./location[@id='{loc.loc_id}']"
+                )
 
-            self._home_loc_id = loc.loc_id
-            self._home_location = self._domain_objects.find(
-                f"./location[@id='{loc.loc_id}']"
-            )
+        if counter == 0:
+            raise KeyError(
+                "Error, location Home (building) not found!"
+            )  # pragma: no cover
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Collect info for all appliances found."""
@@ -739,84 +757,71 @@ class SmileHelper(SmileCommon):
     def _scan_thermostats(self) -> None:
         """Helper-function for smile.py: get_all_entities().
 
-        Update locations with thermostat ranking results and use
+        Adam only: update locations with thermostat ranking results and use
         the result to update the device_class of secondary thermostats.
         """
-        self._thermo_locs = self._match_locations()
+        if not self.check_name(ADAM):
+            return
 
-        thermo_matching: dict[str, int] = {
-            "thermostat": 2,
-            "zone_thermometer": 2,
-            "zone_thermostat": 2,
-            "thermostatic_radiator_valve": 1,
-        }
-
-        for loc_id in self._thermo_locs:
-            for entity_id, entity in self.gw_entities.items():
-                self._rank_thermostat(thermo_matching, loc_id, entity_id, entity)
-
-        for loc_id, loc_data in self._thermo_locs.items():
-            if loc_data["primary_prio"] != 0:
-                self._zones[loc_id] = {
+        self._match_and_rank_thermostats()
+        for location_id, location in self._loc_data.items():
+            if location["primary_prio"] != 0:
+                self._zones[location_id] = {
                     "dev_class": "climate",
                     "model": "ThermoZone",
-                    "name": loc_data["name"],
+                    "name": location["name"],
                     "thermostats": {
-                        "primary": loc_data["primary"],
-                        "secondary": loc_data["secondary"],
+                        "primary": location["primary"],
+                        "secondary": location["secondary"],
                     },
                     "vendor": "Plugwise",
                 }
                 self._count += 5
 
-    def _match_locations(self) -> dict[str, ThermoLoc]:
+    def _match_and_rank_thermostats(self) -> None:
         """Helper-function for _scan_thermostats().
 
-        Match appliances with locations.
+        Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
-        matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self._loc_data.items():
-            for appliance_details in self.gw_entities.values():
-                if appliance_details["location"] == location_id:
-                    location_details.update(
-                        {"primary": [], "primary_prio": 0, "secondary": []}
-                    )
-                    matched_locations[location_id] = location_details
-
-        return matched_locations
+        for location_id, location in self._loc_data.items():
+            for entity_id, entity in self.gw_entities.items():
+                self._rank_thermostat(
+                    entity_id, entity, location_id, location, THERMO_MATCHING
+                )
 
     def _rank_thermostat(
         self,
+        entity_id: str,
+        entity: GwEntityData,
+        location_id: str,
+        location: ThermoLoc,
         thermo_matching: dict[str, int],
-        loc_id: str,
-        appliance_id: str,
-        appliance_details: GwEntityData,
     ) -> None:
         """Helper-function for _scan_thermostats().
 
-        Rank the thermostat based on appliance_details: primary or secondary.
-        Note: there can be several primary and secondary thermostats.
+        Rank the thermostat based on entity-thermostat-type: primary or secondary.
+        There can be several primary and secondary thermostats per location.
         """
-        appl_class = appliance_details["dev_class"]
-        appl_d_loc = appliance_details["location"]
-        thermo_loc = self._thermo_locs[loc_id]
-        if loc_id == appl_d_loc and appl_class in thermo_matching:
-            if thermo_matching[appl_class] == thermo_loc["primary_prio"]:
-                thermo_loc["primary"].append(appliance_id)
-            # Pre-elect new primary
-            elif (thermo_rank := thermo_matching[appl_class]) > thermo_loc[
-                "primary_prio"
-            ]:
-                thermo_loc["primary_prio"] = thermo_rank
-                # Demote former primary
-                if tl_primary := thermo_loc["primary"]:
-                    thermo_loc["secondary"] += tl_primary
-                    thermo_loc["primary"] = []
+        if not (
+            "location" in entity
+            and location_id == entity["location"]
+            and (appl_class := entity["dev_class"]) in thermo_matching
+        ):
+            return None
 
-                # Crown primary
-                thermo_loc["primary"].append(appliance_id)
-            else:
-                thermo_loc["secondary"].append(appliance_id)
+        # Pre-elect new primary
+        if thermo_matching[appl_class] == location["primary_prio"]:
+            location["primary"].append(entity_id)
+        elif (thermo_rank := thermo_matching[appl_class]) > location["primary_prio"]:
+            location["primary_prio"] = thermo_rank
+            # Demote former primary
+            if tl_primary := location["primary"]:
+                location["secondary"] += tl_primary
+                location["primary"] = []
+            # Crown primary
+            location["primary"].append(entity_id)
+        else:
+            location["secondary"].append(entity_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
         """Helper-function for _get_location_data().

@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Code optimizations via PR [#837](https://github.com/plugwise/python-plugwise/pull/837)
+- Code optimizations via PR [#837](https://github.com/plugwise/python-plugwise/pull/837), [#838](https://github.com/plugwise/python-plugwise/pull/838)
 
 ## v1.11.0
 

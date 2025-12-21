@@ -10,7 +10,6 @@ import datetime as dt
 from typing import Any, cast
 
 from plugwise.constants import (
-    ADAM,
     ALLOWED_ZONE_PROFILES,
     ANNA,
     APPLIANCES,
@@ -107,13 +106,12 @@ class SmileAPI(SmileData):
         Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
-        self._all_appliances()
+        self._get_appliances()
         if self._is_thermostat:
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
-            if self.check_name(ADAM):
-                self._scan_thermostats()
+            self._scan_thermostats()
 
         if group_data := self._get_groups():
             self.gw_entities.update(group_data)
