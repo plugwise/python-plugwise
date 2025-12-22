@@ -694,7 +694,6 @@ class SmileHelper(SmileCommon):
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
                 value = format_measure(found.text, NONE)
-                LOGGER.debug("HOI outdoor_temp = %s", value)
                 data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
 
@@ -828,6 +827,12 @@ class SmileHelper(SmileCommon):
         for location_id, location in self._loc_data.items():
             if location["primary_prio"] != 0:
                 self._new_zones.append(location_id)
+                if (
+                    location_id in self._existing_zones
+                    and self.gw_entities[location_id]["name"] == location["name"]
+                ):
+                    continue
+
                 self._zones[location_id] = {
                     "dev_class": "climate",
                     "model": "ThermoZone",
