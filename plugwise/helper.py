@@ -243,6 +243,14 @@ class SmileHelper(SmileCommon):
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
+            # Home location is of type building
+            if loc._type == "building":
+                counter += 1
+                self._home_loc_id = loc.loc_id
+                self._home_location = self._domain_objects.find(
+                    f"./location[@id='{loc.loc_id}']"
+                )
+
             self._new_locations.append(loc.loc_id)
             if (
                 loc.loc_id in self._existing_locations
@@ -256,13 +264,6 @@ class SmileHelper(SmileCommon):
                 "primary_prio": 0,
                 "secondary": [],
             }
-            # Home location is of type building
-            if loc._type == "building":
-                counter += 1
-                self._home_loc_id = loc.loc_id
-                self._home_location = self._domain_objects.find(
-                    f"./location[@id='{loc.loc_id}']"
-                )
 
         removed = list(set(self._existing_locations) - set(self._new_locations))
         if self._existing_locations and removed:

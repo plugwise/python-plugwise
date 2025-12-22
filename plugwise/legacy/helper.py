@@ -108,6 +108,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.mac = None
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.model_id = None
+            appl.module_id = None
             appl.name = appliance.find("name").text
             appl.vendor_name = None
             appl.zigbee_mac = None

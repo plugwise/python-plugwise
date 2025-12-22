@@ -215,7 +215,7 @@ class SmileCommon:
                 and self.gw_entities[group_id]["name"] == group_name
             ):
                 continue
-            
+
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
