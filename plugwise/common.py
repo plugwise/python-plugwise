@@ -205,16 +205,23 @@ class SmileCommon:
         for group in self._domain_objects.findall("./group"):
             members: list[str] = []
             group_id = group.get("id")
-            self._new_groups.append(group_id)
-            if group_id in self._existing_groups:
-                continue
             group_name = group.find("name").text
+            if group_id is None:
+                continue  # pragma: no cover
+
+            self._new_groups.append(group_id)
+            if (
+                group_id in self._existing_groups
+                and self.gw_entities[group_id]["name"] == group_name
+            ):
+                continue
+            
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 self._add_member(item, members)
 
-            if group_type in GROUP_TYPES and members and group_id:
+            if group_type in GROUP_TYPES and members:
                 self.gw_entities[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
