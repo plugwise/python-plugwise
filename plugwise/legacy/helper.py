@@ -99,6 +99,19 @@ class SmileLegacyHelper(SmileCommon):
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
+
+            appl.available = None
+            appl.entity_id = appliance.get("id")
+            appl.firmware = None
+            appl.hardware = None
+            appl.location = self._home_loc_id
+            appl.mac = None
+            appl.model = appl.pwclass.replace("_", " ").title()
+            appl.model_id = None
+            appl.name = appliance.find("name").text
+            appl.vendor_name = None
+            appl.zigbee_mac = None
+
             # Skip thermostats that have this key, should be an orphaned device (Core #81712)
             if (
                 appl.pwclass == "thermostat"
@@ -106,24 +119,12 @@ class SmileLegacyHelper(SmileCommon):
             ):
                 continue  # pragma: no cover
 
-            appl.location = self._home_loc_id
-            appl.entity_id = appliance.get("id")
-            appl.name = appliance.find("name").text
             # Extend device_class name when a Circle/Stealth is type heater_central -- Pw-Beta Issue #739
             if (
                 appl.pwclass == "heater_central"
                 and appl.name != "Central heating boiler"
             ):
                 appl.pwclass = "heater_central_plug"
-
-            appl.model = appl.pwclass.replace("_", " ").title()
-            appl.available = None
-            appl.model_id = None
-            appl.firmware = None
-            appl.hardware = None
-            appl.mac = None
-            appl.zigbee_mac = None
-            appl.vendor_name = None
 
             # Determine class for this appliance
             # Skip on heater_central when no active device present or on orphaned stretch devices
