@@ -118,14 +118,14 @@ class SmileHelper(SmileCommon):
             appl = Munch()
             appl.available = None
             appl.entity_id = appliance.get("id")
+            appl.firmware = None
+            appl.hardware = None
             appl.location = None
-            appl.name = appliance.find("name").text
+            appl.mac = None
             appl.model = None
             appl.model_id = None
             appl.module_id = None
-            appl.firmware = None
-            appl.hardware = None
-            appl.mac = None
+            appl.name = appliance.find("name").text
             appl.pwclass = appliance.find("type").text
             appl.zigbee_mac = None
             appl.vendor_name = None
@@ -205,6 +205,9 @@ class SmileHelper(SmileCommon):
         counter = 0
         loc = Munch()
         locations = self._domain_objects.findall("./location")
+        if not locations:
+            raise KeyError("No location data present!")
+
         for location in locations:
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
