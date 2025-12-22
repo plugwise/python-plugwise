@@ -201,9 +201,11 @@ class SmileHelper(SmileCommon):
         if not module_data["contents"]:  # pragma: no cover
             return
 
+        # Detect a smartmeter change
         module_id = module_data["module_id"]
         if module_id in (
             self.gw_entities[self._gateway_id].get("module_id"),
+            # legacy
             self.gw_entities.get(self._home_loc_id, {}).get("module_id"),
         ):
             return
