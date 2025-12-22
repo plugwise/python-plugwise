@@ -264,11 +264,6 @@ class SmileHelper(SmileCommon):
                     f"./location[@id='{loc.loc_id}']"
                 )
 
-        if counter == 0:
-            raise KeyError(
-                "Error, location Home (building) not found!"
-            )  # pragma: no cover
-
         removed = list(set(self._existing_locations) - set(self._new_locations))
         if self._existing_locations and removed:
             for location_id in removed:
@@ -276,6 +271,11 @@ class SmileHelper(SmileCommon):
 
         self._existing_locations = self._new_locations
         self._new_locations = []
+
+        if counter == 0:
+            raise KeyError(
+                "Error, location Home (building) not found!"
+            )  # pragma: no cover
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Collect info for all appliances found."""
