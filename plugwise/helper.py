@@ -157,13 +157,6 @@ class SmileHelper(SmileCommon):
 
             extend_plug_device_class(appl, appliance)
 
-            # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
-            description = appliance.find("description").text
-            if description is not None and (
-                "ZigBee protocol" in description or "smart plug" in description
-            ):
-                appl.pwclass = f"{appl.pwclass}_plug"
-
             # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
