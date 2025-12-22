@@ -83,10 +83,10 @@ class SmileLegacyHelper(SmileCommon):
         """Return the item-count."""
         return self._count
 
-    def _all_appliances(self) -> None:
+    def _get_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._count = 0
-        self._all_locations()
+        self._get_locations()
 
         self._create_legacy_gateway()
         # For legacy P1 collect the connected SmartMeter info
@@ -137,7 +137,7 @@ class SmileLegacyHelper(SmileCommon):
             self._create_gw_entities(appl)
             self._reorder_devices()
 
-    def _all_locations(self) -> None:
+    def _get_locations(self) -> None:
         """Collect all locations."""
         loc = Munch()
 

@@ -81,7 +81,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
-        self._all_appliances()
+        self._get_appliances()
         self._get_groups()
         self._all_entity_data()
 
