@@ -272,7 +272,7 @@ class SmileHelper(SmileCommon):
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
-        self._gateway_id = appliance.get("id")
+        self._gateway_id = appl.entity_id
         appl.firmware = str(self.smile.version)
         appl.hardware = self.smile.hw_version
         appl.mac = self.smile.mac_address
