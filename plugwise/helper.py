@@ -178,14 +178,18 @@ class SmileHelper(SmileCommon):
         self._reorder_devices()
 
         removed = list(set(self._existing_appliances) - set(self._new_appliances))
+        new = list(set(self._new_appliances) - set(self._existing_appliances))
         if self._existing_appliances:
             for appliance in removed:
                 self.gw_entities.pop(appliance)
-            return False
 
         self._existing_appliances = self._new_appliances
         self._new_appliances = []
-        return True
+
+        if new:
+            return True
+
+        return False
 
     def _add_p1_smartmeter_info(self) -> None:
         """For P1 collect the smartmeter info from the Home/building location and add it as an entity.
