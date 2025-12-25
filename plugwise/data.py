@@ -111,15 +111,16 @@ class SmileData(SmileHelper):
         if entity_id != self._gateway_id:
             return
 
-        if (self._is_thermostat or self.smile.type == "power") and "binary_sensors" not in entity:
-            entity.update({"binary_sensors": {"plugwise_notification": bool(self._notifications)}})
-            entity.update({"notifications": self._notifications})
-            self._count += 2
+        if self._is_thermostat or self.smile.type == "power":
+            if "plugwise_notification" not in entity:
+                entity["binary_sensors"].update({"plugwise_notification": bool(self._notifications)})
+                entity.update({"notifications": self._notifications})
+                self._count += 2
 
-        if "plugwise_notification" in entity["binary_sensors"]:
-            entity["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
-            entity["notifications"] = self._notifications
-            self._count += 2
+            else:
+                entity["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
+                entity["notifications"] = self._notifications
+                self._count += 2
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
