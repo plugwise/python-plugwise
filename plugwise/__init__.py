@@ -334,7 +334,6 @@ class Smile(SmileComm):
         except (DataMissingError, KeyError) as err:
             raise PlugwiseError("No Plugwise data received") from err
 
-        LOGGER.debug("HOI data: %s", data)
         return data
 
     ########################################################################################################
