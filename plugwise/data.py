@@ -107,16 +107,17 @@ class SmileData(SmileHelper):
         self, entity_id: str, entity: GwEntityData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
-        if (
-            entity_id == self._gateway_id
-            and (self._is_thermostat or self.smile.type == "power")
-        ) or (
-            "binary_sensors" in entity
-            and "plugwise_notification" in entity["binary_sensors"]
-        ):
-            entity["binary_sensors"]["plugwise_notification"] = bool(
-                self._notifications
-            )
+
+        if entity_id != self._gateway_id:
+            return
+
+        if (self._is_thermostat or self.smile.type == "power") and "binary_sensors" not in entity:
+            entity.update({"binary_sensors": {"plugwise_notification": bool(self._notifications)}})
+            entity.update({"notifications": self._notifications})
+            self._count += 2
+
+        if "plugwise_notification" in entity["binary_sensors"]:
+            entity["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             entity["notifications"] = self._notifications
             self._count += 2
 
