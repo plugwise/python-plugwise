@@ -113,12 +113,16 @@ class SmileData(SmileHelper):
 
         if self._is_thermostat or self.smile.type == "power":
             if "plugwise_notification" not in entity:
-                entity["binary_sensors"].update({"plugwise_notification": bool(self._notifications)})
+                entity["binary_sensors"].update(
+                    {"plugwise_notification": bool(self._notifications)}
+                )
                 entity.update({"notifications": self._notifications})
                 self._count += 2
 
             else:
-                entity["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
+                entity["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
                 entity["notifications"] = self._notifications
                 self._count += 2
 
