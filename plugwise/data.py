@@ -124,7 +124,6 @@ class SmileData(SmileHelper):
                     self._notifications
                 )
                 entity["notifications"] = self._notifications
-                self._count += 2
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
