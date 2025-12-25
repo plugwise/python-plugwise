@@ -230,6 +230,9 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
+            elif group_id in self._existing_groups:
+                # Group existed but now has no valid members ->  remove
+                self._new_groups.remove(group_id)
 
         removed = list(set(self._existing_groups) - set(self._new_groups))
         if self._existing_groups and removed:
