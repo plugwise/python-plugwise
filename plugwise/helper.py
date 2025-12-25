@@ -160,7 +160,10 @@ class SmileHelper(SmileCommon):
             self._new_appliances.append(appl.entity_id)
             if (
                 appl.entity_id in self._existing_appliances
-                and self.gw_entities[appl.entity_id]["name"] == appl.name
+                and (
+                    appl.name in ("Gateway", "Central heating boiler")
+                    or self.gw_entities[appl.entity_id]["name"] == appl.name
+                )
             ):
                 continue
 
