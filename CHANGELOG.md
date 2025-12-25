@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Update model-data for Jip, Tom and Floor via PR []()
+- Add/update model-data for Jip, Tom and Floor via PR [#842](https://github.com/plugwise/python-plugwise/pull/842)
 
 ## v1.11.1
 
