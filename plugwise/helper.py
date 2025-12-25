@@ -178,8 +178,8 @@ class SmileHelper(SmileCommon):
         # Sort the gw_entities
         self._reorder_devices()
 
-        removed = list(set(self._existing_appliances) - set(self._new_appliances))
         new = list(set(self._new_appliances) - set(self._existing_appliances))
+        removed = list(set(self._existing_appliances) - set(self._new_appliances))
         if self._existing_appliances:
             for appliance in removed:
                 self.gw_entities.pop(appliance)
@@ -187,7 +187,7 @@ class SmileHelper(SmileCommon):
         self._existing_appliances = self._new_appliances
         self._new_appliances = []
 
-        if new:
+        if new or removed:
             return True
 
         return False
