@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Update model-data for Jip, Tom and Floor via PR []()
+
 ## v1.11.1
 
 - Code optimizations via PR [#837](https://github.com/plugwise/python-plugwise/pull/837), [#838](https://github.com/plugwise/python-plugwise/pull/838), [#839](https://github.com/plugwise/python-plugwise/pull/839), [#840](https://github.com/plugwise/python-plugwise/pull/840), and [#841](https://github.com/plugwise/python-plugwise/pull/841)
