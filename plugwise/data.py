@@ -201,7 +201,7 @@ class SmileData(SmileHelper):
                 entity, "heater_central", "no OpenTherm communication"
             )
         # Zigbee node availability
-        self._get_zigbee_availability(entity)
+        self._update_zigbee_availability(entity)
 
         # Switching groups data
         self._entity_switching_group(entity)
