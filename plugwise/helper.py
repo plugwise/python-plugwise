@@ -161,7 +161,7 @@ class SmileHelper(SmileCommon):
             if (
                 appl.entity_id in self._existing_appliances
                 and (
-                    appl.name in ("Gateway", "Central heating boiler")
+                    appl.pwclass in ("gateway", "heater_central")
                     or self.gw_entities[appl.entity_id]["name"] == appl.name
                 )
             ):
