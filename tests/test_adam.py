@@ -154,6 +154,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(
             api, "2022-01-16 00:00:01", testdata_updated, initialize=False
         )
+        assert self.entity_items == 241
 
         # Simulate receiving no xml-data after a requesting a reboot of the gateway
         self.smile_setup = "reboot/adam_plus_anna_new"
