@@ -855,7 +855,7 @@ class SmileHelper(SmileCommon):
         removed = list(set(self._existing_zones) - set(self._new_zones))
         if self._existing_zones and removed:
             for location_id in removed:
-                self._zones.pop(location_id)
+                self._zones.pop(location_id, None)
 
         self._existing_zones = self._new_zones
         self._new_zones = []
