@@ -145,7 +145,7 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
 DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
-    "humidity": UOM(NONE),  # Specific for a Jip
+    "humidity": UOM(NONE),  # Specific for an Emma or Jip
     "illuminance": UOM(UNIT_LUMEN),  # Specific for an Anna
     "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
     "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
@@ -154,7 +154,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "cooling_activation_outdoor_temperature": UOM(TEMP_CELSIUS),
     "cooling_deactivation_threshold": UOM(TEMP_CELSIUS),
     ##################################
-    # Specific for a Lisa or Tom/Floor
+    # Specific for an Emma Jip, Lisa, Tom or Floor
     "battery": UOM(PERCENTAGE),
     "temperature_difference": UOM(DEGREE),
     "valve_position": UOM(PERCENTAGE),
