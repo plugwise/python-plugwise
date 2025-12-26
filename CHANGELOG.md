@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v1.11.2
 
 - Add/update model-data for Jip, Tom and Floor via PR [#842](https://github.com/plugwise/python-plugwise/pull/842)
 
