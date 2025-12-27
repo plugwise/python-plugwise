@@ -54,7 +54,9 @@ class SmileCommon:
         self._cooling_present: bool
         self._count: int
         self._domain_objects: etree.Element
+        self._existing_groups: list[str] = []
         self._heater_id: str = NONE
+        self._new_groups: list[str] = []
         self._on_off_device: bool
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile: Munch
@@ -116,6 +118,7 @@ class SmileCommon:
         appl.model = (
             "Generic heater/cooler" if self._cooling_present else "Generic heater"
         )
+        appl.module_id = module_data["module_id"]
 
         return appl
 
@@ -140,6 +143,7 @@ class SmileCommon:
         appl.available = module_data["reachable"]
         appl.hardware = module_data["hardware_version"]
         appl.firmware = module_data["firmware_version"]
+        appl.module_id = module_data["module_id"]
         appl.zigbee_mac = module_data["zigbee_mac_address"]
 
         return appl
@@ -156,6 +160,7 @@ class SmileCommon:
             "mac_address": appl.mac,
             "model": appl.model,
             "model_id": appl.model_id,
+            "module_id": appl.module_id,
             "name": appl.name,
             "vendor": appl.vendor_name,
             "zigbee_mac_address": appl.zigbee_mac,
@@ -201,14 +206,22 @@ class SmileCommon:
             members: list[str] = []
             group_id = group.get("id")
             group_name = group.find("name").text
+            if group_id is None:
+                continue  # pragma: no cover
+
+            self._new_groups.append(group_id)
+            if (
+                group_id in self._existing_groups
+                and self.gw_entities[group_id]["name"] == group_name
+            ):
+                continue
+
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.get("id") in self.gw_entities:
-                    members.append(item.get("id"))
+                self._add_member(item, members)
 
-            if group_type in GROUP_TYPES and members and group_id:
+            if group_type in GROUP_TYPES and members:
                 self.gw_entities[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
@@ -217,6 +230,22 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
+            elif group_id in self._existing_groups:
+                # Group existed but now has no valid members ->  remove
+                self._new_groups.remove(group_id)
+
+        removed = list(set(self._existing_groups) - set(self._new_groups))
+        if self._existing_groups and removed:
+            for group_id in removed:
+                self.gw_entities.pop(group_id)
+
+        self._existing_groups = self._new_groups
+        self._new_groups = []
+
+    def _add_member(self, element: etree.Element, members: list[str]) -> None:
+        """Check and add member to list."""
+        if (member_id := element.attrib["id"]) in self.gw_entities:
+            members.append(member_id)
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
@@ -252,6 +281,7 @@ class SmileCommon:
             "contents": False,
             "firmware_version": None,
             "hardware_version": None,
+            "module_id": None,
             "reachable": None,
             "vendor_name": None,
             "vendor_model": None,
@@ -275,6 +305,7 @@ class SmileCommon:
                 module_data["vendor_model"] = module.find("vendor_model").text
                 module_data["hardware_version"] = module.find("hardware_version").text
                 module_data["firmware_version"] = module.find("firmware_version").text
+                module_data["module_id"] = module.attrib["id"]
                 get_zigbee_data(module, module_data, legacy)
 
             break

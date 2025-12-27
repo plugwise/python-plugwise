@@ -107,18 +107,23 @@ class SmileData(SmileHelper):
         self, entity_id: str, entity: GwEntityData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
-        if (
-            entity_id == self._gateway_id
-            and (self._is_thermostat or self.smile.type == "power")
-        ) or (
-            "binary_sensors" in entity
-            and "plugwise_notification" in entity["binary_sensors"]
-        ):
-            entity["binary_sensors"]["plugwise_notification"] = bool(
-                self._notifications
-            )
-            entity["notifications"] = self._notifications
-            self._count += 2
+
+        if entity_id != self._gateway_id:
+            return
+
+        if self._is_thermostat or self.smile.type == "power":
+            if "plugwise_notification" not in entity:
+                entity["binary_sensors"].update(
+                    {"plugwise_notification": bool(self._notifications)}
+                )
+                entity.update({"notifications": self._notifications})
+                self._count += 2
+
+            else:
+                entity["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
+                entity["notifications"] = self._notifications
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
@@ -195,6 +200,8 @@ class SmileData(SmileHelper):
             self._check_availability(
                 entity, "heater_central", "no OpenTherm communication"
             )
+        # Zigbee node availability
+        self._update_zigbee_availability(entity)
 
         # Switching groups data
         self._entity_switching_group(entity)

@@ -23,6 +23,7 @@
     "dev_class": "smartmeter",
     "location": "03e65b16e4b247a29ae0d75a78cb492e",
     "model": "XMX5LGF0010453051839",
+    "module_id": "560672c43a964ef29202bad5b8284985",
     "name": "P1",
     "sensors": {
       "electricity_consumed_off_peak_cumulative": 70537.898,

@@ -9,6 +9,7 @@
     "hardware": "6539-1301-5002",
     "location": "eb5309212bf5407bb143e5bfa3b18aee",
     "model": "ThermoTouch",
+    "module_id": "807a45cbc950419c98ce4624bc27ff09",
     "name": "Anna",
     "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
     "select_schedule": "Thuiswerken",
@@ -72,6 +73,7 @@
     },
     "model": "Generic heater",
     "model_id": "2.32",
+    "module_id": "88c1299c194f4b39b857e369803c2481",
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 39.9,

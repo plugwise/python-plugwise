@@ -9,6 +9,7 @@
     "hardware": "6539-1301-5002",
     "location": "be81e3f8275b4129852c4d8d550ae2eb",
     "model": "ThermoTouch",
+    "module_id": "8ee7dfdf4d1c4ad58e6f8b274ff7da9c",
     "name": "Anna",
     "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
     "select_schedule": "off",
@@ -51,6 +52,7 @@
       "upper_bound": 90.0
     },
     "model": "Generic heater",
+    "module_id": "43de3a9e223743aa8127e7bfe8e66fb2",
     "name": "OpenTherm",
     "sensors": {
       "dhw_temperature": 0.0,

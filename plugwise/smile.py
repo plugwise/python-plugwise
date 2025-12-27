@@ -88,6 +88,9 @@ class SmileAPI(SmileData):
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
 
+        self._zones = {}
+        self.gw_entities = {}
+
     @property
     def cooling_present(self) -> bool:
         """Return the cooling capability."""
@@ -106,13 +109,12 @@ class SmileAPI(SmileData):
         Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
-        self._get_appliances()
-        if self._is_thermostat:
+        if self._get_appliances() and self._is_thermostat:
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
-            self._scan_thermostats()
 
+        self._scan_thermostats()
         self._get_groups()
         self._all_entity_data()
 
@@ -121,8 +123,6 @@ class SmileAPI(SmileData):
 
         Any change in the connected entities will be detected immediately.
         """
-        self._zones = {}
-        self.gw_entities = {}
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
@@ -138,7 +138,7 @@ class SmileAPI(SmileData):
                         "cooling_enabled"
                     ]
         except KeyError as err:
-            raise DataMissingError("No Plugwise actual data received") from err
+            raise DataMissingError(f"No Plugwise actual data received: {err}") from err
 
         return self.gw_entities
 

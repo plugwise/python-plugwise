@@ -332,7 +332,7 @@ class Smile(SmileComm):
         try:
             data = await self._smile_api.async_update()
         except (DataMissingError, KeyError) as err:
-            raise PlugwiseError("No Plugwise data received") from err
+            raise PlugwiseError(f"No Plugwise data received: {err}") from err
 
         return data
 

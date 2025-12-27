@@ -58,6 +58,7 @@
     },
     "model": "Generic heater/cooler",
     "model_id": "17.1",
+    "module_id": "1ad05e10747b4e40ba2ba82f2872d1c1",
     "name": "OpenTherm",
     "sensors": {
       "dhw_temperature": 63.5,
@@ -84,6 +85,7 @@
     "location": "b52908550469425b812c87f766fe5303",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "1f0d0e98291145afa4da4432f76a7bd2",
     "name": "Thermostaat BK",
     "sensors": {
       "battery": 55,
@@ -106,6 +108,7 @@
     "location": "20e735858f8146cead98b873177a4f99",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "0a00ddca4e9543c69c6648e5488590dd",
     "name": "Smart Plug DB",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -160,6 +163,7 @@
     "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "3fa224c4c39f458583b2dab4515210bf",
     "name": "Smart Plug KK",
     "sensors": {
       "electricity_consumed": 2.13,
@@ -180,6 +184,7 @@
     "location": "04b15f6e884448288f811d29fb7b1b30",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "483836101eb141e2b04045eedc3716ff",
     "name": "Smart Plug SJ",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -200,6 +205,7 @@
     "location": "fa5fa6b34f6b40a0972988b20e888ed4",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "e20da25d0cbf456097aa1a954efed11b",
     "name": "Smart Plug WK",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -221,6 +227,7 @@
     "location": "20e735858f8146cead98b873177a4f99",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "ddd4ed4873864199b6121459ae9fa4ae",
     "name": "Thermostaat DB",
     "sensors": {
       "setpoint": 18.0,
@@ -275,6 +282,7 @@
     "location": "9a27714b970547ee9a6bdadc2b815ad5",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "2028add51f214a3dbddfa1706e63cfed",
     "name": "Smart Plug SQ",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -325,6 +333,7 @@
     "location": "e39529c79ab54fda9bed26cfc0447546",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "d2f732f328ba447abd5be12f2e196205",
     "name": "Thermostaat JM",
     "sensors": {
       "setpoint": 18.0,
@@ -346,6 +355,7 @@
     "location": "b52908550469425b812c87f766fe5303",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "44fe408e4afd47c19928941ef5499298",
     "name": "Smart Plug BK",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -366,6 +376,7 @@
     "location": "5cc21042f87f4b4c94ccb5537c47a53f",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "1695cccaacc94580860544338b272ce0",
     "name": "Smart Plug BK2",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -453,6 +464,7 @@
     "location": "e39529c79ab54fda9bed26cfc0447546",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "9a3848f23b814b708f7f5bf15702c60d",
     "name": "Smart Plug JM",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -507,6 +519,7 @@
     "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "3e205ba6cede43e5b461e7c76340a64d",
     "name": "Smart Plug RB",
     "sensors": {
       "electricity_consumed": 3.13,
@@ -595,6 +608,7 @@
     "location": "8cf650a4c10c44819e426bed406aec34",
     "model": "Plug",
     "model_id": "160-01",
+    "module_id": "7435452fbc684a30a4978913f342c68b",
     "name": "Smart Plug BK1",
     "sensors": {
       "electricity_consumed": 0.0,
@@ -616,6 +630,7 @@
     "location": "9a27714b970547ee9a6bdadc2b815ad5",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "6991158ce7774dca864ec8fcf7a039ab",
     "name": "Thermostaat SQ",
     "sensors": {
       "setpoint": 18.5,
@@ -638,6 +653,7 @@
     "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "11e4f552602c4b03980e0955e0f114f0",
     "name": "Thermostaat RB",
     "sensors": {
       "setpoint": 17.0,
@@ -657,6 +673,7 @@
     "location": "fa5fa6b34f6b40a0972988b20e888ed4",
     "model": "ThermoTouch",
     "model_id": "143.1",
+    "module_id": "e2d52aece0524fde9c346953e5e1acb2",
     "name": "Thermostaat WK",
     "sensors": {
       "setpoint": 21.5,
@@ -672,6 +689,7 @@
     "location": "04b15f6e884448288f811d29fb7b1b30",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "21d57d51898b41c69ad87fffb59f2581",
     "name": "Thermostaat SJ",
     "sensors": {
       "setpoint": 20.5,
@@ -731,6 +749,7 @@
     "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "0f19738aed2e4bc09e0ca832f2e0c5a4",
     "name": "Thermostaat KK",
     "sensors": {
       "battery": 53,
@@ -754,6 +773,7 @@
     "location": "8cf650a4c10c44819e426bed406aec34",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "efe84c28928a4ce08603024b5edc2fc7",
     "name": "Thermostaat BK1",
     "sensors": {
       "setpoint": 20.5,
@@ -776,6 +796,7 @@
     "location": "5cc21042f87f4b4c94ccb5537c47a53f",
     "model": "Lisa",
     "model_id": "158-01",
+    "module_id": "867bdfa029f042e2a50ab9974cff6fac",
     "name": "Thermostaat  BK2",
     "sensors": {
       "setpoint": 20.5,

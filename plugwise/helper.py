@@ -85,6 +85,12 @@ class SmileHelper(SmileCommon):
     def __init__(self) -> None:
         """Set the constructor for this class."""
         super().__init__()
+        self._existing_appliances: list[str] = []
+        self._existing_locations: list[str] = []
+        self._existing_zones: list[str] = []
+        self._new_appliances: list[str] = []
+        self._new_locations: list[str] = []
+        self._new_zones: list[str] = []
         self._endpoint: str
         self._elga: bool
         self._is_thermostat: bool
@@ -105,7 +111,7 @@ class SmileHelper(SmileCommon):
         """Return the item-count."""
         return self._count
 
-    def _get_appliances(self) -> None:
+    def _get_appliances(self) -> bool:
         """Collect all appliances with relevant info.
 
         Also, collect the P1 smartmeter info from a location
@@ -145,27 +151,49 @@ class SmileHelper(SmileCommon):
             elif appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_loc_id
 
-            # Don't show orphaned thermostat-types
+            # Don't show orphaned (no location) thermostat-types
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
             extend_plug_device_class(appl, appliance)
 
+            self._new_appliances.append(appl.entity_id)
+            if appl.entity_id in self._existing_appliances and (
+                appl.pwclass in ("gateway", "heater_central")
+                or self.gw_entities[appl.entity_id]["name"] == appl.name
+            ):
+                continue
+
             # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
+                self._new_appliances.pop()
                 continue
 
             self._create_gw_entities(appl)
 
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
-            self._get_p1_smartmeter_info()
+            self._add_p1_smartmeter_info()
 
         # Sort the gw_entities
         self._reorder_devices()
 
-    def _get_p1_smartmeter_info(self) -> None:
-        """For P1 collect the connected SmartMeter info from the Home/building location.
+        new = list(set(self._new_appliances) - set(self._existing_appliances))
+        removed = list(set(self._existing_appliances) - set(self._new_appliances))
+        if self._existing_appliances:
+            for appliance in removed:
+                self.gw_entities.pop(appliance)
+
+        self._existing_appliances = self._new_appliances
+        self._new_appliances = []
+
+        if new or removed:
+            return True
+
+        return False
+
+    def _add_p1_smartmeter_info(self) -> None:
+        """For P1 collect the smartmeter info from the Home/building location and add it as an entity.
 
         Note: For P1, the entity_id for the gateway and smartmeter are switched to maintain
         backward compatibility. For Anna P1, the smartmeter uses the home location_id directly.
@@ -178,6 +206,15 @@ class SmileHelper(SmileCommon):
         if not module_data["contents"]:  # pragma: no cover
             return
 
+        # Detect a smartmeter change
+        module_id = module_data["module_id"]
+        if module_id in (
+            self.gw_entities[self._gateway_id].get("module_id"),
+            # legacy
+            self.gw_entities.get(self._home_loc_id, {}).get("module_id"),
+        ):
+            return
+
         appl.available = None
         appl.entity_id = self._home_loc_id
         if not self.smile.anna_p1:
@@ -188,6 +225,7 @@ class SmileHelper(SmileCommon):
         appl.mac = None
         appl.model = module_data["vendor_model"]
         appl.model_id = None  # don't use model_id for SmartMeter
+        appl.module_id = module_id
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.vendor_name = module_data["vendor_name"]
@@ -212,12 +250,6 @@ class SmileHelper(SmileCommon):
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
-            self._loc_data[loc.loc_id] = {
-                "name": loc.name,
-                "primary": [],
-                "primary_prio": 0,
-                "secondary": [],
-            }
             # Home location is of type building
             if loc._type == "building":
                 counter += 1
@@ -225,6 +257,28 @@ class SmileHelper(SmileCommon):
                 self._home_location = self._domain_objects.find(
                     f"./location[@id='{loc.loc_id}']"
                 )
+
+            self._new_locations.append(loc.loc_id)
+            if (
+                loc.loc_id in self._existing_locations
+                and self._loc_data[loc.loc_id]["name"] == loc.name
+            ):
+                continue
+
+            self._loc_data[loc.loc_id] = {
+                "name": loc.name,
+                "primary": [],
+                "primary_prio": 0,
+                "secondary": [],
+            }
+
+        removed = list(set(self._existing_locations) - set(self._new_locations))
+        if self._existing_locations and removed:
+            for location_id in removed:
+                self._loc_data.pop(location_id)
+
+        self._existing_locations = self._new_locations
+        self._new_locations = []
 
         if counter == 0:
             raise KeyError(
@@ -263,6 +317,7 @@ class SmileHelper(SmileCommon):
                 appl.firmware = module_data["firmware_version"]
                 appl.hardware = module_data["hardware_version"]
                 appl.model_id = module_data["vendor_model"]
+                appl.module_id = module_data["module_id"]
                 appl.vendor_name = module_data["vendor_name"]
                 appl.model = check_model(appl.model_id, appl.vendor_name)
                 appl.zigbee_mac = module_data["zigbee_mac_address"]
@@ -393,6 +448,14 @@ class SmileHelper(SmileCommon):
         self._cleanup_data(data)
 
         entity.update(data)
+
+    def _update_zigbee_availability(self, entity: GwEntityData) -> None:
+        """Update zigbee device availability status."""
+        if "module_id" in entity:
+            module_id = entity["module_id"]
+            locator = f'./module[@id="{module_id}"]/protocols/zig_bee_node'
+            if (module := self._domain_objects.find(locator)) is not None:
+                entity["available"] = module.find("reachable").text == "true"
 
     def _collect_group_sensors(
         self,
@@ -770,6 +833,13 @@ class SmileHelper(SmileCommon):
         self._match_and_rank_thermostats()
         for location_id, location in self._loc_data.items():
             if location["primary_prio"] != 0:
+                self._new_zones.append(location_id)
+                if (
+                    location_id in self._existing_zones
+                    and self.gw_entities[location_id]["name"] == location["name"]
+                ):
+                    continue
+
                 self._zones[location_id] = {
                     "dev_class": "climate",
                     "model": "ThermoZone",
@@ -781,6 +851,14 @@ class SmileHelper(SmileCommon):
                     "vendor": "Plugwise",
                 }
                 self._count += 5
+
+        removed = list(set(self._existing_zones) - set(self._new_zones))
+        if self._existing_zones and removed:
+            for location_id in removed:
+                self._zones.pop(location_id, None)
+
+        self._existing_zones = self._new_zones
+        self._new_zones = []
 
     def _match_and_rank_thermostats(self) -> None:
         """Helper-function for _scan_thermostats().
