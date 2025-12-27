@@ -211,7 +211,7 @@ class SmileCommon:
             members = self._collect_members(group)
             if group_id not in self._existing_groups and members:
                 self._new_groups.append(group_id)
-            elif self.gw_entities[group_id]["name"] == group_name
+            elif self.gw_entities[group_id]["name"] == group_name:
                 continue
 
             group_type = group.find("type").text
