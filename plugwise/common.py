@@ -208,12 +208,10 @@ class SmileCommon:
             if group_id is None:
                 continue  # pragma: no cover
 
-            self._new_groups.append(group_id)
-            if (
-                (members := self._collect_members(group))
-                and group_id in self._existing_groups
-                and self.gw_entities[group_id]["name"] == group_name
-            ):
+            members = self._collect_members(group)
+            if group_id not in self._existing_groups and members:
+                self._new_groups.append(group_id)
+            elif self.gw_entities[group_id]["name"] == group_name
                 continue
 
             group_type = group.find("type").text
@@ -226,9 +224,6 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
-            elif group_id in self._existing_groups:
-                # Group existed but now has no valid members ->  remove
-                self._new_groups.remove(group_id)
 
         removed = list(set(self._existing_groups) - set(self._new_groups))
         if self._existing_groups and removed:
