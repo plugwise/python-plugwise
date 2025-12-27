@@ -203,7 +203,6 @@ class SmileCommon:
             return
 
         for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
             group_id = group.get("id")
             group_name = group.find("name").text
             if group_id is None:
@@ -211,16 +210,13 @@ class SmileCommon:
 
             self._new_groups.append(group_id)
             if (
-                group_id in self._existing_groups
+                (members := self._collect_members(group))
+                and group_id in self._existing_groups
                 and self.gw_entities[group_id]["name"] == group_name
             ):
                 continue
 
             group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            for item in group_appliances:
-                self._add_member(item, members)
-
             if group_type in GROUP_TYPES and members:
                 self.gw_entities[group_id] = {
                     "dev_class": group_type,
@@ -242,10 +238,15 @@ class SmileCommon:
         self._existing_groups = self._new_groups
         self._new_groups = []
 
-    def _add_member(self, element: etree.Element, members: list[str]) -> None:
-        """Check and add member to list."""
-        if (member_id := element.attrib["id"]) in self.gw_entities:
-            members.append(member_id)
+    def _collect_members(self, element: etree.Element) -> list[str]:
+        """Check and collect members."""
+        members: list[str] = []
+        group_appliances = element.findall("appliances/appliance")
+        for item in group_appliances:
+            if (member_id := item.get("id")) in self.gw_entities:
+                members.append(member_id)
+
+        return members
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
