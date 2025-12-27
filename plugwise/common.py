@@ -58,7 +58,7 @@ class SmileCommon:
         self._heater_id: str = NONE
         self._new_groups: list[str] = []
         self._on_off_device: bool
-        self.gw_entities: dict[str, GwEntityData] = {}
+        self.gw_entities: dict[str, GwEntityData]
         self.smile: Munch
 
     @property
