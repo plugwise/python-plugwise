@@ -138,7 +138,7 @@ class SmileAPI(SmileData):
                         "cooling_enabled"
                     ]
         except KeyError as err:
-            raise DataMissingError("No Plugwise actual data received") from err
+            raise DataMissingError(f"No Plugwise actual data received: {err}") from err
 
         return self.gw_entities
 
