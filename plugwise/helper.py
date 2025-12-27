@@ -166,11 +166,9 @@ class SmileHelper(SmileCommon):
                 continue
 
             # Collect appliance info, skip orphaned/removed devices
-            if not (
-                (appl := self._appliance_info_finder(appl, appliance))
-                and appl.entity_id in self._new_appliances
-            ):
-                self._new_appliances.pop()
+            if not (appl := self._appliance_info_finder(appl, appliance)):
+                if appl.entity_id in self._new_appliances:
+                    self._new_appliances.pop()
                 continue
 
             self._create_gw_entities(appl)
