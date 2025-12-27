@@ -88,9 +88,6 @@ class SmileAPI(SmileData):
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
 
-        self._zones = {}
-        self.gw_entities = {}
-
     @property
     def cooling_present(self) -> bool:
         """Return the cooling capability."""

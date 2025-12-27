@@ -97,8 +97,8 @@ class SmileHelper(SmileCommon):
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
         self._gateway_id: str = NONE
-        self._zones: dict[str, GwEntityData]
-        self.gw_entities: dict[str, GwEntityData]
+        # self._zones: dict[str, GwEntityData]
+        self.gw_entities: dict[str, GwEntityData] = {}
         self.smile: Munch = Munch()
 
     @property
