@@ -64,6 +64,7 @@ def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
         (search := appliance.find("description")) is not None
         and (description := search.text) is not None
         and ("ZigBee protocol" in description or "smart plug" in description)
+        and not appl.pwclass.endswith("_plug")
     ):
         appl.pwclass = f"{appl.pwclass}_plug"
 
