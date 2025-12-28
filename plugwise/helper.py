@@ -60,10 +60,8 @@ from packaging import version
 def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
     """Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739."""
 
-    if (
-        (search := appliance.find("description")) is not None
-        and (description := search.text) is not None
-        and ("ZigBee protocol" in description or "smart plug" in description)
+    if (description := appliance.description) is not None and (
+        "ZigBee protocol" in description or "smart plug" in description
     ):
         appl.pwclass = f"{appl.pwclass}_plug"
 
@@ -114,10 +112,10 @@ class SmileHelper(SmileCommon):
         self._count = 0
         self._get_locations()
 
-        for appliance in self._domain_objects.findall("./appliance"):
+        for appliance in self._domain_objects.appliance:
             appl = Munch()
             appl.available = None
-            appl.entity_id = appliance.get("id")
+            appl.entity_id = appliance.id
             appl.firmware = None
             appl.hardware = None
             appl.location = None
@@ -125,8 +123,8 @@ class SmileHelper(SmileCommon):
             appl.model = None
             appl.model_id = None
             appl.module_id = None
-            appl.name = appliance.find("name").text
-            appl.pwclass = appliance.find("type").text
+            appl.name = appliance.name
+            appl.pwclass = appliance.type
             appl.zigbee_mac = None
             appl.vendor_name = None
 
@@ -138,7 +136,7 @@ class SmileHelper(SmileCommon):
             ):
                 continue
 
-            if (appl_loc := appliance.find("location")) is not None:
+            if (appl_loc := appliance.location) is not None:
                 appl.location = appl_loc.get("id")
             # Set location to the _home_loc_id when the appliance-location is not found,
             # except for thermostat-devices without a location, they are not active
@@ -204,14 +202,14 @@ class SmileHelper(SmileCommon):
         """Collect all locations."""
         counter = 0
         loc = Munch()
-        locations = self._domain_objects.findall("./location")
+        locations = self._domain_objects.location
         if not locations:
             raise KeyError("No location data present!")
 
         for location in locations:
-            loc.loc_id = location.get("id")
-            loc.name = location.find("name").text
-            loc._type = location.find("type").text
+            loc.loc_id = location.id
+            loc.name = location.name
+            loc._type = location.type
             self._loc_data[loc.loc_id] = {
                 "name": loc.name,
                 "primary": [],
@@ -222,8 +220,9 @@ class SmileHelper(SmileCommon):
             if loc._type == "building":
                 counter += 1
                 self._home_loc_id = loc.loc_id
-                self._home_location = self._domain_objects.find(
-                    f"./location[@id='{loc.loc_id}']"
+                self._home_location = next(
+                    (l for l in self._domain_objects.location if l.id == loc.loc_id),
+                    None,
                 )
 
         if counter == 0:
@@ -504,11 +503,11 @@ class SmileHelper(SmileCommon):
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
         self._notifications = {}
-        for notification in self._domain_objects.findall("./notification"):
+        for notification in self._domain_objects.notification:
             try:
-                msg_id = notification.get("id")
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
+                msg_id = notification.id
+                msg_type = notification.type
+                msg = notification.message
                 self._notifications[msg_id] = {msg_type: msg}
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover

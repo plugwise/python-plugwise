@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 import datetime as dt
+import json
 from typing import Any, cast
 
 from plugwise.constants import (
@@ -35,6 +36,9 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
+import xmltodict
+
+from .model import Appliance, Root
 
 
 def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
@@ -93,10 +97,32 @@ class SmileAPI(SmileData):
         """Return the cooling capability."""
         return self._cooling_present
 
+    def parse_xml(self, xml: str) -> dict:
+        # Safely parse XML
+        element = etree.fromstring(xml)
+        xml_dict = xmltodict.parse(etree.tostring(element))
+        print(f"HOI1 {xml_dict.keys()}")
+        print(
+            f"HOI2 {json.dumps(xmltodict.parse(xml, process_namespaces=True), indent=2)}"
+        )
+        appliance_in = xml_dict["domain_objects"]["appliance"][0]
+        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        appliance_in = xml_dict["domain_objects"]["appliance"][5]
+        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        appliance = Appliance.model_validate(appliance_in)
+        print(f"HOI4a2 {appliance}")
+
+        return Root.model_validate(xml_dict)
+
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-        self._get_plugwise_notifications()
+        self._domain_objects = await self._request(DOMAIN_OBJECTS, new=True)
+        root = self.parse_xml(self._domain_objects)
+        self._domain_objects = root.domain_objects
+        print(f"HOI3a {self._domain_objects}")
+        print(f"HOI3b {self._domain_objects.notification}")
+        if self._domain_objects.notification is not None:
+            self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
         """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
@@ -395,7 +421,7 @@ class SmileAPI(SmileData):
         For individual switches, sets the state directly.
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
-        Return the requested state when succesful, the current state otherwise.
+        Return the requested state when successful, the current state otherwise.
         """
         model_type = cast(SwitchType, model)
         current_state = self.gw_entities[appl_id]["switches"][model_type]

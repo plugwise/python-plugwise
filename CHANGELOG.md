@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Attempt to ditch untyped Munch for the existing TypedDicts by leveraging pydantic to type xmltodict XML conversion
+
 ## v1.11.2
 
 - Add/update model-data for Jip, Tom and Floor via PR [#842](https://github.com/plugwise/python-plugwise/pull/842)

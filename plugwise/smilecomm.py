@@ -51,7 +51,8 @@ class SmileComm:
         retry: int = 3,
         method: str = "get",
         data: str | None = None,
-    ) -> etree.Element:
+        new: bool = False,
+    ) -> etree.Element | str:
         """Get/put/delete data from a give URL."""
         resp: ClientResponse
         url = f"{self._endpoint}{command}"
@@ -105,11 +106,14 @@ class SmileComm:
                 raise ConnectionFailedError
             return await self._request(command, retry - 1)
 
-        return await self._request_validate(resp, method)
+        return await self._request_validate(resp, method, new)
 
     async def _request_validate(
-        self, resp: ClientResponse, method: str
-    ) -> etree.Element:
+        self,
+        resp: ClientResponse,
+        method: str,
+        new: bool = False,
+    ) -> etree.Element | str:
         """Helper-function for _request(): validate the returned data."""
         match resp.status:
             case 200:
@@ -143,6 +147,8 @@ class SmileComm:
             LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
             raise InvalidXMLError from exc
 
+        if new:
+            return result
         return xml
 
     async def close_connection(self) -> None:
