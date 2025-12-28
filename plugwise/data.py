@@ -106,10 +106,10 @@ class SmileData(SmileHelper):
     def _add_or_update_notifications(
         self, entity_id: str, entity: GwEntityData
     ) -> None:
-        """Helper-function adding or updating the Plugwise notifications."""
+        """Helper-function adding or updating the Plugwise notifications to the gateway."""
 
         if entity_id != self._gateway_id:
-            return
+            return  # pragma: no cover
 
         if self._is_thermostat or self.smile.type == "power":
             if "plugwise_notification" not in entity:
@@ -118,12 +118,6 @@ class SmileData(SmileHelper):
                 )
                 entity.update({"notifications": self._notifications})
                 self._count += 2
-
-            else:
-                entity["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-                entity["notifications"] = self._notifications
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
