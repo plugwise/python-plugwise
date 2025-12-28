@@ -157,13 +157,18 @@ class SmileHelper(SmileCommon):
 
             extend_plug_device_class(appl, appliance)
 
-            if appl.entity_id not in self._existing_appliances:
-                self._new_appliances.append(appl.entity_id)
-            elif (
+            self._new_appliances.append(appl.entity_id)
+            if appl.entity_id in self._existing_appliances and (
                 appl.pwclass in ("gateway", "heater_central")
                 or self.gw_entities[appl.entity_id]["name"] == appl.name
             ):
                 continue
+
+#            if (
+#                appl.pwclass in ("gateway", "heater_central") # Names are fixed in software
+#                or self.gw_entities[appl.entity_id]["name"] == appl.name
+#            ):
+#                continue
 
             # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
