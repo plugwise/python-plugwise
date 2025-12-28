@@ -373,17 +373,6 @@ class SmileHelper(SmileCommon):
 
         return mode_list
 
-    def _get_appliances_with_offset_functionality(self) -> list[str]:
-        """Helper-function collecting all appliance that have offset_functionality."""
-        therm_list: list[str] = []
-        offset_appls = self._domain_objects.findall(
-            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
-        )
-        for item in offset_appls:
-            therm_list.append(item.get("id"))
-
-        return therm_list
-
     def _get_zone_data(self, loc_id: str, zone: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
 
