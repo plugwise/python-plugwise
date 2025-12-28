@@ -165,12 +165,6 @@ class SmileHelper(SmileCommon):
             ):
                 continue
 
-#            if (
-#                appl.pwclass in ("gateway", "heater_central") # Names are fixed in software
-#                or self.gw_entities[appl.entity_id]["name"] == appl.name
-#            ):
-#                continue
-
             # Collect appliance info, skip orphaned/removed devices
             entity_id = appl.entity_id
             if not (appl := self._appliance_info_finder(appl, appliance)):
