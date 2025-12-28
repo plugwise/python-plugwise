@@ -112,7 +112,7 @@ class SmileData(SmileHelper):
             return  # pragma: no cover
 
         if self._is_thermostat or self.smile.type == "power":
-            if "plugwise_notification" not in entity:
+            if "plugwise_notification" not in entity["binary_sensors"]:
                 entity["binary_sensors"].update(
                     {"plugwise_notification": bool(self._notifications)}
                 )
