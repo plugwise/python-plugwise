@@ -208,10 +208,13 @@ class SmileCommon:
             if group_id is None:
                 continue  # pragma: no cover
 
-            members = self._collect_members(group)
-            if group_id not in self._existing_groups and members:
+            if (members := self._collect_members(group)):
                 self._new_groups.append(group_id)
-            elif self.gw_entities[group_id]["name"] == group_name:
+
+            if (
+                group_id in self._existing_groups
+                and self.gw_entities[group_id]["name"] == group_name
+            ):
                 continue
 
             group_type = group.find("type").text
