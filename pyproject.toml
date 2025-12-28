@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "plugwise"
-version         = "1.12.0a6"
+version         = "1.12.0a7"
 license         = "MIT"
 description     = "Plugwise Smile (Adam/Anna/P1) and Stretch module for Python 3."
 readme          = "README.md"
