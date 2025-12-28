@@ -208,7 +208,7 @@ class SmileCommon:
             if group_id is None:
                 continue  # pragma: no cover
 
-            if (members := self._collect_members(group)):
+            if members := self._collect_members(group):
                 self._new_groups.append(group_id)
 
             if (
