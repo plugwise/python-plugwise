@@ -10,6 +10,7 @@ from typing import cast
 from plugwise.constants import (
     ANNA,
     GROUP_TYPES,
+    LOGGER,
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
