@@ -3,6 +3,7 @@
 from enum import Enum
 from typing import Any
 
+from packaging.version import Version
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -178,6 +179,7 @@ class ApplianceType(str, Enum):
     CD = "computer_desktop"
     HC = "heater_central"
     HT = "hometheater"
+    STRETCH = "stretch"
     THERMO_RV = "thermostatic_radiator_valve"
     VA = "valve_actuator"
     WHV = "water_heater_vessel"
@@ -305,8 +307,28 @@ class DomainObjects(PWBase):
     rule: list[dict] = []
     template: list[dict] = []
 
+    # Runtime-only cache
+    _appliance_index: dict[str, Appliance] = {}
+    _location_index: dict[str, Location] = {}
 
-class Root(PWBase):
+    def model_post_init(self, __context):
+        """Build index for referencing by ID.
+
+        Runs after validation.
+        """
+        self._appliance_index = {a.id: a for a in self.appliance}
+        self._location_index = {a.id: a for a in self.location}
+
+    def get_appliance(self, id: str) -> Appliance | None:
+        """Get Appliance by ID."""
+        return self._appliance_index.get(id)
+
+    def get_location(self, id: str) -> Location | None:
+        """Get Location  by ID."""
+        return self._location_index.get(id)
+
+
+class PlugwiseData(PWBase):
     """Main XML definition."""
 
     domain_objects: DomainObjects
@@ -344,3 +366,24 @@ class Switch(BaseModel):
     func_type: SwitchFunctionType = SwitchFunctionType.TOGGLE
     act_type: SwitchActuatorType = SwitchActuatorType.CE
     func: SwitchFunctionType = SwitchFunctionType.NONE
+
+
+class GatewayData(BaseModel):
+    """Base Smile/gateway/hub model."""
+
+    anna_p1: bool = False
+    hostname: str
+    firmware_version: str | None = None
+    hardware_version: str | None = None
+    legacy: bool = False
+    mac_address: str | None = None
+    model: str | None = None
+    model_id: str | None = None
+    name: str | None = None
+    type: ApplianceType | None = None
+    version: str = "0.0.0"
+    zigbee_mac_address: str | None = None
+
+    def model_post_init(self, __context):
+        """Init arbitrary types."""
+        self.version = Version(self.version)

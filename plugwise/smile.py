@@ -38,7 +38,7 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 import xmltodict
 
-from .model import Appliance, Root, Switch
+from .model import Appliance, PlugwiseData, Switch
 
 
 def model_to_switch_items(model: str, state: str, switch: Switch) -> tuple[str, Switch]:
@@ -77,6 +77,7 @@ class SmileAPI(SmileData):
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
+        data: PlugwiseData,
         smile: Munch,
     ) -> None:
         """Set the constructor for this class."""
@@ -112,16 +113,16 @@ class SmileAPI(SmileData):
         appliance = Appliance.model_validate(appliance_in)
         print(f"HOI4a2 {appliance}")
 
-        return Root.model_validate(xml_dict)
+        return PlugwiseData.model_validate(xml_dict)
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS, new=True)
-        root = self.parse_xml(self._domain_objects)
-        self._domain_objects = root.domain_objects
-        print(f"HOI3a {self._domain_objects}")
-        print(f"HOI3b {self._domain_objects.notification}")
-        if self._domain_objects.notification is not None:
+        domain_objects = await self._request(DOMAIN_OBJECTS, new=True)
+        root = self.parse_xml(domain_objects)
+        self.data = root.domain_objects
+        print(f"HOI3a {self.data}")
+        print(f"HOI3b {self.data.notification}")
+        if self.data.notification is not None:
             self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:

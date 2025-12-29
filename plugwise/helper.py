@@ -415,9 +415,8 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> etree.Element | None:
         """Collect initial appliance data."""
-        if (
-            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
-        ) is not None:
+        if (appliance := self._domain_objects.get_appliance(entity_id)) is not None:
+            print(f"HOI9 {appliance}")
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
 
@@ -451,14 +450,24 @@ class SmileHelper(SmileCommon):
 
     def _appliance_measurements(
         self,
-        appliance: etree.Element,
+        appliance: Appliance,
         data: GwEntityData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
-            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if (appl_p_loc := appliance.find(p_locator)) is not None:
+            print(f"HOI10 {appliance}")
+            print(f"HOI10 {appliance.logs}")
+            if "point_log" not in appliance.logs:
+                continue
+
+            print(f"HOI10 {appliance.logs.point_log}")
+
+            if (
+                measurement := next(
+                    (m for m in appliance.logs if m.type == "measurement"), None
+                )
+            ) is not None:
                 if skip_obsolete_measurements(appliance, measurement):
                     continue
 
