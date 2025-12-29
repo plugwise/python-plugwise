@@ -104,7 +104,7 @@ class SmileHelper(SmileCommon):
         self._count = 0
         self._get_locations()
 
-        for appliance in self._domain_objects.appliance:
+        for appliance in self.data.appliance:
             appl = Munch()
             appl.available = None
             appl.entity_id = appliance.id
@@ -200,7 +200,8 @@ class SmileHelper(SmileCommon):
         """Collect all locations."""
         counter = 0
         loc = Munch()
-        locations = self._domain_objects.location
+        print(f"HOI15 {self.data.location}")
+        locations = self.data.location
         if not locations:
             raise KeyError("No location data present!")
 
@@ -219,7 +220,7 @@ class SmileHelper(SmileCommon):
                 counter += 1
                 self._home_loc_id = loc.loc_id
                 self._home_location = next(
-                    (l for l in self._domain_objects.location if l.id == loc.loc_id),
+                    (l for l in self.data.location if l.id == loc.loc_id),
                     None,
                 )
 
@@ -307,7 +308,7 @@ class SmileHelper(SmileCommon):
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
         therm_list = []
-        for appl in self._domain_objects.appliance:
+        for appl in self.data.appliance:
             af = appl.actuator_functionalities
             if not af or not isinstance(af, OffsetFunctionality):
                 continue

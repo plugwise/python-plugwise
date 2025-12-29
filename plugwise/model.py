@@ -230,6 +230,14 @@ class Module(WithID):
 
 
 # Gateway
+class GatewayEnvironment(WithID):
+    """Minimal Gateway Environment."""
+
+    postal_code: str | None = None
+    electricity_consumption_tariff_structure: str | None = None
+    electricity_production_tariff_structure: str | None = None
+
+
 class Gateway(Module):
     """Plugwise Gateway."""
 
@@ -237,7 +245,7 @@ class Gateway(Module):
     last_boot_date: str | list[str] | None = None
 
     project: dict[str, Any] | None = None
-    gateway_environment: dict[str, Any] | None = None
+    gateway_environment: GatewayEnvironment | None = None
     features: dict[str, Any] | None = None
 
 
