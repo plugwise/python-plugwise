@@ -419,6 +419,7 @@ ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
 )
 
 
+# TODO recreate or obsolete
 class ModuleData(TypedDict):
     """The Module data class."""
 

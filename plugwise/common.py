@@ -16,17 +16,14 @@ from plugwise.constants import (
     SWITCH_GROUP_TYPES,
     ApplianceType,
     GwEntityData,
-    ModuleData,
+    # ModuleData,
 )
-from plugwise.util import (
-    check_heater_central,
-    check_model,
-    get_vendor_name,
-    return_valid,
-)
+from plugwise.util import check_heater_central, check_model, return_valid
 
 from defusedxml import ElementTree as etree
 from munch import Munch
+
+from .model import ModuleData
 
 
 def get_zigbee_data(
@@ -120,7 +117,7 @@ class SmileCommon:
         return appl
 
     def _appl_thermostat_info(
-        self, appl: Munch, xml_1: etree.Element, xml_2: etree.Element = None
+        self, appl: Appliance, xml_1: etree.Element, xml_2: etree.Element = None
     ) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
@@ -144,21 +141,21 @@ class SmileCommon:
 
         return appl
 
-    def _create_gw_entities(self, appl: Munch) -> None:
+    def _create_gw_entities(self, appl: Appliance) -> None:
         """Helper-function for creating/updating gw_entities."""
-        self.gw_entities[appl.entity_id] = {"dev_class": appl.pwclass}
+        self.gw_entities[appl.id] = {"dev_class": appl.type}
         self._count += 1
         for key, value in {
             "available": appl.available,
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
+            "firmware": appl.firmware_version,
+            "hardware": appl.hardware_version,
             "location": appl.location,
-            "mac_address": appl.mac,
+            "mac_address": appl.mac_address,
             "model": appl.model,
             "model_id": appl.model_id,
             "name": appl.name,
             "vendor": appl.vendor_name,
-            "zigbee_mac_address": appl.zigbee_mac,
+            "zigbee_mac_address": appl.zigbee_mac_address,
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
@@ -237,31 +234,36 @@ class SmileCommon:
 
     def _get_module_data(
         self,
-        xml_1: etree.Element,
-        locator: str,
         key: str | None = None,
-        xml_2: etree.Element | None = None,
         legacy: bool = False,
     ) -> ModuleData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
 
         Collect requested info from MODULES.
         """
-        module_data: ModuleData = {
-            "contents": False,
-            "firmware_version": None,
-            "hardware_version": None,
-            "reachable": None,
-            "vendor_name": None,
-            "vendor_model": None,
-            "zigbee_mac_address": None,
-        }
+        module = self.data.get_module(link_id)
 
-        for appl_search in xml_1.findall(locator):
-            link_tag = appl_search.tag
-            if key is not None and key not in link_tag:
+        for service_type, services in appliance.services.iter_services():
+            if key and key not in service_type:
+                continue
+        for service in services:
+            module = self.data.get_module(service.id)
+            if not module:
                 continue
 
+            return ModuleData(
+                contents=True,
+                firmware_version=None,
+                hardware_version=None,
+                reachable=None,
+                vendor_name=None,
+                vendor_model=None,
+                zigbee_mac_address=None,
+            )
+        return ModuleData()
+
+        # TODO legacy
+        """
             link_id = appl_search.get("id")
             loc = f".//services/{link_tag}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
@@ -277,5 +279,4 @@ class SmileCommon:
                 get_zigbee_data(module, module_data, legacy)
 
             break
-
-        return module_data
+        """
