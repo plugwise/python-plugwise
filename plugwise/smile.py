@@ -38,10 +38,10 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 import xmltodict
 
-from .model import Appliance, Root
+from .model import Appliance, Root, Switch
 
 
-def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
+def model_to_switch_items(model: str, state: str, switch: Switch) -> tuple[str, Switch]:
     """Translate state and switch attributes based on model name.
 
     Helper function for set_switch_state().

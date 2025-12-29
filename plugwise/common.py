@@ -197,7 +197,7 @@ class SmileCommon:
         if self.smile.type == "power" or self.check_name(ANNA):
             return
 
-        for group in self._domain_objects.findall("./group"):
+        for group in self._domain_objects.group:
             group_id = group.get("id")
             if group_id is None:
                 continue  # pragma: no cover
@@ -208,10 +208,10 @@ class SmileCommon:
             group_name = group.find("name").text
             group_type = group.find("type").text
             if group_type in GROUP_TYPES:
-                self.gw_entities[group_id] = {
-                    "dev_class": group_type,
+                self.gw_entities[group.id] = {
+                    "dev_class": group.type,
                     "model": "Group",
-                    "name": group_name,
+                    "name": group.name,
                     "members": members,
                     "vendor": "Plugwise",
                 }
