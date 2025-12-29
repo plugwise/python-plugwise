@@ -5,6 +5,8 @@ Plugwise Smile communication protocol helpers.
 
 from __future__ import annotations
 
+import json  # Debugging
+
 from plugwise.constants import LOGGER
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -17,6 +19,9 @@ from plugwise.util import escape_illegal_xml_characters
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
 from defusedxml import ElementTree as etree
+import xmltodict
+
+from .model import Appliance, PlugwiseData
 
 
 class SmileComm:
@@ -44,6 +49,23 @@ class SmileComm:
 
         self._auth = BasicAuth(username, password=password)
         self._endpoint = f"http://{host}:{str(port)}"  # Sensitive
+
+    def _parse_xml(self, xml: str) -> dict:
+        """Map XML to Pydantic class."""
+        element = etree.fromstring(xml)
+        xml_dict = xmltodict.parse(etree.tostring(element))
+        print(f"HOI1 {xml_dict.keys()}")
+        print(
+            f"HOI2 {json.dumps(xmltodict.parse(xml, process_namespaces=True), indent=2)}"
+        )
+        appliance_in = xml_dict["domain_objects"]["appliance"][0]
+        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        appliance_in = xml_dict["domain_objects"]["appliance"][5]
+        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        appliance = Appliance.model_validate(appliance_in)
+        print(f"HOI4a2 {appliance}")
+
+        return PlugwiseData.model_validate(xml_dict)
 
     async def _request(
         self,
@@ -148,6 +170,9 @@ class SmileComm:
             raise InvalidXMLError from exc
 
         if new:
+            domain_objects = result
+            root = self._parse_xml(domain_objects)
+            self.data = root.domain_objects
             return result
         return xml
 

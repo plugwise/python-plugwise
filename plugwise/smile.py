@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 import datetime as dt
-import json
 from typing import Any, cast
 
 from plugwise.constants import (
@@ -36,9 +35,8 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
-import xmltodict
 
-from .model import Appliance, PlugwiseData, Switch
+from .model import PlugwiseData, Switch
 
 
 def model_to_switch_items(model: str, state: str, switch: Switch) -> tuple[str, Switch]:
@@ -77,8 +75,8 @@ class SmileAPI(SmileData):
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
-        data: PlugwiseData,
         smile: Munch,
+        data: PlugwiseData,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__()
@@ -92,37 +90,21 @@ class SmileAPI(SmileData):
         self._schedule_old_states = _schedule_old_states
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
+        self.data = data
+
+        print(f"HOI16 {self.data.location}")
 
     @property
     def cooling_present(self) -> bool:
         """Return the cooling capability."""
         return self._cooling_present
 
-    def parse_xml(self, xml: str) -> dict:
-        # Safely parse XML
-        element = etree.fromstring(xml)
-        xml_dict = xmltodict.parse(etree.tostring(element))
-        print(f"HOI1 {xml_dict.keys()}")
-        print(
-            f"HOI2 {json.dumps(xmltodict.parse(xml, process_namespaces=True), indent=2)}"
-        )
-        appliance_in = xml_dict["domain_objects"]["appliance"][0]
-        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
-        appliance_in = xml_dict["domain_objects"]["appliance"][5]
-        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
-        appliance = Appliance.model_validate(appliance_in)
-        print(f"HOI4a2 {appliance}")
-
-        return PlugwiseData.model_validate(xml_dict)
-
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        domain_objects = await self._request(DOMAIN_OBJECTS, new=True)
-        root = self.parse_xml(domain_objects)
-        self.data = root.domain_objects
+        self.data = await self._request(DOMAIN_OBJECTS, new=True)
         print(f"HOI3a {self.data}")
-        print(f"HOI3b {self.data.notification}")
-        if self.data.notification is not None:
+        if "notification" in self.data and self.data.notification is not None:
+            print(f"HOI3b {self.data.notification}")
             self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
