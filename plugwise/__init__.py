@@ -41,6 +41,8 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging.version import Version, parse
 
+from .model import GatewayData, PlugwiseData
+
 
 class Smile(SmileComm):
     """The main Plugwise Smile API class."""
@@ -74,18 +76,8 @@ class Smile(SmileComm):
         self._smile_api: SmileAPI | SmileLegacyAPI
         self._stretch_v2 = False
         self._target_smile: str = NONE
-        self.smile: Munch = Munch()
-        self.smile.anna_p1 = False
-        self.smile.hostname = NONE
-        self.smile.hw_version = None
-        self.smile.legacy = False
-        self.smile.mac_address = None
-        self.smile.model = NONE
-        self.smile.model_id = None
-        self.smile.name = NONE
-        self.smile.type = NONE
-        self.smile.version = Version("0.0.0")
-        self.smile.zigbee_mac_address = None
+        self.data: PlugwiseData
+        self.smile: GatewayData
 
     @property
     def cooling_present(self) -> bool:
@@ -161,6 +153,7 @@ class Smile(SmileComm):
                 self._opentherm_device,
                 self._request,
                 self._schedule_old_states,
+                self.data,
                 self.smile,
             )
             if not self.smile.legacy
@@ -172,6 +165,7 @@ class Smile(SmileComm):
                 self._request,
                 self._stretch_v2,
                 self._target_smile,
+                self.data,
                 self.smile,
             )
         )
@@ -179,7 +173,7 @@ class Smile(SmileComm):
         # Update all endpoints on first connect
         await self._smile_api.full_xml_update()
 
-        return cast(Version, self.smile.version)
+        return self.smile.firmware_version
 
     async def _smile_detect(
         self, result: etree.Element, dsmrmain: etree.Element
@@ -189,29 +183,32 @@ class Smile(SmileComm):
         Detect which type of Plugwise Gateway is being connected.
         """
         model: str = "Unknown"
-        if (gateway := result.find("./gateway")) is not None:
-            self.smile.version = parse(gateway.find("firmware_version").text)
-            self.smile.hw_version = gateway.find("hardware_version").text
-            self.smile.hostname = gateway.find("hostname").text
-            self.smile.mac_address = gateway.find("mac_address").text
-            if (vendor_model := gateway.find("vendor_model")) is None:
+        if self.data.gateway is not None:
+            if gateway.vendor_model is None:
                 return  # pragma: no cover
 
-            model = vendor_model.text
-            elec_measurement = gateway.find(
-                "gateway_environment/electricity_consumption_tariff_structure"
-            )
+            self.smile.version = self.data.gateway.firmware_version
+            self.smile.hw_version = self.data.gateway.firmware_version
+            self.smile.hostname = self.data.gateway.hostname
+            self.smile.mac_address = self.data.gateway.mac_address
+
+            print(f"HOI11 {self.data.gateway.environment}")
             if (
-                elec_measurement is not None
+                "electricity_consumption_tariff_structure"
+                in self.data.gateway.environment
                 and elec_measurement.text
-                and model == "smile_thermo"
+                and self.smile.vendor_model == "smile_thermo"
             ):
                 self.smile.anna_p1 = True
         else:
-            model = await self._smile_detect_legacy(result, dsmrmain, model)
+            # TODO
+            self.smile.vendor_model = await self._smile_detect_legacy(
+                result, dsmrmain, model
+            )
 
-        if model == "Unknown" or self.smile.version == Version(
-            "0.0.0"
+        if (
+            self.smile.vendor_model == "Unknown"
+            or self.smile.firmware_version == Version("0.0.0")
         ):  # pragma: no cover
             # Corner case check
             LOGGER.error(
@@ -220,8 +217,8 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        version_major = str(self.smile.version.major)
-        self._target_smile = f"{model}_v{version_major}"
+        version_major = str(self.smile.firmware_version.major)
+        self._target_smile = f"{self.data.gateway.model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
             LOGGER.error(
@@ -242,7 +239,8 @@ class Smile(SmileComm):
             raise UnsupportedDeviceError  # pragma: no cover
 
         self.smile.model = "Gateway"
-        self.smile.model_id = model
+        self.smile.model_id = self.data.gateway.model
+        # TODO gateway name+type?
         self.smile.name = SMILES[self._target_smile].smile_name
         self.smile.type = SMILES[self._target_smile].smile_type
         if self.smile.name == "Smile Anna" and self.smile.anna_p1:
