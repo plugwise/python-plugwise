@@ -318,6 +318,7 @@ class DomainObjects(PWBase):
     # Runtime-only cache
     _appliance_index: dict[str, Appliance] = {}
     _location_index: dict[str, Location] = {}
+    _module_index: dict[str, Module] = {}
 
     def model_post_init(self, __context):
         """Build index for referencing by ID.
@@ -326,14 +327,19 @@ class DomainObjects(PWBase):
         """
         self._appliance_index = {a.id: a for a in self.appliance}
         self._location_index = {a.id: a for a in self.location}
+        self._module_index = {a.id: a for a in self.module}
 
     def get_appliance(self, id: str) -> Appliance | None:
         """Get Appliance by ID."""
         return self._appliance_index.get(id)
 
     def get_location(self, id: str) -> Location | None:
-        """Get Location  by ID."""
+        """Get Location by ID."""
         return self._location_index.get(id)
+
+    def get_module(self, id: str) -> Module | None:
+        """Get Module by ID."""
+        return self._module_index.get(id)
 
 
 class PlugwiseData(PWBase):
@@ -395,3 +401,15 @@ class GatewayData(BaseModel):
     def model_post_init(self, __context):
         """Init arbitrary types."""
         self.version = Version(self.version)
+
+
+class ModuleData(BaseModel):
+    """Module model."""
+
+    contents: bool = False
+    firmware_version: str | None = None
+    hardware_version: str | None = None
+    reachable: bool | None = None
+    vendor_name: str | None = None
+    vendor_model: str | None = None
+    zigbee_mac_address: str | None = None

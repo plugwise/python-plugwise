@@ -105,21 +105,6 @@ class SmileHelper(SmileCommon):
         self._get_locations()
 
         for appliance in self.data.appliance:
-            appl = Munch()
-            appl.available = None
-            appl.entity_id = appliance.id
-            appl.firmware = None
-            appl.hardware = None
-            appl.location = None
-            appl.mac = None
-            appl.model = None
-            appl.model_id = None
-            appl.module_id = None
-            appl.name = appliance.name
-            appl.pwclass = appliance.type
-            appl.zigbee_mac = None
-            appl.vendor_name = None
-
             # Don't collect data for the OpenThermGateway appliance, skip thermostat(s)
             # without actuator_functionalities, should be an orphaned device(s) (Core #81712)
             if appliance.type == ApplianceType.OPENTHERMGW or (
@@ -129,7 +114,7 @@ class SmileHelper(SmileCommon):
                 continue
 
             if appliance.location is not None:
-                appl.fixed_location = appliance.id
+                appliance.fixed_location = appliance.id
             # Set location to the _home_loc_id when the appliance-location is not found,
             # except for thermostat-devices without a location, they are not active
             elif appliance.type not in THERMOSTAT_CLASSES:
@@ -151,8 +136,6 @@ class SmileHelper(SmileCommon):
             # if not (appl := self._appliance_info_finder(appl, appliance)):
             #     continue
 
-            self._create_gw_entities(appl)
-
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
             self._get_p1_smartmeter_info()
@@ -166,7 +149,6 @@ class SmileHelper(SmileCommon):
         Note: For P1, the entity_id for the gateway and smartmeter are switched to maintain
         backward compatibility. For Anna P1, the smartmeter uses the home location_id directly.
         """
-        appl = Munch()
         locator = MODULE_LOCATOR
         tag = "electricity"
         module_data = self._get_module_data(self._home_location, locator, key=tag)
