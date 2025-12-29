@@ -230,7 +230,7 @@ class SmileHelper(SmileCommon):
 
     def _appliance_info_finder(self, appliance: Appliance) -> Appliance:
         """Collect info for all appliances found."""
-        match application.type:
+        match appliance.type:
             # No longer needed since we have a Gateway
             # case "gateway":
             #     # Collect gateway entity info
@@ -270,12 +270,12 @@ class SmileHelper(SmileCommon):
 
     def _appl_gateway_info(self, appliance: Appliance) -> Appliance:
         """Helper-function for _appliance_info_finder()."""
-        self._gateway_id = application.id
+        self._gateway_id = appliance.id
 
         # Adam: collect the ZigBee MAC address of the Smile
         if ADAM in appliance.name:
             if (found := appliance.protocols.zig_bee_coordinator) is not None:
-                application.zigbee_mac = found.mac_address
+                appliance.zigbee_mac = found.mac_address
 
             # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
             self._reg_allowed_modes = self._get_appl_actuator_modes(
