@@ -197,22 +197,21 @@ class SmileCommon:
         if self.smile.type == "power" or self.check_name(ANNA):
             return
 
-        for group in self._domain_objects.findall("./group"):
+        for group in self._domain_objects.group:
             members: list[str] = []
-            group_id = group.get("id")
-            group_name = group.find("name").text
-            group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.get("id") in self.gw_entities:
-                    members.append(item.get("id"))
+            if not group.appliances:
+                continue
 
-            if group_type in GROUP_TYPES and members and group_id:
-                self.gw_entities[group_id] = {
-                    "dev_class": group_type,
+            for item in group.appliances.appliance:
+                # Check if members are not orphaned - stretch
+                if item.id in self.gw_entities:
+                    members.append(item.id)
+
+            if group.type in GROUP_TYPES and members and group.id:
+                self.gw_entities[group.id] = {
+                    "dev_class": group.type,
                     "model": "Group",
-                    "name": group_name,
+                    "name": group.name,
                     "members": members,
                     "vendor": "Plugwise",
                 }

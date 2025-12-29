@@ -43,6 +43,7 @@ from plugwise.constants import (
     ThermoLoc,
     ToggleNameType,
 )
+from plugwise.model import Appliance, ApplianceType, OffsetFunctionality
 from plugwise.util import (
     check_model,
     collect_power_values,
@@ -55,15 +56,6 @@ from plugwise.util import (
 from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging import version
-
-
-def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
-    """Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739."""
-
-    if (description := appliance.description) is not None and (
-        "ZigBee protocol" in description or "smart plug" in description
-    ):
-        appl.pwclass = f"{appl.pwclass}_plug"
 
 
 def search_actuator_functionalities(
@@ -130,28 +122,34 @@ class SmileHelper(SmileCommon):
 
             # Don't collect data for the OpenThermGateway appliance, skip thermostat(s)
             # without actuator_functionalities, should be an orphaned device(s) (Core #81712)
-            if appl.pwclass == "open_therm_gateway" or (
-                appl.pwclass == "thermostat"
-                and appliance.find("actuator_functionalities/") is None
+            if appliance.type == ApplianceType.OPENTHERMGW or (
+                appliance.type == ApplianceType.THERMOSTAT
+                and appliance.actuator_functionalities is None
             ):
                 continue
 
-            if (appl_loc := appliance.location) is not None:
-                appl.location = appl_loc.get("id")
+            if appliance.location is not None:
+                appl.fixed_location = appliance.id
             # Set location to the _home_loc_id when the appliance-location is not found,
             # except for thermostat-devices without a location, they are not active
-            elif appl.pwclass not in THERMOSTAT_CLASSES:
-                appl.location = self._home_loc_id
+            elif appliance.type not in THERMOSTAT_CLASSES:
+                appliance.fixed_location = self._home_loc_id
 
             # Don't show orphaned thermostat-types
-            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
+            if appliance.type in THERMOSTAT_CLASSES and appliance.location is None:
                 continue
 
-            extend_plug_device_class(appl, appliance)
+            # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
+            if appliance.description is not None and (
+                "ZigBee protocol" in appliance.description
+                or "smart plug" in appliance.description
+            ):
+                appliance.type = f"{appliance.type}_plug"
 
-            # Collect appliance info, skip orphaned/removed devices
-            if not (appl := self._appliance_info_finder(appl, appliance)):
-                continue
+            # TODO: recreate functionality
+            # # Collect appliance info, skip orphaned/removed devices
+            # if not (appl := self._appliance_info_finder(appl, appliance)):
+            #     continue
 
             self._create_gw_entities(appl)
 
@@ -230,12 +228,13 @@ class SmileHelper(SmileCommon):
                 "Error, location Home (building) not found!"
             )  # pragma: no cover
 
-    def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
+    def _appliance_info_finder(self, appliance: Appliance) -> Appliance:
         """Collect info for all appliances found."""
-        match appl.pwclass:
-            case "gateway":
-                # Collect gateway entity info
-                return self._appl_gateway_info(appl, appliance)
+        match application.type:
+            # No longer needed since we have a Gateway
+            # case "gateway":
+            #     # Collect gateway entity info
+            #     return self._appl_gateway_info(appl, appliance)
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
                 # Collect thermostat entity info
                 return self._appl_thermostat_info(appl, appliance)
@@ -269,24 +268,14 @@ class SmileHelper(SmileCommon):
             case _:  # pragma: no cover
                 return Munch()
 
-    def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
+    def _appl_gateway_info(self, appliance: Appliance) -> Appliance:
         """Helper-function for _appliance_info_finder()."""
-        self._gateway_id = appl.entity_id
-        locator = "./gateway/firmware_version"
-        appl.firmware = self._domain_objects.find(locator).text
-        appl.hardware = self.smile.hw_version
-        appl.mac = self.smile.mac_address
-        appl.model = self.smile.model
-        appl.model_id = self.smile.model_id
-        appl.name = self.smile.name
-        appl.vendor_name = "Plugwise"
+        self._gateway_id = application.id
 
         # Adam: collect the ZigBee MAC address of the Smile
-        if self.check_name(ADAM):
-            if (
-                found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
-            ) is not None:
-                appl.zigbee_mac = found.find("mac_address").text
+        if ADAM in appliance.name:
+            if (found := appliance.protocols.zig_bee_coordinator) is not None:
+                application.zigbee_mac = found.mac_address
 
             # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
             self._reg_allowed_modes = self._get_appl_actuator_modes(
@@ -317,12 +306,19 @@ class SmileHelper(SmileCommon):
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
-        therm_list: list[str] = []
-        offset_appls = self._domain_objects.findall(
-            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
-        )
-        for item in offset_appls:
-            therm_list.append(item.get("id"))
+        therm_list = []
+        for appl in self._domain_objects.appliance:
+            af = appl.actuator_functionalities
+            if not af or not isinstance(af, OffsetFunctionality):
+                continue
+
+            print(f"HOI6 {af}")
+            ofs = af.offset_functionality
+            if isinstance(ofs, OffsetFunctionality):
+                ofs = [ofs]
+
+            if any(o.type == "temperature_offset" for o in ofs):
+                therm_list.append(appl.id)
 
         return therm_list
 

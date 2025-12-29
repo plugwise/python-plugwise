@@ -1,5 +1,6 @@
 """Plugwise models."""
 
+from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -167,12 +168,31 @@ class ZigBeeNode(WithID):
 
 
 # Appliance
+class ApplianceType(str, Enum):
+    """Define application types."""
+
+    GATEWAY = "gateway"
+    OPENTHERMGW = "open_therm_gateway"
+    THERMOSTAT = "thermostat"
+    CHP = "central_heating_pump"
+    CD = "computer_desktop"
+    HC = "heater_central"
+    HT = "hometheater"
+    THERMO_RV = "thermostatic_radiator_valve"
+    VA = "valve_actuator"
+    WHV = "water_heater_vessel"
+    ZONETHERMOMETER = "zone_thermometer"
+    ZONETHERMOSTAT = "zone_thermostat"
+
+    # TODO we still need all the '{}_plug' things here eventually
+
+
 class Appliance(WithID):
     """Plugwise Appliance."""
 
     name: str
     description: str | None = None
-    type: str
+    type: ApplianceType
     created_date: str
     modified_date: str | list[str] | None = None
     deleted_date: str | None = None
@@ -183,6 +203,9 @@ class Appliance(WithID):
     actuator_functionalities: (
         dict[str, BaseFunctionality | list[BaseFunctionality]] | None
     ) = None
+
+    # Internal processing
+    fixed_location: str | None = None
 
 
 # Module
@@ -202,6 +225,54 @@ class Module(WithID):
     services: dict[str, Any] | list[Any] | None = None
 
     protocols: dict[str, Any] | None = None  # ZigBeeNode, WLAN, LAN
+
+
+# Gateway
+class Gateway(Module):
+    """Plugwise Gateway."""
+
+    last_reset_date: str | list[str] | None = None
+    last_boot_date: str | list[str] | None = None
+
+    project: dict[str, Any] | None = None
+    gateway_environment: dict[str, Any] | None = None
+    features: dict[str, Any] | None = None
+
+
+# Group
+class ApplianceRef(WithID):
+    """Group appliance reference."""
+
+    pass
+
+
+class AppliancesContainer(PWBase):
+    """Group container containing appliance IDs."""
+
+    appliance: list[ApplianceRef] | ApplianceRef
+
+
+class GroupType(str, Enum):
+    """Define group types."""
+
+    PUMPING = "pumping"
+    SWITCHING = "switching"
+
+
+class Group(WithID):
+    """Group of appliances."""
+
+    name: str
+    description: str | None = None
+    type: GroupType | None = None
+
+    created_date: str
+    modified_date: str | list[str] | None = None
+    deleted_date: str | None = None
+
+    logs: dict[str, BaseLog | list[BaseLog]] | list[BaseLog] | None
+    appliances: AppliancesContainer | None = None
+    actuator_functionalities: dict[str, BaseFunctionality] | None = None
 
 
 # Location
@@ -226,6 +297,8 @@ class DomainObjects(PWBase):
     """Plugwise Domain Objects."""
 
     appliance: list[Appliance] = []
+    gateway: Gateway | list[Gateway] | None = None
+    group: Group | list[Group] | None = None
     module: list[Module] = []
     location: list[Location] = []
     notification: Notification | list[Notification] | None = None
@@ -237,3 +310,37 @@ class Root(PWBase):
     """Main XML definition."""
 
     domain_objects: DomainObjects
+
+
+# Mappings
+
+
+class SwitchDeviceType(str, Enum):
+    """Define switch device types."""
+
+    TOGGLE = "toggle"
+    LOCK = "lock"
+
+
+class SwitchFunctionType(str, Enum):
+    """Define switch function types."""
+
+    TOGGLE = "toggle_functionality"
+    LOCK = "lock"
+    NONE = None
+
+
+class SwitchActuatorType(str, Enum):
+    """Define switch actuator types."""
+
+    DHWCM = "domestic_hot_water_comfort_mode"
+    CE = "cooling_enabled"
+
+
+class Switch(BaseModel):
+    """Switch/relay definition."""
+
+    device: SwitchDeviceType = SwitchDeviceType.TOGGLE
+    func_type: SwitchFunctionType = SwitchFunctionType.TOGGLE
+    act_type: SwitchActuatorType = SwitchActuatorType.CE
+    func: SwitchFunctionType = SwitchFunctionType.NONE
