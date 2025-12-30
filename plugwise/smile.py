@@ -16,7 +16,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -107,14 +106,12 @@ class SmileAPI(SmileData):
         Collect and add switching- and/or pump-group entities.
         Finally, collect the data and states for each entity.
         """
-        LOGGER.debug("HOI 1 get_all_gateway_entities data: %s", self.gw_entities)
         if self._get_appliances() and self._is_thermostat:
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
 
         self._scan_thermostats()
-        LOGGER.debug("HOI 2 get_all_gateway_entities data: %s", self.gw_entities)
         self._get_groups()
         self._all_entity_data()
 

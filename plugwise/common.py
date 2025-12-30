@@ -210,10 +210,8 @@ class SmileCommon:
                 continue  # pragma: no cover
 
             if members := self._collect_members(group):
-                LOGGER.debug("HOI members: %s", members)
                 self._new_groups.append(group_id)
 
-            LOGGER.debug("HOI get_existing_groups: %s", self._existing_groups)
             if (
                 group_id in self._existing_groups
                 and self.gw_entities[group_id]["name"] == group_name
