@@ -268,12 +268,7 @@ class SmileHelper(SmileCommon):
             ):
                 continue
 
-            self._loc_data[loc.loc_id] = {
-                "name": loc.name,
-                "primary": [],
-                "primary_prio": 0,
-                "secondary": [],
-            }
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
         removed = list(set(self._existing_locations) - set(self._new_locations))
         if self._existing_locations and removed:
@@ -858,6 +853,7 @@ class SmileHelper(SmileCommon):
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
         for location_id, location in self._loc_data.items():
+            location.update({"primary": [], "primary_prio": 0, "secondary": []})
             for entity_id, entity in self.gw_entities.items():
                 self._rank_thermostat(
                     entity_id, entity, location_id, location, THERMO_MATCHING
@@ -885,20 +881,16 @@ class SmileHelper(SmileCommon):
 
         # Pre-elect new primary
         if thermo_matching[appl_class] == location["primary_prio"]:
-            if entity_id not in location["primary"]:
-                location["primary"].append(entity_id)
+            location["primary"].append(entity_id)
         elif (thermo_rank := thermo_matching[appl_class]) > location["primary_prio"]:
             location["primary_prio"] = thermo_rank
             # Demote former primary
             if tl_primary := location["primary"]:
-                for item in tl_primary:
-                    if item not in location["secondary"]:
-                        location["secondary"].append(item)
-                    location["primary"].remove(item)
+                location["secondary"] += tl_primary
+                location["primary"] = []
             # Crown primary
-            if entity_id not in location["primary"]:
-                location["primary"].append(entity_id)
-        elif entity_id not in location["secondary"]:
+            location["primary"].append(entity_id)
+        else:
             location["secondary"].append(entity_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
