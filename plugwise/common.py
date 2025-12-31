@@ -204,21 +204,22 @@ class SmileCommon:
 
         for group in self._domain_objects.findall("./group"):
             group_id = group.get("id")
-            group_name = group.find("name").text
             if group_id is None:
                 continue  # pragma: no cover
 
-            if members := self._collect_members(group):
-                self._new_groups.append(group_id)
+            if not (members := self._collect_members(group)):
+                continue
 
+            group_name = group.find("name").text
+            group_type = group.find("type").text
+            self._new_groups.append(group_id)
             if (
                 group_id in self._existing_groups
                 and self.gw_entities[group_id]["name"] == group_name
             ):
                 continue
 
-            group_type = group.find("type").text
-            if group_type in GROUP_TYPES and members:
+            if group_type in GROUP_TYPES:
                 self.gw_entities[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
@@ -228,10 +229,10 @@ class SmileCommon:
                 }
                 self._count += 5
 
-        removed = list(set(self._existing_groups) - set(self._new_groups))
-        if self._existing_groups and removed:
-            for group_id in removed:
-                self.gw_entities.pop(group_id)
+        if self._existing_groups:
+            removed_groups = set(self._existing_groups) - set(self._new_groups)
+            for group_id in removed_groups:
+                self.gw_entities.pop(group_id, None)
 
         self._existing_groups = self._new_groups
         self._new_groups = []
