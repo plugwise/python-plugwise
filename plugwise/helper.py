@@ -901,7 +901,7 @@ class SmileHelper(SmileCommon):
             if entity_id not in location["primary"]:
                 location["primary"].append(entity_id)
         elif entity_id not in location["secondary"]:
-                location["secondary"].append(entity_id)
+            location["secondary"].append(entity_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
         """Helper-function for _get_location_data().
