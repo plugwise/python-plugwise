@@ -157,6 +157,7 @@ class Neighbor(PWBase):
 class ZigBeeNode(WithID):
     """ZigBee node definition."""
 
+    reachable: bool | None = None
     mac_address: str
     type: str
     reachable: bool
@@ -166,6 +167,26 @@ class ZigBeeNode(WithID):
     neighbors: list[Neighbor]
     last_neighbor_table_received: str | None = None
     neighbor_table_support: bool | None = None
+
+
+class NetworkRouter(BaseModel):
+    """Network router."""
+
+    mac_address: str | None = None
+
+
+class NetworkCoordinator(BaseModel):
+    """Network coordinator."""
+
+    mac_address: str | None = None
+
+
+class Protocols(BaseModel):
+    """Protocol definition."""
+
+    network_router: NetworkRouter | None = None
+    network_coordinator: NetworkCoordinator | None = None
+    zig_bee_node: ZigBeeNode | None = None
 
 
 # Appliance
@@ -182,6 +203,7 @@ class ApplianceType(str, Enum):
     STRETCH = "stretch"
     THERMO_RV = "thermostatic_radiator_valve"
     VA = "valve_actuator"
+    VA_plug = "valve_actuator_plug"
     WHV = "water_heater_vessel"
     ZONETHERMOMETER = "zone_thermometer"
     ZONETHERMOSTAT = "zone_thermostat"
@@ -192,6 +214,7 @@ class ApplianceType(str, Enum):
 class Appliance(WithID):
     """Plugwise Appliance."""
 
+    available: bool = False
     name: str
     description: str | None = None
     type: ApplianceType
@@ -226,7 +249,8 @@ class Module(WithID):
     #  services: dict[str, ServiceBase | list[ServiceBase]] | list[dict[str, Any]] | None = None
     services: dict[str, Any] | list[Any] | None = None
 
-    protocols: dict[str, Any] | None = None  # ZigBeeNode, WLAN, LAN
+    # protocols: dict[str, Any] | None = None  # ZigBeeNode, WLAN, LAN
+    protocols: dict[str, Protocols] | list[Protocols] | None = None
 
 
 # Gateway

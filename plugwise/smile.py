@@ -101,7 +101,7 @@ class SmileAPI(SmileData):
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self.data = await self._request(DOMAIN_OBJECTS, new=True)
+        await self._request(DOMAIN_OBJECTS, new=True)
         print(f"HOI3a {self.data}")
         if "notification" in self.data and self.data.notification is not None:
             print(f"HOI3b {self.data.notification}")
