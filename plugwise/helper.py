@@ -884,18 +884,24 @@ class SmileHelper(SmileCommon):
             return None
 
         # Pre-elect new primary
-        if thermo_matching[appl_class] == location["primary_prio"]:
+        if (
+            thermo_matching[appl_class] == location["primary_prio"]
+            and entity_id not in location["primary"]
+        ):
             location["primary"].append(entity_id)
         elif (thermo_rank := thermo_matching[appl_class]) > location["primary_prio"]:
             location["primary_prio"] = thermo_rank
             # Demote former primary
             if tl_primary := location["primary"]:
-                location["secondary"] += tl_primary
+                for item in tl_primary:
+                    if item not in location["secondary"]:
+                        location["secondary"].append(item)
                 location["primary"] = []
             # Crown primary
-            location["primary"].append(entity_id)
-        else:
-            location["secondary"].append(entity_id)
+            if entity_id not in location["primary"]:
+                location["primary"].append(entity_id)
+        elif entity_id not in location["secondary"]:
+                location["secondary"].append(entity_id)
 
     def _control_state(self, data: GwEntityData) -> str | bool:
         """Helper-function for _get_location_data().
