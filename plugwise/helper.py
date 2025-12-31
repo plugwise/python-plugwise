@@ -884,11 +884,9 @@ class SmileHelper(SmileCommon):
             return None
 
         # Pre-elect new primary
-        if (
-            thermo_matching[appl_class] == location["primary_prio"]
-            and entity_id not in location["primary"]
-        ):
-            location["primary"].append(entity_id)
+        if thermo_matching[appl_class] == location["primary_prio"]:
+            if entity_id not in location["primary"]:
+                location["primary"].append(entity_id)
         elif (thermo_rank := thermo_matching[appl_class]) > location["primary_prio"]:
             location["primary_prio"] = thermo_rank
             # Demote former primary
@@ -896,7 +894,7 @@ class SmileHelper(SmileCommon):
                 for item in tl_primary:
                     if item not in location["secondary"]:
                         location["secondary"].append(item)
-                location["primary"] = []
+                    location["primary"].remove(item)
             # Crown primary
             if entity_id not in location["primary"]:
                 location["primary"].append(entity_id)
