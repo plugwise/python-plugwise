@@ -26,7 +26,6 @@ from plugwise.constants import (
     LOCATIONS,
     LOGGER,
     MODULE_LOCATOR,
-    NONE,
     OFF,
     P1_MEASUREMENTS,
     TEMP_CELSIUS,
@@ -80,7 +79,7 @@ class SmileHelper(SmileCommon):
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
-        self._gateway_id: str = NONE
+        self._gateway_id: str = None
         self._zones: dict[str, GwEntityData]
         self.gw_entities: dict[str, GwEntityData]
         self.smile: Munch = Munch()
@@ -131,10 +130,9 @@ class SmileHelper(SmileCommon):
             ):
                 appliance.type = f"{appliance.type}_plug"
 
-            # TODO: recreate functionality
-            # # Collect appliance info, skip orphaned/removed devices
-            # if not (appl := self._appliance_info_finder(appl, appliance)):
-            #     continue
+            # Collect appliance info, skip orphaned/removed devices
+            if not self._appliance_info_finder(appliance):
+                continue
 
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
@@ -182,6 +180,7 @@ class SmileHelper(SmileCommon):
         """Collect all locations."""
         counter = 0
         loc = Munch()
+        print(f"HOI15 {self.data}")
         print(f"HOI15 {self.data.location}")
         locations = self.data.location
         if not locations:
@@ -211,48 +210,51 @@ class SmileHelper(SmileCommon):
                 "Error, location Home (building) not found!"
             )  # pragma: no cover
 
-    def _appliance_info_finder(self, appliance: Appliance) -> Appliance:
+    def _appliance_info_finder(self, appliance: Appliance) -> Appliance | None:
         """Collect info for all appliances found."""
+        print(f"HOI22 appliance type {appliance.type}!")
         match appliance.type:
-            # No longer needed since we have a Gateway
-            # case "gateway":
-            #     # Collect gateway entity info
-            #     return self._appl_gateway_info(appl, appliance)
+            case "gateway":
+                # Collect gateway entity info
+                print("HOI22 gateway!")
+                return self._appl_gateway_info(appliance)
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
                 # Collect thermostat entity info
-                return self._appl_thermostat_info(appl, appliance)
+                return self._appl_thermostat_info(appliance)
             case "heater_central":
                 # Collect heater_central entity info
                 # 251016: the added guarding below also solves Core Issue #104433
                 if not (
-                    appl := self._appl_heater_central_info(appl, appliance, False)
+                    appliance := self._appl_heater_central_info(appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
                 self._dhw_allowed_modes = self._get_appl_actuator_modes(
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
-                return appl
+                return appliance
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
                 locator = MODULE_LOCATOR
                 module_data = self._get_module_data(appliance, locator)
                 # A plug without module-data is orphaned/ no present
                 if not module_data["contents"]:
-                    return Munch()
+                    return None
 
-                appl.available = module_data["reachable"]
-                appl.firmware = module_data["firmware_version"]
-                appl.hardware = module_data["hardware_version"]
-                appl.model_id = module_data["vendor_model"]
-                appl.vendor_name = module_data["vendor_name"]
-                appl.model = check_model(appl.model_id, appl.vendor_name)
-                appl.zigbee_mac = module_data["zigbee_mac_address"]
-                return appl
+                print(f"HOI24 {module_data}")
+                appliance.available = module_data["reachable"]
+                appliance.firmware_version = module_data["firmware_version"]
+                appliance.hardware_version = module_data["hardware_version"]
+                appliance.model_id = module_data["vendor_model"]
+                appliance.vendor_name = module_data["vendor_name"]
+                appliance.model = check_model(appl.model_id, appl.vendor_name)
+                appliance.zigbee_mac_address = module_data["zigbee_mac_address"]
+                return appliance
             case _:  # pragma: no cover
-                return Munch()
+                return None
 
     def _appl_gateway_info(self, appliance: Appliance) -> Appliance:
         """Helper-function for _appliance_info_finder()."""
+        print(f"HOI19 {appliance.id}")
         self._gateway_id = appliance.id
 
         # Adam: collect the ZigBee MAC address of the Smile
@@ -272,7 +274,7 @@ class SmileHelper(SmileCommon):
                 # Limit the possible gateway-modes
                 self._gw_allowed_modes = ["away", "full", "vacation"]
 
-        return appl
+        return appliance
 
     def _get_appl_actuator_modes(
         self, appliance: etree.Element, actuator_type: str
@@ -624,7 +626,7 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and entity_id == self._gateway_id:
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
-                value = format_measure(found.text, NONE)
+                value = format_measure(found.text, None)
                 data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
 
@@ -918,7 +920,7 @@ class SmileHelper(SmileCommon):
                 }
             else:
                 schedule_ids[rule.get("id")] = {
-                    "location": NONE,
+                    "location": None,
                     "name": name,
                     "active": active,
                 }
@@ -945,7 +947,7 @@ class SmileHelper(SmileCommon):
                     }
                 else:
                     schedule_ids[rule.get("id")] = {
-                        "location": NONE,
+                        "location": None,
                         "name": name,
                         "active": active,
                     }
@@ -958,9 +960,9 @@ class SmileHelper(SmileCommon):
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available: list[str] = [NONE]
+        available: list[str] = [None]
         rule_ids: dict[str, dict[str, str]] = {}
-        selected = NONE
+        selected = None
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
@@ -980,9 +982,9 @@ class SmileHelper(SmileCommon):
             schedules.append(name)
 
         if schedules:
-            available.remove(NONE)
+            available.remove(None)
             available.append(OFF)
-            if selected == NONE:
+            if selected == None:
                 selected = OFF
 
         return available, selected

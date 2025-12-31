@@ -23,13 +23,14 @@ from plugwise.util import check_heater_central, check_model, return_valid
 from defusedxml import ElementTree as etree
 from munch import Munch
 
-from .model import ModuleData
+from .model import Module, ModuleData
 
 
-def get_zigbee_data(
-    module: etree.Element, module_data: ModuleData, legacy: bool
-) -> None:
+def get_zigbee_data(module: Module, module_data: ModuleData, legacy: bool) -> None:
     """Helper-function for _get_module_data()."""
+    if not module.protocols:
+        return
+
     if legacy:
         # Stretches
         if (router := module.find("./protocols/network_router")) is not None:
@@ -37,10 +38,19 @@ def get_zigbee_data(
         # Also look for the Circle+/Stealth M+
         if (coord := module.find("./protocols/network_coordinator")) is not None:
             module_data["zigbee_mac_address"] = coord.find("mac_address").text
+    if legacy:
+        if module.protocols.network_router:
+            module_data.zigbee_mac_address = module.protocols.network_router.mac_address
+        if module.protocols.network_coordinator:
+            module_data.zigbee_mac_address = (
+                module.protocols.network_coordinator.mac_address
+            )
+        return
     # Adam
-    elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-        module_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-        module_data["reachable"] = zb_node.find("reachable").text == "true"
+    if module.protocols.zig_bee_node:
+        zb = module.protocols.zig_bee_node
+        module_data.zigbee_mac_address = zb.mac_address
+        module_data.reachable = zb.reachable
 
 
 class SmileCommon:
@@ -194,7 +204,7 @@ class SmileCommon:
         if self.smile.type == "power" or self.check_name(ANNA):
             return
 
-        for group in self._domain_objects.group:
+        for group in self.data.group:
             members: list[str] = []
             if not group.appliances:
                 continue
@@ -241,26 +251,32 @@ class SmileCommon:
 
         Collect requested info from MODULES.
         """
-        module = self.data.get_module(link_id)
+        module_data = ModuleData()
+        if "services" not in self.data.appliance or not self.data.appliance.services:
+            return module_data
 
-        for service_type, services in appliance.services.iter_services():
+        for service_type, services in self.data.appliance.services.iter_services():
             if key and key not in service_type:
                 continue
-        for service in services:
-            module = self.data.get_module(service.id)
-            if not module:
-                continue
 
-            return ModuleData(
-                contents=True,
-                firmware_version=None,
-                hardware_version=None,
-                reachable=None,
-                vendor_name=None,
-                vendor_model=None,
-                zigbee_mac_address=None,
-            )
-        return ModuleData()
+            # NOW correctly nested
+            for service in services:
+                module = self.data.get_module(service.id)
+                if not module:
+                    continue
+
+                module_data = ModuleData(
+                    content=True,
+                    firmware_version=module.firmware_version,
+                    hardware_version=module.hardware_version,
+                    reachable=module.reachable,
+                    vendor_name=module.vendor_name,
+                    vendor_model=module.vendor_model,
+                    zigbee_mac_address=module.zigbee_mac_address,
+                )
+                get_zigbee_data(module, module_data, legacy)
+
+        return module_data
 
         # TODO legacy
         """
