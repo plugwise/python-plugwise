@@ -41,5 +41,21 @@
     "switches": {
       "relay": false
     }
+  },
+  "f2bf9048bef64cc5b6d5110154e33c81": {
+    "thermostats": {
+      "primary": [
+        "ad4838d7d35c4d6ea796ee12ae5aedf8",
+        "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6",
+        "da575e9e09b947e281fb6e3ebce3b174"
+      ],
+      "secondary": []
+    }
+  },
+  "f871b8c4d63549319221e294e4f88074": {
+    "thermostats": {
+      "primary": ["e2f4322d57924fa090fbbc48b3a140dc"],
+      "secondary": ["1772a4ea304041adb83f357b751341ff"]
+    }
   }
 }
