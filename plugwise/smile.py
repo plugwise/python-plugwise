@@ -116,6 +116,17 @@ class SmileAPI(SmileData):
         self._get_groups()
         self._all_entity_data()
 
+    def _get_appliances_with_offset_functionality(self) -> list[str]:
+        """Helper-function collecting all appliance that have offset_functionality."""
+        therm_list: list[str] = []
+        offset_appls = self._domain_objects.findall(
+            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
+        )
+        for item in offset_appls:
+            therm_list.append(item.get("id"))
+
+        return therm_list
+
     async def async_update(self) -> dict[str, GwEntityData]:
         """Perform an full update: re-collect all gateway entities and their data and states.
 
