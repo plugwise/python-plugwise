@@ -198,17 +198,16 @@ class SmileCommon:
             return
 
         for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
             group_id = group.get("id")
+            if group_id is None:
+                continue  # pragma: no cover
+
+            if not (members := self._collect_members(group)):
+                continue
+
             group_name = group.find("name").text
             group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.get("id") in self.gw_entities:
-                    members.append(item.get("id"))
-
-            if group_type in GROUP_TYPES and members and group_id:
+            if group_type in GROUP_TYPES:
                 self.gw_entities[group_id] = {
                     "dev_class": group_type,
                     "model": "Group",
@@ -217,6 +216,16 @@ class SmileCommon:
                     "vendor": "Plugwise",
                 }
                 self._count += 5
+
+    def _collect_members(self, element: etree.Element) -> list[str]:
+        """Check and collect members."""
+        members: list[str] = []
+        group_appliances = element.findall("appliances/appliance")
+        for item in group_appliances:
+            if (member_id := item.get("id")) in self.gw_entities:
+                members.append(member_id)
+
+        return members
 
     def _get_lock_state(
         self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
