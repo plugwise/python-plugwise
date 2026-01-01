@@ -212,12 +212,7 @@ class SmileHelper(SmileCommon):
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
-            self._loc_data[loc.loc_id] = {
-                "name": loc.name,
-                "primary": [],
-                "primary_prio": 0,
-                "secondary": [],
-            }
+            self._loc_data[loc.loc_id] = {"name": loc.name}
             # Home location is of type building
             if loc._type == "building":
                 counter += 1
@@ -777,6 +772,7 @@ class SmileHelper(SmileCommon):
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
         for location_id, location in self._loc_data.items():
+            location.update({"primary": [], "primary_prio": 0, "secondary": []})
             for entity_id, entity in self.gw_entities.items():
                 self._rank_thermostat(
                     entity_id, entity, location_id, location, THERMO_MATCHING
