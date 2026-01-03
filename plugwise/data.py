@@ -106,19 +106,18 @@ class SmileData(SmileHelper):
     def _add_or_update_notifications(
         self, entity_id: str, entity: GwEntityData
     ) -> None:
-        """Helper-function adding or updating the Plugwise notifications."""
-        if (
-            entity_id == self._gateway_id
-            and (self._is_thermostat or self.smile.type == "power")
-        ) or (
-            "binary_sensors" in entity
-            and "plugwise_notification" in entity["binary_sensors"]
-        ):
-            entity["binary_sensors"]["plugwise_notification"] = bool(
-                self._notifications
-            )
-            entity["notifications"] = self._notifications
-            self._count += 2
+        """Helper-function adding or updating the Plugwise notifications to the gateway."""
+
+        if entity_id != self._gateway_id:
+            return  # pragma: no cover
+
+        if self._is_thermostat or self.smile.type == "power":
+            if "plugwise_notification" not in entity["binary_sensors"]:
+                entity["binary_sensors"].update(
+                    {"plugwise_notification": bool(self._notifications)}
+                )
+                entity.update({"notifications": self._notifications})
+                self._count += 2
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
@@ -184,28 +183,27 @@ class SmileData(SmileHelper):
         Provide entity-data, based on appliance_id (= entity_id).
         """
         self._get_measurement_data(entity_id, entity)
-
-        # Check availability of wired-connected entities
-        # Smartmeter
-        self._check_availability(
-            entity, "smartmeter", "P1 does not seem to be connected"
-        )
-        # OpenTherm entity
-        if entity["name"] != "OnOff":
-            self._check_availability(
-                entity, "heater_central", "no OpenTherm communication"
-            )
-
-        # Switching groups data
-        self._entity_switching_group(entity)
         # Adam data
         if self.check_name(ADAM):
             self._get_adam_data(entity)
+            # Update switching-group status
+            self._entity_switching_group(entity)
 
         # Thermostat data for Anna (presets, temperatures etc)
         if self.check_name(ANNA) and entity["dev_class"] == "thermostat":
             self._climate_data(entity_id, entity)
             self._get_anna_control_state(entity)
+
+        # Check availability of wired entities:
+        # - Smartmeter
+        self._check_availability(
+            entity, "smartmeter", "P1 does not seem to be connected"
+        )
+        # - OpenTherm entity
+        if entity["name"] != "OnOff":
+            self._check_availability(
+                entity, "heater_central", "no OpenTherm communication"
+            )
 
     def _check_availability(
         self, entity: GwEntityData, dev_class: str, message: str

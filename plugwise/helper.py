@@ -145,7 +145,7 @@ class SmileHelper(SmileCommon):
             elif appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_loc_id
 
-            # Don't show orphaned thermostat-types
+            # Don't show orphaned (no location) thermostat-types
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
@@ -212,12 +212,7 @@ class SmileHelper(SmileCommon):
             loc.loc_id = location.get("id")
             loc.name = location.find("name").text
             loc._type = location.find("type").text
-            self._loc_data[loc.loc_id] = {
-                "name": loc.name,
-                "primary": [],
-                "primary_prio": 0,
-                "secondary": [],
-            }
+            self._loc_data[loc.loc_id] = {"name": loc.name}
             # Home location is of type building
             if loc._type == "building":
                 counter += 1
@@ -315,17 +310,6 @@ class SmileHelper(SmileCommon):
                 mode_list.append(mode.text)
 
         return mode_list
-
-    def _get_appliances_with_offset_functionality(self) -> list[str]:
-        """Helper-function collecting all appliance that have offset_functionality."""
-        therm_list: list[str] = []
-        offset_appls = self._domain_objects.findall(
-            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
-        )
-        for item in offset_appls:
-            therm_list.append(item.get("id"))
-
-        return therm_list
 
     def _get_zone_data(self, loc_id: str, zone: GwEntityData) -> None:
         """Helper-function for smile.py: _get_entity_data().
@@ -788,6 +772,7 @@ class SmileHelper(SmileCommon):
         Match thermostat-appliances with locations, rank them for locations with multiple thermostats.
         """
         for location_id, location in self._loc_data.items():
+            location.update({"primary": [], "primary_prio": 0, "secondary": []})
             for entity_id, entity in self.gw_entities.items():
                 self._rank_thermostat(
                     entity_id, entity, location_id, location, THERMO_MATCHING
