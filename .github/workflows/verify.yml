@@ -4,9 +4,8 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 2
+  CACHE_VERSION: 3
   DEFAULT_PYTHON: "3.14"
-  PRE_COMMIT_HOME: ~/.cache/pre-commit
   VENV: venv
 
 on:
@@ -45,15 +44,15 @@ jobs:
     needs: cache
     name: Prepare
     steps:
-      - name: Prepare code checkout and python/pre-commit setup
+      - name: Prepare code checkout and python/prek(pre-commit) setup
         id: cache-reuse
-        uses: plugwise/gh-actions/prepare-python-and-code@v1
+        uses: plugwise/gh-actions/prepare-python-and-code@v2
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           fail-on-miss: false  # First time create cache (if not already exists)
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
 
   ruff:
     runs-on: ubuntu-latest
@@ -68,12 +67,12 @@ jobs:
           persist-credentials: false
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v1
+        uses: plugwise/gh-actions/restore-venv@v2
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
       - name: Ruff (with fix)
         run: |
           . venv-${{ needs.cache.outputs.python-version }}/bin/activate
@@ -104,25 +103,20 @@ jobs:
         uses: actions/checkout@v6
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v1
+        uses: plugwise/gh-actions/restore-venv@v2
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
       - name: Verify commit
         run: |
           . venv-${{ needs.cache.outputs.python-version }}/bin/activate
-          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual pylint
-      - name: Biome lint
-        run: |
-          . venv-${{ needs.cache.outputs.python-version }}/bin/activate
-          mkdir -p ./tmp && curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64" -o ./tmp/biome && chmod +x ./tmp/biome
-          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual biome
+          prek run --show-diff-on-failure --color=always --all-files --hook-stage manual pylint
       - name: Lint markdown files
         run: |
           . venv-${{ needs.cache.outputs.python-version }}/bin/activate
-          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
+          prek run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
 
   pytest:
     runs-on: ubuntu-latest
@@ -144,13 +138,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v1
+        uses: plugwise/gh-actions/restore-venv@v2
         with:
           fail-on-miss: false  # First time create cache (if not already exists)
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ steps.python.outputs.python-version }}  # Force to installed python minor
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
       - name: Run all tests
         run: |
           . venv-${{ steps.python.outputs.python-version }}/bin/activate
@@ -177,12 +171,12 @@ jobs:
           persist-credentials: false
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v1
+        uses: plugwise/gh-actions/restore-venv@v2
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
       - name: Run mypy
         run: |
           . venv-${{ needs.cache.outputs.python-version }}/bin/activate
@@ -222,12 +216,12 @@ jobs:
         uses: actions/checkout@v6
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v1
+        uses: plugwise/gh-actions/restore-venv@v2
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
       - name: Download all coverage artifacts
         uses: actions/download-artifact@v7
         with:
@@ -304,12 +298,12 @@ jobs:
         uses: actions/checkout@v6
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v1
+        uses: plugwise/gh-actions/restore-venv@v2
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
-          precommit-home: ${{ env.PRE_COMMIT_HOME }}
+          prek-home: ${{ env.PREK_HOME }}
       - name: Run complexity report (click to view details)
         run: |
           . venv-${{ needs.cache.outputs.python-version }}/bin/activate

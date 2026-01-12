@@ -406,7 +406,7 @@ class SmileAPI(SmileData):
         For individual switches, sets the state directly.
         For group switches, sets the state for each member in the group separately.
         For switch-locks, sets the lock state using a different data format.
-        Return the requested state when succesful, the current state otherwise.
+        Return the requested state when successful, the current state otherwise.
         """
         model_type = cast(SwitchType, model)
         current_state = self.gw_entities[appl_id]["switches"][model_type]

@@ -20,4 +20,4 @@ fi
 uv pip install --upgrade -e . -r requirements_commit.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
 
 # Install pre-commit hook
-pre-commit install
+prek install --install-hooks

@@ -44,15 +44,9 @@ handle_command_error() {
     fi
 }
 
-biome_format() {
-    ./tmp/biome check fixtures/ plugwise/ tests/ --files-ignore-unknown=true --no-errors-on-unmatched --indent-width=2 --indent-style=space --write
-    handle_command_error "biome formatting"
-}
-
 # Install/update dependencies
-pre-commit install
-pre-commit install-hooks
 uv pip install -r requirements_test.txt -r requirements_commit.txt
+prek install --install-hooks
 
 set +u
 
@@ -63,9 +57,6 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "test_and_coverage" ] ; then
 fi
 
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
-    echo "... biome-ing (prettier) ..."
-    biome_format
-
     echo "... ruff checking ..."
     ruff check plugwise/ tests/
     handle_command_error "ruff checking"
@@ -82,12 +73,7 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
     handle_command_error "mypy validation"
 fi
 
-# As to not generated fixtures, leaving biome to re-do them
-# so no auto-generation during github run of testing
-# Creating todo #313 to 'gracefully' do this on merge on github action
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
    echo "... Crafting manual fixtures ..." 
    PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
-    echo "... (re) biome-ing (prettier) ..."
-    biome_format
 fi

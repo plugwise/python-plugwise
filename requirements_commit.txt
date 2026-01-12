@@ -5,6 +5,6 @@
 coverage
 ruff
 mypy
-pre-commit
+prek
 pylint
 pylint_strict_informational==0.1

@@ -1,5 +1,10 @@
 {
   "files": {
     "maxSize": 5000000
+  },
+  "json": {
+    "formatter": {
+      "arrayExpand": "all"
+    }
   }
 }
