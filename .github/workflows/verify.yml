@@ -116,7 +116,7 @@ jobs:
       - name: Lint markdown files
         run: |
           . venv-${{ needs.cache.outputs.python-version }}/bin/activate
-          prek run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
+          prek run --show-diff-on-failure --color=always --all-files --hook-stage manual pymarkdown
 
   pytest:
     runs-on: ubuntu-latest
