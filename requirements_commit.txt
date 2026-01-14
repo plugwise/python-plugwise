@@ -5,6 +5,6 @@
 coverage
 ruff
 mypy
-prek
+prek>=0.2.27
 pylint
 pylint_strict_informational==0.1

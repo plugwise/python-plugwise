@@ -6,7 +6,7 @@
 - Chores:
   - Introduce prek (for pre-commit) & align with v2 gh-actions
   - Remove biome (as prettier was reinstated)
-  - Replace node-based markdownlint with pythonesk library
+  - Replace node-based markdownlint with pythonic library
 
 ## v1.11.2
 

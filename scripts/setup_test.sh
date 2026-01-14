@@ -21,7 +21,7 @@ mkdir -p ./tmp
 # Install test requirements
 uv pip install --upgrade -e . -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
 
-# Install prek hook unless running from within pre-commit
+# Install prek hook unless running from within prek/pre-commit
 if [ "$#" -eq 0 ]; then
   prek install --install-hooks
 fi
