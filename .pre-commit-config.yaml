@@ -86,10 +86,6 @@ repos:
         name: "Setup"
         entry: /usr/bin/env bash -c 'test -d ./venv || scripts/setup.sh'
         language: script
-      - id: setup_test
-        name: "Setup (extended for testing"
-        entry: /usr/bin/env bash -c 'test -f ./tmp/biome || scripts/setup_test.sh pre-commit'
-        language: script
       - id: userdata
         name: "Validating userdata"
         entry: scripts/pre-commit.sh
@@ -115,11 +111,8 @@ repos:
         entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" NO_FIXTURES="1" scripts/tests_and_coverage.sh test_and_coverage'
         language: script
         pass_filenames: false
-      - id: biome
-        name: "Biome (prettier)"
-        entry: ./tmp/biome check fixtures/ plugwise/ tests/ --files-ignore-unknown=true --no-errors-on-unmatched --json-formatter-indent-width=2 --json-formatter-indent-style=space
-        language: script
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.47.0
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.34
     hooks:
-      - id: markdownlint
+      - id: pymarkdown
+        name: MarkDown Lint

@@ -3,6 +3,10 @@
 ## Ongoing
 
 - More code optimizations via PR[#843](https://github.com/plugwise/python-plugwise/pull/843)
+- Chores:
+  - Introduce prek (for pre-commit) & align with v2 gh-actions
+  - Remove biome (as prettier was reinstated)
+  - Replace node-based markdownlint with pythonic library
 
 ## v1.11.2
 
