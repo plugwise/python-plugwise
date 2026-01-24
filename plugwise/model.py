@@ -430,7 +430,7 @@ class GatewayData(BaseModel):
 class ModuleData(BaseModel):
     """Module model."""
 
-    contents: bool = False
+    content: bool = False
     firmware_version: str | None = None
     hardware_version: str | None = None
     reachable: bool | None = None
