@@ -158,15 +158,15 @@ class SmileHelper(SmileCommon):
         appl.entity_id = self._home_loc_id
         if not self.smile.anna_p1:
             appl.entity_id = self._gateway_id
-        appl.firmware = module_data["firmware_version"]
-        appl.hardware = module_data["hardware_version"]
+        appl.firmware = module_data.firmware_version
+        appl.hardware = module_data.hardware_version
         appl.location = self._home_loc_id
         appl.mac = None
-        appl.model = module_data["vendor_model"]
+        appl.model = module_data.vendor_model
         appl.model_id = None  # don't use model_id for SmartMeter
         appl.name = "P1"
         appl.pwclass = "smartmeter"
-        appl.vendor_name = module_data["vendor_name"]
+        appl.vendor_name = module_data.vendor_name
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
@@ -232,17 +232,17 @@ class SmileHelper(SmileCommon):
                 locator = MODULE_LOCATOR
                 module_data = self._get_module_data(appliance, locator)
                 # A plug without module-data is orphaned/ no present
-                if not module_data["content"]:
+                if not module_data.content:
                     return None
 
                 print(f"HOI24 {module_data}")
-                appliance.available = module_data["reachable"]
-                appliance.firmware_version = module_data["firmware_version"]
-                appliance.hardware_version = module_data["hardware_version"]
-                appliance.model_id = module_data["vendor_model"]
-                appliance.vendor_name = module_data["vendor_name"]
+                appliance.available = module_data.reachable
+                appliance.firmware_version = module_data.firmware_version
+                appliance.hardware_version = module_data.hardware_version
+                appliance.model_id = module_data.vendor_model
+                appliance.vendor_name = module_data.vendor_name
                 appliance.model = check_model(appl.model_id, appl.vendor_name)
-                appliance.zigbee_mac_address = module_data["zigbee_mac_address"]
+                appliance.zigbee_mac_address = module_data.zigbee_mac_address
                 return appliance
             case _:  # pragma: no cover
                 return None
