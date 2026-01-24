@@ -151,7 +151,7 @@ class SmileHelper(SmileCommon):
         tag = "electricity"
         module_data = self._get_module_data(self._home_location, locator, key=tag)
         # No module-data present means the device has been removed
-        if not module_data["contents"]:  # pragma: no cover
+        if not module_data["content"]:  # pragma: no cover
             return
 
         appl.available = None
@@ -232,7 +232,7 @@ class SmileHelper(SmileCommon):
                 locator = MODULE_LOCATOR
                 module_data = self._get_module_data(appliance, locator)
                 # A plug without module-data is orphaned/ no present
-                if not module_data["contents"]:
+                if not module_data["content"]:
                     return None
 
                 print(f"HOI24 {module_data}")

@@ -110,9 +110,9 @@ class SmileCommon:
         # xml_3: self._modules for legacy, self._domain_objects for actual
         xml_3 = return_valid(xml_3, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator_1, xml_2=xml_3)
-        if not module_data["contents"]:
+        if not module_data["content"]:
             module_data = self._get_module_data(xml_1, locator_2, xml_2=xml_3)
-            if not module_data["contents"]:
+            if not module_data["content"]:
                 self._heater_id = NONE
                 return (
                     Munch()
@@ -133,7 +133,7 @@ class SmileCommon:
         locator = "./logs/point_log[type='thermostat']/thermostat"
         xml_2 = return_valid(xml_2, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator, xml_2=xml_2)
-        if not module_data["contents"]:
+        if not module_data["content"]:
             return Munch()  # no module-data present means the device has been removed
 
         appl.vendor_name = module_data["vendor_name"]
@@ -287,7 +287,7 @@ class SmileCommon:
             search = return_valid(xml_2, self._domain_objects)
             module = search.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
-                module_data["contents"] = True
+                module_data["content"] = True
                 get_vendor_name(module, module_data)
                 module_data["vendor_model"] = module.find("vendor_model").text
                 module_data["hardware_version"] = module.find("hardware_version").text
