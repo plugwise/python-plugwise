@@ -150,7 +150,7 @@ jobs:
           . venv-${{ steps.python.outputs.python-version }}/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-${{ steps.python.outputs.python-version }}
           path: .coverage
@@ -223,7 +223,7 @@ jobs:
           venv-dir: ${{ env.VENV }}
           prek-home: ${{ env.PREK_HOME }}
       - name: Download all coverage artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: coverage-*
           merge-multiple: true
