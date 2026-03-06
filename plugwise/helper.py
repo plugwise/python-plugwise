@@ -567,6 +567,7 @@ class SmileHelper(SmileCommon):
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
+            LOGGER.debug("HOI 2 data: %s", data)
 
     def _get_actuator_mode(
         self, appliance: etree.Element, entity_id: str, key: str
@@ -862,6 +863,7 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the thermostat regulation_control state of a location.
         """
+        LOGGER.debug("HOI data: %s", data)
         if (reg_control := data["thermostat"].get("regulation_control")) is not None:
             data["select_zone_profile"] = reg_control
             data["zone_profiles"] = ALLOWED_ZONE_PROFILES
