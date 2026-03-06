@@ -820,7 +820,7 @@ class SmileHelper(SmileCommon):
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         if (thermostat := data.get("thermostat")) is None:
-            return
+            return False
 
         if (ctrl_state := thermostat.get("control_state")) is not None:
             data["thermostat"].pop("control_state")
