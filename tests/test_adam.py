@@ -18,8 +18,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
     @pytest.mark.asyncio
     async def test_connect_adam_jvonk(self):
-        """Test Adam (firmware 3.10.3)."""
-        self.smile_setup = "adam_jvonk"
+        """Test Adam with missing thermostat data."""
+        self.smile_setup = "adam_bad_thermostat"
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper(raise_timeout=True)
