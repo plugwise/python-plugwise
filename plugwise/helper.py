@@ -567,7 +567,6 @@ class SmileHelper(SmileCommon):
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
-            LOGGER.debug("HOI 2 data: %s", data)
 
     def _get_actuator_mode(
         self, appliance: etree.Element, entity_id: str, key: str
@@ -821,7 +820,6 @@ class SmileHelper(SmileCommon):
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         if (thermostat := data.get("thermostat")) is None:
-            LOGGER.warning("Something wrong, incomplete thermostat data")
             return
 
         if (ctrl_state := thermostat.get("control_state")) is not None:
@@ -866,6 +864,7 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the thermostat regulation_control state of a location.
         """
+        LOGGER.debug("HOI 2 data: %s", data)
         if (thermostat := data.get("thermostat")) is None:
             LOGGER.warning("Something wrong, incomplete thermostat data")
             return
