@@ -864,9 +864,11 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the thermostat regulation_control state of a location.
         """
-        LOGGER.debug("HOI 2 data: %s", data)
         if (thermostat := data.get("thermostat")) is None:
-            LOGGER.warning("Something wrong, incomplete thermostat data")
+            LOGGER.warning(
+                "Thermostat data in Zone %s is incomplete. Check the configuration in the Plugwise App.",
+                data["name"],
+            )
             return
 
         if (reg_control := thermostat.get("regulation_control")) is not None:
