@@ -1,0 +1,135 @@
+{
+  "292c5988ac814684bc1ade6286a8248b": {
+    "available": true,
+    "binary_sensors": {
+      "dhw_state": false,
+      "flame_state": false,
+      "heating_state": false
+    },
+    "dev_class": "heater_central",
+    "location": "856285a783f24bf4b2573c8bc510eabf",
+    "max_dhw_temperature": {
+      "lower_bound": 0.0,
+      "resolution": 1.0,
+      "setpoint": 50.0,
+      "upper_bound": 100.0
+    },
+    "maximum_boiler_temperature": {
+      "lower_bound": 25.0,
+      "resolution": 0.01,
+      "setpoint": 38.0,
+      "upper_bound": 45.0
+    },
+    "model": "Generic heater",
+    "model_id": "1.1",
+    "name": "OpenTherm",
+    "sensors": {
+      "dhw_temperature": 49.9,
+      "intended_boiler_temperature": 0.0,
+      "modulation_level": 0.0,
+      "outdoor_air_temperature": 13.6,
+      "return_temperature": 33.0,
+      "water_temperature": 20.9
+    },
+    "switches": {
+      "dhw_cm_switch": false
+    },
+    "vendor": "WeHeat"
+  },
+  "3ee6b9486cb04c258a3130fff2b144a4": {
+    "active_preset": "home",
+    "available_schedules": [],
+    "climate_mode": "heat",
+    "control_state": "idle",
+    "dev_class": "climate",
+    "model": "ThermoZone",
+    "name": "Overloop",
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
+    "select_schedule": null,
+    "sensors": {
+      "temperature": 20.3
+    },
+    "thermostats": {
+      "primary": [
+        "8edf4c8b659342e8ae9809a6f9734532"
+      ],
+      "secondary": []
+    },
+    "vendor": "Plugwise"
+  },
+  "8edf4c8b659342e8ae9809a6f9734532": {
+    "available": true,
+    "binary_sensors": {
+      "low_battery": false
+    },
+    "dev_class": "zone_thermometer",
+    "firmware": "2023-06-12T02:00:00+02:00",
+    "hardware": "1",
+    "location": "3ee6b9486cb04c258a3130fff2b144a4",
+    "model": "Jip",
+    "model_id": "168-02",
+    "name": "Jip overloop ",
+    "sensors": {
+      "battery": 100,
+      "humidity": 53.6,
+      "temperature": 20.3
+    },
+    "vendor": "Plugwise",
+    "zigbee_mac_address": "3C2EF5FFFED5DB5B"
+  },
+  "b0db639e4cf14e0ba3e586eb18febc36": {
+    "available": true,
+    "dev_class": "valve_actuator_plug",
+    "hardware": "1",
+    "location": "3ee6b9486cb04c258a3130fff2b144a4",
+    "model": "Aqara Smart Plug",
+    "model_id": "lumi.plug.maeu01",
+    "name": "Koen overloop",
+    "sensors": {
+      "electricity_consumed_interval": 0.0
+    },
+    "switches": {
+      "relay": false
+    },
+    "vendor": "LUMI",
+    "zigbee_mac_address": "54EF441000810C91"
+  },
+  "d4ad887fc59a4454bdcda64bbcf2d9ab": {
+    "binary_sensors": {
+      "plugwise_notification": false
+    },
+    "dev_class": "gateway",
+    "firmware": "3.10.13",
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
+    "hardware": "AME Smile 2.0 board",
+    "location": "856285a783f24bf4b2573c8bc510eabf",
+    "mac_address": "C493004A803A",
+    "model": "Gateway",
+    "model_id": "smile_open_therm",
+    "name": "Adam",
+    "notifications": {},
+    "regulation_modes": [
+      "off",
+      "bleeding_hot",
+      "bleeding_cold",
+      "heating"
+    ],
+    "select_gateway_mode": "full",
+    "select_regulation_mode": "heating",
+    "sensors": {
+      "outdoor_temperature": 15.6
+    },
+    "vendor": "Plugwise",
+    "zigbee_mac_address": "000D6F000DB9F188"
+  }
+}

@@ -1,8 +1,9 @@
 # Changelog
 
-## Ongoing
+## v1.11.3
 
-- More code optimizations via PR[#843](https://github.com/plugwise/python-plugwise/pull/843)
+- Improve handling of missing thermostat data via PR [#860](https://github.com/plugwise/python-plugwise/pull/860)
+- More code optimizations via PR [#843](https://github.com/plugwise/python-plugwise/pull/843)
 - Chores:
   - Introduce prek (for pre-commit) & align with v2 gh-actions
   - Remove biome (as prettier was reinstated)

@@ -819,8 +819,10 @@ class SmileHelper(SmileCommon):
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
+        if (thermostat := data.get("thermostat")) is None:
+            return False
 
-        if (ctrl_state := data["thermostat"].get("control_state")) is not None:
+        if (ctrl_state := thermostat.get("control_state")) is not None:
             data["thermostat"].pop("control_state")
             self._count -= 1
             return ctrl_state
@@ -862,7 +864,14 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the thermostat regulation_control state of a location.
         """
-        if (reg_control := data["thermostat"].get("regulation_control")) is not None:
+        if (thermostat := data.get("thermostat")) is None:
+            LOGGER.warning(
+                "Thermostat data in Zone %s is incomplete. Check the Zone configuration in the Plugwise App.",
+                data.get("name"),
+            )
+            return
+
+        if (reg_control := thermostat.get("regulation_control")) is not None:
             data["select_zone_profile"] = reg_control
             data["zone_profiles"] = ALLOWED_ZONE_PROFILES
             data["thermostat"].pop("regulation_control")
