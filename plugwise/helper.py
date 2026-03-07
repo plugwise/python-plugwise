@@ -866,8 +866,8 @@ class SmileHelper(SmileCommon):
         """
         if (thermostat := data.get("thermostat")) is None:
             LOGGER.warning(
-                "Thermostat data in Zone %s is incomplete. Check the configuration in the Plugwise App.",
-                data["name"],
+                "Thermostat data in Zone %s is incomplete. Check the Zone configuration in the Plugwise App.",
+                data.get("name"),
             )
             return
 
