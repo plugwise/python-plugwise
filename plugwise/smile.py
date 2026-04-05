@@ -36,8 +36,10 @@ from defusedxml import ElementTree as etree
 # Dict as class
 from munch import Munch
 
+from .model import PlugwiseData, Switch
 
-def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
+
+def model_to_switch_items(model: str, state: str, switch: Switch) -> tuple[str, Switch]:
     """Translate state and switch attributes based on model name.
 
     Helper function for set_switch_state().
@@ -74,6 +76,7 @@ class SmileAPI(SmileData):
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
         smile: Munch,
+        data: PlugwiseData,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__()
@@ -87,6 +90,9 @@ class SmileAPI(SmileData):
         self._schedule_old_states = _schedule_old_states
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
+        self.data = data
+
+        print(f"HOI16 {self.data.location}")
 
     @property
     def cooling_present(self) -> bool:
@@ -95,8 +101,11 @@ class SmileAPI(SmileData):
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-        self._get_plugwise_notifications()
+        await self._request(DOMAIN_OBJECTS, new=True)
+        print(f"HOI3a {self.data}")
+        if "notification" in self.data and self.data.notification is not None:
+            print(f"HOI3b {self.data.notification}")
+            self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
         """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
