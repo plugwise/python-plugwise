@@ -60,7 +60,7 @@ class SmileComm:
         )
         appliance_in = xml_dict["domain_objects"]["appliance"][0]
         print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
-        appliance_in = xml_dict["domain_objects"]["appliance"][5]
+        appliance_in = xml_dict["domain_objects"]["appliance"][4]
         print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
         appliance = Appliance.model_validate(appliance_in)
         print(f"HOI4a2 {appliance}")
