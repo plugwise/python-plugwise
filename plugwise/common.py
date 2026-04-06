@@ -18,6 +18,7 @@ from plugwise.constants import (
     GwEntityData,
     # ModuleData,
 )
+from plugwise.model import Appliance, DomainObjects
 from plugwise.util import check_heater_central, check_model, return_valid
 
 from defusedxml import ElementTree as etree
@@ -80,8 +81,7 @@ class SmileCommon:
 
     def _appl_heater_central_info(
         self,
-        appl: Munch,
-        xml_1: etree.Element,
+        appl: Appliance,
         legacy: bool,
         xml_2: etree.Element = None,
         xml_3: etree.Element = None,
@@ -117,9 +117,9 @@ class SmileCommon:
                 return (
                     Munch()
                 )  # no module-data present means the device has been removed
-        appl.vendor_name = module_data["vendor_name"]
-        appl.hardware = module_data["hardware_version"]
-        appl.model_id = module_data["vendor_model"] if not legacy else None
+        appl.vendor_name = module_data.vendor_name
+        appl.hardware = module_data.hardware_version
+        appl.model_id = module_data.vendor_model if not legacy else None
         appl.model = (
             "Generic heater/cooler" if self._cooling_present else "Generic heater"
         )
