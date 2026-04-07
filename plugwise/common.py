@@ -85,15 +85,15 @@ class SmileCommon:
         legacy: bool,
         xml_2: etree.Element = None,
         xml_3: etree.Element = None,
-    ) -> Munch:
+    ) -> None:
         """Helper-function for _appliance_info_finder()."""
         # Find the valid heater_central
         # xml_2 self._appliances for legacy, self._domain_objects for actual
-        xml_2 = return_valid(xml_2, self._domain_objects)
-        self._heater_id = check_heater_central(xml_2)
+        # xml_2 = return_valid(xml_2, self._domain_objects)
+        self._heater_id = check_heater_central(self.data)
 
         if self._heater_id == NONE:
-            return Munch()  # pragma: no cover
+            return  # pragma: no cover
 
         #  Info for On-Off device
         if self._on_off_device:
