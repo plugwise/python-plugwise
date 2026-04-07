@@ -29,7 +29,7 @@ from plugwise.constants import (
     SpecialType,
     SwitchType,
 )
-from plugiwse.model import PlugwiseData
+from plugwise.model import PlugwiseData
 
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -92,7 +92,7 @@ def check_heater_central(data: PlugwiseData) -> str:
             if (heater_central_name := appliance.name) is None:
                 continue  # pragma: no cover
 
-            has_actuators = heater_central.actuator_functionalities is not None
+            has_actuators = appliance.actuator_functionalities is not None
             # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
             if heater_central_name == "Central heating boiler":
                 heater_central_list.append({heater_central_id: has_actuators})
