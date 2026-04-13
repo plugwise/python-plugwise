@@ -151,7 +151,7 @@ class SmileHelper(SmileCommon):
         tag = "electricity"
         module_data = self._get_module_data(self._home_location, locator, key=tag)
         # No module-data present means the device has been removed
-        if not module_data["content"]:  # pragma: no cover
+        if not module_data["contents"]:  # pragma: no cover
             return
 
         appl.available = None

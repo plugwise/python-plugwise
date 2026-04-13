@@ -111,7 +111,7 @@ class SmileCommon:
         module_data = self._get_module_data(key)
         # if not module_data["content"]:
         #    module_data = self._get_module_data(xml_1, locator_2, xml_2=xml_3)
-        if not module_data.contents:
+        if not module_data.content:
             self._heater_id = NONE
             return
 
