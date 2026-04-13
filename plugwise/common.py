@@ -83,8 +83,8 @@ class SmileCommon:
         self,
         appl: Appliance,
         legacy: bool,
-        xml_2: etree.Element = None,
-        xml_3: etree.Element = None,
+        # xml_2: etree.Element = None,
+        # xml_3: etree.Element = None,
     ) -> None:
         """Helper-function for _appliance_info_finder()."""
         # Find the valid heater_central
@@ -104,19 +104,17 @@ class SmileCommon:
 
         # Info for OpenTherm device
         appl.name = "OpenTherm"
-        locator_1 = "./logs/point_log[type='flame_state']/boiler_state"
-        locator_2 = "./services/boiler_state"
+        key = "boiler_state"
         # xml_1: appliance
         # xml_3: self._modules for legacy, self._domain_objects for actual
-        xml_3 = return_valid(xml_3, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator_1, xml_2=xml_3)
-        if not module_data["content"]:
-            module_data = self._get_module_data(xml_1, locator_2, xml_2=xml_3)
-            if not module_data["content"]:
-                self._heater_id = NONE
-                return (
-                    Munch()
-                )  # no module-data present means the device has been removed
+        # xml_3 = return_valid(xml_3, self._domain_objects)
+        module_data = self._get_module_data(key)
+        # if not module_data["content"]:
+        #    module_data = self._get_module_data(xml_1, locator_2, xml_2=xml_3)
+        if not module_data.contents:
+            self._heater_id = NONE
+            return
+
         appl.vendor_name = module_data.vendor_name
         appl.hardware = module_data.hardware_version
         appl.model_id = module_data.vendor_model if not legacy else None
