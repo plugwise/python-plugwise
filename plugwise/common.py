@@ -124,28 +124,26 @@ class SmileCommon:
 
         return appl
 
-    def _appl_thermostat_info(
-        self, appl: Appliance, xml_1: etree.Element, xml_2: etree.Element = None
-    ) -> Munch:
+    def _appl_thermostat_info(self, appl: Appliance) -> Munch:
         """Helper-function for _appliance_info_finder()."""
-        locator = "./logs/point_log[type='thermostat']/thermostat"
-        xml_2 = return_valid(xml_2, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator, xml_2=xml_2)
-        if not module_data["content"]:
-            return Munch()  # no module-data present means the device has been removed
+        key = "thermostat"
+        # xml_2 = return_valid(xml_2, self._domain_objects)
+        module_data = self._get_module_data(key)
+        if not module_data.content:
+            return
 
-        appl.vendor_name = module_data["vendor_name"]
-        appl.model = module_data["vendor_model"]
+        appl.vendor_name = module_data.vendor_name
+        appl.model = module_data.vendor_model
         if (
             appl.model != "ThermoTouch"
         ):  # model_id for Anna not present as stand-alone device
             appl.model_id = appl.model
             appl.model = check_model(appl.model, appl.vendor_name)
 
-        appl.available = module_data["reachable"]
-        appl.hardware = module_data["hardware_version"]
-        appl.firmware = module_data["firmware_version"]
-        appl.zigbee_mac = module_data["zigbee_mac_address"]
+        appl.available = module_data.reachable
+        appl.hardware = module_data.hardware_version
+        appl.firmware = module_data.firmware_version
+        appl.zigbee_mac = module_data.zigbee_mac_address
 
         return appl
 
