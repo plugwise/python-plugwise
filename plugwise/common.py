@@ -200,6 +200,9 @@ class SmileCommon:
         if self.smile.type == "power" or self.check_name(ANNA):
             return
 
+        if self.data.group is None:
+            return
+
         for group in self.data.group:
             members: list[str] = []
             if not group.appliances:
