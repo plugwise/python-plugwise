@@ -180,8 +180,8 @@ class SmileHelper(SmileCommon):
         """Collect all locations."""
         counter = 0
         loc = Munch()
-        print(f"HOI15 {self.data}")
-        print(f"HOI15 {self.data.location}")
+        # print(f"HOI15 {self.data}")
+        # print(f"HOI15 {self.data.location}")
         locations = self.data.location
         if not locations:
             raise KeyError("No location data present!")
@@ -207,11 +207,11 @@ class SmileHelper(SmileCommon):
 
     def _appliance_info_finder(self, appliance: Appliance) -> Appliance | None:
         """Collect info for all appliances found."""
-        print(f"HOI22 appliance type {appliance.type}!")
+        # print(f"HOI22 appliance type {appliance.type}!")
         match appliance.type:
             case "gateway":
                 # Collect gateway entity info
-                print("HOI22 gateway!")
+                # print("HOI22 gateway!")
                 return self._appl_gateway_info(appliance)
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
                 # Collect thermostat entity info
@@ -235,7 +235,7 @@ class SmileHelper(SmileCommon):
                 if not module_data.content:
                     return None
 
-                print(f"HOI24 {module_data}")
+                # print(f"HOI24 {module_data}")
                 appliance.available = module_data.reachable
                 appliance.firmware_version = module_data.firmware_version
                 appliance.hardware_version = module_data.hardware_version
@@ -249,7 +249,7 @@ class SmileHelper(SmileCommon):
 
     def _appl_gateway_info(self, appliance: Appliance) -> Appliance:
         """Helper-function for _appliance_info_finder()."""
-        print(f"HOI19 {appliance.id}")
+        # print(f"HOI19 {appliance.id}")
         self._gateway_id = appliance.id
 
         # Adam: collect the ZigBee MAC address of the Smile
@@ -378,7 +378,7 @@ class SmileHelper(SmileCommon):
     ) -> etree.Element | None:
         """Collect initial appliance data."""
         if (appliance := self._domain_objects.get_appliance(entity_id)) is not None:
-            print(f"HOI9 {appliance}")
+            # print(f"HOI9 {appliance}")
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
 
@@ -418,12 +418,12 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
-            print(f"HOI10 {appliance}")
-            print(f"HOI10 {appliance.logs}")
+            # print(f"HOI10 {appliance}")
+            # print(f"HOI10 {appliance.logs}")
             if "point_log" not in appliance.logs:
                 continue
 
-            print(f"HOI10 {appliance.logs.point_log}")
+            # print(f"HOI10 {appliance.logs.point_log}")
 
             if (
                 measurement := next(

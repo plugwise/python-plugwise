@@ -54,16 +54,16 @@ class SmileComm:
         """Map XML to Pydantic class."""
         element = etree.fromstring(xml)
         xml_dict = xmltodict.parse(etree.tostring(element))
-        print(f"HOI1 {xml_dict.keys()}")
-        print(
-            f"HOI2 {json.dumps(xmltodict.parse(xml, process_namespaces=True), indent=2)}"
-        )
-        appliance_in = xml_dict["domain_objects"]["appliance"][0]
-        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
-        appliance_in = xml_dict["domain_objects"]["appliance"][4]
-        print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
-        appliance = Appliance.model_validate(appliance_in)
-        print(f"HOI4a2 {appliance}")
+        # print(f"HOI1 {xml_dict.keys()}")
+        # print(
+        #     f"HOI2 {json.dumps(xmltodict.parse(xml, process_namespaces=True), indent=2)}"
+        # )
+        # appliance_in = xml_dict["domain_objects"]["appliance"][0]
+        # print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        # appliance_in = xml_dict["domain_objects"]["appliance"][4]
+        # print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        # appliance = Appliance.model_validate(appliance_in)
+        # print(f"HOI4a2 {appliance}")
 
         return PlugwiseData.model_validate(xml_dict)
 

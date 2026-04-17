@@ -16,6 +16,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -92,7 +93,7 @@ class SmileAPI(SmileData):
         self.therms_with_offset_func: list[str] = []
         self.data = data
 
-        print(f"HOI16 {self.data.location}")
+        # print(f"HOI16 {self.data.location}")
 
     @property
     def cooling_present(self) -> bool:
@@ -102,9 +103,9 @@ class SmileAPI(SmileData):
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
         await self._request(DOMAIN_OBJECTS, new=True)
-        print(f"HOI3a {self.data}")
+        # print(f"HOI3a {self.data}")
         if "notification" in self.data and self.data.notification is not None:
-            print(f"HOI3b {self.data.notification}")
+            # print(f"HOI3b {self.data.notification}")
             self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
@@ -122,6 +123,7 @@ class SmileAPI(SmileData):
             )
             self._scan_thermostats()
 
+        LOGGER.debug("HOI gw_entities: %s", self.gw_entities)
         self._get_groups()
         self._all_entity_data()
 

@@ -564,6 +564,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         self.cooling_present = api.cooling_present
         self.notifications = None
+        _LOGGER.debug("HOI data: %s", data)
         if "notifications" in data[api.gateway_id]:
             self.notifications = data[api.gateway_id]["notifications"]
         self.entity_items = api.item_count

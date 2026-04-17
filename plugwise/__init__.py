@@ -176,8 +176,8 @@ class Smile(SmileComm):
 
         Detect which type of Plugwise Gateway is being connected.
         """
-        print(f"HOI14 {self}")
-        print(f"HOI14 {self.smile}")
+        # print(f"HOI14 {self}")
+        # print(f"HOI14 {self.smile}")
         model: str = "Unknown"
         if self.data.gateway is not None:
             if self.data.gateway.vendor_model is None:
@@ -188,15 +188,15 @@ class Smile(SmileComm):
             self.smile.hostname = self.data.gateway.hostname
             self.smile.mac_address = self.data.gateway.mac_address
 
-            print(f"HOI11a {self.data.gateway}")
-            print(f"HOI11b {self.data.gateway.gateway_environment}")
-            if (
-                "electricity_consumption_tariff_structure"
-                in self.data.gateway.gateway_environment
-            ):
-                print(
-                    f"HOI11c {self.data.gateway.gateway_environment.electricity_consumption_tariff_structure}"
-                )
+            # print(f"HOI11a {self.data.gateway}")
+            # print(f"HOI11b {self.data.gateway.gateway_environment}")
+            # if (
+            #     "electricity_consumption_tariff_structure"
+            #     in self.data.gateway.gateway_environment
+            # ):
+            #      print(
+            #          f"HOI11c {self.data.gateway.gateway_environment.electricity_consumption_tariff_structure}"
+            #      )
             if (
                 "electricity_consumption_tariff_structure"
                 in self.data.gateway.gateway_environment
