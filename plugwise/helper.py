@@ -134,6 +134,8 @@ class SmileHelper(SmileCommon):
             if not self._appliance_info_finder(appliance):
                 continue
 
+            self._create_gw_entities(appliance)
+
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
             self._get_p1_smartmeter_info()
