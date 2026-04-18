@@ -214,7 +214,6 @@ class ApplianceType(str, Enum):
 class Appliance(WithID):
     """Plugwise Appliance."""
 
-    available: bool = False
     name: str
     description: str | None = None
     type: ApplianceType
@@ -231,6 +230,16 @@ class Appliance(WithID):
 
     # Internal processing
     fixed_location: str | None = None
+
+    # Taken from Module
+    available: bool = False
+    firmware_version: str | None = None
+    hardware_version: str | None = None
+    mac_address: str | None = None
+    model: str | None = None
+    model_id: str | None = None
+    vendor_name: str | None = None
+    zigbee_mac_address: str | None = None
 
 
 # Module
