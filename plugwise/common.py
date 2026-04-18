@@ -165,7 +165,7 @@ class SmileCommon:
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
-                self.gw_entities[appl.entity_id][appl_key] = value
+                self.gw_entities[appl.id][appl_key] = value
                 self._count += 1
 
     def _reorder_devices(self) -> None:
