@@ -106,6 +106,22 @@ class BaseFunctionality(WithID):
     updated_date: str | None = None
 
 
+class GatewayModeControlFunctionality(BaseFunctionality):
+    """Gateway mode control functionality"""
+
+    type: str
+    mode: str
+    gateway_mode_control: WithID | None = None
+
+
+class RegulationModeControlFunctionality(BaseFunctionality):
+    """Regulation mode control functionality"""
+
+    type: str
+    mode: str
+    regulation_mode_control: WithID | None = None
+
+
 class RelayFunctionality(BaseFunctionality):
     """Relay functionality."""
 
@@ -123,6 +139,16 @@ class ThermostatFunctionality(BaseFunctionality):
     resolution: float
     setpoint: float
     thermostat: WithID | None = None
+
+
+class ToggleFunctionality(BaseFunctionality):
+    """Toggle functionality."""
+
+    type: str
+    state: str
+    cooling_toggle: WithID | None = None
+    domestic_hot_water_toggle: WithID | None = None
+    proximity_sensor_toggle: WithID | None = None
 
 
 class OffsetFunctionality(BaseFunctionality):

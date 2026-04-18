@@ -57,13 +57,11 @@ from munch import Munch
 from packaging import version
 
 
-def search_actuator_functionalities(
-    appliance: etree.Element, actuator: str
-) -> etree.Element | None:
+def search_actuator_functionalities(appl: Appliance, actuator: str) -> Appliance | None:
     """Helper-function for finding the relevant actuator xml-structure."""
-    locator = f"./actuator_functionalities/{actuator}"
-    if (search := appliance.find(locator)) is not None:
-        return search
+    if (af := getattr(appl, "actuator_functionalities", None)) is not None:
+        if (af_actuator := af.get(actuator)) is not None:
+            return af_actuator
 
     return None
 
@@ -379,7 +377,7 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> etree.Element | None:
         """Collect initial appliance data."""
-        if (appliance := self._domain_objects.get_appliance(entity_id)) is not None:
+        if (appliance := self.data.get_appliance(entity_id)) is not None:
             # print(f"HOI9 {appliance}")
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
@@ -387,7 +385,7 @@ class SmileHelper(SmileCommon):
             for toggle, name in TOGGLES.items():
                 self._get_toggle_state(appliance, toggle, name, data)
 
-            if appliance.find("type").text in ACTUATOR_CLASSES:
+            if appliance.type in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
 
             return appliance
@@ -419,55 +417,68 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
+        print(f"HOI10 {appliance}")
         for measurement, attrs in measurements.items():
-            # print(f"HOI10 {appliance}")
             # print(f"HOI10 {appliance.logs}")
-            if "point_log" not in appliance.logs:
+            if appliance.logs.get("point_log") is None:
                 continue
 
-            # print(f"HOI10 {appliance.logs.point_log}")
+            # print(f'HOI10a {appliance.logs["point_log"]}')
 
-            if (
-                measurement := next(
-                    (m for m in appliance.logs if m.type == "measurement"), None
-                )
-            ) is not None:
-                if skip_obsolete_measurements(appliance, measurement):
-                    continue
-
-                if new_name := getattr(attrs, ATTR_NAME, None):
-                    measurement = new_name
-
-                match measurement:
-                    case "elga_status_code":
-                        data["elga_status_code"] = int(appl_p_loc.text)
-                    case "select_dhw_mode":
-                        if self._dhw_allowed_modes:
-                            data["select_dhw_mode"] = appl_p_loc.text
-
-                common_match_cases(measurement, attrs, appl_p_loc, data)
-
-            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if (appl_i_loc := appliance.find(i_locator)) is not None:
-                name = cast(SensorType, f"{measurement}_interval")
-                data["sensors"][name] = format_measure(
-                    appl_i_loc.text, ENERGY_WATT_HOUR
-                )
+            for m in appliance.logs["point_log"]:
+                if m.type == measurement:
+                    print(f'HOI10b {measurement}')
+#            if (
+#                measurement := next(
+#                    (m for m in appliance.logs["point_log"] if m.type == measurement), None
+#                )
+#            ) is not None:
+#                print(f'HOI10b {measurement}')
+#                if skip_obsolete_measurements(appliance, measurement):
+#                    continue
+#
+#                if new_name := getattr(attrs, ATTR_NAME, None):
+#                    measurement = new_name
+#
+#                match measurement:
+#                    case "elga_status_code":
+#                        data["elga_status_code"] = int(appl_p_loc.text)
+#                    case "select_dhw_mode":
+#                        if self._dhw_allowed_modes:
+#                            data["select_dhw_mode"] = appl_p_loc.text
+#
+#                common_match_cases(measurement, attrs, appl_p_loc, data)
+#
+#            if appliance.logs.get("interval_log") is None:
+#                continue
+#
+#            if (
+#                measurement := next(
+#                    (m for m in appliance.logs["interval_log"] if m.type == "measurement"), None
+#                )
+#            ) is not None:
+#                name = cast(SensorType, f"{measurement}_interval")
+#                data["sensors"][name] = format_measure(
+#                    appl_i_loc.text, ENERGY_WATT_HOUR
+#                )
 
         self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
-        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData
+        self, appl: Appliance, toggle: str, name: ToggleNameType, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
         Obtain the toggle state of a 'toggle' = switch.
         """
-        if xml.find("type").text == "heater_central":
-            locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
-            if (state := xml.find(locator)) is not None:
-                data["switches"][name] = state.text == "on"
-                self._count += 1
+        if appl.type != "heater_central":
+            return
+
+        if (actuator := getattr(appl, "actuator_functionalities", None)) is not None:
+            if (tf := actuator.get("toggle_functionality")) is not None:
+                if tf.type == toggle:
+                    data["switches"][name] = tf.state
+                    self._count += 1
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
@@ -563,7 +574,7 @@ class SmileHelper(SmileCommon):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
-            return str(search.find("mode").text)
+            return search.mode
 
         return None
 

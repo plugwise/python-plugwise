@@ -224,7 +224,7 @@ class SmileCommon:
                 self._count += 5
 
     def _get_lock_state(
-        self, xml: etree.Element, data: GwEntityData, stretch_v2: bool = False
+        self, appl: Appliance, data: GwEntityData, stretch_v2: bool = False
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -235,10 +235,12 @@ class SmileCommon:
         if stretch_v2:
             actuator = "actuators"
             func_type = "relay"
-        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
-            locator = f"./{actuator}/{func_type}/lock"
-            if (found := xml.find(locator)) is not None:
-                data["switches"]["lock"] = found.text == "true"
+        if appl.type in SPECIAL_PLUG_TYPES:
+            return
+
+        if (actuator := getattr(appl, actuator, None)) is not None:
+            if func_type := actuator.get(func_type) is not None:
+                data["switches"]["lock"] = func_type.lock
                 self._count += 1
 
     def _get_module_data(
