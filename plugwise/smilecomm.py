@@ -5,6 +5,8 @@ Plugwise Smile communication protocol helpers.
 
 from __future__ import annotations
 
+import json  # Debugging
+
 from plugwise.constants import LOGGER
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -17,6 +19,9 @@ from plugwise.util import escape_illegal_xml_characters
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
 from defusedxml import ElementTree as etree
+import xmltodict
+
+from .model import Appliance, PlugwiseData
 
 
 class SmileComm:
@@ -45,13 +50,31 @@ class SmileComm:
         self._auth = BasicAuth(username, password=password)
         self._endpoint = f"http://{host}:{str(port)}"  # Sensitive
 
+    def _parse_xml(self, xml: str) -> dict:
+        """Map XML to Pydantic class."""
+        element = etree.fromstring(xml)
+        xml_dict = xmltodict.parse(etree.tostring(element))
+        # print(f"HOI1 {xml_dict.keys()}")
+        # print(
+        #     f"HOI2 {json.dumps(xmltodict.parse(xml, process_namespaces=True), indent=2)}"
+        # )
+        # appliance_in = xml_dict["domain_objects"]["appliance"][0]
+        # print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        # appliance_in = xml_dict["domain_objects"]["appliance"][4]
+        # print(f"HOI4a1 {json.dumps(appliance_in, indent=2)}")
+        # appliance = Appliance.model_validate(appliance_in)
+        # print(f"HOI4a2 {appliance}")
+
+        return PlugwiseData.model_validate(xml_dict)
+
     async def _request(
         self,
         command: str,
         retry: int = 3,
         method: str = "get",
         data: str | None = None,
-    ) -> etree.Element:
+        new: bool = False,
+    ) -> etree.Element | str:
         """Get/put/delete data from a give URL."""
         resp: ClientResponse
         url = f"{self._endpoint}{command}"
@@ -105,11 +128,14 @@ class SmileComm:
                 raise ConnectionFailedError
             return await self._request(command, retry - 1)
 
-        return await self._request_validate(resp, method)
+        return await self._request_validate(resp, method, new)
 
     async def _request_validate(
-        self, resp: ClientResponse, method: str
-    ) -> etree.Element:
+        self,
+        resp: ClientResponse,
+        method: str,
+        new: bool = False,
+    ) -> etree.Element | str:
         """Helper-function for _request(): validate the returned data."""
         match resp.status:
             case 200:
@@ -143,6 +169,11 @@ class SmileComm:
             LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
             raise InvalidXMLError from exc
 
+        if new:
+            domain_objects = result
+            root = self._parse_xml(domain_objects)
+            self.data = root.domain_objects
+            return result
         return xml
 
     async def close_connection(self) -> None:
