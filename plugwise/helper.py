@@ -427,40 +427,40 @@ class SmileHelper(SmileCommon):
 
             for m in appliance.logs["point_log"]:
                 if m.type == measurement:
-                    print(f'HOI10b {measurement}')
-#            if (
-#                measurement := next(
-#                    (m for m in appliance.logs["point_log"] if m.type == measurement), None
-#                )
-#            ) is not None:
-#                print(f'HOI10b {measurement}')
-#                if skip_obsolete_measurements(appliance, measurement):
-#                    continue
-#
-#                if new_name := getattr(attrs, ATTR_NAME, None):
-#                    measurement = new_name
-#
-#                match measurement:
-#                    case "elga_status_code":
-#                        data["elga_status_code"] = int(appl_p_loc.text)
-#                    case "select_dhw_mode":
-#                        if self._dhw_allowed_modes:
-#                            data["select_dhw_mode"] = appl_p_loc.text
-#
-#                common_match_cases(measurement, attrs, appl_p_loc, data)
-#
-#            if appliance.logs.get("interval_log") is None:
-#                continue
-#
-#            if (
-#                measurement := next(
-#                    (m for m in appliance.logs["interval_log"] if m.type == "measurement"), None
-#                )
-#            ) is not None:
-#                name = cast(SensorType, f"{measurement}_interval")
-#                data["sensors"][name] = format_measure(
-#                    appl_i_loc.text, ENERGY_WATT_HOUR
-#                )
+                    print(f"HOI10b {measurement}")
+        #            if (
+        #                measurement := next(
+        #                    (m for m in appliance.logs["point_log"] if m.type == measurement), None
+        #                )
+        #            ) is not None:
+        #                print(f'HOI10b {measurement}')
+        #                if skip_obsolete_measurements(appliance, measurement):
+        #                    continue
+        #
+        #                if new_name := getattr(attrs, ATTR_NAME, None):
+        #                    measurement = new_name
+        #
+        #                match measurement:
+        #                    case "elga_status_code":
+        #                        data["elga_status_code"] = int(appl_p_loc.text)
+        #                    case "select_dhw_mode":
+        #                        if self._dhw_allowed_modes:
+        #                            data["select_dhw_mode"] = appl_p_loc.text
+        #
+        #                common_match_cases(measurement, attrs, appl_p_loc, data)
+        #
+        #            if appliance.logs.get("interval_log") is None:
+        #                continue
+        #
+        #            if (
+        #                measurement := next(
+        #                    (m for m in appliance.logs["interval_log"] if m.type == "measurement"), None
+        #                )
+        #            ) is not None:
+        #                name = cast(SensorType, f"{measurement}_interval")
+        #                data["sensors"][name] = format_measure(
+        #                    appl_i_loc.text, ENERGY_WATT_HOUR
+        #                )
 
         self._count = count_data_items(self._count, data)
 

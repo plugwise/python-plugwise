@@ -16,18 +16,18 @@ WERKDAG_SCHEMA = "Werkdag schema"
 class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outside-init
     """Tests for Adam."""
 
-#    @pytest.mark.asyncio
-#    async def test_connect_adam_bad_thermostat(self, caplog):
-#        """Test Adam with missing thermostat data."""
-#        self.smile_setup = "adam_bad_thermostat"
-#
-#        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
-#        server, api, client = await self.connect_wrapper(raise_timeout=True)
-#        await self.device_test(api, "2023-12-17 00:00:01", testdata)
-#        assert "Thermostat data in Zone" in caplog.text
-#
-#        await api.close_connection()
-#        await self.disconnect(server, client)
+    #    @pytest.mark.asyncio
+    #    async def test_connect_adam_bad_thermostat(self, caplog):
+    #        """Test Adam with missing thermostat data."""
+    #        self.smile_setup = "adam_bad_thermostat"
+    #
+    #        testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
+    #        server, api, client = await self.connect_wrapper(raise_timeout=True)
+    #        await self.device_test(api, "2023-12-17 00:00:01", testdata)
+    #        assert "Thermostat data in Zone" in caplog.text
+    #
+    #        await api.close_connection()
+    #        await self.disconnect(server, client)
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):

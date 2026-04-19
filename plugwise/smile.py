@@ -130,9 +130,9 @@ class SmileAPI(SmileData):
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
         therm_list: list[str] = []
-        
+
         for appliance in self.data.appliance:
-            if (functionalities := appliance.actuator_functionalities) is not None: 
+            if (functionalities := appliance.actuator_functionalities) is not None:
                 for functionality in functionalities:
                     if functionality == "offset_functionality":
                         therm_list.append(appliance.id)
