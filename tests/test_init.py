@@ -564,6 +564,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         self.cooling_present = api.cooling_present
         self.notifications = None
+        _LOGGER.debug("HOI data: %s", data)
         if "notifications" in data[api.gateway_id]:
             self.notifications = data[api.gateway_id]["notifications"]
         self.entity_items = api.item_count
@@ -1034,7 +1035,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if smile_version:
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
-            assert api.smile.version == version.parse(smile_version)
+            assert version.parse(api.smile.firmware_version) == version.parse(
+                smile_version
+            )
         log_msg = f" # Assert legacy {smile_legacy}"
         parent_logger.info(log_msg)
         if smile_legacy:

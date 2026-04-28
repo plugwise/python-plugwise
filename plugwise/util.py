@@ -29,6 +29,7 @@ from plugwise.constants import (
     SpecialType,
     SwitchType,
 )
+from plugwise.model import PlugwiseData
 
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -75,27 +76,27 @@ def in_alternative_location(loc: Munch, legacy: bool) -> bool:
     return present
 
 
-def check_heater_central(xml: etree.Element) -> str:
+def check_heater_central(data: PlugwiseData) -> str:
     """Find the valid heater_central, helper-function for _appliance_info_finder().
 
     Solution for Core Issue #104433,
     for a system that has two heater_central appliances.
     """
-    locator = "./appliance[type='heater_central']"
     heater_central_count = 0
     heater_central_list: list[dict[str, bool]] = []
-    for heater_central in xml.findall(locator):
-        if (heater_central_id := heater_central.get("id")) is None:
-            continue  # pragma: no cover
+    for appliance in data.appliance:
+        if appliance.type == "heater_central":
+            if (heater_central_id := appliance.id) is None:
+                continue  # pragma: no cover
 
-        if (heater_central_name := heater_central.find("name")) is None:
-            continue  # pragma: no cover
+            if (heater_central_name := appliance.name) is None:
+                continue  # pragma: no cover
 
-        has_actuators = heater_central.find("actuator_functionalities/") is not None
-        # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
-        if heater_central_name.text == "Central heating boiler":
-            heater_central_list.append({heater_central_id: has_actuators})
-            heater_central_count += 1
+            has_actuators = appliance.actuator_functionalities is not None
+            # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
+            if heater_central_name == "Central heating boiler":
+                heater_central_list.append({heater_central_id: has_actuators})
+                heater_central_count += 1
 
     if not heater_central_list:
         return NONE  # pragma: no cover

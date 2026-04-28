@@ -26,7 +26,6 @@ from plugwise.constants import (
     LOCATIONS,
     LOGGER,
     MODULE_LOCATOR,
-    NONE,
     OFF,
     P1_MEASUREMENTS,
     TEMP_CELSIUS,
@@ -43,6 +42,7 @@ from plugwise.constants import (
     ThermoLoc,
     ToggleNameType,
 )
+from plugwise.model import Appliance, ApplianceType, OffsetFunctionality
 from plugwise.util import (
     check_model,
     collect_power_values,
@@ -57,24 +57,11 @@ from munch import Munch
 from packaging import version
 
 
-def extend_plug_device_class(appl: Munch, appliance: etree.Element) -> None:
-    """Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739."""
-
-    if (
-        (search := appliance.find("description")) is not None
-        and (description := search.text) is not None
-        and ("ZigBee protocol" in description or "smart plug" in description)
-    ):
-        appl.pwclass = f"{appl.pwclass}_plug"
-
-
-def search_actuator_functionalities(
-    appliance: etree.Element, actuator: str
-) -> etree.Element | None:
+def search_actuator_functionalities(appl: Appliance, actuator: str) -> Appliance | None:
     """Helper-function for finding the relevant actuator xml-structure."""
-    locator = f"./actuator_functionalities/{actuator}"
-    if (search := appliance.find(locator)) is not None:
-        return search
+    if (af := getattr(appl, "actuator_functionalities", None)) is not None:
+        if (af_actuator := af.get(actuator)) is not None:
+            return af_actuator
 
     return None
 
@@ -90,7 +77,7 @@ class SmileHelper(SmileCommon):
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
-        self._gateway_id: str = NONE
+        self._gateway_id: str = None
         self._zones: dict[str, GwEntityData]
         self.gw_entities: dict[str, GwEntityData]
         self.smile: Munch = Munch()
@@ -114,48 +101,38 @@ class SmileHelper(SmileCommon):
         self._count = 0
         self._get_locations()
 
-        for appliance in self._domain_objects.findall("./appliance"):
-            appl = Munch()
-            appl.available = None
-            appl.entity_id = appliance.get("id")
-            appl.firmware = None
-            appl.hardware = None
-            appl.location = None
-            appl.mac = None
-            appl.model = None
-            appl.model_id = None
-            appl.module_id = None
-            appl.name = appliance.find("name").text
-            appl.pwclass = appliance.find("type").text
-            appl.zigbee_mac = None
-            appl.vendor_name = None
-
+        for appliance in self.data.appliance:
             # Don't collect data for the OpenThermGateway appliance, skip thermostat(s)
             # without actuator_functionalities, should be an orphaned device(s) (Core #81712)
-            if appl.pwclass == "open_therm_gateway" or (
-                appl.pwclass == "thermostat"
-                and appliance.find("actuator_functionalities/") is None
+            if appliance.type == ApplianceType.OPENTHERMGW or (
+                appliance.type == ApplianceType.THERMOSTAT
+                and appliance.actuator_functionalities is None
             ):
                 continue
 
-            if (appl_loc := appliance.find("location")) is not None:
-                appl.location = appl_loc.get("id")
+            if appliance.location is not None:
+                appliance.fixed_location = appliance.id
             # Set location to the _home_loc_id when the appliance-location is not found,
             # except for thermostat-devices without a location, they are not active
-            elif appl.pwclass not in THERMOSTAT_CLASSES:
-                appl.location = self._home_loc_id
+            elif appliance.type not in THERMOSTAT_CLASSES:
+                appliance.fixed_location = self._home_loc_id
 
-            # Don't show orphaned (no location) thermostat-types
-            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
+            # Don't show orphaned thermostat-types
+            if appliance.type in THERMOSTAT_CLASSES and appliance.location is None:
                 continue
 
-            extend_plug_device_class(appl, appliance)
+            # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
+            if appliance.description is not None and (
+                "ZigBee protocol" in appliance.description
+                or "smart plug" in appliance.description
+            ):
+                appliance.type = f"{appliance.type}_plug"
 
             # Collect appliance info, skip orphaned/removed devices
-            if not (appl := self._appliance_info_finder(appl, appliance)):
+            if not self._appliance_info_finder(appliance):
                 continue
 
-            self._create_gw_entities(appl)
+            self._create_gw_entities(appliance)
 
         # A smartmeter is not present as an appliance, add it specifically
         if self.smile.type == "power" or self.smile.anna_p1:
@@ -170,7 +147,6 @@ class SmileHelper(SmileCommon):
         Note: For P1, the entity_id for the gateway and smartmeter are switched to maintain
         backward compatibility. For Anna P1, the smartmeter uses the home location_id directly.
         """
-        appl = Munch()
         locator = MODULE_LOCATOR
         tag = "electricity"
         module_data = self._get_module_data(self._home_location, locator, key=tag)
@@ -182,15 +158,15 @@ class SmileHelper(SmileCommon):
         appl.entity_id = self._home_loc_id
         if not self.smile.anna_p1:
             appl.entity_id = self._gateway_id
-        appl.firmware = module_data["firmware_version"]
-        appl.hardware = module_data["hardware_version"]
+        appl.firmware = module_data.firmware_version
+        appl.hardware = module_data.hardware_version
         appl.location = self._home_loc_id
         appl.mac = None
-        appl.model = module_data["vendor_model"]
+        appl.model = module_data.vendor_model
         appl.model_id = None  # don't use model_id for SmartMeter
         appl.name = "P1"
         appl.pwclass = "smartmeter"
-        appl.vendor_name = module_data["vendor_name"]
+        appl.vendor_name = module_data.vendor_name
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
@@ -204,21 +180,24 @@ class SmileHelper(SmileCommon):
         """Collect all locations."""
         counter = 0
         loc = Munch()
-        locations = self._domain_objects.findall("./location")
+        # print(f"HOI15 {self.data}")
+        # print(f"HOI15 {self.data.location}")
+        locations = self.data.location
         if not locations:
             raise KeyError("No location data present!")
 
         for location in locations:
-            loc.loc_id = location.get("id")
-            loc.name = location.find("name").text
-            loc._type = location.find("type").text
+            loc.loc_id = location.id
+            loc.name = location.name
+            loc._type = location.type
             self._loc_data[loc.loc_id] = {"name": loc.name}
             # Home location is of type building
             if loc._type == "building":
                 counter += 1
                 self._home_loc_id = loc.loc_id
-                self._home_location = self._domain_objects.find(
-                    f"./location[@id='{loc.loc_id}']"
+                self._home_location = next(
+                    (l for l in self.data.location if l.id == loc.loc_id),
+                    None,
                 )
 
         if counter == 0:
@@ -226,63 +205,57 @@ class SmileHelper(SmileCommon):
                 "Error, location Home (building) not found!"
             )  # pragma: no cover
 
-    def _appliance_info_finder(self, appl: Munch, appliance: etree.Element) -> Munch:
+    def _appliance_info_finder(self, appliance: Appliance) -> Appliance | None:
         """Collect info for all appliances found."""
-        match appl.pwclass:
+        # print(f"HOI22 appliance type {appliance.type}!")
+        match appliance.type:
             case "gateway":
                 # Collect gateway entity info
-                return self._appl_gateway_info(appl, appliance)
+                # print("HOI22 gateway!")
+                return self._appl_gateway_info(appliance)
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
                 # Collect thermostat entity info
-                return self._appl_thermostat_info(appl, appliance)
+                return self._appl_thermostat_info(appliance)
             case "heater_central":
                 # Collect heater_central entity info
                 # 251016: the added guarding below also solves Core Issue #104433
                 if not (
-                    appl := self._appl_heater_central_info(appl, appliance, False)
+                    appliance := self._appl_heater_central_info(appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
                 self._dhw_allowed_modes = self._get_appl_actuator_modes(
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
-                return appl
+                return appliance
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
                 locator = MODULE_LOCATOR
                 module_data = self._get_module_data(appliance, locator)
                 # A plug without module-data is orphaned/ no present
-                if not module_data["contents"]:
-                    return Munch()
+                if not module_data.content:
+                    return None
 
-                appl.available = module_data["reachable"]
-                appl.firmware = module_data["firmware_version"]
-                appl.hardware = module_data["hardware_version"]
-                appl.model_id = module_data["vendor_model"]
-                appl.vendor_name = module_data["vendor_name"]
-                appl.model = check_model(appl.model_id, appl.vendor_name)
-                appl.zigbee_mac = module_data["zigbee_mac_address"]
-                return appl
+                # print(f"HOI24 {module_data}")
+                appliance.available = module_data.reachable
+                appliance.firmware_version = module_data.firmware_version
+                appliance.hardware_version = module_data.hardware_version
+                appliance.model_id = module_data.vendor_model
+                appliance.vendor_name = module_data.vendor_name
+                appliance.model = check_model(appl.model_id, appl.vendor_name)
+                appliance.zigbee_mac_address = module_data.zigbee_mac_address
+                return appliance
             case _:  # pragma: no cover
-                return Munch()
+                return None
 
-    def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
+    def _appl_gateway_info(self, appliance: Appliance) -> Appliance:
         """Helper-function for _appliance_info_finder()."""
-        self._gateway_id = appl.entity_id
-        locator = "./gateway/firmware_version"
-        appl.firmware = self._domain_objects.find(locator).text
-        appl.hardware = self.smile.hw_version
-        appl.mac = self.smile.mac_address
-        appl.model = self.smile.model
-        appl.model_id = self.smile.model_id
-        appl.name = self.smile.name
-        appl.vendor_name = "Plugwise"
+        # print(f"HOI19 {appliance.id}")
+        self._gateway_id = appliance.id
 
         # Adam: collect the ZigBee MAC address of the Smile
-        if self.check_name(ADAM):
-            if (
-                found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
-            ) is not None:
-                appl.zigbee_mac = found.find("mac_address").text
+        if ADAM in appliance.name:
+            if (found := appliance.protocols.zig_bee_coordinator) is not None:
+                appliance.zigbee_mac = found.mac_address
 
             # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
             self._reg_allowed_modes = self._get_appl_actuator_modes(
@@ -296,7 +269,7 @@ class SmileHelper(SmileCommon):
                 # Limit the possible gateway-modes
                 self._gw_allowed_modes = ["away", "full", "vacation"]
 
-        return appl
+        return appliance
 
     def _get_appl_actuator_modes(
         self, appliance: etree.Element, actuator_type: str
@@ -404,16 +377,15 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> etree.Element | None:
         """Collect initial appliance data."""
-        if (
-            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
-        ) is not None:
+        if (appliance := self.data.get_appliance(entity_id)) is not None:
+            # print(f"HOI9 {appliance}")
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
 
             for toggle, name in TOGGLES.items():
                 self._get_toggle_state(appliance, toggle, name, data)
 
-            if appliance.find("type").text in ACTUATOR_CLASSES:
+            if appliance.type in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
 
             return appliance
@@ -440,59 +412,82 @@ class SmileHelper(SmileCommon):
 
     def _appliance_measurements(
         self,
-        appliance: etree.Element,
+        appliance: Appliance,
         data: GwEntityData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
+        print(f"HOI10 {appliance}")
         for measurement, attrs in measurements.items():
-            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if (appl_p_loc := appliance.find(p_locator)) is not None:
-                if skip_obsolete_measurements(appliance, measurement):
-                    continue
+            # print(f"HOI10 {appliance.logs}")
+            if appliance.logs.get("point_log") is None:
+                continue
 
-                if new_name := getattr(attrs, ATTR_NAME, None):
-                    measurement = new_name
+            # print(f'HOI10a {appliance.logs["point_log"]}')
 
-                match measurement:
-                    case "elga_status_code":
-                        data["elga_status_code"] = int(appl_p_loc.text)
-                    case "select_dhw_mode":
-                        if self._dhw_allowed_modes:
-                            data["select_dhw_mode"] = appl_p_loc.text
-
-                common_match_cases(measurement, attrs, appl_p_loc, data)
-
-            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if (appl_i_loc := appliance.find(i_locator)) is not None:
-                name = cast(SensorType, f"{measurement}_interval")
-                data["sensors"][name] = format_measure(
-                    appl_i_loc.text, ENERGY_WATT_HOUR
-                )
+            for m in appliance.logs["point_log"]:
+                if m.type == measurement:
+                    print(f"HOI10b {measurement}")
+        #            if (
+        #                measurement := next(
+        #                    (m for m in appliance.logs["point_log"] if m.type == measurement), None
+        #                )
+        #            ) is not None:
+        #                print(f'HOI10b {measurement}')
+        #                if skip_obsolete_measurements(appliance, measurement):
+        #                    continue
+        #
+        #                if new_name := getattr(attrs, ATTR_NAME, None):
+        #                    measurement = new_name
+        #
+        #                match measurement:
+        #                    case "elga_status_code":
+        #                        data["elga_status_code"] = int(appl_p_loc.text)
+        #                    case "select_dhw_mode":
+        #                        if self._dhw_allowed_modes:
+        #                            data["select_dhw_mode"] = appl_p_loc.text
+        #
+        #                common_match_cases(measurement, attrs, appl_p_loc, data)
+        #
+        #            if appliance.logs.get("interval_log") is None:
+        #                continue
+        #
+        #            if (
+        #                measurement := next(
+        #                    (m for m in appliance.logs["interval_log"] if m.type == "measurement"), None
+        #                )
+        #            ) is not None:
+        #                name = cast(SensorType, f"{measurement}_interval")
+        #                data["sensors"][name] = format_measure(
+        #                    appl_i_loc.text, ENERGY_WATT_HOUR
+        #                )
 
         self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
-        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData
+        self, appl: Appliance, toggle: str, name: ToggleNameType, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
         Obtain the toggle state of a 'toggle' = switch.
         """
-        if xml.find("type").text == "heater_central":
-            locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
-            if (state := xml.find(locator)) is not None:
-                data["switches"][name] = state.text == "on"
-                self._count += 1
+        if appl.type != "heater_central":
+            return
+
+        if (actuator := getattr(appl, "actuator_functionalities", None)) is not None:
+            if (tf := actuator.get("toggle_functionality")) is not None:
+                if tf.type == toggle:
+                    data["switches"][name] = tf.state
+                    self._count += 1
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
         self._notifications = {}
-        for notification in self._domain_objects.findall("./notification"):
+        for notification in self._domain_objects.notification:
             try:
-                msg_id = notification.get("id")
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
+                msg_id = notification.id
+                msg_type = notification.type
+                msg = notification.message
                 self._notifications[msg_id] = {msg_type: msg}
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
@@ -579,7 +574,7 @@ class SmileHelper(SmileCommon):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
-            return str(search.find("mode").text)
+            return search.mode
 
         return None
 
@@ -621,7 +616,7 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and entity_id == self._gateway_id:
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
-                value = format_measure(found.text, NONE)
+                value = format_measure(found.text, None)
                 data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
 
@@ -925,7 +920,7 @@ class SmileHelper(SmileCommon):
                 }
             else:
                 schedule_ids[rule.get("id")] = {
-                    "location": NONE,
+                    "location": None,
                     "name": name,
                     "active": active,
                 }
@@ -952,7 +947,7 @@ class SmileHelper(SmileCommon):
                     }
                 else:
                     schedule_ids[rule.get("id")] = {
-                        "location": NONE,
+                        "location": None,
                         "name": name,
                         "active": active,
                     }
@@ -965,9 +960,9 @@ class SmileHelper(SmileCommon):
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available: list[str] = [NONE]
+        available: list[str] = [None]
         rule_ids: dict[str, dict[str, str]] = {}
-        selected = NONE
+        selected = None
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
@@ -987,9 +982,9 @@ class SmileHelper(SmileCommon):
             schedules.append(name)
 
         if schedules:
-            available.remove(NONE)
+            available.remove(None)
             available.append(OFF)
-            if selected == NONE:
+            if selected == None:
                 selected = OFF
 
         return available, selected
