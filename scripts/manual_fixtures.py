@@ -205,7 +205,6 @@ m_adam_heating_off_schedule = m_adam_heating.copy()
 # Updates for f2bf9048bef64cc5b6d5110154e33c81" 
 m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "off"
 m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["control_state"] = "idle"
-m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["select_schedule"] = "Weekschema"
 
 # Go for e2f4
 m_adam_heating["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "off"
