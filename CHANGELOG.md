@@ -2,7 +2,7 @@
 
 ## v1.11.4
 
-- Correct Anna P1 detection via PR (#879)[https://github.com/plugwise/python-plugwise/pull/879]
+- Correct Anna P1 detection via PR [#879](https://github.com/plugwise/python-plugwise/pull/879)
 - Create an extra test-fixture for increased test coverage in the Integration via PR [#878](https://github.com/plugwise/python-plugwise/pull/878)
 - Add missing Emma firmware via PR [#863](https://github.com/plugwise/python-plugwise/pull/863)
 - Improve test function added in #860 via PR [#862](https://github.com/plugwise/python-plugwise/pull/862)
