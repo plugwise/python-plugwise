@@ -193,7 +193,9 @@ class Smile(SmileComm):
         self._store_smile_data(model)
         self._process_for_thermostat(result)
 
-    async def _collect_smile_data(self, dsmrmain: etree.Element, result: etree.Element) -> str:
+    async def _collect_smile_data(
+        self, dsmrmain: etree.Element, result: etree.Element
+    ) -> str:
         """Collect smile/gateway data."""
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
@@ -201,10 +203,10 @@ class Smile(SmileComm):
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
-            if (vendor_model := gateway.find("vendor_model")) is None:
-                return  # pragma: no cover
+            if (vendor_model := gateway.find("vendor_model")) is not None:
+                model = vendor_model.text
 
-            model = vendor_model.text
+            # Check for Anna P1 function
             elec_point_meters = result.findall(
                 "./location/logs/point_log/electricity_point_meter"
             )
