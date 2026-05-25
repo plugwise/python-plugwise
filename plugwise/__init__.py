@@ -198,15 +198,13 @@ class Smile(SmileComm):
                 return  # pragma: no cover
 
             model = vendor_model.text
-            elec_measurement = gateway.find(
-                "gateway_environment/electricity_consumption_tariff_structure"
+            elec_point_meters = result.findall(
+                "./location/logs/point_log/electricity_point_meter"
             )
-            if (
-                elec_measurement is not None
-                and elec_measurement.text
-                and model == "smile_thermo"
-            ):
-                self.smile.anna_p1 = True
+            for meter in elec_point_meters:
+                if meter.get("id") is not None and model == "smile_thermo":
+                    self.smile.anna_p1 = True
+                    break
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
