@@ -203,22 +203,22 @@ json_writer("m_adam_heating", m_adam_heating)
 m_adam_heating_off_schedule = m_adam_heating.copy()
 
 # Updates for f2bf9048bef64cc5b6d5110154e33c81" 
-m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "off"
-m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["control_state"] = "idle"
+m_adam_heating_off_schedule["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "off"
+m_adam_heating_off_schedule["f2bf9048bef64cc5b6d5110154e33c81"]["control_state"] = "idle"
 
 # Go for e2f4
-m_adam_heating["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "off"
-m_adam_heating["f871b8c4d63549319221e294e4f88074"]["control_state"] = "idle"
-m_adam_heating["f871b8c4d63549319221e294e4f88074"]["select_schedule"] = "Badkamer"
+m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "off"
+m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["control_state"] = "idle"
+m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["select_schedule"] = "Badkamer"
 
 # Go for da22
-m_adam_heating["da224107914542988a88561b4452b0f6"]["select_regulation_mode"] = "off"
+m_adam_heating_off_schedule["da224107914542988a88561b4452b0f6"]["select_regulation_mode"] = "off"
 
 # Go for 056e
-m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
+m_adam_heating_off_schedule["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
     "heating_state"
 ] = False
-m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
+m_adam_heating_off_schedule["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 0.0
 
