@@ -211,7 +211,7 @@ class Smile(SmileComm):
                 "./location/logs/point_log/electricity_point_meter"
             )
             for meter in elec_point_meters:
-                if meter.get("id") is not None and model == "smile_thermo":
+                if meter.get("id") and model == "smile_thermo":
                     self.smile.anna_p1 = True
                     break
         else:
