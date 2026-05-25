@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v1.11.4
 
 - Correct Anna P1 detection via PR (#879)[https://github.com/plugwise/python-plugwise/pull/879]
 - Create an extra test-fixture for increased test coverage in the Integration via PR [#878](https://github.com/plugwise/python-plugwise/pull/878)
