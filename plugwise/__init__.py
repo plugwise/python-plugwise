@@ -187,7 +187,14 @@ class Smile(SmileComm):
         """Helper-function for connect().
 
         Detect which type of Plugwise Gateway is being connected.
+        Store the collected data, also collect some specific thermostat devices.
         """
+        model = await self._collect_smile_data(dsmrmain, result)
+        self._store_smile_data(model)
+        self._process_for_thermostat(result)
+
+    async def _collect_smile_data(self, dsmrmain: etree.Element, result: etree.Element) -> str:
+        """Collect smile/gateway data."""
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
             self.smile.version = parse(gateway.find("firmware_version").text)
@@ -218,6 +225,35 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
+        return model
+
+    def _process_for_thermostat(self, result: etree.Element) -> None:
+        """Extra processing for thermostats."""
+        if self.smile.type != "thermostat":
+            return
+
+        self._is_thermostat = True
+        # For Adam, Anna, determine the system capabilities:
+        # Find the connected heating/cooling device (heater_central),
+        # e.g. heat-pump or gas-fired heater
+        onoff_boiler = result.find("./module/protocols/onoff_boiler")
+        open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
+        self._on_off_device = onoff_boiler is not None
+        self._opentherm_device = open_therm_boiler is not None
+
+        # Determine the presence of special features
+        locator_1 = "./gateway/features/cooling"
+        locator_2 = "./gateway/features/elga_support"
+        if result.find(locator_1) is not None:
+            self._cooling_present = True
+        if result.find(locator_2) is not None:
+            self._elga = True
+
+    def _store_smile_data(self, model: str) -> None:
+        """Store the collected the smile/gateway data.
+
+        Perform some checks, and set a shorter timeout for non-legacy Gateways.
+        """
         version_major = str(self.smile.version.major)
         self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
@@ -248,30 +284,6 @@ class Smile(SmileComm):
 
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
-
-        self._process_for_thermostat(result)
-
-    def _process_for_thermostat(self, result: etree.Element) -> None:
-        """Extra processing for thermostats."""
-        if self.smile.type != "thermostat":
-            return
-
-        self._is_thermostat = True
-        # For Adam, Anna, determine the system capabilities:
-        # Find the connected heating/cooling device (heater_central),
-        # e.g. heat-pump or gas-fired heater
-        onoff_boiler = result.find("./module/protocols/onoff_boiler")
-        open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
-        self._on_off_device = onoff_boiler is not None
-        self._opentherm_device = open_therm_boiler is not None
-
-        # Determine the presence of special features
-        locator_1 = "./gateway/features/cooling"
-        locator_2 = "./gateway/features/elga_support"
-        if result.find(locator_1) is not None:
-            self._cooling_present = True
-        if result.find(locator_2) is not None:
-            self._elga = True
 
     async def _smile_detect_legacy(
         self, result: etree.Element, dsmrmain: etree.Element, model: str
