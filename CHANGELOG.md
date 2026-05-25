@@ -2,7 +2,8 @@
 
 ## Ongoing
 
-- Add Add missing Emma firmware via PR [#863](https://github.com/plugwise/python-plugwise/pull/863)
+- Create an extra test-fixture for increased test coverage in the Integration via PR [#878](https://github.com/plugwise/python-plugwise/pull/878)
+- Add missing Emma firmware via PR [#863](https://github.com/plugwise/python-plugwise/pull/863)
 - Improve test function added in #860 via PR [#862](https://github.com/plugwise/python-plugwise/pull/862)
 
 ## v1.11.3
