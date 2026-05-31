@@ -16,6 +16,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -36,8 +37,10 @@ from defusedxml import ElementTree as etree
 # Dict as class
 from munch import Munch
 
+from .model import PlugwiseData, Switch
 
-def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
+
+def model_to_switch_items(model: str, state: str, switch: Switch) -> tuple[str, Switch]:
     """Translate state and switch attributes based on model name.
 
     Helper function for set_switch_state().
@@ -74,6 +77,7 @@ class SmileAPI(SmileData):
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
         smile: Munch,
+        data: PlugwiseData,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__()
@@ -87,6 +91,9 @@ class SmileAPI(SmileData):
         self._schedule_old_states = _schedule_old_states
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
+        self.data = data
+
+        # print(f"HOI16 {self.data.location}")
 
     @property
     def cooling_present(self) -> bool:
@@ -95,8 +102,11 @@ class SmileAPI(SmileData):
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-        self._get_plugwise_notifications()
+        await self._request(DOMAIN_OBJECTS, new=True)
+        # print(f"HOI3a {self.data}")
+        if "notification" in self.data and self.data.notification is not None:
+            # print(f"HOI3b {self.data.notification}")
+            self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
         """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
@@ -113,17 +123,19 @@ class SmileAPI(SmileData):
             )
             self._scan_thermostats()
 
+        LOGGER.debug("HOI gw_entities: %s", self.gw_entities)
         self._get_groups()
         self._all_entity_data()
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
         therm_list: list[str] = []
-        offset_appls = self._domain_objects.findall(
-            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
-        )
-        for item in offset_appls:
-            therm_list.append(item.get("id"))
+
+        for appliance in self.data.appliance:
+            if (functionalities := appliance.actuator_functionalities) is not None:
+                for functionality in functionalities:
+                    if functionality == "offset_functionality":
+                        therm_list.append(appliance.id)
 
         return therm_list
 

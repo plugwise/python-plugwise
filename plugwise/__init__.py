@@ -41,6 +41,8 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 from packaging.version import Version, parse
 
+from .model import GatewayData, PlugwiseData
+
 
 class Smile(SmileComm):
     """The main Plugwise Smile API class."""
@@ -74,18 +76,8 @@ class Smile(SmileComm):
         self._smile_api: SmileAPI | SmileLegacyAPI
         self._stretch_v2 = False
         self._target_smile: str = NONE
-        self.smile: Munch = Munch()
-        self.smile.anna_p1 = False
-        self.smile.hostname = NONE
-        self.smile.hw_version = None
-        self.smile.legacy = False
-        self.smile.mac_address = None
-        self.smile.model = NONE
-        self.smile.model_id = None
-        self.smile.name = NONE
-        self.smile.type = NONE
-        self.smile.version = Version("0.0.0")
-        self.smile.zigbee_mac_address = None
+        self.data: PlugwiseData
+        self.smile = GatewayData(hostname="smile")
 
     @property
     def cooling_present(self) -> bool:
@@ -117,23 +109,19 @@ class Smile(SmileComm):
 
     async def connect(self) -> Version:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
-        result = await self._request(DOMAIN_OBJECTS)
+        await self._request(DOMAIN_OBJECTS, new=True)
+
         # Work-around for Stretch fw 2.7.18
-        if not (vendor_names := result.findall("./module/vendor_name")):
-            result = await self._request(MODULES)
-            vendor_names = result.findall("./module/vendor_name")
+        dsmrmain: bool = False
+        vendor_names: list = []
+        vendor_models: list = []
+        for module in self.data.module:
+            vendor_names.append(module.vendor_name)
+            vendor_models.append(module.vendor_model)
+            if "dsmrmain" in module.protocols:
+                dsmrmain = True
 
-        names: list[str] = []
-        for name in vendor_names:
-            names.append(name.text)
-
-        vendor_models = result.findall("./module/vendor_model")
-        models: list[str] = []
-        for model in vendor_models:
-            models.append(model.text)
-
-        dsmrmain = result.find("./module/protocols/dsmrmain")
-        if "Plugwise" not in names and dsmrmain is None:  # pragma: no cover
+        if "Plugwise" not in vendor_names and dsmrmain is None:  # pragma: no cover
             LOGGER.error(
                 "Connected but expected text not returned, we got %s. Please create"
                 " an issue on http://github.com/plugwise/python-plugwise",
@@ -142,14 +130,14 @@ class Smile(SmileComm):
             raise ResponseError
 
         # Check if Anna is connected to an Adam
-        if "159.2" in models:
+        if "159.2" in vendor_models:
             LOGGER.error(
                 "Your Anna is connected to an Adam, make sure to only add the Adam as integration."
             )
             raise InvalidSetupError
 
         # Determine smile specifics
-        await self._smile_detect(result, dsmrmain)
+        await self._smile_detect()
 
         self._smile_api = (
             SmileAPI(
@@ -162,6 +150,7 @@ class Smile(SmileComm):
                 self._request,
                 self._schedule_old_states,
                 self.smile,
+                self.data,
             )
             if not self.smile.legacy
             else SmileLegacyAPI(
@@ -173,45 +162,57 @@ class Smile(SmileComm):
                 self._stretch_v2,
                 self._target_smile,
                 self.smile,
+                self.data,
             )
         )
 
         # Update all endpoints on first connect
         await self._smile_api.full_xml_update()
 
-        return cast(Version, self.smile.version)
+        return self.smile.firmware_version
 
-    async def _smile_detect(
-        self, result: etree.Element, dsmrmain: etree.Element
-    ) -> None:
+    async def _smile_detect(self) -> None:
         """Helper-function for connect().
 
         Detect which type of Plugwise Gateway is being connected.
         """
+        # print(f"HOI14 {self}")
+        # print(f"HOI14 {self.smile}")
         model: str = "Unknown"
-        if (gateway := result.find("./gateway")) is not None:
-            self.smile.version = parse(gateway.find("firmware_version").text)
-            self.smile.hw_version = gateway.find("hardware_version").text
-            self.smile.hostname = gateway.find("hostname").text
-            self.smile.mac_address = gateway.find("mac_address").text
-            if (vendor_model := gateway.find("vendor_model")) is None:
+        if self.data.gateway is not None:
+            if self.data.gateway.vendor_model is None:
                 return  # pragma: no cover
 
-            model = vendor_model.text
-            elec_measurement = gateway.find(
-                "gateway_environment/electricity_consumption_tariff_structure"
-            )
+            self.smile.firmware_version = self.data.gateway.firmware_version
+            self.smile.hardware_version = self.data.gateway.hardware_version
+            self.smile.hostname = self.data.gateway.hostname
+            self.smile.mac_address = self.data.gateway.mac_address
+
+            # print(f"HOI11a {self.data.gateway}")
+            # print(f"HOI11b {self.data.gateway.gateway_environment}")
+            # if (
+            #     "electricity_consumption_tariff_structure"
+            #     in self.data.gateway.gateway_environment
+            # ):
+            #      print(
+            #          f"HOI11c {self.data.gateway.gateway_environment.electricity_consumption_tariff_structure}"
+            #      )
             if (
-                elec_measurement is not None
-                and elec_measurement.text
-                and model == "smile_thermo"
+                "electricity_consumption_tariff_structure"
+                in self.data.gateway.gateway_environment
+                and self.data.gateway.gateway_environment.electricity_consumption_tariff_structure
+                and self.smile.vendor_model == "smile_thermo"
             ):
                 self.smile.anna_p1 = True
         else:
-            model = await self._smile_detect_legacy(result, dsmrmain, model)
+            # TODO
+            self.smile.vendor_model = await self._smile_detect_legacy(
+                result, dsmrmain, model
+            )
 
-        if model == "Unknown" or self.smile.version == Version(
-            "0.0.0"
+        if (
+            self.data.gateway.vendor_model == "Unknown"
+            or self.smile.firmware_version == Version("0.0.0")
         ):  # pragma: no cover
             # Corner case check
             LOGGER.error(
@@ -220,8 +221,8 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        version_major = str(self.smile.version.major)
-        self._target_smile = f"{model}_v{version_major}"
+        version_major = Version(self.smile.firmware_version).major
+        self._target_smile = f"{self.data.gateway.vendor_model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
             LOGGER.error(
@@ -242,7 +243,7 @@ class Smile(SmileComm):
             raise UnsupportedDeviceError  # pragma: no cover
 
         self.smile.model = "Gateway"
-        self.smile.model_id = model
+        self.smile.model_id = self.data.gateway.vendor_model
         self.smile.name = SMILES[self._target_smile].smile_name
         self.smile.type = SMILES[self._target_smile].smile_type
         if self.smile.name == "Smile Anna" and self.smile.anna_p1:
@@ -251,9 +252,9 @@ class Smile(SmileComm):
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
 
-        self._process_for_thermostat(result)
+        self._process_for_thermostat()
 
-    def _process_for_thermostat(self, result: etree.Element) -> None:
+    def _process_for_thermostat(self) -> None:
         """Extra processing for thermostats."""
         if self.smile.type != "thermostat":
             return
@@ -262,18 +263,22 @@ class Smile(SmileComm):
         # For Adam, Anna, determine the system capabilities:
         # Find the connected heating/cooling device (heater_central),
         # e.g. heat-pump or gas-fired heater
-        onoff_boiler = result.find("./module/protocols/onoff_boiler")
-        open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
-        self._on_off_device = onoff_boiler is not None
-        self._opentherm_device = open_therm_boiler is not None
+        self._on_off_device: bool = (
+            True
+            if "protocols" in self.data.module
+            and "on_off_boiler" in self.data.module.protocols
+            else False
+        )
+        self._opentherm_device: bool = (
+            True
+            if "protocols" in self.data.module
+            and "open_therm_boiler" in self.data.module.protocols
+            else False
+        )
 
         # Determine the presence of special features
-        locator_1 = "./gateway/features/cooling"
-        locator_2 = "./gateway/features/elga_support"
-        if result.find(locator_1) is not None:
-            self._cooling_present = True
-        if result.find(locator_2) is not None:
-            self._elga = True
+        self._cooling_present = "cooling" in self.data.gateway.features
+        self._elga = "elga_support" in self.data.gateway.features
 
     async def _smile_detect_legacy(
         self, result: etree.Element, dsmrmain: etree.Element, model: str
