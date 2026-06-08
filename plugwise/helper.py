@@ -482,8 +482,13 @@ class SmileHelper(SmileCommon):
         if xml.find("type").text == "heater_central":
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
-                data["switches"][name] = state.text == "on"
-                self._count += 1
+                match toggle:
+                    case "cooling_ena_switch":
+                        data["switches"][name] = state.text == "on"
+                        self._count += 1
+                    case "dhw_cm_switch":
+                        self._dhw_allowed_modes = ["comfort", "off"]
+                        self.select_dhw_mode = "comfort" if state.text == "on" else "off"
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
