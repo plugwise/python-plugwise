@@ -351,7 +351,7 @@ class SmileHelper(SmileCommon):
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
-            # Show the allowed dhw_modes (Loria only)
+            # Show the available dhw_modes
             if self._dhw_allowed_modes:
                 data["dhw_modes"] = self._dhw_allowed_modes
                 # Counting of this item is done in _appliance_measurements()
