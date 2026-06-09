@@ -419,7 +419,9 @@ class SmileHelper(SmileCommon):
             appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
             # Collect the cooling enabled toggle state
-            self._get_toggle_state(appliance, "cooling_enabled", "cooling_ena_switch", data)
+            self._get_toggle_state(
+                appliance, "cooling_enabled", "cooling_ena_switch", data
+            )
 
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
@@ -473,7 +475,9 @@ class SmileHelper(SmileCommon):
                         if self._dhw_allowed_modes:
                             data["select_dhw_mode"] = appl_p_loc.text
                             if old_measurement == "domestic_hot_water_comfort_mode":
-                                  data["select_dhw_mode"] = "comfort" if appl_p_loc.text == "on" else "off"
+                                data["select_dhw_mode"] = (
+                                    "comfort" if appl_p_loc.text == "on" else "off"
+                                )
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
