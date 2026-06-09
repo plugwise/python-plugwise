@@ -463,6 +463,7 @@ class SmileHelper(SmileCommon):
                     continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
+                    old_measurement = measurement
                     measurement = new_name
 
                 match measurement:
@@ -471,6 +472,8 @@ class SmileHelper(SmileCommon):
                     case "select_dhw_mode":
                         if self._dhw_allowed_modes:
                             data["select_dhw_mode"] = appl_p_loc.text
+                            if old_measurement == "domestic_hot_water_comfort_mode":
+                                  data["select_dhw_mode"] = "comfort" if appl_p_loc.text == "on" else "off"
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
@@ -499,7 +502,6 @@ class SmileHelper(SmileCommon):
                         self._count += 1
                     case "domestic_hot_water_comfort_mode":
                         self._dhw_allowed_modes = ["comfort", "off"]
-                        # data["select_dhw_mode"] = "comfort" if state.text == "on" else "off"
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
