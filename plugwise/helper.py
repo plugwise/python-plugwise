@@ -242,9 +242,8 @@ class SmileHelper(SmileCommon):
                     appl := self._appl_heater_central_info(appl, appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
-                self._dhw_allowed_modes = self._get_appl_actuator_modes(
-                    appliance, "domestic_hot_water_mode_control_functionality"
-                )
+                self._collect_dhw_modes(appliance)
+
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
@@ -264,6 +263,18 @@ class SmileHelper(SmileCommon):
                 return appl
             case _:  # pragma: no cover
                 return Munch()
+
+    def _collect_dhw_modes(self, appliance: etree.Element) -> None:
+        """Collect the DHW modes."""
+        # Collect the Loria dhw_modes
+        self._dhw_allowed_modes = self._get_appl_actuator_modes(
+            appliance, "domestic_hot_water_mode_control_functionality"
+        )
+        # Collect the default dhw modes: comfort and off
+        if not self._dhw_allowed_modes:
+            self._get_toggle_state(
+                appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", None
+            )
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
@@ -407,8 +418,8 @@ class SmileHelper(SmileCommon):
         if (
             appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
-            for toggle, name in TOGGLES.items():
-                self._get_toggle_state(appliance, toggle, name, data)
+            # Collect the cooling enabled toggle state
+            self._get_toggle_state(appliance, "cooling_enabled", "cooling_ena_switch", data)
 
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
@@ -483,12 +494,12 @@ class SmileHelper(SmileCommon):
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
                 match toggle:
-                    case "cooling_ena_switch":
+                    case "cooling_enabled":
                         data["switches"][name] = state.text == "on"
                         self._count += 1
-                    case "dhw_cm_switch":
+                    case "domestic_hot_water_comfort_mode":
                         self._dhw_allowed_modes = ["comfort", "off"]
-                        self.select_dhw_mode = "comfort" if state.text == "on" else "off"
+                        # data["select_dhw_mode"] = "comfort" if state.text == "on" else "off"
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
