@@ -181,6 +181,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     ),  # Available with the Loria and Elga (newer Anna firmware) heatpumps
     "cooling_state": UOM(NONE),
     "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
+    "domestic_hot_water_comfort_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
