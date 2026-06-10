@@ -491,7 +491,7 @@ class SmileHelper(SmileCommon):
         self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
-        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData
+        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData | None
     ) -> None:
         """Helper-function for _get_measurement_data().
 
