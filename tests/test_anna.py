@@ -29,7 +29,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert api.gateway_id == "0466eae8520144c78afb29628384edeb"
-        assert self.entity_items == 60
+        assert self.entity_items == 61
         assert not self.notifications
 
         assert not self.cooling_present
@@ -101,7 +101,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
-        assert self.entity_items == 60
+        assert self.entity_items == 61
         assert not self.notifications
 
         result = await self.tinker_thermostat(
