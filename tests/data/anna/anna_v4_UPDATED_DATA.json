@@ -1,5 +1,6 @@
 {
   "cd0e6156b1f04d5f952349ffbe397481": {
+    "dhw_modes": ["comfort", "off"],
     "maximum_boiler_temperature": {
       "setpoint": 69.0,
       "lower_bound": 0.0,
@@ -17,15 +18,13 @@
       "heating_state": false,
       "flame_state": false
     },
+    "select_dhw_mode": "off",
     "sensors": {
       "water_temperature": 51.0,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
       "return_temperature": 41.0,
       "water_pressure": 2.1
-    },
-    "switches": {
-      "dhw_cm_switch": true
     }
   },
   "01b85360fdd243d0aaad4d6ac2a5ba7e": {
