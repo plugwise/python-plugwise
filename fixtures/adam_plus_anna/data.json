@@ -45,6 +45,10 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
     "location": "07d618f0bb80412687f065b8698ce3e7",
     "maximum_boiler_temperature": {
       "lower_bound": 0.0,
@@ -54,12 +58,10 @@
     },
     "model": "Generic heater",
     "name": "OpenTherm",
+    "select_dhw_mode": "off",
     "sensors": {
       "intended_boiler_temperature": 0.0,
       "water_temperature": 48.0
-    },
-    "switches": {
-      "dhw_cm_switch": false
     }
   },
   "aa6b0002df0a46e1b1eb94beb61eddfe": {
