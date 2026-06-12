@@ -4,10 +4,6 @@
       "plugwise_notification": false
     },
     "dev_class": "gateway",
-    "dhw_modes": [
-      "comfort",
-      "off"
-    ],
     "firmware": "4.0.15",
     "hardware": "AME Smile 2.0 board",
     "location": "a57efe5f145f498c9be62a9b63626fbf",
@@ -31,6 +27,10 @@
       "secondary_boiler_state": false
     },
     "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
     "location": "a57efe5f145f498c9be62a9b63626fbf",
     "max_dhw_temperature": {
       "lower_bound": 35.0,
