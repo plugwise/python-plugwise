@@ -1,6 +1,10 @@
 {
   "1cbf783bb11e4a7c8a6843dee3a86927": {
     "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
     "location": "a57efe5f145f498c9be62a9b63626fbf",
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
@@ -21,6 +25,7 @@
       "secondary_boiler_state": false,
       "flame_state": false
     },
+    "select_dhw_mode": "off",
     "sensors": {
       "water_temperature": 29.1,
       "domestic_hot_water_setpoint": 60.0,
@@ -30,9 +35,7 @@
       "return_temperature": 25.1,
       "water_pressure": 1.57,
       "outdoor_air_temperature": 3.0
-    },
-    "switches": {
-      "dhw_cm_switch": false
+
     }
   }
 }
