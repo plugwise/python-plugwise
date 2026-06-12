@@ -18,7 +18,7 @@
       "heating_state": false,
       "flame_state": false
     },
-    "select_dhw_mode": "off",
+    "select_dhw_mode": "comfort",
     "sensors": {
       "water_temperature": 51.0,
       "intended_boiler_temperature": 0.0,
