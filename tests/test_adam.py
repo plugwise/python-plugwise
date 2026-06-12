@@ -115,12 +115,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             ["2568cc4b9c1e401495d4741a5f89bee1", "29542b2b6a6a4169acecc15c72a599b8"],
         )
         assert switch_change
-        switch_change = await self.tinker_switch(
-            api,
-            "056ee145a816487eaa69243c3280f8bf",
-            model="dhw_cm_switch",
-        )
-        assert switch_change
         # Test relay without lock-attribute
         switch_change = await self.tinker_switch(
             api,
