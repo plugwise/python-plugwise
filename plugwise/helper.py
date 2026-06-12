@@ -503,7 +503,6 @@ class SmileHelper(SmileCommon):
                 match toggle:
                     case "cooling_enabled":
                         data["switches"][name] = state.text == "on"
-                        self._count += 1
                     case "domestic_hot_water_comfort_mode":
                         self._dhw_allowed_modes = ["comfort", "off"]
 
