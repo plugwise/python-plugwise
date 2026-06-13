@@ -272,7 +272,7 @@ class SmileHelper(SmileCommon):
         # Collect the default dhw modes: comfort and off
         if not self._dhw_allowed_modes:
             self._get_toggle_state(
-                appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", None
+                appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", {}
             )
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
@@ -490,7 +490,11 @@ class SmileHelper(SmileCommon):
         self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
-        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData | None
+        self,
+        xml: etree.Element,
+        toggle: str,
+        name: ToggleNameType,
+        data: GwEntityData,
     ) -> None:
         """Helper-function for _get_measurement_data().
 
