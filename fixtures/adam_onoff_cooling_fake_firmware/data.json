@@ -27,7 +27,6 @@
     },
     "model": "Unknown",
     "name": "OnOff",
-    "select_dhw_mode": "comfort",
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
@@ -36,7 +35,8 @@
       "return_temperature": 24.9,
       "water_pressure": 2.0,
       "water_temperature": 24.5
-    }
+    },
+    "water_heater_mode": "comfort"
   },
   "7d97fc3117784cfdafe347bcedcbbbcb": {
     "binary_sensors": {

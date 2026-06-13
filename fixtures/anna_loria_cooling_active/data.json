@@ -94,7 +94,6 @@
     "model": "Generic heater/cooler",
     "model_id": "173",
     "name": "OpenTherm",
-    "select_dhw_mode": "auto",
     "sensors": {
       "dhw_temperature": 52.9,
       "intended_boiler_temperature": 0.0,
@@ -106,6 +105,7 @@
     "switches": {
       "cooling_ena_switch": true
     },
-    "vendor": "Atlantic"
+    "vendor": "Atlantic",
+    "water_heater_mode": "auto"
   }
 }

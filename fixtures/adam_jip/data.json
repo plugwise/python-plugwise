@@ -414,7 +414,6 @@
     "model": "Generic heater",
     "model_id": "10.20",
     "name": "OpenTherm",
-    "select_dhw_mode": "off",
     "sensors": {
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
@@ -422,7 +421,8 @@
       "water_pressure": 1.4,
       "water_temperature": 37.3
     },
-    "vendor": "Remeha B.V."
+    "vendor": "Remeha B.V.",
+    "water_heater_mode": "off"
   },
   "f61f1a2535f54f52ad006a3d18e459ca": {
     "available": true,
