@@ -32,7 +32,6 @@ from plugwise.constants import (
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
-    TOGGLES,
     UOM,
     ZONE_MEASUREMENTS,
     ActuatorData,

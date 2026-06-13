@@ -406,11 +406,6 @@ ToggleNameType = Literal[
     "cooling_ena_switch",
     "dhw_cm_switch",
 ]
-TOGGLES: Final[dict[str, ToggleNameType]] = {
-    "cooling_enabled": "cooling_ena_switch",
-    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
-}
-
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
     "thermostatic_radiator_valve",
