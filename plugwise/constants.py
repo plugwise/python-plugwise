@@ -500,6 +500,7 @@ class SmileSwitches(TypedDict, total=False):
     """Smile Switches class."""
 
     cooling_ena_switch: bool
+    dhw_cm_switch: bool
     lock: bool
     relay: bool
 
