@@ -75,7 +75,6 @@
     "model": "Generic heater/cooler",
     "model_id": "17.1",
     "name": "OpenTherm",
-    "select_dhw_mode": "comfort",
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
@@ -85,7 +84,8 @@
       "water_pressure": 2.0,
       "water_temperature": 24.5
     },
-    "vendor": "Remeha B.V."
+    "vendor": "Remeha B.V.",
+    "water_heater_mode": "comfort"
   },
   "1053c8bbf8be43c6921742b146a625f1": {
     "available": true,

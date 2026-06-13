@@ -27,7 +27,6 @@
     "model": "Generic heater",
     "model_id": "1.1",
     "name": "OpenTherm",
-    "select_dhw_mode": "off",
     "sensors": {
       "dhw_temperature": 49.9,
       "intended_boiler_temperature": 0.0,
@@ -36,7 +35,8 @@
       "return_temperature": 33.0,
       "water_temperature": 20.9
     },
-    "vendor": "WeHeat"
+    "vendor": "WeHeat",
+    "water_heater_mode": "off"
   },
   "3ee6b9486cb04c258a3130fff2b144a4": {
     "active_preset": "home",
