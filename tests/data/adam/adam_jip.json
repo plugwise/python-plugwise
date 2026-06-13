@@ -349,7 +349,7 @@
     "model": "Generic heater",
     "model_id": "10.20",
     "name": "OpenTherm",
-    "select_dhw_mode": "off",
+    "water_heater_mode": "off",
     "sensors": {
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
