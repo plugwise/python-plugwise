@@ -2,7 +2,7 @@
 
 ## v1.12.0
 
-- Replace the DHW-comfort-mode switch by a DHW mode selector to match the HA water_heater platform via PR [#883](https://github.com/plugwise/python-plugwise/pull/883)
+- Replace the DHW-comfort-mode switch by a DHW mode selector to match the HA select or water_heater platforms, via PR [#883](https://github.com/plugwise/python-plugwise/pull/883)
 
 ## v1.11.4
 
