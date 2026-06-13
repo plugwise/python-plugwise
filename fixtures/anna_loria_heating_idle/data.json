@@ -104,8 +104,7 @@
       "water_temperature": 25.3
     },
     "switches": {
-      "cooling_ena_switch": false,
-      "dhw_cm_switch": true
+      "cooling_ena_switch": false
     },
     "vendor": "Atlantic"
   }
