@@ -472,7 +472,7 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        if self._dhw_allowed_modes:
+                        if self._dhw_allowed_modes and "select_dhw_mode" not in data:
                             data["select_dhw_mode"] = appl_p_loc.text
                             if old_measurement == "domestic_hot_water_comfort_mode":
                                 data["select_dhw_mode"] = (
