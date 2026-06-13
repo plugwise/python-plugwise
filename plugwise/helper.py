@@ -463,8 +463,8 @@ class SmileHelper(SmileCommon):
                 if skip_obsolete_measurements(appliance, measurement):
                     continue
 
+                old_measurement = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    old_measurement = measurement
                     measurement = new_name
 
                 match measurement:
