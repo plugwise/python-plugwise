@@ -471,12 +471,7 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        if self._dhw_allowed_modes and "select_dhw_mode" not in data:
-                            data["select_dhw_mode"] = appl_p_loc.text
-                            if old_measurement == "domestic_hot_water_comfort_mode":
-                                data["select_dhw_mode"] = (
-                                    "comfort" if appl_p_loc.text == "on" else "off"
-                                )
+                        self._select_dhw_mode(appl_p_loc.text, data, old_measurement)
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
@@ -488,6 +483,15 @@ class SmileHelper(SmileCommon):
                 )
 
         self._count = count_data_items(self._count, data)
+
+    def _select_dhw_mode(self, text: str, data: GwEntityData, measurement: str) -> None:
+        """Set the selected dhw mode."""
+        if self._dhw_allowed_modes and "select_dhw_mode" not in data:
+            data["select_dhw_mode"] = text
+            if measurement == "domestic_hot_water_comfort_mode":
+                data["select_dhw_mode"] = (
+                    "comfort" if text == "on" else "off"
+                )
 
     def _get_toggle_state(
         self,
