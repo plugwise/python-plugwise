@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.12.0
+
+- Replace the DHW-comfort-mode switch by a DHW mode selector to match the HA water_heater platform via PR [#883](https://github.com/plugwise/python-plugwise/pull/883) 
+
 ## v1.11.4
 
 - Correct Anna P1 detection via PR [#879](https://github.com/plugwise/python-plugwise/pull/879)
