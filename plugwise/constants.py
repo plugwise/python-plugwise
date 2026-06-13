@@ -556,8 +556,9 @@ class GwEntityData(TypedDict, total=False):
     # Device availability
     available: bool | None
 
-    # Loria
+    # DHW mode related
     select_dhw_mode: str
+    water_heater_mode: str
     dhw_modes: list[str]
 
     # Gateway
