@@ -330,6 +330,10 @@
     },
     "dev_class": "heater_central",
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
     "max_dhw_temperature": {
       "lower_bound": 40.0,
       "resolution": 0.01,
@@ -345,15 +349,13 @@
     "model": "Generic heater",
     "model_id": "10.20",
     "name": "OpenTherm",
+    "dhw_mode": "off",
     "sensors": {
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
       "return_temperature": 37.1,
       "water_pressure": 1.4,
       "water_temperature": 37.3
-    },
-    "switches": {
-      "dhw_cm_switch": false
     },
     "vendor": "Remeha B.V."
   },

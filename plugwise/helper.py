@@ -32,7 +32,6 @@ from plugwise.constants import (
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
-    TOGGLES,
     UOM,
     ZONE_MEASUREMENTS,
     ActuatorData,
@@ -242,9 +241,8 @@ class SmileHelper(SmileCommon):
                     appl := self._appl_heater_central_info(appl, appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
-                self._dhw_allowed_modes = self._get_appl_actuator_modes(
-                    appliance, "domestic_hot_water_mode_control_functionality"
-                )
+                self._collect_dhw_modes(appliance)
+
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
@@ -264,6 +262,18 @@ class SmileHelper(SmileCommon):
                 return appl
             case _:  # pragma: no cover
                 return Munch()
+
+    def _collect_dhw_modes(self, appliance: etree.Element) -> None:
+        """Collect the DHW modes."""
+        # Collect the Loria dhw_modes
+        self._dhw_allowed_modes = self._get_appl_actuator_modes(
+            appliance, "domestic_hot_water_mode_control_functionality"
+        )
+        # Collect the default dhw modes: comfort and off
+        if not self._dhw_allowed_modes:
+            self._get_toggle_state(
+                appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", {}
+            )
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
@@ -351,7 +361,7 @@ class SmileHelper(SmileCommon):
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
-            # Show the allowed dhw_modes (Loria only)
+            # Show the available dhw_modes
             if self._dhw_allowed_modes:
                 data["dhw_modes"] = self._dhw_allowed_modes
                 # Counting of this item is done in _appliance_measurements()
@@ -407,11 +417,13 @@ class SmileHelper(SmileCommon):
         if (
             appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
+            # Collect the cooling enabled toggle state
+            self._get_toggle_state(
+                appliance, "cooling_enabled", "cooling_ena_switch", data
+            )
+
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
-
-            for toggle, name in TOGGLES.items():
-                self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
@@ -451,6 +463,7 @@ class SmileHelper(SmileCommon):
                 if skip_obsolete_measurements(appliance, measurement):
                     continue
 
+                old_measurement = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
@@ -458,8 +471,7 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        if self._dhw_allowed_modes:
-                            data["select_dhw_mode"] = appl_p_loc.text
+                        self._select_dhw_mode(appl_p_loc.text, data, old_measurement)
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
@@ -472,8 +484,19 @@ class SmileHelper(SmileCommon):
 
         self._count = count_data_items(self._count, data)
 
+    def _select_dhw_mode(self, text: str, data: GwEntityData, measurement: str) -> None:
+        """Set the selected dhw mode."""
+        if self._dhw_allowed_modes and "select_dhw_mode" not in data:
+            data["select_dhw_mode"] = text
+            if measurement == "domestic_hot_water_comfort_mode":
+                data["select_dhw_mode"] = "comfort" if text == "on" else "off"
+
     def _get_toggle_state(
-        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData
+        self,
+        xml: etree.Element,
+        toggle: str,
+        name: ToggleNameType,
+        data: GwEntityData,
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -482,8 +505,11 @@ class SmileHelper(SmileCommon):
         if xml.find("type").text == "heater_central":
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
-                data["switches"][name] = state.text == "on"
-                self._count += 1
+                match toggle:
+                    case "cooling_enabled":
+                        data["switches"][name] = state.text == "on"
+                    case "domestic_hot_water_comfort_mode":
+                        self._dhw_allowed_modes = ["comfort", "off"]
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""

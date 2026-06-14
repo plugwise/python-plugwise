@@ -210,10 +210,11 @@ class Smile(SmileComm):
             elec_point_meters = result.findall(
                 "./location/logs/point_log/electricity_point_meter"
             )
-            for meter in elec_point_meters:
-                if meter.get("id") and model == "smile_thermo":
-                    self.smile.anna_p1 = True
-                    break
+            if model == "smile_thermo":
+                for meter in elec_point_meters:
+                    if meter.get("id"):
+                        self.smile.anna_p1 = True
+                        break
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 

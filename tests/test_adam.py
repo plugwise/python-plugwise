@@ -47,7 +47,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.entity_items == 231
+        assert self.entity_items == 232
         assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
@@ -113,12 +113,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             api,
             "e8ef2a01ed3b4139a53bf749204fe6b4",
             ["2568cc4b9c1e401495d4741a5f89bee1", "29542b2b6a6a4169acecc15c72a599b8"],
-        )
-        assert switch_change
-        switch_change = await self.tinker_switch(
-            api,
-            "056ee145a816487eaa69243c3280f8bf",
-            model="dhw_cm_switch",
         )
         assert switch_change
         # Test relay without lock-attribute
@@ -352,7 +346,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 539
+        assert self.entity_items == 540
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
@@ -376,7 +370,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 70
+        assert self.entity_items == 71
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
@@ -401,7 +395,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self.entity_items == 82
+        assert self.entity_items == 83
         assert test_items == self.entity_items
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
@@ -442,7 +436,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata)
         assert api.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self.entity_items == 269
+        assert self.entity_items == 270
         assert test_items == self.entity_items
 
         # Negative test

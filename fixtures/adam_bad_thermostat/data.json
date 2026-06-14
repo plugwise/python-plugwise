@@ -7,6 +7,11 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "off",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
     "location": "856285a783f24bf4b2573c8bc510eabf",
     "max_dhw_temperature": {
       "lower_bound": 0.0,
@@ -30,9 +35,6 @@
       "outdoor_air_temperature": 13.6,
       "return_temperature": 33.0,
       "water_temperature": 20.9
-    },
-    "switches": {
-      "dhw_cm_switch": false
     },
     "vendor": "WeHeat"
   },

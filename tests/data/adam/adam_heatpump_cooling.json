@@ -44,6 +44,10 @@
     },
     "dev_class": "heater_central",
     "location": "eedadcb297564f1483faa509179aebed",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
     "max_dhw_temperature": {
       "lower_bound": 40.0,
       "resolution": 0.01,
@@ -59,6 +63,7 @@
     "model": "Generic heater/cooler",
     "model_id": "17.1",
     "name": "OpenTherm",
+    "dhw_mode": "comfort",
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
@@ -67,9 +72,6 @@
       "return_temperature": 24.9,
       "water_pressure": 2.0,
       "water_temperature": 24.5
-    },
-    "switches": {
-      "dhw_cm_switch": true
     },
     "vendor": "Remeha B.V."
   },
