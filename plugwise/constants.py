@@ -557,9 +557,9 @@ class GwEntityData(TypedDict, total=False):
     available: bool | None
 
     # DHW mode related
-    select_dhw_mode: str
-    water_heater_mode: str
+    dhw_mode: str
     dhw_modes: list[str]
+    select_dhw_mode: str
 
     # Gateway
     gateway_modes: list[str]

@@ -83,7 +83,7 @@ class SmileData(SmileHelper):
                 mode = entity.get("select_dhw_mode")
                 if mode is not None:
                     entity.pop("select_dhw_mode")
-                    entity["water_heater_mode"] = mode
+                    entity["dhw_mode"] = mode
 
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""

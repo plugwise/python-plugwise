@@ -63,7 +63,7 @@
     "model": "Generic heater/cooler",
     "model_id": "17.1",
     "name": "OpenTherm",
-    "water_heater_mode": "comfort",
+    "dhw_mode": "comfort",
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,

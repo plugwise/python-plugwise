@@ -46,7 +46,7 @@
     },
     "model": "Generic heater",
     "name": "OpenTherm",
-    "water_heater_mode": "off",
+    "dhw_mode": "off",
     "sensors": {
       "dhw_temperature": 46.3,
       "intended_boiler_temperature": 35.0,
