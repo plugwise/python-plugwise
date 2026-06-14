@@ -43,6 +43,10 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
     Helper function for set_switch_state().
     """
     match model:
+        case "select_dhw_mode":
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
+            switch.act_type = "domestic_hot_water_comfort_mode"
         case "cooling_ena_switch":
             switch.device = "toggle"
             switch.func_type = "toggle_functionality"
@@ -234,7 +238,8 @@ class SmileAPI(SmileData):
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
             case "select_dhw_mode":
-                await self.set_dhw_mode(option)
+                state = STATE_ON if option == "comfort" else STATE_OFF
+                await self.set_switch_state(loc_id, None, key, state)
             case "select_gateway_mode":
                 await self.set_gateway_mode(option)
             case "select_regulation_mode":
@@ -245,18 +250,27 @@ class SmileAPI(SmileData):
             case "select_zone_profile":
                 await self.set_zone_profile(loc_id, option)
 
-    async def set_dhw_mode(self, mode: str) -> None:
-        """Set the domestic hot water heating regulation mode."""
+    async def set_dhw_mode(
+        self, key: str, loc_id: str, length: int, mode: str
+    ) -> None:
+        """Set the domestic hot water mode."""
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
-        data = (
-            "<domestic_hot_water_mode_control_functionality>"
-            f"<mode>{mode}</mode>"
-            "</domestic_hot_water_mode_control_functionality>"
-        )
-        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
-        await self.call_request(uri, method="put", data=data)
+        match length:
+            # Devices with the domestic_hot_water_comfort switch
+            case 2:
+                state = STATE_ON if mode == "comfort" else STATE_OFF
+                await self.set_switch_state(loc_id, None, key, state)
+            # Loria with extended dhw modes
+            case _:
+                data = (
+                    "<domestic_hot_water_mode_control_functionality>"
+                    f"<mode>{mode}</mode>"
+                    "</domestic_hot_water_mode_control_functionality>"
+                )
+                uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+                await self.call_request(uri, method="put", data=data)
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
