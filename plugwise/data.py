@@ -78,7 +78,7 @@ class SmileData(SmileHelper):
 
             remove_empty_platform_dicts(entity)
 
-            # Replace select_dhw_mode with water_heater_mode when applicable
+            # Replace select_dhw_mode with dhw_mode when applicable
             if "max_dhw_temperature" in entity:
                 mode = entity.get("select_dhw_mode")
                 if mode is not None:
