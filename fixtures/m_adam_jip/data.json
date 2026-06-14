@@ -393,6 +393,7 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "off",
     "dhw_modes": [
       "comfort",
       "off"
@@ -420,8 +421,7 @@
       "water_pressure": 1.4,
       "water_temperature": 37.3
     },
-    "vendor": "Remeha B.V.",
-    "water_heater_mode": "off"
+    "vendor": "Remeha B.V."
   },
   "f61f1a2535f54f52ad006a3d18e459ca": {
     "available": true,

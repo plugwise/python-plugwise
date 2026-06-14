@@ -71,6 +71,7 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "auto",
     "dhw_modes": [
       "off",
       "auto",
@@ -105,7 +106,6 @@
     "switches": {
       "cooling_ena_switch": true
     },
-    "vendor": "Atlantic",
-    "water_heater_mode": "auto"
+    "vendor": "Atlantic"
   }
 }

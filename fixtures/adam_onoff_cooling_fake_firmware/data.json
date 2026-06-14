@@ -8,6 +8,7 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "comfort",
     "dhw_modes": [
       "comfort",
       "off"
@@ -35,8 +36,7 @@
       "return_temperature": 24.9,
       "water_pressure": 2.0,
       "water_temperature": 24.5
-    },
-    "water_heater_mode": "comfort"
+    }
   },
   "7d97fc3117784cfdafe347bcedcbbbcb": {
     "binary_sensors": {
