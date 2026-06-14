@@ -67,6 +67,7 @@
       "heating_state": true
     },
     "dev_class": "heater_central",
+    "dhw_mode": "off",
     "dhw_modes": [
       "comfort",
       "off"
@@ -94,7 +95,6 @@
       "water_pressure": 2.2,
       "water_temperature": 45.0
     },
-    "vendor": "Bosch Thermotechniek B.V.",
-    "water_heater_mode": "off"
+    "vendor": "Bosch Thermotechniek B.V."
   }
 }

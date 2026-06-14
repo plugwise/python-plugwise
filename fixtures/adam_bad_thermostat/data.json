@@ -7,6 +7,7 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "off",
     "dhw_modes": [
       "comfort",
       "off"
@@ -35,8 +36,7 @@
       "return_temperature": 33.0,
       "water_temperature": 20.9
     },
-    "vendor": "WeHeat",
-    "water_heater_mode": "off"
+    "vendor": "WeHeat"
   },
   "3ee6b9486cb04c258a3130fff2b144a4": {
     "active_preset": "home",
