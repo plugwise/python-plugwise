@@ -474,7 +474,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "ERROR raised setting block cooling: %s", exc.value
             )  # pragma: no cover
 
-        tinkered = await self.tinker_dhw_mode(api)
+        tinkered = await self.tinker_dhw_mode(api, "bfb5ee0a88e14e5f97bfa725a760cc49")
         assert not tinkered
 
         await api.close_connection()
@@ -483,7 +483,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper(raise_timeout=True)
         await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
 
-        tinkered = await self.tinker_dhw_mode(api, unhappy=True)
+        tinkered = await self.tinker_dhw_mode(
+            api, "bfb5ee0a88e14e5f97bfa725a760cc49", unhappy=True
+        )
         assert tinkered
 
         await api.close_connection()

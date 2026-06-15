@@ -849,7 +849,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return result_1 and result_2 and result_3
 
     @staticmethod
-    async def tinker_dhw_mode(api, unhappy=False):
+    async def tinker_dhw_mode(api, appliance, unhappy=False):
         """Toggle dhw to test functionality."""
         tinker_dhw_mode_passed = False
         for mode in ["auto", "boost", BOGUS]:
@@ -859,7 +859,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
-                await api.set_dhw_mode("select_dhw_mode", 4, mode)
+                await api.set_dhw_mode(appliance, 4, mode)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
                 tinker_dhw_mode_passed = True
             except pw_exceptions.PlugwiseError:
