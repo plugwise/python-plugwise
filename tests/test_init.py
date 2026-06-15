@@ -852,7 +852,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_dhw_mode(api, appliance, unhappy=False):
         """Toggle dhw to test functionality."""
         tinker_dhw_mode_passed = False
-        for mode in ["auto", "boost", BOGUS]:
+        for mode in ["comfort", "auto", BOGUS]:
             warning = ""
             if mode[0] == "!":
                 warning = " TD Negative test"
