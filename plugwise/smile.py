@@ -250,9 +250,7 @@ class SmileAPI(SmileData):
             case "select_zone_profile":
                 await self.set_zone_profile(loc_id, option)
 
-    async def set_dhw_mode(
-        self, key: str, loc_id: str, length: int, mode: str
-    ) -> None:
+    async def set_dhw_mode(self, loc_id: str, length: int, mode: str) -> None:
         """Set the domestic hot water mode."""
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
@@ -261,7 +259,7 @@ class SmileAPI(SmileData):
             # Devices with the domestic_hot_water_comfort switch
             case 2:
                 state = STATE_ON if mode == "comfort" else STATE_OFF
-                await self.set_switch_state(loc_id, None, key, state)
+                await self.set_switch_state(loc_id, None, "select_dhw_mode", state)
             # Loria with extended dhw modes
             case _:
                 data = (
