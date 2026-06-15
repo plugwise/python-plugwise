@@ -138,6 +138,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "854f8a9b0e7e425db97f1f110e1ce4b3",
         )
 
+        tinkered = await self.tinker_dhw_mode(api, "056ee145a816487eaa69243c3280f8bf")
+        assert not tinkered
+
         tinkered = await self.tinker_gateway_mode(api)
         assert not tinkered
 
