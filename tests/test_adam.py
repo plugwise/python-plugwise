@@ -455,5 +455,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             good_schedules=[None],
         )
         assert result
+
+        tinkered = await self.tinker_dhw_mode(api, "e4684553153b44afbef2200885f379dc")
+        assert not tinkered
+
         await api.close_connection()
         await self.disconnect(server, client)
