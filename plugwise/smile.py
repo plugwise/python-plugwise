@@ -267,7 +267,9 @@ class SmileAPI(SmileData):
                     f"<mode>{mode}</mode>"
                     "</domestic_hot_water_mode_control_functionality>"
                 )
-                uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+                uri = (
+                    f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+                )
                 await self.call_request(uri, method="put", data=data)
 
     async def set_gateway_mode(self, mode: str) -> None:
