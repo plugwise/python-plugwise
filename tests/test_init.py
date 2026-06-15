@@ -859,7 +859,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
-                await api.set_select("select_dhw_mode", "dummy", mode)
+                await api.set_dhw_mode("select_dhw_mode", 4, mode)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
                 tinker_dhw_mode_passed = True
             except pw_exceptions.PlugwiseError:
