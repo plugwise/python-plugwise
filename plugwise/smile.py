@@ -16,7 +16,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -250,9 +249,7 @@ class SmileAPI(SmileData):
             case "select_zone_profile":
                 await self.set_zone_profile(loc_id, option)
 
-    async def set_dhw_mode(
-        self, key: str, loc_id: str, length: int, mode: str
-    ) -> None:
+    async def set_dhw_mode(self, key: str, loc_id: str, length: int, mode: str) -> None:
         """Set the domestic hot water mode."""
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
