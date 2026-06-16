@@ -470,7 +470,7 @@ class SmileAPI(SmileData):
                     break
             else:  # actuators with a single item like relay_functionality
                 switch_id = item.get("id")
-            LOGGER.debug("HOI switch_id: %s", switch_id)
+        LOGGER.debug("HOI switch_id: %s", switch_id)
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay":
