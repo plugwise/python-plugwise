@@ -474,7 +474,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "ERROR raised setting block cooling: %s", exc.value
             )  # pragma: no cover
 
-        tinkered = await self.tinker_dhw_mode(api, "bfb5ee0a88e14e5f97bfa725a760cc49", 4)
+        tinkered = await self.tinker_dhw_mode(
+            api, "bfb5ee0a88e14e5f97bfa725a760cc49", 4
+        )
         assert not tinkered
 
         await api.close_connection()

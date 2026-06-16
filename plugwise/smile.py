@@ -238,7 +238,6 @@ class SmileAPI(SmileData):
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
             case "select_dhw_mode":
-                state = STATE_ON if option == "comfort" else STATE_OFF
                 await self.set_switch_state(loc_id, None, key, state)
             case "select_gateway_mode":
                 await self.set_gateway_mode(option)
