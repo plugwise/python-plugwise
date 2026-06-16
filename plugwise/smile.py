@@ -16,6 +16,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -236,6 +237,9 @@ class SmileAPI(SmileData):
         self, key: str, loc_id: str, option: str, state: str | None
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
+        LOGGER.debug(
+            "HOI set_select called with: %s, %s, %s, %s", key, loc_id, option, state
+        )
         match key:
             case "select_dhw_mode" | "dhw_mode":
                 state = STATE_ON if option == "comfort" else STATE_OFF
@@ -258,6 +262,9 @@ class SmileAPI(SmileData):
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
+        LOGGER.debug(
+            "HOI set_dhw_mode called with: %s, %s, %s, %s", key, appl_id, length, mode
+        )
         match length:
             # Devices with the domestic_hot_water_comfort switch
             case 2:
@@ -420,6 +427,13 @@ class SmileAPI(SmileData):
         For switch-locks, sets the lock state using a different data format.
         Return the requested state when successful, the current state otherwise.
         """
+        LOGGER.debug(
+            "HOI set_switch_state called with: %s, %s, %s, %s",
+            appl_id,
+            members,
+            model,
+            state,
+        )
         model_type = cast(SwitchType, model)
         try:
             current_state = self.gw_entities[appl_id]["switches"][model_type]
@@ -449,11 +463,13 @@ class SmileAPI(SmileData):
         for item in found:
             # multiple types of e.g. toggle_functionality present
             if (sw_type := item.find("type")) is not None:
+                LOGGER.debug("HOI switch_type: %s", sw_type.text)
                 if sw_type.text == switch.act_type:
                     switch_id = item.get("id")
                     break
             else:  # actuators with a single item like relay_functionality
                 switch_id = item.get("id")
+            LOGGER.debug("HOI switch_id: %s", switch_id)
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if model == "relay":
