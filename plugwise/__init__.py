@@ -423,7 +423,7 @@ class Smile(SmileComm):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given State of the relevant Switch.
 
         Return the result:

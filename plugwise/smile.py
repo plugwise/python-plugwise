@@ -410,7 +410,7 @@ class SmileAPI(SmileData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given state of the relevant Switch.
 
         For individual switches, sets the state directly.
