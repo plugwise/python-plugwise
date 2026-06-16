@@ -461,11 +461,11 @@ class Smile(SmileComm):
                 f"Failed to set regulation mode: {str(exc)}"
             ) from exc  # pragma no cover
 
-    async def set_dhw_mode(self, location: str, length: int, mode: str) -> None:
+    async def set_dhw_mode(self, key: str, location: str, length: int, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:  # pragma no cover
             await self._smile_api.set_dhw_mode(
-                location, length, mode
+                key, location, length, mode
             )  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(

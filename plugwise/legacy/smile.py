@@ -131,7 +131,7 @@ class SmileLegacyAPI(SmileLegacyData):
     async def reboot_gateway(self) -> None:
         """Set-function placeholder for legacy devices."""
 
-    async def set_dhw_mode(self, loc_id: str, length: int, mode: str) -> None:
+    async def set_dhw_mode(self, key: str, location: str, length: int, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
 
     async def set_gateway_mode(self, mode: str) -> None:
