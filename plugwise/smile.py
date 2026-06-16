@@ -16,6 +16,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -257,8 +258,12 @@ class SmileAPI(SmileData):
         match length:
             # Devices with the domestic_hot_water_comfort switch
             case 2:
+                # two options here:
+                # - with max_dhw_temperature dict: call set_select()
+                # - without: call set_switch_state()
                 state = STATE_ON if mode == "comfort" else STATE_OFF
                 await self.set_switch_state(loc_id, None, "select_dhw_mode", state)
+
             # Loria with extended dhw modes
             case _:
                 data = (
