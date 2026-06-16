@@ -460,6 +460,7 @@ class SmileAPI(SmileData):
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found = self._domain_objects.findall(locator)
+        switch_id: str | None = None
         for item in found:
             # multiple types of e.g. toggle_functionality present
             if (sw_type := item.find("type")) is not None:
