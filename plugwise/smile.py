@@ -419,7 +419,11 @@ class SmileAPI(SmileData):
         Return the requested state when successful, the current state otherwise.
         """
         model_type = cast(SwitchType, model)
-        current_state = self.gw_entities[appl_id]["switches"][model_type]
+        try:
+            current_state = self.gw_entities[appl_id]["switches"][model_type]
+        except KeyError:
+            current_state = None
+
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
