@@ -46,11 +46,11 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
     match model:
         case "select_dhw_mode" | "dhw_mode":
             switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
+            switch.func_type = "toggle"
             switch.act_type = "domestic_hot_water_comfort_mode"
         case "cooling_ena_switch":
             switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
+            switch.func_type = "toggle"
             switch.act_type = "cooling_enabled"
         case "lock":
             switch.func = "lock"
@@ -452,27 +452,16 @@ class SmileAPI(SmileData):
             f"<{switch.func}>{state}</{switch.func}>"
             f"</{switch.func_type}>"
         )
+        extra = ""
+        if switch.device == "toggle":
+            extra = f";type={switch.act_type}"
 
         if members is not None:
             return await self._set_groupswitch_member_state(
                 appl_id, data, members, state, switch
             )
 
-        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found = self._domain_objects.findall(locator)
-        switch_id: str | None = None
-        for item in found:
-            # multiple types of e.g. toggle_functionality present
-            if (sw_type := item.find("type")) is not None:
-                LOGGER.debug("HOI switch_type: %s", sw_type.text)
-                if sw_type.text == switch.act_type:
-                    switch_id = item.get("id")
-                    break
-            else:  # actuators with a single item like relay_functionality
-                switch_id = item.get("id")
-        LOGGER.debug("HOI switch_id: %s", switch_id)
-
-        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
+        uri = f"{APPLIANCES};id={appl_id}/{switch.device}{extra}"
         if model == "relay":
             lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
             if lock_blocked or lock_blocked is None:
