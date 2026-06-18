@@ -54,6 +54,7 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
             switch.act_type = "cooling_enabled"
         case "lock":
             switch.func = "lock"
+            switch.method = "post"
             state = "true" if state == STATE_ON else "false"
 
     return state, switch
@@ -446,6 +447,7 @@ class SmileAPI(SmileData):
         switch.device = "relay"
         switch.func_type = "relay_functionality"
         switch.func = "state"
+        switch.method = "put"
         state, switch = model_to_switch_items(model, state, switch)
         data = (
             f"<{switch.func_type}>"
@@ -469,7 +471,7 @@ class SmileAPI(SmileData):
                 # lock is present. That means the relay can't be controlled by the user.
                 return current_state
 
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method=switch.method, data=data)
         return requested_state
 
     async def _set_groupswitch_member_state(
