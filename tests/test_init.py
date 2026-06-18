@@ -115,22 +115,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
         if not raise_timeout:
+            app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_http_accept)
+            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept)
             app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_http_accept)
-            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_http_accept)
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route(
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
-            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept)
         else:
-            app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_timeout)
-            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
-            app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_timeout)
-            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout)
-
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
         return app
 
     def setup_legacy_app(
