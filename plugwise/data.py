@@ -79,11 +79,12 @@ class SmileData(SmileHelper):
             remove_empty_platform_dicts(entity)
 
             # Replace select_dhw_mode with dhw_mode when applicable
-            if "max_dhw_temperature" in entity:
-                mode = entity.get("select_dhw_mode")
-                if mode is not None:
-                    entity.pop("select_dhw_mode")
-                    entity["dhw_mode"] = mode
+            if (
+                "max_dhw_temperature" in entity
+                and (mode := entity.get("select_dhw_mode")) is not None
+            ):
+                entity.pop("select_dhw_mode")
+                entity["dhw_mode"] = mode
 
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""
