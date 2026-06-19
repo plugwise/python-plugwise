@@ -232,37 +232,41 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="put", data=data)
 
     async def set_select(
-        self, key: str, loc_id: str, option: str, state: str | None
+        self, key: str, appl_or_loc_id: str, option: str, state: str | None
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
             case "select_dhw_mode" | "dhw_mode":
                 state = STATE_ON if option == "comfort" else STATE_OFF
-                # Appliance id is passed as loc_id
-                await self.set_switch_state(loc_id, None, key, state)
+                # Appliance id is passed
+                await self.set_switch_state(appl_or_loc_id, None, key, state)
             case "select_gateway_mode":
                 await self.set_gateway_mode(option)
             case "select_regulation_mode":
                 await self.set_regulation_mode(option)
             case "select_schedule":
                 # The schedule name corresponds to the select option
-                # Location id is passed as loc_id
-                await self.set_schedule_state(loc_id, state, option)
+                # Location id is passed
+                await self.set_schedule_state(appl_or_loc_id, state, option)
             case "select_zone_profile":
-                await self.set_zone_profile(loc_id, option)
+                # Location id is passed
+                await self.set_zone_profile(appl_or_loc_id, option)
 
     async def set_dhw_mode(
         self, key: str, appl_id: str, length: int, mode: str
     ) -> None:
-        """Set the domestic hot water mode."""
+        """Set the domestic hot water mode.
+        
+        Two options are known:
+        - 2 modes, comfort and off, representing the dhw comfort mode on and off switch states,
+        - and the 5 modes available on the Loria.
+        """
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
         match length:
-            # Devices with the domestic_hot_water_comfort switch
             case 2:
                 await self.set_select(key, appl_id, mode, None)
-            # Loria with extended dhw modes
             case _:
                 data = (
                     "<domestic_hot_water_mode_control_functionality>"
