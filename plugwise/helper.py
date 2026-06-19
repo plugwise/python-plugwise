@@ -265,11 +265,11 @@ class SmileHelper(SmileCommon):
 
     def _collect_dhw_modes(self, appliance: etree.Element) -> None:
         """Collect the DHW modes."""
-        # Collect the Loria dhw_modes
+        # Collect the Loria dhw modes
         self._dhw_allowed_modes = self._get_appl_actuator_modes(
             appliance, "domestic_hot_water_mode_control_functionality"
         )
-        # Collect the default dhw modes: comfort and off
+        # Determine the dhw modes from the domestic_hot_water_comfort_mode toggle
         if not self._dhw_allowed_modes:
             self._get_toggle_state(
                 appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", {}

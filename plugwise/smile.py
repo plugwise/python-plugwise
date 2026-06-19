@@ -244,14 +244,15 @@ class SmileAPI(SmileData):
         match key:
             case "select_dhw_mode" | "dhw_mode":
                 state = STATE_ON if option == "comfort" else STATE_OFF
-                # loc_id = appliance_id
+                # Appliance id is passed as loc_id
                 await self.set_switch_state(loc_id, None, key, state)
             case "select_gateway_mode":
                 await self.set_gateway_mode(option)
             case "select_regulation_mode":
                 await self.set_regulation_mode(option)
             case "select_schedule":
-                # schedule name corresponds to select option
+                # The schedule name corresponds to the select option
+                # Location id is passed as loc_id
                 await self.set_schedule_state(loc_id, state, option)
             case "select_zone_profile":
                 await self.set_zone_profile(loc_id, option)
