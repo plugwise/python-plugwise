@@ -256,7 +256,7 @@ class SmileAPI(SmileData):
         self, key: str, appl_id: str, length: int, mode: str
     ) -> None:
         """Set the domestic hot water mode.
-        
+
         Two options are known:
         - 2 modes, comfort and off, representing the dhw comfort mode on and off switch states,
         - and the 5 modes available on the Loria.
