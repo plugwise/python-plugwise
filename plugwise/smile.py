@@ -45,12 +45,10 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
     """
     match model:
         case "select_dhw_mode" | "dhw_mode":
-            switch.device = "toggle"
-            switch.func_type = "toggle"
+            switch.device = switch.func_type = "toggle"
             switch.act_type = "domestic_hot_water_comfort_mode"
         case "cooling_ena_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle"
+            switch.device = switch.func_type = "toggle"
             switch.act_type = "cooling_enabled"
         case "lock":
             switch.func = "lock"
