@@ -25,7 +25,7 @@ jobs:
       python-version: ${{ steps.python.outputs.python-version }}  # Ensure all runners use THIS minor version
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up Python and determine minor version for ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v6
@@ -62,7 +62,7 @@ jobs:
       - prepare
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
       - name: Restore cached environment
@@ -100,7 +100,7 @@ jobs:
       - dependencies_check
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Restore cached environment
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v2
@@ -130,7 +130,7 @@ jobs:
         python-version: ["3.14", "3.13"]
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v6
@@ -166,7 +166,7 @@ jobs:
       - pytest
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
       - name: Restore cached environment
@@ -189,7 +189,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
 
@@ -199,7 +199,7 @@ jobs:
     name: Dependency
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Run dependency checker
         run: scripts/dependencies_check.sh debug
 
@@ -213,7 +213,7 @@ jobs:
       - mypy
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Restore cached environment
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v2
@@ -253,7 +253,7 @@ jobs:
       - mypy
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Prepare uv
         run: |
           pip install uv
@@ -295,7 +295,7 @@ jobs:
       - coverage
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Restore cached environment
         id: cache-reuse
         uses: plugwise/gh-actions/restore-venv@v2
