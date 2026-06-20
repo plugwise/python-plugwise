@@ -257,9 +257,8 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "zone_thermostat",
 )
 ActuatorType = Literal[
-    "domestic_hot_water_setpoint",
-    "max_dhw_temperature",
-    "maximum_boiler_temperature",
+    "boiler_temperature",
+    "dhw_temperature",
     "temperature_offset",
     "thermostat",
 ]
@@ -277,6 +276,7 @@ ACTIVE_KEYS: Final[tuple[str, ...]] = (
 
 ActuatorDataType = Literal[
     "control_state",
+    "current",
     "lower_bound",
     "regulation_control",
     "resolution",
@@ -585,8 +585,8 @@ class GwEntityData(TypedDict, total=False):
 
     # Dict-types
     binary_sensors: SmileBinarySensors
-    max_dhw_temperature: ActuatorData
-    maximum_boiler_temperature: ActuatorData
+    boiler_temperature: ActuatorData
+    dhw_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
     temperature_offset: ActuatorData
