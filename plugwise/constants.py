@@ -259,6 +259,8 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
 ActuatorType = Literal[
     "boiler_temperature",
     "dhw_temperature",
+    "domestic_hot_water_setpoint",
+    "maximum_boiler_temperature",
     "temperature_offset",
     "thermostat",
 ]
