@@ -535,9 +535,9 @@ class SmileHelper(SmileCommon):
         Add the resulting dict(s) to the entity's data.
         """
         for item in ACTIVE_ACTUATORS:
-            # Skip dhw_temperature, not initially valid,
+            # Skip boiler_ and dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
-            if item == "dhw_temperature" or (
+            if item in ("boiler_temperature", "dhw_temperature") or (
                 item == "thermostat"
                 and (
                     entity["dev_class"] != "climate"
@@ -591,6 +591,9 @@ class SmileHelper(SmileCommon):
                     if DHW_SETPOINT in data["sensors"]:
                         data["sensors"].pop(DHW_SETPOINT)
                         self._count -= 1
+                    if "dhw_temperature" in data["sensors"]:
+                        temp_dict["current"] = data["sensors"]["dhw_temperature"]
+                        data["sensors"].pop("dhw_temperature")
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
