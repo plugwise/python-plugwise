@@ -210,10 +210,11 @@ class Smile(SmileComm):
             elec_point_meters = result.findall(
                 "./location/logs/point_log/electricity_point_meter"
             )
-            for meter in elec_point_meters:
-                if meter.get("id") and model == "smile_thermo":
-                    self.smile.anna_p1 = True
-                    break
+            if model == "smile_thermo":
+                for meter in elec_point_meters:
+                    if meter.get("id"):
+                        self.smile.anna_p1 = True
+                        break
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
@@ -422,7 +423,7 @@ class Smile(SmileComm):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given State of the relevant Switch.
 
         Return the result:
@@ -460,10 +461,14 @@ class Smile(SmileComm):
                 f"Failed to set regulation mode: {str(exc)}"
             ) from exc  # pragma no cover
 
-    async def set_dhw_mode(self, mode: str) -> None:
+    async def set_dhw_mode(
+        self, key: str, location: str, length: int, mode: str
+    ) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:  # pragma no cover
-            await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
+            await self._smile_api.set_dhw_mode(
+                key, location, length, mode
+            )  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(
                 f"Failed to set dhw mode: {str(exc)}"

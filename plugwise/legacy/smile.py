@@ -131,7 +131,9 @@ class SmileLegacyAPI(SmileLegacyData):
     async def reboot_gateway(self) -> None:
         """Set-function placeholder for legacy devices."""
 
-    async def set_dhw_mode(self, mode: str) -> None:
+    async def set_dhw_mode(
+        self, key: str, location: str, length: int, mode: str
+    ) -> None:
         """Set-function placeholder for legacy devices."""
 
     async def set_gateway_mode(self, mode: str) -> None:
@@ -221,7 +223,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given state of the relevant switch.
 
         For individual switches, sets the state directly.
@@ -229,7 +231,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For switch-locks, sets the lock state using a different data format.
         Return the requested state when successful, the current state otherwise.
         """
-        current_state = self.gw_entities[appl_id]["switches"]["relay"]
+        current_state = self.gw_entities[appl_id]["switches"].get("relay")
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"

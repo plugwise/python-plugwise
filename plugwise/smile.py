@@ -43,16 +43,15 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
     Helper function for set_switch_state().
     """
     match model:
-        case "dhw_cm_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
+        case "select_dhw_mode" | "dhw_mode":
+            switch.device = switch.func_type = "toggle"
             switch.act_type = "domestic_hot_water_comfort_mode"
         case "cooling_ena_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
+            switch.device = switch.func_type = "toggle"
             switch.act_type = "cooling_enabled"
         case "lock":
             switch.func = "lock"
+            switch.method = "post"
             state = "true" if state == STATE_ON else "false"
 
     return state, switch
@@ -233,34 +232,51 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="put", data=data)
 
     async def set_select(
-        self, key: str, loc_id: str, option: str, state: str | None
+        self, key: str, appl_or_loc_id: str, option: str, state: str | None
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
-            case "select_dhw_mode":
-                await self.set_dhw_mode(option)
+            case "select_dhw_mode" | "dhw_mode":
+                state = STATE_ON if option == "comfort" else STATE_OFF
+                # Appliance id is passed
+                await self.set_switch_state(appl_or_loc_id, None, key, state)
             case "select_gateway_mode":
                 await self.set_gateway_mode(option)
             case "select_regulation_mode":
                 await self.set_regulation_mode(option)
             case "select_schedule":
-                # schedule name corresponds to select option
-                await self.set_schedule_state(loc_id, state, option)
+                # The schedule name corresponds to the select option
+                # Location id is passed
+                await self.set_schedule_state(appl_or_loc_id, state, option)
             case "select_zone_profile":
-                await self.set_zone_profile(loc_id, option)
+                # Location id is passed
+                await self.set_zone_profile(appl_or_loc_id, option)
 
-    async def set_dhw_mode(self, mode: str) -> None:
-        """Set the domestic hot water heating regulation mode."""
+    async def set_dhw_mode(
+        self, key: str, appl_id: str, length: int, mode: str
+    ) -> None:
+        """Set the domestic hot water mode.
+
+        Two options are known:
+        - 2 modes, comfort and off, representing the dhw comfort mode on and off switch states,
+        - and the 5 modes available on the Loria.
+        """
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
-        data = (
-            "<domestic_hot_water_mode_control_functionality>"
-            f"<mode>{mode}</mode>"
-            "</domestic_hot_water_mode_control_functionality>"
-        )
-        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
-        await self.call_request(uri, method="put", data=data)
+        match length:
+            case 2:
+                await self.set_select(key, appl_id, mode, None)
+            case _:
+                data = (
+                    "<domestic_hot_water_mode_control_functionality>"
+                    f"<mode>{mode}</mode>"
+                    "</domestic_hot_water_mode_control_functionality>"
+                )
+                uri = (
+                    f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+                )
+                await self.call_request(uri, method="put", data=data)
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
@@ -400,7 +416,7 @@ class SmileAPI(SmileData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given state of the relevant Switch.
 
         For individual switches, sets the state directly.
@@ -409,37 +425,34 @@ class SmileAPI(SmileData):
         Return the requested state when successful, the current state otherwise.
         """
         model_type = cast(SwitchType, model)
-        current_state = self.gw_entities[appl_id]["switches"][model_type]
+        try:
+            current_state = self.gw_entities[appl_id]["switches"][model_type]
+        except KeyError:
+            current_state = None
+
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"
         switch.device = "relay"
         switch.func_type = "relay_functionality"
         switch.func = "state"
+        switch.method = "put"
         state, switch = model_to_switch_items(model, state, switch)
         data = (
             f"<{switch.func_type}>"
             f"<{switch.func}>{state}</{switch.func}>"
             f"</{switch.func_type}>"
         )
+        extra = ""
+        if switch.device == "toggle":
+            extra = f";type={switch.act_type}"
 
         if members is not None:
             return await self._set_groupswitch_member_state(
                 appl_id, data, members, state, switch
             )
 
-        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found = self._domain_objects.findall(locator)
-        for item in found:
-            # multiple types of e.g. toggle_functionality present
-            if (sw_type := item.find("type")) is not None:
-                if sw_type.text == switch.act_type:
-                    switch_id = item.get("id")
-                    break
-            else:  # actuators with a single item like relay_functionality
-                switch_id = item.get("id")
-
-        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
+        uri = f"{APPLIANCES};id={appl_id}/{switch.device}{extra}"
         if model == "relay":
             lock_blocked = self.gw_entities[appl_id]["switches"].get("lock")
             if lock_blocked or lock_blocked is None:
@@ -447,7 +460,7 @@ class SmileAPI(SmileData):
                 # lock is present. That means the relay can't be controlled by the user.
                 return current_state
 
-        await self.call_request(uri, method="put", data=data)
+        await self.call_request(uri, method=switch.method, data=data)
         return requested_state
 
     async def _set_groupswitch_member_state(
@@ -462,9 +475,7 @@ class SmileAPI(SmileData):
         requested_state = state == STATE_ON
         switched = 0
         for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._domain_objects.find(locator).get("id")
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            uri = f"{APPLIANCES};id={member}/{switch.device}"
             lock_blocked = self.gw_entities[member]["switches"].get("lock")
             # Assume Plugs under Plugwise control are not part of a group
             if lock_blocked is not None and not lock_blocked:

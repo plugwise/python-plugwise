@@ -73,6 +73,7 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "auto",
     "dhw_modes": [
       "comfort",
       "eco",
@@ -96,7 +97,6 @@
     "model": "Generic heater/cooler",
     "model_id": "173",
     "name": "OpenTherm",
-    "select_dhw_mode": "auto",
     "sensors": {
       "dhw_temperature": 49.5,
       "intended_boiler_temperature": 0.0,
@@ -106,8 +106,7 @@
       "water_temperature": 23.3
     },
     "switches": {
-      "cooling_ena_switch": false,
-      "dhw_cm_switch": true
+      "cooling_ena_switch": false
     },
     "vendor": "Atlantic"
   }

@@ -181,6 +181,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     ),  # Available with the Loria and Elga (newer Anna firmware) heatpumps
     "cooling_state": UOM(NONE),
     "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
+    "domestic_hot_water_comfort_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
@@ -386,7 +387,6 @@ SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_ME
 
 SwitchType = Literal[
     "cooling_ena_switch",
-    "dhw_cm_switch",
     "lock",
     "relay",
 ]
@@ -406,11 +406,6 @@ ToggleNameType = Literal[
     "cooling_ena_switch",
     "dhw_cm_switch",
 ]
-TOGGLES: Final[dict[str, ToggleNameType]] = {
-    "cooling_enabled": "cooling_ena_switch",
-    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
-}
-
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
     "thermostatic_radiator_valve",
@@ -561,9 +556,10 @@ class GwEntityData(TypedDict, total=False):
     # Device availability
     available: bool | None
 
-    # Loria
-    select_dhw_mode: str
+    # DHW mode related
+    dhw_mode: str
     dhw_modes: list[str]
+    select_dhw_mode: str
 
     # Gateway
     gateway_modes: list[str]
