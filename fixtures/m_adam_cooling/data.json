@@ -8,7 +8,7 @@
       "heating_state": false
     },
     "boiler_temperature": {
-      "current": 43.0,
+      "current": 19.0,
       "lower_bound": 25.0,
       "resolution": 0.01,
       "setpoint": 50.0,
@@ -24,8 +24,7 @@
     "name": "OpenTherm",
     "select_dhw_mode": "off",
     "sensors": {
-      "intended_boiler_temperature": 17.5,
-      "water_temperature": 19.0
+      "intended_boiler_temperature": 17.5
     }
   },
   "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6": {
