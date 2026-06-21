@@ -20,7 +20,7 @@
     "dev_class": "heater_central",
     "dhw_modes": [
       "comfort",
-      "off"
+      "eco"
     ],
     "location": "d34dfe6ab90b410c98068e75de3eb631",
 

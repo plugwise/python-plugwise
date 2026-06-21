@@ -8,9 +8,10 @@
       "resolution": 1.0
     },
     "dev_class": "heater_central",
+    "dhw_mode": "eco",
     "dhw_modes": [
       "comfort",
-      "off"
+      "eco"
     ],
     "location": "a57efe5f145f498c9be62a9b63626fbf",
     "model": "Generic heater/cooler",
@@ -27,7 +28,6 @@
       "secondary_boiler_state": false,
       "flame_state": false
     },
-    "select_dhw_mode": "off",
     "sensors": {
       "intended_boiler_temperature": 35.0,
       "modulation_level": 52,

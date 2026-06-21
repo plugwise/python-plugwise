@@ -77,7 +77,7 @@
     "dhw_mode": "off",
     "dhw_modes": [
       "comfort",
-      "off"
+      "eco"
     ],
     "dhw_temperature": {
       "current": 45.0,
