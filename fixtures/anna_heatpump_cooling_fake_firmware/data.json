@@ -28,18 +28,19 @@
       "heating_state": false,
       "secondary_boiler_state": false
     },
+    "boiler_temperature": {
+      "current": 24.7,
+      "lower_bound": 0.0,
+      "resolution": 1.0,
+      "setpoint": 60.0,
+      "upper_bound": 100.0
+    },
     "dev_class": "heater_central",
     "dhw_modes": [
       "comfort",
       "off"
     ],
     "location": "a57efe5f145f498c9be62a9b63626fbf",
-    "maximum_boiler_temperature": {
-      "lower_bound": 0.0,
-      "resolution": 1.0,
-      "setpoint": 60.0,
-      "upper_bound": 100.0
-    },
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
     "select_dhw_mode": "off",
@@ -50,8 +51,7 @@
       "modulation_level": 100,
       "outdoor_air_temperature": 22.0,
       "return_temperature": 23.8,
-      "water_pressure": 1.61,
-      "water_temperature": 24.7
+      "water_pressure": 1.61
     },
     "vendor": "Techneco"
   },
