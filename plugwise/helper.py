@@ -583,28 +583,37 @@ class SmileHelper(SmileCommon):
                         temp_dict[act_key] = str(pw_function.text)
 
             if temp_dict:
-                # If domestic_hot_water_setpoint is present as actuator,
-                # rename and remove as sensor
-                if item == DHW_SETPOINT:
-                    item = "dhw_temperature"
-                    if DHW_SETPOINT in data["sensors"]:
-                        data["sensors"].pop(DHW_SETPOINT)
-                        self._count -= 1
-                    if "dhw_temperature" in data["sensors"]:
-                        temp_dict["current"] = data["sensors"]["dhw_temperature"]
-                        data["sensors"].pop("dhw_temperature")
-                    elif "water_temperature" in data["sensors"]:
-                        temp_dict["current"] = data["sensors"]["water_temperature"]
-                        self._count += 1
-
-                if item == "maximum_boiler_temperature":
-                    item = "boiler_temperature"
-                    if "water_temperature" in data["sensors"]:
-                        temp_dict["current"] = data["sensors"]["water_temperature"]
-                        data["sensors"].pop("water_temperature")
-
+                item, temp_dict = self._create_special_dicts(item, data, temp_dict)
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
+
+    def _create_special_dicts(
+        self, item: str, data: GwEntityData, temp_dict: ActuatorData
+    ) -> tuple[str, ActuatorData]:
+        """Create dhw_temperature and boiler_temperature dicts.
+
+        The initial item-names are updated and a current key is added.
+        Also, the copied sensor data is removed.
+        """
+        if item == DHW_SETPOINT:
+            item = "dhw_temperature"
+            if DHW_SETPOINT in data["sensors"]:
+                data["sensors"].pop(DHW_SETPOINT)
+                self._count -= 1
+            if "dhw_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["dhw_temperature"]
+                data["sensors"].pop("dhw_temperature")
+            elif "water_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["water_temperature"]
+                self._count += 1
+
+        if item == "maximum_boiler_temperature":
+            item = "boiler_temperature"
+            if "water_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["water_temperature"]
+                data["sensors"].pop("water_temperature")
+
+        return item, temp_dict
 
     def _get_actuator_mode(
         self, appliance: etree.Element, entity_id: str, key: str
