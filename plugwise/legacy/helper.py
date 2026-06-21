@@ -346,13 +346,6 @@ class SmileLegacyHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
-            # Skip max_dhw_temperature, not initially valid,
-            # skip thermostat for thermo_sensors
-            if item == "max_dhw_temperature" or (
-                item == "thermostat" and entity["dev_class"] == "thermo_sensor"
-            ):
-                continue
-
             temp_dict: ActuatorData = {}
             functionality = "thermostat_functionality"
 
