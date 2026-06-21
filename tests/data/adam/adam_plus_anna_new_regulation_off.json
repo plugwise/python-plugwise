@@ -6,24 +6,24 @@
       "flame_state": false,
       "heating_state": false
     },
-    "dev_class": "heater_central",
-    "location": "bc93488efab249e5bc54fd7e175a6f91",
-    "dhw_modes": [
-      "comfort",
-      "off"
-    ],
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 30.0,
       "lower_bound": 25.0,
       "resolution": 0.01,
       "setpoint": 50.0,
       "upper_bound": 95.0
     },
+    "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "off"
+    ],
+    "location": "bc93488efab249e5bc54fd7e175a6f91",
     "model": "Generic heater",
     "name": "OpenTherm",
     "select_dhw_mode": "off",
     "sensors": {
-      "intended_boiler_temperature": 0.0,
-      "water_temperature": 30.0
+      "intended_boiler_temperature": 0.0
     }
   },
   "10016900610d4c7481df78c89606ef22": {
@@ -157,29 +157,6 @@
     },
     "vendor": "Plugwise"
   },
-  "da224107914542988a88561b4452b0f6": {
-    "binary_sensors": {
-      "plugwise_notification": false
-    },
-    "dev_class": "gateway",
-    "firmware": "3.7.8",
-    "gateway_modes": ["away", "full", "vacation"],
-    "hardware": "AME Smile 2.0 board",
-    "location": "bc93488efab249e5bc54fd7e175a6f91",
-    "mac_address": "012345679891",
-    "model": "Gateway",
-    "model_id": "smile_open_therm",
-    "name": "Adam",
-    "notifications": {},
-    "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
-    "select_gateway_mode": "full",
-    "select_regulation_mode": "off",
-    "sensors": {
-      "outdoor_temperature": 9.19
-    },
-    "vendor": "Plugwise",
-    "zigbee_mac_address": "000D6F000D5A168D"
-  },
   "c9293d1d68ee48fc8843c6f0dee2b6be": {
     "dev_class": "pumping",
     "members": [
@@ -188,7 +165,44 @@
     ],
     "model": "Group",
     "name": "Vloerverwarming",
+    "sensors": {
+      "electricity_consumed": 43.8,
+      "electricity_produced": 0.0,
+      "temperature": 18.4
+    },
     "vendor": "Plugwise"
+  },
+  "da224107914542988a88561b4452b0f6": {
+    "binary_sensors": {
+      "plugwise_notification": false
+    },
+    "dev_class": "gateway",
+    "firmware": "3.7.8",
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
+    "hardware": "AME Smile 2.0 board",
+    "location": "bc93488efab249e5bc54fd7e175a6f91",
+    "mac_address": "012345679891",
+    "model": "Gateway",
+    "model_id": "smile_open_therm",
+    "name": "Adam",
+    "notifications": {},
+    "regulation_modes": [
+      "bleeding_hot",
+      "bleeding_cold",
+      "off",
+      "heating"
+    ],
+    "select_gateway_mode": "full",
+    "select_regulation_mode": "off",
+    "sensors": {
+      "outdoor_temperature": 9.19
+    },
+    "vendor": "Plugwise",
+    "zigbee_mac_address": "000D6F000D5A168D"
   },
   "e2f4322d57924fa090fbbc48b3a140dc": {
     "available": true,
@@ -224,6 +238,10 @@
     ],
     "model": "Group",
     "name": "Test",
+    "sensors": {
+      "electricity_consumed": 14.8,
+      "electricity_produced": 0.0
+    },
     "switches": {
       "relay": true
     },
@@ -243,7 +261,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
-    "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
+    "preset_modes": [
+      "no_frost",
+      "asleep",
+      "vacation",
+      "home",
+      "away"
+    ],
     "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
@@ -258,11 +282,17 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": ["ad4838d7d35c4d6ea796ee12ae5aedf8"],
+      "primary": [
+        "ad4838d7d35c4d6ea796ee12ae5aedf8"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "f871b8c4d63549319221e294e4f88074": {
     "active_preset": "home",
@@ -278,7 +308,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Bathroom",
-    "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
+    "preset_modes": [
+      "no_frost",
+      "asleep",
+      "vacation",
+      "home",
+      "away"
+    ],
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -293,10 +329,18 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["e2f4322d57924fa090fbbc48b3a140dc"],
-      "secondary": ["1772a4ea304041adb83f357b751341ff"]
+      "primary": [
+        "e2f4322d57924fa090fbbc48b3a140dc"
+      ],
+      "secondary": [
+        "1772a4ea304041adb83f357b751341ff"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   }
 }
