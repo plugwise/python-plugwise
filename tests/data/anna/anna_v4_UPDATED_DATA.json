@@ -1,13 +1,16 @@
 {
   "cd0e6156b1f04d5f952349ffbe397481": {
-    "dhw_modes": ["comfort", "off"],
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 51.0,
       "setpoint": 69.0,
       "lower_bound": 0.0,
       "upper_bound": 100.0,
       "resolution": 1.0
     },
-    "max_dhw_temperature": {
+    "dhw_mode": "comfort",
+    "dhw_modes": ["comfort", "off"],
+    "dhw_temperature": {
+      "current": 51.0,
       "setpoint": 59.0,
       "lower_bound": 30.0,
       "upper_bound": 60.0,
@@ -18,9 +21,7 @@
       "heating_state": false,
       "flame_state": false
     },
-    "dhw_mode": "comfort",
     "sensors": {
-      "water_temperature": 51.0,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
       "return_temperature": 41.0,
