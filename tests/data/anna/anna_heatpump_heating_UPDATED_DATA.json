@@ -17,7 +17,6 @@
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
     "vendor": "Techneco",
-
     "available": true,
     "binary_sensors": {
       "dhw_state": false,
