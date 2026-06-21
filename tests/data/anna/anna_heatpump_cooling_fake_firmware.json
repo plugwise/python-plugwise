@@ -28,18 +28,19 @@
       "heating_state": false,
       "secondary_boiler_state": false
     },
+    "boiler_temperature": {
+      "current": 24.7,
+      "lower_bound": 0.0,
+      "resolution": 1.0,
+      "setpoint": 60.0,
+      "upper_bound": 100.0
+    },
     "dev_class": "heater_central",
     "dhw_modes": [
       "comfort",
       "off"
     ],
     "location": "a57efe5f145f498c9be62a9b63626fbf",
-    "maximum_boiler_temperature": {
-      "lower_bound": 0.0,
-      "resolution": 1.0,
-      "setpoint": 60.0,
-      "upper_bound": 100.0
-    },
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
     "select_dhw_mode": "off",
@@ -50,14 +51,16 @@
       "modulation_level": 100,
       "outdoor_air_temperature": 22.0,
       "return_temperature": 23.8,
-      "water_pressure": 1.61,
-      "water_temperature": 24.7
+      "water_pressure": 1.61
     },
     "vendor": "Techneco"
   },
   "3cb70739631c4d17a86b8b12e8a5161b": {
     "active_preset": "home",
-    "available_schedules": ["standaard", "off"],
+    "available_schedules": [
+      "standaard",
+      "off"
+    ],
     "climate_mode": "heat_cool",
     "control_state": "cooling",
     "dev_class": "thermostat",
@@ -66,7 +69,13 @@
     "location": "c784ee9fdab44e1395b8dee7d7a497d5",
     "model": "ThermoTouch",
     "name": "Anna",
-    "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
+    "preset_modes": [
+      "no_frost",
+      "home",
+      "away",
+      "asleep",
+      "vacation"
+    ],
     "select_schedule": "off",
     "sensors": {
       "cooling_activation_outdoor_temperature": 21.0,
