@@ -489,7 +489,7 @@ class SmileHelper(SmileCommon):
         if self._dhw_allowed_modes and "select_dhw_mode" not in data:
             data["select_dhw_mode"] = text
             if measurement == "domestic_hot_water_comfort_mode":
-                data["select_dhw_mode"] = "comfort" if text == "on" else "off"
+                data["select_dhw_mode"] = "comfort" if text == "on" else "eco"
 
     def _get_toggle_state(
         self,
