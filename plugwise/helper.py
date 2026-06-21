@@ -583,7 +583,6 @@ class SmileHelper(SmileCommon):
                         temp_dict[act_key] = str(pw_function.text)
 
             if temp_dict:
-                LOGGER.debug("HOI temp_dict: %s", temp_dict)
                 # If domestic_hot_water_setpoint is present as actuator,
                 # rename and remove as sensor
                 if item == DHW_SETPOINT:
