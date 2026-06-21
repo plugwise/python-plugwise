@@ -595,6 +595,7 @@ class SmileHelper(SmileCommon):
                         data["sensors"].pop("dhw_temperature")
                     elif "water_temperature" in data["sensors"]:
                         temp_dict["current"] = data["sensors"]["water_temperature"]
+                        self._count += 1
 
                 if item == "maximum_boiler_temperature":
                     item = "boiler_temperature"
