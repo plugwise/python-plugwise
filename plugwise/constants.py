@@ -520,6 +520,7 @@ class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
     control_state: str
+    current: float
     lower_bound: float
     regulation_control: str
     resolution: float
@@ -589,6 +590,7 @@ class GwEntityData(TypedDict, total=False):
     binary_sensors: SmileBinarySensors
     boiler_temperature: ActuatorData
     dhw_temperature: ActuatorData
+    maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
     temperature_offset: ActuatorData
