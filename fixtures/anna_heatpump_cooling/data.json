@@ -38,12 +38,12 @@
     "dev_class": "heater_central",
     "dhw_modes": [
       "comfort",
-      "off"
+      "eco"
     ],
     "location": "a57efe5f145f498c9be62a9b63626fbf",
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
-    "select_dhw_mode": "off",
+    "select_dhw_mode": "eco",
     "sensors": {
       "dhw_temperature": 41.5,
       "domestic_hot_water_setpoint": 60.0,
