@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improve on v1.12.0 update by outputting dedicated boiler_ and dhw_temperature dicts with current-key added. Rename dhw_mode off to eco for standard cv-heaters.
+
 ## v1.12.0
 
 - Replace the DHW-comfort-mode switch by a DHW mode selector to match the new HA select or water_heater platform updates, via PR [#883](https://github.com/plugwise/python-plugwise/pull/883)
