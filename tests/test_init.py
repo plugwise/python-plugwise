@@ -910,9 +910,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_reg_mode_passed
 
     @staticmethod
-    async def tinker_max_boiler_temp(api, unhappy=False):
-        """Change max boiler temp setpoint to test functionality."""
-        tinker_max_boiler_temp_passed = False
+    async def tinker_actuator_temp(api, unhappy=False):
+        """Change actuator temperature setpoint to test functionality."""
+        tinker_actuator_passed = False
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
         for test in [
@@ -923,11 +923,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("  + for %s", test)
             try:
                 await api.set_number("dummy", test, new_temp)
-                _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
-                tinker_max_boiler_temp_passed = True
+                _LOGGER.info("  + tinker_actuator_temp worked as intended")
+                tinker_actuator_passed = True
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
-                tinker_max_boiler_temp_passed = False
+                _LOGGER.info("  + tinker_actuator_temp failed as intended")
+                tinker_actuator_passed = False
             except (
                 pw_exceptions.ConnectionFailedError
             ):  # leave for-loop at connect-error
@@ -938,7 +938,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
                     return False
 
-        return tinker_max_boiler_temp_passed
+        return tinker_actuator_passed
 
     @staticmethod
     async def tinker_temp_offset(api, dev_id, unhappy=False):
