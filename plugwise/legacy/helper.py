@@ -273,7 +273,7 @@ class SmileLegacyHelper(SmileCommon):
             self._get_lock_state(appliance, data, self._stretch_v2)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, entity, data)
+                self._get_actuator_functionalities(appliance, data)
 
         # Anna: the Smile outdoor_temperature is present in the Home location
         # For some Anna's LOCATIONS is empty, falling back to domain_objects!
@@ -341,9 +341,7 @@ class SmileLegacyHelper(SmileCommon):
 
         self._count = count_data_items(self._count, data)
 
-    def _get_actuator_functionalities(
-        self, xml: etree.Element, entity: GwEntityData, data: GwEntityData
-    ) -> None:
+    def _get_actuator_functionalities(self, xml: etree.Element, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             temp_dict: ActuatorData = {}
