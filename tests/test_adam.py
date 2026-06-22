@@ -466,5 +466,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert not tinkered
 
+        tinkered = await self.tinker_actuator_temp(api)
+        assert not tinkered
+
         await api.close_connection()
         await self.disconnect(server, client)
