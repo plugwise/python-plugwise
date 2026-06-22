@@ -1,10 +1,8 @@
 # Changelog
 
-## Ongoing
-
+- Improve on v1.12.0 update by outputting dedicated boiler_ and dhw_temperature dicts with current-key added. Rename dhw_mode off to eco for standard cv-heaters.
 - Add PEP 740 digital attestations (workaround until included in `uv publish`), pin GitHub acions including our own from gh-actions, via PR [#891](https://github.com/plugwise/python-plugwise/pull/891)
 - Solve aiohttp BasicAuth deprecation via PR [#890](https://github.com/plugwise/python-plugwise/pull/890)
-
 ## v1.12.0
 
 - Replace the DHW-comfort-mode switch by a DHW mode selector to match the new HA select or water_heater platform updates, via PR [#883](https://github.com/plugwise/python-plugwise/pull/883)
