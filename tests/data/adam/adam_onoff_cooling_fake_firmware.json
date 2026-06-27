@@ -7,35 +7,35 @@
       "flame_state": false,
       "heating_state": false
     },
-    "dev_class": "heater_central",
-    "location": "eedadcb297564f1483faa509179aebed",
-    "dhw_modes": [
-      "comfort",
-      "off"
-    ],
-    "max_dhw_temperature": {
-      "lower_bound": 40.0,
-      "resolution": 0.01,
-      "setpoint": 60.0,
-      "upper_bound": 65.0
-    },
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 24.5,
       "lower_bound": 7.0,
       "resolution": 0.01,
       "setpoint": 35.0,
       "upper_bound": 50.0
     },
+    "dev_class": "heater_central",
+    "dhw_mode": "comfort",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
+    "dhw_temperature": {
+      "current": 63.5,
+      "lower_bound": 40.0,
+      "resolution": 0.01,
+      "setpoint": 60.0,
+      "upper_bound": 65.0
+    },
+    "location": "eedadcb297564f1483faa509179aebed",
     "model": "Unknown",
     "name": "OnOff",
-    "dhw_mode": "comfort",
     "sensors": {
-      "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
       "outdoor_air_temperature": 13.5,
       "return_temperature": 24.9,
-      "water_pressure": 2.0,
-      "water_temperature": 24.5
+      "water_pressure": 2.0
     }
   },
   "7d97fc3117784cfdafe347bcedcbbbcb": {
@@ -44,7 +44,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "eedadcb297564f1483faa509179aebed",
     "mac_address": "012345670001",
@@ -92,7 +96,13 @@
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+    "preset_modes": [
+      "no_frost",
+      "vacation",
+      "away",
+      "home",
+      "asleep"
+    ],
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "active",
     "sensors": {
@@ -107,10 +117,16 @@
       "upper_bound": 35.0
     },
     "thermostats": {
-      "primary": ["ca79d23ae0094120b877558734cff85c"],
+      "primary": [
+        "ca79d23ae0094120b877558734cff85c"
+      ],
       "secondary": []
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   }
 }

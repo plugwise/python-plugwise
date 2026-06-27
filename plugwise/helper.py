@@ -489,7 +489,7 @@ class SmileHelper(SmileCommon):
         if self._dhw_allowed_modes and "select_dhw_mode" not in data:
             data["select_dhw_mode"] = text
             if measurement == "domestic_hot_water_comfort_mode":
-                data["select_dhw_mode"] = "comfort" if text == "on" else "off"
+                data["select_dhw_mode"] = "comfort" if text == "on" else "eco"
 
     def _get_toggle_state(
         self,
@@ -509,7 +509,7 @@ class SmileHelper(SmileCommon):
                     case "cooling_enabled":
                         data["switches"][name] = state.text == "on"
                     case "domestic_hot_water_comfort_mode":
-                        self._dhw_allowed_modes = ["comfort", "off"]
+                        self._dhw_allowed_modes = ["comfort", "eco"]
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
@@ -535,9 +535,9 @@ class SmileHelper(SmileCommon):
         Add the resulting dict(s) to the entity's data.
         """
         for item in ACTIVE_ACTUATORS:
-            # Skip max_dhw_temperature, not initially valid,
+            # Skip boiler_ and dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
-            if item == "max_dhw_temperature" or (
+            if item in ("boiler_temperature", "dhw_temperature") or (
                 item == "thermostat"
                 and (
                     entity["dev_class"] != "climate"
@@ -583,16 +583,37 @@ class SmileHelper(SmileCommon):
                         temp_dict[act_key] = str(pw_function.text)
 
             if temp_dict:
-                # If domestic_hot_water_setpoint is present as actuator,
-                # rename and remove as sensor
-                if item == DHW_SETPOINT:
-                    item = "max_dhw_temperature"
-                    if DHW_SETPOINT in data["sensors"]:
-                        data["sensors"].pop(DHW_SETPOINT)
-                        self._count -= 1
-
+                item, temp_dict = self._create_special_dicts(item, data, temp_dict)
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
+
+    def _create_special_dicts(
+        self, item: str, data: GwEntityData, temp_dict: ActuatorData
+    ) -> tuple[str, ActuatorData]:
+        """Create dhw_temperature and boiler_temperature dicts.
+
+        The initial item-names are updated and a current key is added.
+        Also, the copied sensor data is removed.
+        """
+        if item == DHW_SETPOINT:
+            item = "dhw_temperature"
+            if DHW_SETPOINT in data["sensors"]:
+                data["sensors"].pop(DHW_SETPOINT)
+                self._count -= 1
+            if "dhw_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["dhw_temperature"]
+                data["sensors"].pop("dhw_temperature")
+            elif "water_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["water_temperature"]
+                self._count += 1
+
+        if item == "maximum_boiler_temperature":
+            item = "boiler_temperature"
+            if "water_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["water_temperature"]
+                data["sensors"].pop("water_temperature")
+
+        return item, temp_dict
 
     def _get_actuator_mode(
         self, appliance: etree.Element, entity_id: str, key: str

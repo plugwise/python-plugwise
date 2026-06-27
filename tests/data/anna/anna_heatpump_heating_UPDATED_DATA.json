@@ -1,20 +1,5 @@
 {
   "1cbf783bb11e4a7c8a6843dee3a86927": {
-    "dev_class": "heater_central",
-    "dhw_modes": [
-      "comfort",
-      "off"
-    ],
-    "location": "a57efe5f145f498c9be62a9b63626fbf",
-    "model": "Generic heater/cooler",
-    "name": "OpenTherm",
-    "vendor": "Techneco",
-    "maximum_boiler_temperature": {
-      "setpoint": 60.0,
-      "lower_bound": 0.0,
-      "upper_bound": 100.0,
-      "resolution": 1.0
-    },
     "available": true,
     "binary_sensors": {
       "dhw_state": false,
@@ -25,17 +10,30 @@
       "secondary_boiler_state": false,
       "flame_state": false
     },
-    "select_dhw_mode": "off",
+    "boiler_temperature": {
+      "current": 29.1,
+      "setpoint": 60.0,
+      "lower_bound": 0.0,
+      "upper_bound": 100.0,
+      "resolution": 1.0
+    },
+    "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
+    "location": "a57efe5f145f498c9be62a9b63626fbf",
+    "model": "Generic heater/cooler",
+    "name": "OpenTherm",
+    "select_dhw_mode": "eco",
     "sensors": {
-      "water_temperature": 29.1,
-      "domestic_hot_water_setpoint": 60.0,
-      "dhw_temperature": 46.3,
       "intended_boiler_temperature": 35.0,
       "modulation_level": 52,
       "return_temperature": 25.1,
       "water_pressure": 1.57,
       "outdoor_air_temperature": 3.0
 
-    }
+    },
+    "vendor": "Techneco"
   }
 }
