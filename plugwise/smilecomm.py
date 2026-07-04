@@ -15,7 +15,7 @@ from plugwise.exceptions import (
 from plugwise.util import escape_illegal_xml_characters
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
+import aiohttp
 from defusedxml import ElementTree as etree
 
 
@@ -29,12 +29,12 @@ class SmileComm:
         port: int,
         timeout: int,
         username: str,
-        websession: ClientSession | None,
+        websession: aiohttp.ClientSession | None,
     ) -> None:
         """Set the constructor for this class."""
         if not websession:
-            aio_timeout = ClientTimeout(total=timeout)
-            self._websession = ClientSession(timeout=aio_timeout)
+            aio_timeout = aiohttp.ClientTimeout(total=timeout)
+            self._websession = aiohttp.ClientSession(timeout=aio_timeout)
         else:
             self._websession = websession
 
@@ -42,7 +42,7 @@ class SmileComm:
         if host.count(":") > 2:  # pragma: no cover
             host = f"[{host}]"
 
-        self._auth = BasicAuth(username, password=password)
+        self._base_header = {"Authorization": aiohttp.encode_basic_auth(username, password=password)}
         self._endpoint = f"http://{host}:{str(port)}"  # Sensitive
 
     async def _request(
@@ -53,36 +53,32 @@ class SmileComm:
         data: str | None = None,
     ) -> etree.Element:
         """Get/put/delete data from a give URL."""
-        resp: ClientResponse
+        resp: aiohttp.ClientResponse
         url = f"{self._endpoint}{command}"
         try:
             match method:
                 case "delete":
-                    resp = await self._websession.delete(url, auth=self._auth)
+                    resp = await self._websession.delete(url, headers=self._base_header)
                 case "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
-                    headers = {"Accept-Encoding": "gzip"}
-                    resp = await self._websession.get(
-                        url, headers=headers, auth=self._auth
-                    )
+                    headers = {**self._base_header, "Accept-Encoding": "gzip"}
+                    resp = await self._websession.get(url, headers=headers)
                 case "post":
-                    headers = {"Content-type": "text/xml"}
+                    headers = {**self._base_header, "Content-type": "text/xml"}
                     resp = await self._websession.post(
                         url,
                         headers=headers,
                         data=data,
-                        auth=self._auth,
                     )
                 case "put":
-                    headers = {"Content-type": "text/xml"}
+                    headers = {**self._base_header, "Content-type": "text/xml"}
                     resp = await self._websession.put(
                         url,
                         headers=headers,
                         data=data,
-                        auth=self._auth,
                     )
         except (
-            ClientError
+            aiohttp.ClientError
         ) as exc:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
                 LOGGER.warning(
@@ -108,7 +104,7 @@ class SmileComm:
         return await self._request_validate(resp, method)
 
     async def _request_validate(
-        self, resp: ClientResponse, method: str
+        self, resp: aiohttp.ClientResponse, method: str
     ) -> etree.Element:
         """Helper-function for _request(): validate the returned data."""
         match resp.status:
