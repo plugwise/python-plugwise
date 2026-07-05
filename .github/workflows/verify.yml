@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Prepare code checkout and python/prek(pre-commit) setup
         id: cache-reuse
-        uses: plugwise/gh-actions/prepare-python-and-code@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/prepare-python-and-code@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           fail-on-miss: false  # First time create cache (if not already exists)
@@ -67,7 +67,7 @@ jobs:
           persist-credentials: false
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/restore-venv@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -103,7 +103,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/restore-venv@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -138,7 +138,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/restore-venv@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           fail-on-miss: false  # First time create cache (if not already exists)
           cache-key: ${{ needs.cache.outputs.cache-key }}
@@ -171,7 +171,7 @@ jobs:
           persist-credentials: false
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/restore-venv@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -216,7 +216,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/restore-venv@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -301,7 +301,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@0375df40f07d6f002cb134335a3e3296579ac99b
+        uses: plugwise/gh-actions/restore-venv@09054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
