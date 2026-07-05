@@ -1,5 +1,10 @@
 # Changelog
 
+## Ongoing
+
+- Add PEP 740 digital attestations (workaround until included in `uv publish`)
+- Pin GitHub acions including our own from gh-actions
+
 ## v1.12.0
 
 - Replace the DHW-comfort-mode switch by a DHW mode selector to match the new HA select or water_heater platform updates, via PR [#883](https://github.com/plugwise/python-plugwise/pull/883)

@@ -4,7 +4,7 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 3
+  CACHE_VERSION: 4
   DEFAULT_PYTHON: "3.14"
   VENV: venv
 
@@ -25,10 +25,10 @@ jobs:
       python-version: ${{ steps.python.outputs.python-version }}  # Ensure all runners use THIS minor version
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Set up Python and determine minor version for ${{ env.DEFAULT_PYTHON }}
         id: python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Fetch HA pyproject
@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Prepare code checkout and python/prek(pre-commit) setup
         id: cache-reuse
-        uses: plugwise/gh-actions/prepare-python-and-code@v2
+        uses: plugwise/gh-actions/prepare-python-and-code@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           fail-on-miss: false  # First time create cache (if not already exists)
@@ -62,12 +62,12 @@ jobs:
       - prepare
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           persist-credentials: false
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v2
+        uses: plugwise/gh-actions/restore-venv@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -100,10 +100,10 @@ jobs:
       - dependencies_check
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v2
+        uses: plugwise/gh-actions/restore-venv@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -130,15 +130,15 @@ jobs:
         python-version: ["3.14", "3.13"]
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Set up Python ${{ matrix.python-version }}
         id: python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: ${{ matrix.python-version }}
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v2
+        uses: plugwise/gh-actions/restore-venv@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           fail-on-miss: false  # First time create cache (if not already exists)
           cache-key: ${{ needs.cache.outputs.cache-key }}
@@ -150,7 +150,7 @@ jobs:
           . venv-${{ steps.python.outputs.python-version }}/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: coverage-${{ steps.python.outputs.python-version }}
           path: .coverage
@@ -166,12 +166,12 @@ jobs:
       - pytest
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           persist-credentials: false
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v2
+        uses: plugwise/gh-actions/restore-venv@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
@@ -189,9 +189,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38
 
   # Check for missing python dependencies
   dependencies_check:
@@ -199,7 +199,7 @@ jobs:
     name: Dependency
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Run dependency checker
         run: scripts/dependencies_check.sh debug
 
@@ -213,17 +213,17 @@ jobs:
       - mypy
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v2
+        uses: plugwise/gh-actions/restore-venv@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
           venv-dir: ${{ env.VENV }}
           prek-home: ${{ env.PREK_HOME }}
       - name: Download all coverage artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           pattern: coverage-*
           merge-multiple: true
@@ -235,7 +235,7 @@ jobs:
           coverage report --fail-under=94
           coverage xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -253,7 +253,7 @@ jobs:
       - mypy
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Prepare uv
         run: |
           pip install uv
@@ -280,6 +280,9 @@ jobs:
         run: |
           . venv/bin/activate
           uv build
+      - name: Generate PEP 740 Attestations
+        if: steps.check_package.outputs.should_publish == 'true'
+        uses: astral-sh/attest-action@f589a42a7efb6fe400b4f400de60b4bc90390027
       - name: Publish distribution 📦 to TestPyPI
         if: steps.check_package.outputs.should_publish == 'true'
         run: |
@@ -295,10 +298,10 @@ jobs:
       - coverage
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Restore cached environment
         id: cache-reuse
-        uses: plugwise/gh-actions/restore-venv@v2
+        uses: plugwise/gh-actions/restore-venv@9054f02b05e53697300c41df27d0307332dc7cd8
         with:
           cache-key: ${{ needs.cache.outputs.cache-key }}
           python-version: ${{ needs.cache.outputs.python-version }}
