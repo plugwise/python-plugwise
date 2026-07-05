@@ -1,7 +1,9 @@
 # Changelog
 
-## Ongoing
+## v1.13.0
 
+- Improve on v1.12.0 update by outputting dedicated boiler_ and dhw_temperature dicts with current-key added. Rename dhw_mode off to eco for standard cv-heaters.
+  Via PR [#888](https://github.com/plugwise/python-plugwise/pull/888)
 - Add PEP 740 digital attestations (workaround until included in `uv publish`), pin GitHub acions including our own from gh-actions, via PR [#891](https://github.com/plugwise/python-plugwise/pull/891)
 - Solve aiohttp BasicAuth deprecation via PR [#890](https://github.com/plugwise/python-plugwise/pull/890)
 

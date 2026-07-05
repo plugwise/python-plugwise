@@ -149,7 +149,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         tinkered = await self.tinker_regulation_mode(api)
         assert not tinkered
 
-        tinkered = await self.tinker_max_boiler_temp(api)
+        tinkered = await self.tinker_actuator_temp(api)
         assert not tinkered
 
         assert not await self.tinker_zone_profile(
@@ -191,7 +191,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper(raise_timeout=True)
         await self.device_test(api, "2023-12-17 00:00:01", testdata, skip_testing=True)
 
-        tinkered = await self.tinker_max_boiler_temp(api, unhappy=True)
+        tinkered = await self.tinker_actuator_temp(api, unhappy=True)
         assert tinkered
 
         tinkered = await self.tinker_gateway_mode(api, unhappy=True)
@@ -282,7 +282,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert result
 
-        tinkered = await self.tinker_max_boiler_temp(api, unhappy=True)
+        tinkered = await self.tinker_actuator_temp(api, unhappy=True)
         assert not tinkered
 
         try:
@@ -441,7 +441,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata)
         assert api.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self.entity_items == 270
+        assert self.entity_items == 271
         assert test_items == self.entity_items
 
         # Negative test
@@ -464,6 +464,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         tinkered = await self.tinker_dhw_mode(
             api, "e4684553153b44afbef2200885f379dc", "dhw_mode", 2
         )
+        assert not tinkered
+
+        tinkered = await self.tinker_actuator_temp(api)
         assert not tinkered
 
         await api.close_connection()
