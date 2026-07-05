@@ -42,7 +42,9 @@ class SmileComm:
         if host.count(":") > 2:  # pragma: no cover
             host = f"[{host}]"
 
-        self._base_header = {"Authorization": aiohttp.encode_basic_auth(username, password=password)}
+        self._base_header = {
+            "Authorization": aiohttp.encode_basic_auth(username, password=password)
+        }
         self._endpoint = f"http://{host}:{str(port)}"  # Sensitive
 
     async def _request(
