@@ -1,10 +1,9 @@
 # Changelog
 
-## v1.12.1
+## Ongoing
 
 - Add PEP 740 digital attestations (workaround until included in `uv publish`)
-- Pin GitHub acions
-- Bump our own github actions to pinned tag
+- Pin GitHub acions including our own from gh-actions
 
 ## v1.12.0
 
