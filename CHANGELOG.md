@@ -2,8 +2,8 @@
 
 ## Ongoing
 
-- Add PEP 740 digital attestations (workaround until included in `uv publish`)
-- Pin GitHub acions including our own from gh-actions
+- Add PEP 740 digital attestations (workaround until included in `uv publish`), pin GitHub acions including our own from gh-actions, via PR [#891](https://github.com/plugwise/python-plugwise/pull/891)
+- Solve aiohttp BasicAuth deprecation via PR [#890](https://github.com/plugwise/python-plugwise/pull/890)
 
 ## v1.12.0
 
