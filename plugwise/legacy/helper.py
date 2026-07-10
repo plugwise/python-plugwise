@@ -366,12 +366,7 @@ class SmileLegacyHelper(SmileCommon):
                     self._count += 1
 
             if temp_dict:
-                if item == "maximum_boiler_temperature":
-                    item = "boiler_temperature"
-                if "water_temperature" in data["sensors"]:
-                    temp_dict["current"] = data["sensors"]["water_temperature"]
-                    data["sensors"].pop("water_temperature")
-
+                item, temp_dict = self._create_special_dicts(item, data, temp_dict)
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
