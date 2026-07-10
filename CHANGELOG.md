@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Implement dedicated boiler_temperature dict for legacy Anna
+
 ## v1.13.0
 
 - Improve on v1.12.0 update by outputting dedicated boiler_ and dhw_temperature dicts with current-key added. Rename dhw_mode off to eco for standard cv-heaters.
