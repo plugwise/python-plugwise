@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v1.13.1
 
 - Implement dedicated boiler_temperature dict for legacy Anna via PR [#893](https://github.com/plugwise/python-plugwise/pull/893)
 
