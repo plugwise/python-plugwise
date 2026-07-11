@@ -175,9 +175,7 @@ class SmileAPI(SmileData):
             case "temperature_offset":
                 await self.set_offset(dev_id, temperature)
                 return
-            case "boiler_temperature":
-                key = "maximum_boiler_temperature"
-            case "dhw_temperature":
+            case "max_dhw_temperature":
                 key = "domestic_hot_water_setpoint"
 
         temp = str(temperature)
