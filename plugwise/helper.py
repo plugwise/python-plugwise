@@ -242,6 +242,7 @@ class SmileHelper(SmileCommon):
                     appl := self._appl_heater_central_info(appl, appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
+                self._collect_dhw_modes(appliance)
 
                 return appl
             case _ as s if s.endswith("_plug"):
@@ -262,6 +263,18 @@ class SmileHelper(SmileCommon):
                 return appl
             case _:  # pragma: no cover
                 return Munch()
+
+    def _collect_dhw_modes(self, appliance: etree.Element) -> None:
+        """Collect the DHW modes."""
+        # Collect the Loria dhw modes
+        self._dhw_allowed_modes = self._get_appl_actuator_modes(
+            appliance, "domestic_hot_water_mode_control_functionality"
+        )
+        # Determine the dhw modes from the domestic_hot_water_comfort_mode toggle
+        if not self._dhw_allowed_modes:
+            self._get_toggle_state(
+                appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", {}
+            )
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
