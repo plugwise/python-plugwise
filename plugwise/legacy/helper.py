@@ -341,7 +341,9 @@ class SmileLegacyHelper(SmileCommon):
 
         self._count = count_data_items(self._count, data)
 
-    def _get_actuator_functionalities(self, xml: etree.Element, data: GwEntityData) -> None:
+    def _get_actuator_functionalities(
+        self, xml: etree.Element, data: GwEntityData
+    ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             temp_dict: ActuatorData = {}
@@ -364,6 +366,7 @@ class SmileLegacyHelper(SmileCommon):
                     self._count += 1
 
             if temp_dict:
+                item, temp_dict = self._create_special_dicts(item, data, temp_dict)
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 

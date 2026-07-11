@@ -51,14 +51,15 @@
       "flame_state": false,
       "heating_state": false
     },
-    "dev_class": "heater_central",
-    "location": "be81e3f8275b4129852c4d8d550ae2eb",
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 54.0,
       "lower_bound": 50.0,
       "resolution": 1.0,
       "setpoint": 70.0,
       "upper_bound": 90.0
     },
+    "dev_class": "heater_central",
+    "location": "be81e3f8275b4129852c4d8d550ae2eb",
     "model": "Generic heater",
     "name": "OpenTherm",
     "sensors": {
@@ -66,8 +67,7 @@
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
       "return_temperature": 0.0,
-      "water_pressure": 1.7,
-      "water_temperature": 54.0
+      "water_pressure": 1.7
     }
   }
 }
