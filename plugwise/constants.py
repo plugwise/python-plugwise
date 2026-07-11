@@ -257,10 +257,9 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "zone_thermostat",
 )
 ActuatorType = Literal[
-    "boiler_temperature",
-    "dhw_temperature",
     "domestic_hot_water_setpoint",
     "maximum_boiler_temperature",
+    "max_dhw_temperature",
     "temperature_offset",
     "thermostat",
 ]
@@ -382,13 +381,13 @@ SpecialType = Literal[
     "c_heating_state",
     "thermostat_supports_cooling",
 ]
-
 SPECIALS: Final[tuple[str, ...]] = get_args(SpecialType)
 
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 
 SwitchType = Literal[
     "cooling_ena_switch",
+    "dhw_cm_switch",
     "lock",
     "relay",
 ]
@@ -408,6 +407,11 @@ ToggleNameType = Literal[
     "cooling_ena_switch",
     "dhw_cm_switch",
 ]
+TOGGLES: Final[dict[str, ToggleNameType]] = {
+    "cooling_enabled": "cooling_ena_switch",
+    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
+}
+
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
     "thermostatic_radiator_valve",
@@ -588,8 +592,7 @@ class GwEntityData(TypedDict, total=False):
 
     # Dict-types
     binary_sensors: SmileBinarySensors
-    boiler_temperature: ActuatorData
-    dhw_temperature: ActuatorData
+    max_dhw_temperatureL ActuatorData
     maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
