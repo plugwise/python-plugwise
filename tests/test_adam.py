@@ -351,7 +351,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 540
+        assert self.entity_items == 542
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
