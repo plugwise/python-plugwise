@@ -31,6 +31,7 @@ from plugwise.constants import (
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
+    TOGGLES,
     UOM,
     ZONE_MEASUREMENTS,
     ActuatorData,
@@ -240,7 +241,6 @@ class SmileHelper(SmileCommon):
                     appl := self._appl_heater_central_info(appl, appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
-                self._collect_dhw_modes(appliance)
 
                 return appl
             case _ as s if s.endswith("_plug"):
@@ -261,18 +261,6 @@ class SmileHelper(SmileCommon):
                 return appl
             case _:  # pragma: no cover
                 return Munch()
-
-    def _collect_dhw_modes(self, appliance: etree.Element) -> None:
-        """Collect the DHW modes."""
-        # Collect the Loria dhw modes
-        self._dhw_allowed_modes = self._get_appl_actuator_modes(
-            appliance, "domestic_hot_water_mode_control_functionality"
-        )
-        # Determine the dhw modes from the domestic_hot_water_comfort_mode toggle
-        if not self._dhw_allowed_modes:
-            self._get_toggle_state(
-                appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", {}
-            )
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
@@ -417,12 +405,11 @@ class SmileHelper(SmileCommon):
             appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
             # Collect the cooling enabled toggle state
-            self._get_toggle_state(
-                appliance, "cooling_enabled", "cooling_ena_switch", data
-            )
-
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
+
+            for toggle, name in TOGGLES.items():
+                self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
