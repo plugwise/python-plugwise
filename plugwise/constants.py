@@ -592,7 +592,7 @@ class GwEntityData(TypedDict, total=False):
 
     # Dict-types
     binary_sensors: SmileBinarySensors
-    max_dhw_temperatureL ActuatorData
+    max_dhw_temperature: ActuatorData
     maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
