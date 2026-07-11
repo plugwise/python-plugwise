@@ -86,6 +86,7 @@ class SmileHelper(SmileCommon):
         super().__init__()
         self._endpoint: str
         self._elga: bool
+        self._dhw_allowed_modes: list[str] | None = None
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
