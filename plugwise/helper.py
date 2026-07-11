@@ -505,6 +505,9 @@ class SmileHelper(SmileCommon):
         if xml.find("type").text == "heater_central":
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
+                if "switches" not in data:
+                    return
+
                 data["switches"][name] = state.text == "on"
                 self._count += 1
                 match toggle:
