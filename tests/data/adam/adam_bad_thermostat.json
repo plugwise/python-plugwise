@@ -7,6 +7,11 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "eco",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
     "location": "856285a783f24bf4b2573c8bc510eabf",
     "max_dhw_temperature": {
       "current": 49.9,
