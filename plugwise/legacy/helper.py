@@ -342,10 +342,20 @@ class SmileLegacyHelper(SmileCommon):
         self._count = count_data_items(self._count, data)
 
     def _get_actuator_functionalities(
-        self, xml: etree.Element, data: GwEntityData
+        self,
+        xml: etree.Element,
+        data: GwEntityData,
+        entity: GwEntityData,
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
+            # Skip max_dhw_temperature, not initially valid,
+            # skip thermostat for thermo_sensors
+            if item == "max_dhw_temperature" or (
+                item == "thermostat" and entity["dev_class"] == "thermo_sensor"
+            ):
+                continue
+
             temp_dict: ActuatorData = {}
             functionality = "thermostat_functionality"
 
