@@ -301,7 +301,7 @@ class SmileCommon:
         Also, the copied sensor data is removed.
         """
         if item == DHW_SETPOINT:
-            item = "dhw_temperature"
+            item = "max_dhw_temperature"
             if DHW_SETPOINT in data["sensors"]:
                 data["sensors"].pop(DHW_SETPOINT)
                 self._count -= 1
@@ -313,9 +313,7 @@ class SmileCommon:
                 self._count += 1
 
         if item == "maximum_boiler_temperature":
-            item = "boiler_temperature"
             if "water_temperature" in data["sensors"]:
                 temp_dict["current"] = data["sensors"]["water_temperature"]
-                data["sensors"].pop("water_temperature")
 
         return item, temp_dict
