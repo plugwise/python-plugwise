@@ -504,6 +504,8 @@ class SmileHelper(SmileCommon):
         if xml.find("type").text == "heater_central":
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
+                data["switches"][name] = state.text == "on"
+                self._count += 1
                 match toggle:
                     case "cooling_enabled":
                         data["switches"][name] = state.text == "on"
@@ -534,9 +536,9 @@ class SmileHelper(SmileCommon):
         Add the resulting dict(s) to the entity's data.
         """
         for item in ACTIVE_ACTUATORS:
-            # Skip boiler_ and dhw_temperature, not initially valid,
+            # Skip max_dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
-            if item in ("boiler_temperature", "dhw_temperature") or (
+            if item == "max_dhw_temperature" or (
                 item == "thermostat"
                 and (
                     entity["dev_class"] != "climate"
