@@ -31,7 +31,7 @@
     "name": "OpenTherm",
     "sensors": {
       "intended_boiler_temperature": 0.0,
-      "water_temperature": 43.0
+      "water_temperature": 37.0
     },
     "switches": {
       "dhw_cm_switch": false
