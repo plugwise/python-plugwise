@@ -193,6 +193,9 @@ m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperature"] = {
     "upper_bound": 60.0,
     "resolution": 0.01,
 }
+dhw_mode = m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["select_dhw_mode"]
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["dhw_mode"] = dhw_mode
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"].pop("select_dhw_mode")
 
 json_writer("m_adam_heating", m_adam_heating)
 
