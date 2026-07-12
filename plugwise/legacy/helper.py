@@ -273,7 +273,7 @@ class SmileLegacyHelper(SmileCommon):
             self._get_lock_state(appliance, data, self._stretch_v2)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, data)
+                self._get_actuator_functionalities(appliance, data, entity)
 
         # Anna: the Smile outdoor_temperature is present in the Home location
         # For some Anna's LOCATIONS is empty, falling back to domain_objects!
