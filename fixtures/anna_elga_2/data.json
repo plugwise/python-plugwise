@@ -28,6 +28,9 @@
       "water_pressure": 0.5,
       "water_temperature": 42.6
     },
+    "switches": {
+      "dhw_cm_switch": false
+    },
     "vendor": "Techneco"
   },
   "ebd90df1ab334565b5895f37590ccff4": {

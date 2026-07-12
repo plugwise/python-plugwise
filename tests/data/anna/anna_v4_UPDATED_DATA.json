@@ -1,31 +1,32 @@
 {
   "cd0e6156b1f04d5f952349ffbe397481": {
-    "boiler_temperature": {
+    "dhw_mode": "comfort",
+    "dhw_modes": ["comfort", "eco"],
+    "binary_sensors": {
+      "dhw_state": false,
+      "heating_state": false,
+      "flame_state": false
+    },
+    "maximum_boiler_temperature": {
       "current": 51.0,
       "setpoint": 69.0,
       "lower_bound": 0.0,
       "upper_bound": 100.0,
       "resolution": 1.0
     },
-    "dhw_mode": "comfort",
-    "dhw_modes": ["comfort", "eco"],
-    "dhw_temperature": {
+    "max_dhw_temperature": {
       "current": 51.0,
       "setpoint": 59.0,
       "lower_bound": 30.0,
       "upper_bound": 60.0,
       "resolution": 0.01
     },
-    "binary_sensors": {
-      "dhw_state": false,
-      "heating_state": false,
-      "flame_state": false
-    },
     "sensors": {
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
       "return_temperature": 41.0,
-      "water_pressure": 2.1
+      "water_pressure": 2.1,
+      "water_temperature": 51.0
     }
   },
   "01b85360fdd243d0aaad4d6ac2a5ba7e": {

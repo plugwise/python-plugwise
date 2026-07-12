@@ -1,7 +1,10 @@
 {
   "1e5e55b958ac445583602f767cb45942": {
     "active_preset": "home",
-    "available_schedules": ["Thermostat schedule", "off"],
+    "available_schedules": [
+      "Thermostat schedule",
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "thermostat",
@@ -10,7 +13,13 @@
     "location": "5b13651d79c4454684fd268850b1bff8",
     "model": "ThermoTouch",
     "name": "Anna",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
     "select_schedule": "off",
     "sensors": {
       "illuminance": 2.0,
@@ -39,7 +48,10 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
-    "dhw_modes": ["comfort", "eco"],
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
     "location": "da7be222ab3b420c927f3e49fade0304",
     "model": "Generic heater",
     "model_id": "HR24",
@@ -51,7 +63,28 @@
       "water_pressure": 6.0,
       "water_temperature": 35.0
     },
+    "switches": {
+      "dhw_cm_switch": true
+    },
     "vendor": "Intergas"
+  },
+  "53130847be2f436cb946b78dedb9053a": {
+    "binary_sensors": {
+      "plugwise_notification": false
+    },
+    "dev_class": "gateway",
+    "firmware": "4.4.4",
+    "hardware": "AME Smile 2.0 board",
+    "location": "da7be222ab3b420c927f3e49fade0304",
+    "mac_address": "C493000ABCD",
+    "model": "Gateway",
+    "model_id": "smile_thermo",
+    "name": "Smile Anna P1",
+    "notifications": {},
+    "sensors": {
+      "outdoor_temperature": 11.8
+    },
+    "vendor": "Plugwise"
   },
   "da7be222ab3b420c927f3e49fade0304": {
     "available": true,
@@ -81,23 +114,5 @@
       "voltage_phase_one": 234.6
     },
     "vendor": "SAGEM"
-  },
-  "53130847be2f436cb946b78dedb9053a": {
-    "binary_sensors": {
-      "plugwise_notification": false
-    },
-    "dev_class": "gateway",
-    "firmware": "4.4.4",
-    "hardware": "AME Smile 2.0 board",
-    "location": "da7be222ab3b420c927f3e49fade0304",
-    "mac_address": "C493000ABCD",
-    "model": "Gateway",
-    "model_id": "smile_thermo",
-    "name": "Smile Anna P1",
-    "notifications": {},
-    "sensors": {
-      "outdoor_temperature": 11.8
-    },
-    "vendor": "Plugwise"
   }
 }

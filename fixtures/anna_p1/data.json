@@ -63,6 +63,9 @@
       "water_pressure": 6.0,
       "water_temperature": 35.0
     },
+    "switches": {
+      "dhw_cm_switch": true
+    },
     "vendor": "Intergas"
   },
   "53130847be2f436cb946b78dedb9053a": {
