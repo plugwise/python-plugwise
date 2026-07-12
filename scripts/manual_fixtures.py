@@ -186,6 +186,9 @@ m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["maximum_boiler_temperature"]
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 38.1
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
+    "water_temperature"
+] = 37.0
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperature"] = {
     "current": 37.0,
     "setpoint": 60.0,
