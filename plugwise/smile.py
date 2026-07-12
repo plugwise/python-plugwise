@@ -261,7 +261,7 @@ class SmileAPI(SmileData):
         - 2 modes, comfort and off, representing the dhw comfort mode on and off switch states,
         - and the 5 modes available on the Loria.
         """
-        if mode not in self._dhw_allowed_modes:
+        if self._dhw_allowed_modes is not None and mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
         match length:
