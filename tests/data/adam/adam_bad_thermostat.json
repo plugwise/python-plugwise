@@ -31,7 +31,6 @@
     "model_id": "1.1",
     "name": "OpenTherm",
     "sensors": {
-      "dhw_temperature": 49.9,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
       "outdoor_air_temperature": 13.6,

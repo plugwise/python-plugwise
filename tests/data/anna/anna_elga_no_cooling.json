@@ -50,7 +50,6 @@
     "model": "Generic heater",
     "name": "OpenTherm",
     "sensors": {
-      "dhw_temperature": 46.3,
       "intended_boiler_temperature": 35.0,
       "modulation_level": 52,
       "outdoor_air_temperature": 3.0,
