@@ -27,7 +27,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.0.15",
         )
 
-        await self.device_test(api, "2020-04-05 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert api.gateway_id == "0466eae8520144c78afb29628384edeb"
         assert self.entity_items == 64
         assert not self.notifications
@@ -100,7 +100,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.0.15",
         )
 
-        await self.device_test(api, "2020-04-05 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert self.entity_items == 64
         assert not self.notifications
 
@@ -129,7 +129,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.0.15",
         )
 
-        await self.device_test(api, "2020-04-05 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert self.entity_items == 64
 
         result = await self.tinker_thermostat(
@@ -157,7 +157,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.4.1",
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 41
         assert not self.notifications
 
@@ -184,7 +184,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.0.15",
         )
 
-        await self.device_test(api, "2020-04-12 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert self.entity_items == 72
         assert not self.notifications
@@ -240,7 +240,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.0.15",
         )
 
-        await self.device_test(api, "2020-04-19 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-19 00:00:01", testdata)
         assert self.entity_items == 69
         assert self.cooling_present
         assert not self.notifications
@@ -286,7 +286,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.10.10",
         )
 
-        await self.device_test(api, "2020-04-19 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-19 00:00:01", testdata)
         assert self.entity_items == 69
         assert self.cooling_present
         assert self._cooling_enabled
@@ -311,7 +311,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.0.15",
         )
 
-        await self.device_test(api, "2020-04-12 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert self.entity_items == 68
         assert not self.notifications
@@ -335,7 +335,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.4.1",
         )
 
-        await self.device_test(api, "2022-03-13 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-03-13 00:00:01", testdata)
         assert self.entity_items == 63
         assert api.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
@@ -354,7 +354,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
         assert api.smile.hostname == "smile000000"
 
-        await self.device_test(api, "2022-03-13 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-03-13 00:00:01", testdata)
         assert not self._cooling_enabled
         assert self.entity_items == 68
 
@@ -386,7 +386,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="4.2.1",
         )
 
-        await self.device_test(api, "2022-03-10 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-03-10 00:00:01", testdata)
         assert self.entity_items == 68
         assert not self.notifications
 
@@ -439,7 +439,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 69
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -508,7 +508,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 69
         assert self.cooling_present
         assert self._cooling_enabled
@@ -531,7 +531,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 69
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -554,7 +554,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2025-11-02 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2025-11-02 00:00:01", testdata)
         assert self.entity_items == 78
 
         await api.close_connection()
@@ -575,7 +575,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 12
 
         await api.close_connection()

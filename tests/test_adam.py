@@ -23,7 +23,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(api, "2023-12-17 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2023-12-17 00:00:01", testdata)
         assert "Thermostat data in Zone" in caplog.text
 
         await api.close_connection()
@@ -45,7 +45,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.9.0",
         )
 
-        test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
         assert self.entity_items == 234
         assert test_items == self.entity_items
@@ -218,7 +218,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
         assert api.smile.hostname == "smile000000"
 
-        await self.device_test(api, "2023-12-17 00:00:01", testdata, skip_testing=True)
+        await self.device_test(api, "2023-12-17 00:00:01", testdata)
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -238,7 +238,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.0.15",
         )
 
-        test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
         assert self.entity_items == 386
         assert test_items == self.entity_items
@@ -313,7 +313,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.0.15",
         )
 
-        test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert self.entity_items == 394
         assert test_items == self.entity_items
 
@@ -350,7 +350,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
 
-        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
         assert self.entity_items == 542
         assert test_items == self.entity_items
         assert self.cooling_present
@@ -374,7 +374,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version=None,
         )
 
-        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
         assert self.entity_items == 73
         assert test_items == self.entity_items
         assert self.cooling_present
@@ -398,7 +398,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_version="3.0.15",
         )
 
-        test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert self.entity_items == 85
         assert test_items == self.entity_items
@@ -439,7 +439,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
 
-        test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata, skip_testing=True)
+        test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata)
         assert api.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
         assert self.entity_items == 273
         assert test_items == self.entity_items
