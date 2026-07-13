@@ -54,36 +54,41 @@
       "flame_state": false,
       "heating_state": false
     },
-    "boiler_temperature": {
-      "current": 24.5,
-      "lower_bound": 7.0,
-      "resolution": 0.01,
-      "setpoint": 35.0,
-      "upper_bound": 50.0
-    },
     "dev_class": "heater_central",
     "dhw_mode": "comfort",
     "dhw_modes": [
       "comfort",
       "eco"
     ],
-    "dhw_temperature": {
+    "location": "eedadcb297564f1483faa509179aebed",
+    "max_dhw_temperature": {
       "current": 63.5,
       "lower_bound": 40.0,
       "resolution": 0.01,
       "setpoint": 60.0,
       "upper_bound": 65.0
     },
-    "location": "eedadcb297564f1483faa509179aebed",
+    "maximum_boiler_temperature": {
+      "current": 24.5,
+      "lower_bound": 7.0,
+      "resolution": 0.01,
+      "setpoint": 35.0,
+      "upper_bound": 50.0
+    },
     "model": "Generic heater/cooler",
     "model_id": "17.1",
     "name": "OpenTherm",
     "sensors": {
+      "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
       "outdoor_air_temperature": 13.5,
       "return_temperature": 24.9,
-      "water_pressure": 2.0
+      "water_pressure": 2.0,
+      "water_temperature": 24.5
+    },
+    "switches": {
+      "dhw_cm_switch": true
     },
     "vendor": "Remeha B.V."
   },

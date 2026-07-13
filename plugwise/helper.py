@@ -31,6 +31,7 @@ from plugwise.constants import (
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
+    TOGGLES,
     UOM,
     ZONE_MEASUREMENTS,
     ActuatorData,
@@ -85,6 +86,7 @@ class SmileHelper(SmileCommon):
         super().__init__()
         self._endpoint: str
         self._elga: bool
+        self._dhw_allowed_modes: list[str] | None = None
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
@@ -417,12 +419,11 @@ class SmileHelper(SmileCommon):
             appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
             # Collect the cooling enabled toggle state
-            self._get_toggle_state(
-                appliance, "cooling_enabled", "cooling_ena_switch", data
-            )
-
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
+
+            for toggle, name in TOGGLES.items():
+                self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
@@ -504,11 +505,11 @@ class SmileHelper(SmileCommon):
         if xml.find("type").text == "heater_central":
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
-                match toggle:
-                    case "cooling_enabled":
-                        data["switches"][name] = state.text == "on"
-                    case "domestic_hot_water_comfort_mode":
-                        self._dhw_allowed_modes = ["comfort", "eco"]
+                if "switches" in data:
+                    data["switches"][name] = state.text == "on"
+                    self._count += 1
+                if toggle == "domestic_hot_water_comfort_mode":
+                    self._dhw_allowed_modes = ["comfort", "eco"]
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
@@ -534,9 +535,9 @@ class SmileHelper(SmileCommon):
         Add the resulting dict(s) to the entity's data.
         """
         for item in ACTIVE_ACTUATORS:
-            # Skip boiler_ and dhw_temperature, not initially valid,
+            # Skip max_dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
-            if item in ("boiler_temperature", "dhw_temperature") or (
+            if item == "max_dhw_temperature" or (
                 item == "thermostat"
                 and (
                     entity["dev_class"] != "climate"

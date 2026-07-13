@@ -175,9 +175,7 @@ class SmileAPI(SmileData):
             case "temperature_offset":
                 await self.set_offset(dev_id, temperature)
                 return
-            case "boiler_temperature":
-                key = "maximum_boiler_temperature"
-            case "dhw_temperature":
+            case "max_dhw_temperature":
                 key = "domestic_hot_water_setpoint"
 
         temp = str(temperature)
@@ -263,7 +261,7 @@ class SmileAPI(SmileData):
         - 2 modes, comfort and off, representing the dhw comfort mode on and off switch states,
         - and the 5 modes available on the Loria.
         """
-        if mode not in self._dhw_allowed_modes:
+        if self._dhw_allowed_modes and mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
         match length:

@@ -127,7 +127,7 @@ m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
 m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"]["flame_state"] = (
     False
 )
-m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["boiler_temperature"]["current"] = 19.0
+m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["maximum_boiler_temperature"]["current"] = 19.0
 m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 17.5
@@ -182,17 +182,23 @@ m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"]["flame_state"] = (
     False
 )
-m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["boiler_temperature"]["current"] = 37.0
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["maximum_boiler_temperature"]["current"] = 37.0
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 38.1
-m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["dhw_temperature"] = {
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
+    "water_temperature"
+] = 37.0
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperature"] = {
     "current": 37.0,
     "setpoint": 60.0,
     "lower_bound": 40.0,
     "upper_bound": 60.0,
     "resolution": 0.01,
 }
+dhw_mode = m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["select_dhw_mode"]
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["dhw_mode"] = dhw_mode
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"].pop("select_dhw_mode")
 
 json_writer("m_adam_heating", m_adam_heating)
 
@@ -244,8 +250,8 @@ m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["binary_sensors"][
     "cooling_state"
 ] = True
 
-m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["boiler_temperature"]["current"] = 22.7
-m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["dhw_temperature"]["current"] = 41.5
+m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["maximum_boiler_temperature"]["current"] = 22.7
+m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["max_dhw_temperature"]["current"] = 41.5
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "intended_boiler_temperature"
 ] = 0.0
@@ -297,8 +303,8 @@ m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["binary_sensors"][
     "cooling_state"
 ] = False
 
-m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["boiler_temperature"]["current"] = 19.1
-m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["dhw_temperature"]["current"] = 46.3
+m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["maximum_boiler_temperature"]["current"] = 19.1
+m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["max_dhw_temperature"]["current"] = 46.3
 m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "intended_boiler_temperature"
 ] = 18.0

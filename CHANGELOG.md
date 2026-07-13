@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.14.0
+
+- Include both old and new entities for a step-wise introduction of water_heaters in HA via PR [#895](https://github.com/plugwise/python-plugwise/pull/895):
+  - Keep the `dhw_cm_switch` and add the `dhw_modes list` and the `select_dhw_mode` string that will replace the `dhw_cm_switch` in the future
+  - `dhw_cm_switch` = `on` --> `select_dhw_mode` = `comfort`, `dhw_cm_switch` = `off` --> `select_dhw_mode` = `eco`
+  - Add a `current` (`temperature`) key to the `maximum_boiler_temperature` and `max_dhw_temperature` dicts
+
 ## v1.13.1
 
 - Implement dedicated boiler_temperature dict for legacy Anna via PR [#893](https://github.com/plugwise/python-plugwise/pull/893)

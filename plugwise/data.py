@@ -80,7 +80,7 @@ class SmileData(SmileHelper):
 
             # Replace select_dhw_mode with dhw_mode when applicable
             if (
-                "dhw_temperature" in entity
+                "max_dhw_temperature" in entity
                 and (mode := entity.get("select_dhw_mode")) is not None
             ):
                 entity.pop("select_dhw_mode")

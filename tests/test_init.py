@@ -916,8 +916,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
         for test in [
-            "boiler_temperature",
-            "dhw_temperature",
+            "maximum_boiler_temperature",
+            "max_dhw_temperature",
             "bogus_temperature",
         ]:
             _LOGGER.info("  + for %s", test)
