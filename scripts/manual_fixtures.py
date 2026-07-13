@@ -131,6 +131,9 @@ m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["maximum_boiler_temperature"]
 m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 17.5
+m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
+    "water_temperature"
+] = 19.0
 
 json_writer("m_adam_cooling", m_adam_cooling)
 
