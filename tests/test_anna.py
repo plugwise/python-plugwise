@@ -186,7 +186,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.entity_items == 72
+        assert self.entity_items == 73
         assert not self.notifications
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -313,7 +313,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.entity_items == 68
+        assert self.entity_items == 69
         assert not self.notifications
         assert not self.cooling_present
 
@@ -440,7 +440,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 69
+        assert self.entity_items == 70
         assert self.cooling_present
         assert not self._cooling_enabled
 
@@ -509,7 +509,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 69
+        assert self.entity_items == 70
         assert self.cooling_present
         assert self._cooling_enabled
 
@@ -532,7 +532,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 69
+        assert self.entity_items == 70
         assert self.cooling_present
         assert not self._cooling_enabled
 
