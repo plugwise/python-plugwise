@@ -232,7 +232,7 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="put", data=data)
 
     async def set_select(
-        self, key: str, appl_or_loc_id: str, option: str, state: str | None
+        self, key: str, appl_or_loc_id: str, option: str,
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
@@ -247,13 +247,13 @@ class SmileAPI(SmileData):
             case "select_schedule":
                 # The schedule name corresponds to the select option
                 # Location id is passed
-                await self.set_schedule_state(appl_or_loc_id, state, option)
+                await self.set_schedule_state(appl_or_loc_id, option)
             case "select_zone_profile":
                 # Location id is passed
                 await self.set_zone_profile(appl_or_loc_id, option)
 
     async def set_dhw_mode(
-        self, key: str, appl_id: str, length: int, mode: str
+        self, key: str, appl_id: str, mode: str, length: int
     ) -> None:
         """Set the domestic hot water mode.
 
@@ -266,7 +266,7 @@ class SmileAPI(SmileData):
 
         match length:
             case 2:
-                await self.set_select(key, appl_id, mode, None)
+                await self.set_select(key, appl_id, mode)
             case _:
                 data = (
                     "<domestic_hot_water_mode_control_functionality>"
@@ -344,8 +344,8 @@ class SmileAPI(SmileData):
     async def set_schedule_state(
         self,
         loc_id: str,
-        new_state: str | None,
         name: str | None,
+        new_state: str | None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
