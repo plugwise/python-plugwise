@@ -358,10 +358,11 @@ class Smile(SmileComm):
         key: str,
         loc_id: str,
         option: str,
+        state: str | None = None,
     ) -> None:
         """Set the selected option for the applicable Select."""
         try:
-            await self._smile_api.set_select(key, loc_id, option)
+            await self._smile_api.set_select(key, loc_id, option, state=state)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set select option '{option}': {str(exc)}"
@@ -375,7 +376,7 @@ class Smile(SmileComm):
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         try:
-            await self._smile_api.set_schedule_state(loc_id, name, state)
+            await self._smile_api.set_schedule_state(loc_id, name=name, state=state)
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(
                 f"Failed to set schedule state: {str(exc)}"
