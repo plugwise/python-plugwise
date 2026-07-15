@@ -170,14 +170,14 @@ class SmileLegacyAPI(SmileLegacyData):
         """Set-function placeholder for legacy devices."""
 
     async def set_select(
-        self, key: str, loc_id: str, option: str,
+        self, key: str, loc_id: str, option: str, state: str | None = None,
     ) -> None:
         """Set the thermostat schedule option."""
         # schedule name corresponds to select option
-        await self.set_schedule_state("dummy", option)
+        await self.set_schedule_state("loc_id", option, state=state)
 
     async def set_schedule_state(
-        self, _: str, name: str | None, state: str | None = None,
+        self, _: str, name: str | None = None, state: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule.
 

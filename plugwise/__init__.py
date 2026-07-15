@@ -371,7 +371,7 @@ class Smile(SmileComm):
         self,
         loc_id: str,
         name: str | None = None,
-        state: str | None = None
+        state: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         try:

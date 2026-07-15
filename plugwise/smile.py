@@ -345,7 +345,7 @@ class SmileAPI(SmileData):
         self,
         loc_id: str,
         name: str | None,
-        new_state: str | None,
+        state: str | None = None
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
@@ -353,12 +353,14 @@ class SmileAPI(SmileData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
-        if new_state not in (STATE_OFF, STATE_ON):
+        if state is None:
+            state = STATE_ON
+        elif state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Translate selection of Off-schedule-option to disabling the active schedule
         if name == OFF:
-            new_state = STATE_OFF
+            state = STATE_OFF
 
         # Handle no schedule-name / schedule-off requested: find the active schedule
         if name is None or name == OFF:
@@ -372,7 +374,7 @@ class SmileAPI(SmileData):
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         # If no state change is requested, do nothing
-        if new_state == self._schedule_old_states[loc_id][name]:
+        if state == self._schedule_old_states[loc_id][name]:
             return
 
         schedule_rule_id: str = next(iter(schedule_rule))
@@ -384,7 +386,7 @@ class SmileAPI(SmileData):
             template_id = self._domain_objects.find(locator).get("id")
             template = f'<template id="{template_id}" />'
 
-        contexts = self.determine_contexts(loc_id, new_state, schedule_rule_id)
+        contexts = self.determine_contexts(loc_id, state, schedule_rule_id)
         data = (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
@@ -396,7 +398,7 @@ class SmileAPI(SmileData):
         )
         uri = f"{RULES};id={schedule_rule_id}"
         await self.call_request(uri, method="put", data=data)
-        self._schedule_old_states[loc_id][name] = new_state
+        self._schedule_old_states[loc_id][name] = state
 
     def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""
