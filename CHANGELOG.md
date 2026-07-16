@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Improve manual fixtures script, reorder set_schedule_state() arguments for better compatibility with set_dhw_mode()
+- Improve manual fixtures script, reorder set_schedule_state() arguments for better compatibility with set_dhw_mode(), via PR[#897](https://github.com/plugwise/python-plugwise/pull/897)
 
 ## v1.14.0
 
