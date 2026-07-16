@@ -175,7 +175,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_select(
         self,
-        key: str,
+        _: str,
         loc_id: str,
         option: str,
         state: str | None = None,
