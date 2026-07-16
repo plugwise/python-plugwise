@@ -346,10 +346,7 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="post", data=data)
 
     async def set_schedule_state(
-        self,
-        loc_id: str,
-        name: str | None,
-        state: str | None = None
+        self, loc_id: str, name: str | None, state: str | None = None
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
