@@ -232,7 +232,11 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="put", data=data)
 
     async def set_select(
-        self, key: str, appl_or_loc_id: str, option: str,
+        self,
+        key: str,
+        appl_or_loc_id: str,
+        option: str,
+        state: str | None = None,
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
@@ -247,7 +251,7 @@ class SmileAPI(SmileData):
             case "select_schedule":
                 # The schedule name corresponds to the select option
                 # Location id is passed
-                await self.set_schedule_state(appl_or_loc_id, option)
+                await self.set_schedule_state(appl_or_loc_id, option, state=state)
             case "select_zone_profile":
                 # Location id is passed
                 await self.set_zone_profile(appl_or_loc_id, option)
