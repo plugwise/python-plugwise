@@ -366,7 +366,7 @@ class SmileAPI(SmileData):
         # Handle no schedule-name / schedule-off requested: find the active schedule
         if name is None or name == OFF:
             _, name = self._schedules(loc_id)
-            if name == OFF:  # no active schedule found, nothing to do
+            if name in (NONE, OFF):  # no active schedule found, nothing to do
                 return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
