@@ -131,6 +131,9 @@ m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["maximum_boiler_temperature"]
 m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 17.5
+m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
+    "water_temperature"
+] = 19.0
 
 json_writer("m_adam_cooling", m_adam_cooling)
 
@@ -253,6 +256,9 @@ m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["binary_sensors"][
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["maximum_boiler_temperature"]["current"] = 22.7
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["max_dhw_temperature"]["current"] = 41.5
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
+    "dhw_temperature"
+] = 41.5
+m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "intended_boiler_temperature"
 ] = 0.0
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
@@ -264,6 +270,9 @@ m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "outdoor_air_temperature"
 ] = 28.0
+m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
+    "water_temperature"
+] = 22.7
 
 # Go for 015a
 m_anna_heatpump_cooling["015ae9ea3f964e668e490fa39da3870b"]["sensors"][

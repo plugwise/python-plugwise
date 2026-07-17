@@ -232,7 +232,11 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="put", data=data)
 
     async def set_select(
-        self, key: str, appl_or_loc_id: str, option: str, state: str | None
+        self,
+        key: str,
+        appl_or_loc_id: str,
+        option: str,
+        state: str | None = None,
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
@@ -247,13 +251,13 @@ class SmileAPI(SmileData):
             case "select_schedule":
                 # The schedule name corresponds to the select option
                 # Location id is passed
-                await self.set_schedule_state(appl_or_loc_id, state, option)
+                await self.set_schedule_state(appl_or_loc_id, option, state=state)
             case "select_zone_profile":
                 # Location id is passed
                 await self.set_zone_profile(appl_or_loc_id, option)
 
     async def set_dhw_mode(
-        self, key: str, appl_id: str, length: int, mode: str
+        self, key: str, appl_id: str, mode: str, length: int
     ) -> None:
         """Set the domestic hot water mode.
 
@@ -266,7 +270,7 @@ class SmileAPI(SmileData):
 
         match length:
             case 2:
-                await self.set_select(key, appl_id, mode, None)
+                await self.set_select(key, appl_id, mode)
             case _:
                 data = (
                     "<domestic_hot_water_mode_control_functionality>"
@@ -342,10 +346,7 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="post", data=data)
 
     async def set_schedule_state(
-        self,
-        loc_id: str,
-        new_state: str | None,
-        name: str | None,
+        self, loc_id: str, name: str | None = None, state: str | None = None
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
@@ -353,17 +354,19 @@ class SmileAPI(SmileData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
-        if new_state not in (STATE_OFF, STATE_ON):
+        if state is None:
+            state = STATE_ON
+        elif state not in (STATE_OFF, STATE_ON):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Translate selection of Off-schedule-option to disabling the active schedule
         if name == OFF:
-            new_state = STATE_OFF
+            state = STATE_OFF
 
         # Handle no schedule-name / schedule-off requested: find the active schedule
         if name is None or name == OFF:
             _, name = self._schedules(loc_id)
-            if name == OFF:  # no active schedule found, nothing to do
+            if name in (NONE, OFF):  # no active schedule found, nothing to do
                 return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
@@ -372,7 +375,7 @@ class SmileAPI(SmileData):
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         # If no state change is requested, do nothing
-        if new_state == self._schedule_old_states[loc_id][name]:
+        if state == self._schedule_old_states[loc_id][name]:
             return
 
         schedule_rule_id: str = next(iter(schedule_rule))
@@ -384,7 +387,7 @@ class SmileAPI(SmileData):
             template_id = self._domain_objects.find(locator).get("id")
             template = f'<template id="{template_id}" />'
 
-        contexts = self.determine_contexts(loc_id, new_state, schedule_rule_id)
+        contexts = self.determine_contexts(loc_id, state, schedule_rule_id)
         data = (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
@@ -396,7 +399,7 @@ class SmileAPI(SmileData):
         )
         uri = f"{RULES};id={schedule_rule_id}"
         await self.call_request(uri, method="put", data=data)
-        self._schedule_old_states[loc_id][name] = new_state
+        self._schedule_old_states[loc_id][name] = state
 
     def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""

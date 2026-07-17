@@ -77,10 +77,16 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert result
 
         # Special test-case for turning a schedule off based on only the location id.
-        await api.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "off")
+        await api.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", None, "off")
 
         # Special test-case for turning a schedule off for a location via the option "off".
-        await api.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "on", "off")
+        await api.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "off", "on")
+
+        # Special test-case for setting a schedule to an invalid state.
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_schedule_state(
+                "f2bf9048bef64cc5b6d5110154e33c81", "Weekschema", "eco"
+            )
 
         # bad schedule-state test
         result = await self.tinker_thermostat_schedule(

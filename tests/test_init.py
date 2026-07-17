@@ -744,7 +744,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    await api.set_select("select_schedule", loc_id, new_schedule, state)
+                    await api.set_select("select_schedule", loc_id, new_schedule)
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
@@ -860,7 +860,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
-                await api.set_dhw_mode(key, appliance, length, mode)
+                await api.set_dhw_mode(key, appliance, mode, length)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
                 tinker_dhw_mode_passed = True
             except pw_exceptions.PlugwiseError:

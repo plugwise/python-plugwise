@@ -362,7 +362,7 @@ class Smile(SmileComm):
     ) -> None:
         """Set the selected option for the applicable Select."""
         try:
-            await self._smile_api.set_select(key, loc_id, option, state)
+            await self._smile_api.set_select(key, loc_id, option, state=state)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set select option '{option}': {str(exc)}"
@@ -371,12 +371,12 @@ class Smile(SmileComm):
     async def set_schedule_state(
         self,
         loc_id: str,
-        state: str | None,
         name: str | None = None,
+        state: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         try:
-            await self._smile_api.set_schedule_state(loc_id, state, name)
+            await self._smile_api.set_schedule_state(loc_id, name=name, state=state)
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(
                 f"Failed to set schedule state: {str(exc)}"
@@ -462,12 +462,19 @@ class Smile(SmileComm):
             ) from exc  # pragma no cover
 
     async def set_dhw_mode(
-        self, key: str, location: str, length: int, mode: str
+        self,
+        key: str,
+        location: str,
+        mode: str,
+        length: int,
     ) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:  # pragma no cover
             await self._smile_api.set_dhw_mode(
-                key, location, length, mode
+                key,
+                location,
+                mode,
+                length,
             )  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(
