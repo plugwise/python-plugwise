@@ -12,7 +12,6 @@ from plugwise.constants import (
     ANNA,
     MAX_SETPOINT,
     MIN_SETPOINT,
-    NONE,
     OFF,
     ActuatorData,
     GwEntityData,
