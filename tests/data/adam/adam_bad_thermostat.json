@@ -45,7 +45,9 @@
   },
   "3ee6b9486cb04c258a3130fff2b144a4": {
     "active_preset": "home",
-    "available_schedules": ["off"],
+    "available_schedules": [
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
