@@ -1,7 +1,7 @@
 {
   "06aecb3d00354375924f50c47af36bd2": {
     "active_preset": "no_frost",
-    "available_schedules": [],
+    "available_schedules": ["off"],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
@@ -14,7 +14,7 @@
       "vacation",
       "no_frost"
     ],
-    "select_schedule": null,
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 24.2
@@ -42,7 +42,7 @@
   },
   "13228dab8ce04617af318a2888b3c548": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": ["off"],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
@@ -55,7 +55,7 @@
       "vacation",
       "no_frost"
     ],
-    "select_schedule": null,
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 27.4
@@ -282,7 +282,7 @@
   },
   "d27aede973b54be484f6842d1b2802ad": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": ["off"],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
@@ -295,7 +295,7 @@
       "vacation",
       "no_frost"
     ],
-    "select_schedule": null,
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 30.0
@@ -347,7 +347,7 @@
   },
   "d58fec52899f4f1c92e4f8fad6d8c48c": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": ["off"],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
@@ -360,7 +360,7 @@
       "vacation",
       "no_frost"
     ],
-    "select_schedule": null,
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 30.0
