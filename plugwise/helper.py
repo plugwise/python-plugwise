@@ -984,9 +984,9 @@ class SmileHelper(SmileCommon):
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available: list[str] = [NONE]
+        available: list[str] = [OFF]
         rule_ids: dict[str, dict[str, str]] = {}
-        selected = NONE
+        selected = OFF
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
@@ -1004,12 +1004,6 @@ class SmileHelper(SmileCommon):
             if location == data["location"] and active:
                 selected = name
             schedules.append(name)
-
-        if schedules:
-            available.remove(NONE)
-            available.append(OFF)
-            if selected == NONE:
-                selected = OFF
 
         return available, selected
 
