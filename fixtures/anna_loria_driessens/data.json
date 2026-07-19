@@ -20,11 +20,11 @@
   "9fb768d699e44c7fb5cc50309dc4e7d4": {
     "active_preset": "home",
     "available_schedules": [
+      "off",
       "Verwarmen@9-23u",
       "VAKANTIE (winter)",
       "VERWARMEN",
-      "KOELEN",
-      "off"
+      "KOELEN"
     ],
     "climate_mode": "auto",
     "control_state": "idle",

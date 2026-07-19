@@ -36,8 +36,8 @@
   "ebd90df1ab334565b5895f37590ccff4": {
     "active_preset": "home",
     "available_schedules": [
-      "Thermostat schedule",
-      "off"
+      "off",
+      "Thermostat schedule"
     ],
     "climate_mode": "auto",
     "control_state": "heating",

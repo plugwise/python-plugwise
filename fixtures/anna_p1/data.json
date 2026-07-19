@@ -2,8 +2,8 @@
   "1e5e55b958ac445583602f767cb45942": {
     "active_preset": "home",
     "available_schedules": [
-      "Thermostat schedule",
-      "off"
+      "off",
+      "Thermostat schedule"
     ],
     "climate_mode": "heat",
     "control_state": "idle",
