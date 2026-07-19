@@ -413,8 +413,8 @@ class SmileLegacyHelper(SmileCommon):
 
     def _schedules(self) -> tuple[list[str], str]:
         """Collect the schedule for the legacy thermostat."""
-        available: list[str] = [NONE]
-        rule_id = selected = NONE
+        available: list[str] = [OFF]
+        rule_id = selected = OFF
         name: str | None = None
 
         search = self._domain_objects
@@ -433,7 +433,7 @@ class SmileLegacyHelper(SmileCommon):
             search.find(f'./rule[@id="{rule_id}"]/directives/when/then') is not None
         )
         if directives and name is not None:
-            available = [name, OFF]
+            available = [OFF, name]
             selected = name if active else OFF
 
         return available, selected
