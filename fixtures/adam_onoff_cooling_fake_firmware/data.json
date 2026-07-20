@@ -91,10 +91,10 @@
   "fa5fa6b34f6b40a0972988b20e888ed4": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "auto",
     "control_state": "idle",

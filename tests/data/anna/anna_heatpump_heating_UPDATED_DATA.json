@@ -32,7 +32,6 @@
       "return_temperature": 25.1,
       "water_pressure": 1.57,
       "outdoor_air_temperature": 3.0
-
     },
     "switches": {
       "dhw_cm_switch": false

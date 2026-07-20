@@ -2,10 +2,10 @@
   "04b15f6e884448288f811d29fb7b1b30": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "cool",
     "control_state": "idle",
@@ -141,10 +141,10 @@
   "20e735858f8146cead98b873177a4f99": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "cool",
     "control_state": "idle",
@@ -269,10 +269,10 @@
   "5cc21042f87f4b4c94ccb5537c47a53f": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "auto",
     "control_state": "idle",
@@ -429,10 +429,10 @@
   "8cf650a4c10c44819e426bed406aec34": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "auto",
     "control_state": "idle",
@@ -475,10 +475,10 @@
   "93ac3f7bf25342f58cbb77c4a99ac0b3": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "cool",
     "control_state": "idle",
@@ -540,10 +540,10 @@
   "9a27714b970547ee9a6bdadc2b815ad5": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "cool",
     "control_state": "idle",
@@ -606,10 +606,10 @@
   "a562019b0b1f47a4bde8ebe3dbe3e8a9": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "auto",
     "control_state": "idle",
@@ -652,10 +652,10 @@
   "b52908550469425b812c87f766fe5303": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "cool",
     "control_state": "idle",
@@ -796,10 +796,10 @@
   "e39529c79ab54fda9bed26cfc0447546": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "cool",
     "control_state": "idle",
@@ -912,10 +912,10 @@
   "fa5fa6b34f6b40a0972988b20e888ed4": {
     "active_preset": "away",
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
     "climate_mode": "auto",
     "control_state": "idle",

@@ -12,7 +12,6 @@ from plugwise.constants import (
     ANNA,
     MAX_SETPOINT,
     MIN_SETPOINT,
-    NONE,
     OFF,
     ActuatorData,
     GwEntityData,
@@ -276,18 +275,18 @@ class SmileData(SmileHelper):
             entity["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        entity["available_schedules"] = []
-        entity["select_schedule"] = None
+        entity["available_schedules"] = [OFF]
+        entity["select_schedule"] = OFF
         self._count += 2
         avail_schedules, sel_schedule = self._schedules(loc_id)
-        if avail_schedules != [NONE]:
+        if avail_schedules != [OFF]:
             entity["available_schedules"] = avail_schedules
             entity["select_schedule"] = sel_schedule
 
         # Set HA climate HVACMode: auto, heat, heat_cool, cool and off
         entity["climate_mode"] = "auto"
         self._count += 1
-        if sel_schedule in (NONE, OFF):
+        if sel_schedule == OFF:
             entity["climate_mode"] = "heat"
             if self._cooling_present:
                 entity["climate_mode"] = (
@@ -297,10 +296,9 @@ class SmileData(SmileHelper):
         if self.check_reg_mode("off"):
             entity["climate_mode"] = "off"
 
-        if NONE not in avail_schedules:
-            self._get_schedule_states_with_off(
-                loc_id, avail_schedules, sel_schedule, entity
-            )
+        self._get_schedule_states_with_off(
+            loc_id, avail_schedules, sel_schedule, entity
+        )
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
@@ -326,15 +324,12 @@ class SmileData(SmileHelper):
     def _get_schedule_states_with_off(
         self, location: str, schedules: list[str], selected: str, entity: GwEntityData
     ) -> None:
-        """Collect schedules with states for each thermostat.
-
-        Also, replace NONE by OFF when none of the schedules are active.
-        """
+        """Collect schedules with states for each thermostat."""
         all_off = True
         self._schedule_old_states[location] = {}
         for schedule in schedules:
-            active: bool = schedule == selected and entity["climate_mode"] == "auto"
             self._schedule_old_states[location][schedule] = "off"
+            active: bool = schedule == selected and entity["climate_mode"] == "auto"
             if active:
                 self._schedule_old_states[location][schedule] = "on"
                 all_off = False
