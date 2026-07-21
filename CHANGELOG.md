@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.14.2
+
+- Implement common typing in functions that are interacting.
+
 ## v1.14.1
 
 - Improve manual fixtures script, reorder set_schedule_state() arguments for better compatibility with set_dhw_mode(), via PR[#897](https://github.com/plugwise/python-plugwise/pull/897)
