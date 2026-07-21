@@ -136,7 +136,7 @@ class SmileLegacyAPI(SmileLegacyData):
         key: str,
         location: str,
         mode: str,
-        length: int,
+        length: int | str | None,
     ) -> None:
         """Set-function placeholder for legacy devices."""
 
@@ -178,7 +178,7 @@ class SmileLegacyAPI(SmileLegacyData):
         _: str,
         loc_id: str,
         option: str,
-        state: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Set the thermostat schedule option."""
         # schedule name corresponds to select option
@@ -188,7 +188,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self,
         _: str,
         name: str | None = None,
-        state: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule.
 

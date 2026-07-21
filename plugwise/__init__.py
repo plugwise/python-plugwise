@@ -358,7 +358,7 @@ class Smile(SmileComm):
         key: str,
         loc_id: str,
         option: str,
-        state: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Set the selected option for the applicable Select."""
         try:
@@ -372,7 +372,7 @@ class Smile(SmileComm):
         self,
         loc_id: str,
         name: str | None = None,
-        state: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         try:
@@ -462,11 +462,7 @@ class Smile(SmileComm):
             ) from exc  # pragma no cover
 
     async def set_dhw_mode(
-        self,
-        key: str,
-        location: str,
-        mode: str,
-        length: int,
+        self, key: str, location: str, mode: str, length: int | str | None = None
     ) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:  # pragma no cover
@@ -474,7 +470,7 @@ class Smile(SmileComm):
                 key,
                 location,
                 mode,
-                length,
+                length=length,
             )  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(

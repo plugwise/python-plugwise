@@ -236,7 +236,7 @@ class SmileAPI(SmileData):
         key: str,
         appl_or_loc_id: str,
         option: str,
-        state: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
@@ -257,7 +257,7 @@ class SmileAPI(SmileData):
                 await self.set_zone_profile(appl_or_loc_id, option)
 
     async def set_dhw_mode(
-        self, key: str, appl_id: str, mode: str, length: int
+        self, key: str, appl_id: str, mode: str, length: int | str | None = None
     ) -> None:
         """Set the domestic hot water mode.
 
@@ -265,8 +265,13 @@ class SmileAPI(SmileData):
         - 2 modes, comfort and off, representing the dhw comfort mode on and off switch states,
         - and the 5 modes available on the Loria.
         """
-        if self._dhw_allowed_modes and mode not in self._dhw_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid dhw mode.")
+        if (
+            self._dhw_allowed_modes
+            and mode not in self._dhw_allowed_modes
+            or length is None
+            or not isinstance(length, int)
+        ):
+            raise PlugwiseError("Plugwise: invalid dhw mode or invalid dhw modes list.")
 
         match length:
             case 2:
@@ -346,7 +351,7 @@ class SmileAPI(SmileData):
         await self.call_request(uri, method="post", data=data)
 
     async def set_schedule_state(
-        self, loc_id: str, name: str | None = None, state: str | None = None
+        self, loc_id: str, name: str | None = None, state: int | str | None = None
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
