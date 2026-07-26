@@ -204,7 +204,8 @@ class Smile(SmileComm):
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
-            self.smile.wifi_mac_address = gateway.find("wifi_mac_address").text
+            if (wifi_mac := gateway.find("wifi_mac_address")) is not None:
+                self.smile.wifi_mac_address = wifi_mac.text
             if (vendor_model := gateway.find("vendor_model")) is not None:
                 model = vendor_model.text
 
