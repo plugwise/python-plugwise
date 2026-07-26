@@ -2,7 +2,7 @@
 
 import pytest
 
-from .test_init import _LOGGER, TestPlugwise, pw_exceptions
+from .test_init import TestPlugwise
 
 SMILE_TYPE = "anna"
 # Reoccuring constants
@@ -173,7 +173,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await api.close_connection()
         await self.disconnect(server, client)
-
 
     @pytest.mark.asyncio
     async def test_connect_anna_loria_cooling_active(self):

@@ -2,7 +2,7 @@
 
 import pytest
 
-from .test_init import _LOGGER, TestPlugwise, pw_exceptions
+from .test_init import TestPlugwise
 
 SMILE_TYPE = "p1"
 

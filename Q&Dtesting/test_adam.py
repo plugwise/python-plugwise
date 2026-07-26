@@ -2,7 +2,7 @@
 
 import pytest
 
-from .test_init import _LOGGER, TestPlugwise, pw_exceptions
+from .test_init import TestPlugwise
 
 SMILE_TYPE = "adam"
 
@@ -36,10 +36,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = await self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, api, client = await self.connect_wrapper()
         await self.device_test(api, "2025-10-12 00:00:01", testdata)
-        
+
         await api.close_connection()
         await self.disconnect(server, client)
-
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new_regulation_off(self):
@@ -64,7 +63,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await api.close_connection()
         await self.disconnect(server, client)
-
 
     @pytest.mark.asyncio
     async def test_connect_adam_multiple_devices_per_zone(self):
