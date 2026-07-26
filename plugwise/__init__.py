@@ -85,6 +85,7 @@ class Smile(SmileComm):
         self.smile.name = NONE
         self.smile.type = NONE
         self.smile.version = Version("0.0.0")
+        self.smile.wifi_mac_address = None
         self.smile.zigbee_mac_address = None
 
     @property
@@ -203,6 +204,7 @@ class Smile(SmileComm):
             self.smile.hw_version = gateway.find("hardware_version").text
             self.smile.hostname = gateway.find("hostname").text
             self.smile.mac_address = gateway.find("mac_address").text
+            self.smile.wifi_mac_address = gateway.find("wifi_mac_address").text
             if (vendor_model := gateway.find("vendor_model")) is not None:
                 model = vendor_model.text
 
