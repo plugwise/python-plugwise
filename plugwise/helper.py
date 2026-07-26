@@ -127,6 +127,7 @@ class SmileHelper(SmileCommon):
             appl.module_id = None
             appl.name = appliance.find("name").text
             appl.pwclass = appliance.find("type").text
+            appl.wifi_mac_address = None
             appl.zigbee_mac = None
             appl.vendor_name = None
 
@@ -289,6 +290,7 @@ class SmileHelper(SmileCommon):
         appl.model_id = self.smile.model_id
         appl.name = self.smile.name
         appl.vendor_name = "Plugwise"
+        appl.wifi_mac_address = self.smile.wifi_mac_address
 
         # Adam: collect the ZigBee MAC address of the Smile
         if self.check_name(ADAM):
