@@ -110,6 +110,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.model_id = None
             appl.name = appliance.find("name").text
             appl.vendor_name = None
+            appl.wifi_mac_address = None
             appl.zigbee_mac = None
 
             # Skip thermostats that have this key, should be an orphaned device (Core #81712)
@@ -241,6 +242,7 @@ class SmileLegacyHelper(SmileCommon):
         appl.model_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
+        appl.wifi_mac_address = None
         appl.zigbee_mac = None
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_entity_info_finder(location, appl)
