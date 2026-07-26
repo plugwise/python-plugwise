@@ -160,6 +160,7 @@ class SmileCommon:
             "model_id": appl.model_id,
             "name": appl.name,
             "vendor": appl.vendor_name,
+            "wifi_mac_address": appl.wifi_mac_address,
             "zigbee_mac_address": appl.zigbee_mac,
         }.items():
             if value is not None or key == "location":
