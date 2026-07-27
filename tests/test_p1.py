@@ -28,7 +28,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert self.entity_items == 33
+        assert self.entity_items == 34
         assert not self.notifications
 
         # Now change some data and change directory reading xml from
@@ -78,7 +78,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
-        assert self.entity_items == 42
+        assert self.entity_items == 43
         assert self.notifications
 
         await api.close_connection()
