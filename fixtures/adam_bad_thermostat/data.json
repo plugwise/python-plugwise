@@ -139,6 +139,7 @@
       "outdoor_temperature": 15.6
     },
     "vendor": "Plugwise",
+    "wifi_mac_address": "C493004A803C",
     "zigbee_mac_address": "000D6F000DB9F188"
   }
 }
