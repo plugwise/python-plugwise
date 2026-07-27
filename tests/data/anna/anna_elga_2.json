@@ -94,6 +94,7 @@
     "sensors": {
       "outdoor_temperature": 6.38
     },
-    "vendor": "Plugwise"
+    "vendor": "Plugwise",
+    "wifi_mac_address": "C4930002FE77"
   }
 }
