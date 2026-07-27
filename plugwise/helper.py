@@ -192,7 +192,7 @@ class SmileHelper(SmileCommon):
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.vendor_name = module_data["vendor_name"]
-        appl.wifi_mac_address = self.smile.wifi_mac_address
+        appl.wifi_mac_address = None
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
