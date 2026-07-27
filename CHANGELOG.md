@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Collect wifi_mac_address [#904](https://github.com/plugwise/python-plugwise/issues/904)
+
 ## v1.14.6
 
 - Bugfixes: fix domestic hot water comfort switching, dhw modes selection issues reported in Core issue [#178699](https://github.com/home-assistant/core/issues/178699) via PR [#914](https://github.com/plugwise/python-plugwise/pull/914)
