@@ -200,7 +200,7 @@ def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
     float_measure = float(measure)
     if unit == PERCENTAGE:
-        if 0 <= float_measure <= 1: # support older firmare
+        if 0 <= float_measure <= 1:  # support older firmware
             return int(float_measure * 100)
 
         return int(float_measure)

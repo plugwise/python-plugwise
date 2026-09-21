@@ -81,7 +81,7 @@
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
-      "modulation_level": 0.0,
+      "modulation_level": 0,
       "outdoor_air_temperature": 13.5,
       "return_temperature": 24.9,
       "water_pressure": 2.0,

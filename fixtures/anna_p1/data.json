@@ -59,7 +59,7 @@
     "select_dhw_mode": "comfort",
     "sensors": {
       "intended_boiler_temperature": 0.0,
-      "modulation_level": 0.0,
+      "modulation_level": 0,
       "water_pressure": 6.0,
       "water_temperature": 35.0
     },
