@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v1.14.7
 
 - Adapt to percentages being shown as 0-100 instead of 0-1, solving Issue [#903](https://github.com/plugwise/python-plugwise/issues/903)
 - Collect wifi_mac_address [#904](https://github.com/plugwise/python-plugwise/issues/904)
