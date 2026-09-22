@@ -75,7 +75,7 @@
       "setpoint": 25.0,
       "temperature": 24.8,
       "temperature_difference": -0.4,
-      "valve_position": 100.0
+      "valve_position": 100
     },
     "temperature_offset": {
       "lower_bound": -2.0,

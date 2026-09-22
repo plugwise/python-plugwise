@@ -199,8 +199,11 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
 def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
     float_measure = float(measure)
-    if unit == PERCENTAGE and 0 < float_measure <= 1:
-        return int(float_measure * 100)
+    if unit == PERCENTAGE:
+        if 0 < float_measure <= 1:  # support older firmware
+            return int(float_measure * 100)
+
+        return int(float_measure)
 
     if unit == ENERGY_KILO_WATT_HOUR:
         float_measure = float_measure / 1000

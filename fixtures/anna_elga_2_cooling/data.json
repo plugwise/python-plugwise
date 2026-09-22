@@ -29,7 +29,7 @@
     "sensors": {
       "domestic_hot_water_setpoint": 60.0,
       "intended_boiler_temperature": 0.0,
-      "modulation_level": 0.0,
+      "modulation_level": 0,
       "outdoor_air_temperature": 30.0,
       "return_temperature": 23.4,
       "water_pressure": 0.5,

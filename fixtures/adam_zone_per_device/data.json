@@ -226,7 +226,7 @@
       "setpoint": 14.0,
       "temperature": 19.1,
       "temperature_difference": -0.3,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -377,7 +377,7 @@
       "setpoint": 13.0,
       "temperature": 17.1,
       "temperature_difference": -0.1,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -520,7 +520,7 @@
       "setpoint": 16.0,
       "temperature": 16.9,
       "temperature_difference": 0.1,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -588,7 +588,7 @@
       "setpoint": 5.5,
       "temperature": 15.6,
       "temperature_difference": 0.1,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
