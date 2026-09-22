@@ -85,6 +85,7 @@ class Smile(SmileComm):
         self.smile.name = NONE
         self.smile.type = NONE
         self.smile.version = Version("0.0.0")
+        self.smile.wifi_mac_address = None
         self.smile.zigbee_mac_address = None
 
     @property
@@ -197,26 +198,10 @@ class Smile(SmileComm):
         self, dsmrmain: etree.Element, result: etree.Element
     ) -> str:
         """Collect smile/gateway data."""
-        model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
-            self.smile.version = parse(gateway.find("firmware_version").text)
-            self.smile.hw_version = gateway.find("hardware_version").text
-            self.smile.hostname = gateway.find("hostname").text
-            self.smile.mac_address = gateway.find("mac_address").text
-            if (vendor_model := gateway.find("vendor_model")) is not None:
-                model = vendor_model.text
-
-            # Check for Anna P1 function
-            elec_point_meters = result.findall(
-                "./location/logs/point_log/electricity_point_meter"
-            )
-            if model == "smile_thermo":
-                for meter in elec_point_meters:
-                    if meter.get("id"):
-                        self.smile.anna_p1 = True
-                        break
+            model = self._collect_gateway_data(gateway, result)
         else:
-            model = await self._smile_detect_legacy(result, dsmrmain, model)
+            model = await self._smile_detect_legacy(result, dsmrmain, "Unknown")
 
         if model == "Unknown" or self.smile.version == Version(
             "0.0.0"
@@ -228,6 +213,29 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
+        return model
+
+    def _collect_gateway_data(
+        self, gateway: etree.Element, result: etree.Element
+    ) -> str:
+        """Collect data from a current-generation gateway."""
+        self.smile.version = parse(gateway.find("firmware_version").text)
+        self.smile.hw_version = gateway.find("hardware_version").text
+        self.smile.hostname = gateway.find("hostname").text
+        self.smile.mac_address = gateway.find("mac_address").text
+        if (wifi_mac := gateway.find("wifi_mac_address")) is not None:
+            self.smile.wifi_mac_address = wifi_mac.text
+
+        model: str = gateway.findtext("vendor_model", "Unknown")
+        if model == "smile_thermo":
+            has_anna_p1 = any(
+                meter.get("id")
+                for meter in result.findall(
+                    "./location/logs/point_log/electricity_point_meter"
+                )
+            )
+            if has_anna_p1:
+                self.smile.anna_p1 = True
         return model
 
     def _process_for_thermostat(self, result: etree.Element) -> None:

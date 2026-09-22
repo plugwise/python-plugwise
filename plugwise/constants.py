@@ -298,6 +298,7 @@ ApplianceType = Literal[
     "model_id",
     "name",
     "vendor",
+    "wifi_mac_address",
     "zigbee_mac_address",
 ]
 
@@ -551,6 +552,7 @@ class GwEntityData(TypedDict, total=False):
     model_id: str | None
     name: str
     vendor: str
+    wifi_mac_address: str
     zigbee_mac_address: str
 
     # For temporary use
