@@ -30,6 +30,7 @@ dependencies    = [
         "aiohttp>=3.14",
         "defusedxml",
         "munch",
+        "packaging",
         "python-dateutil",
 ]
 
