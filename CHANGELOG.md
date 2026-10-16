@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Add support for the Scan(HA), Stealth(HA) and Switch(HA)
 - Declare `packaging` as a dependency; `import plugwise` failed on a clean install without it
 
 ## v1.14.7
