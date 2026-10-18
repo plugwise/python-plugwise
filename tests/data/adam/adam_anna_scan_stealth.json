@@ -3,8 +3,15 @@
     "available": true,
     "binary_sensors": {
       "dhw_state": false,
-      "flame_state": true,
-      "heating_state": true
+      "flame_state": false,
+      "heating_state": false
+    },
+    "boiler_temperature": {
+      "current": 20.0,
+      "lower_bound": 25.0,
+      "resolution": 0.01,
+      "setpoint": 50.0,
+      "upper_bound": 95.0
     },
     "dev_class": "heater_central",
     "dhw_modes": [
@@ -12,35 +19,16 @@
       "eco"
     ],
     "location": "bc93488efab249e5bc54fd7e175a6f91",
-    "boiler_temperature": {
-      "current": 43.0,
-      "lower_bound": 25.0,
-      "resolution": 0.01,
-      "setpoint": 50.0,
-      "upper_bound": 95.0
-    },
     "model": "Generic heater",
     "name": "OpenTherm",
     "select_dhw_mode": "eco",
     "sensors": {
-      "intended_boiler_temperature": 22.5,
-      "water_temperature": 43.0
+      "intended_boiler_temperature": 0.0,
+      "water_temperature": 20.0
     },
     "switches": {
       "dhw_cm_switch": false
     }
-  },
-  "10016900610d4c7481df78c89606ef22": {
-    "available": true,
-    "dev_class": "valve_actuator_plug",
-    "location": "d9786723dbcf4f19b5c629a54629f9c7",
-    "model_id": "TS0011",
-    "name": "Aanvoer water afsluiter (nous lz3)",
-    "switches": {
-      "relay": false
-    },
-    "vendor": "_TZ3000_abjodzas",
-    "zigbee_mac_address": "A4C13862AF9917B1"
   },
   "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6": {
     "available": true,
@@ -48,17 +36,17 @@
       "low_battery": false
     },
     "dev_class": "zone_thermostat",
-    "firmware": "2025-11-10T01:00:00+01:00",
+    "firmware": "2026-03-26T01:00:00+01:00",
     "hardware": "1",
-    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+    "location": "8201a2ac4d1b4303bf994e18d67311eb",
     "model": "Emma Pro",
     "model_id": "170-01",
     "name": "Emma",
     "sensors": {
-      "battery": 100,
-      "humidity": 65.0,
-      "setpoint": 20.5,
-      "temperature": 19.7
+      "battery": 32,
+      "humidity": 61.8,
+      "setpoint": 15.0,
+      "temperature": 20.0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -67,7 +55,7 @@
       "upper_bound": 2.0
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "60EFABFFFE89CBA0"
+    "zigbee_mac_address": "60EFABFFFE89965C"
   },
   "1772a4ea304041adb83f357b751341ff": {
     "available": true,
@@ -82,11 +70,11 @@
     "model_id": "106-03",
     "name": "Tom Badkamer",
     "sensors": {
-      "battery": 60,
-      "setpoint": 20.0,
-      "temperature": 19.0,
+      "battery": 99,
+      "setpoint": 15.0,
+      "temperature": 18.6,
       "temperature_difference": -0.4,
-      "valve_position": 100
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -95,7 +83,7 @@
       "upper_bound": 2.0
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "000D6F000C8FCBA0"
+    "zigbee_mac_address": "000D6F000C8FF5EE"
   },
   "2568cc4b9c1e401495d4741a5f89bee1": {
     "available": true,
@@ -106,17 +94,17 @@
     "model_id": "160-01",
     "name": "Plug MediaTV",
     "sensors": {
-      "electricity_consumed": 15.8,
-      "electricity_consumed_interval": 4.0,
+      "electricity_consumed": 25.2,
+      "electricity_consumed_interval": 7.0,
       "electricity_produced": 0.0,
       "electricity_produced_interval": 0.0
     },
     "switches": {
-      "lock": true,
+      "lock": false,
       "relay": true
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "000D6F000D13CBA1"
+    "zigbee_mac_address": "000D6F000D13CCFD"
   },
   "29542b2b6a6a4169acecc15c72a599b8": {
     "available": true,
@@ -133,58 +121,107 @@
       "electricity_produced_interval": 0.0
     },
     "switches": {
-      "lock": false,
+      "lock": true,
       "relay": true
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "000D6F000D13CBA2"
+    "zigbee_mac_address": "000D6F000D13CA9A"
   },
-  "67d73d0bd469422db25a618a5fb8eeb0": {
-    "available": true,
-    "dev_class": "heater_central_plug",
-    "location": "b4f211175e124df59603412bafa77a34",
-    "model": "Aqara Smart Plug",
-    "model_id": "lumi.plug.maeu01",
-    "name": "SmartPlug Floor 0",
+  "8201a2ac4d1b4303bf994e18d67311eb": {
+    "active_preset": "away",
+    "available_schedules": [
+      "off"
+    ],
+    "climate_mode": "heat",
+    "control_state": "idle",
+    "dev_class": "climate",
+    "model": "ThermoZone",
+    "name": "Bijkeuken",
+    "preset_modes": [
+      "vacation",
+      "no_frost",
+      "asleep",
+      "home",
+      "away"
+    ],
+    "select_schedule": "off",
+    "select_zone_profile": "off",
     "sensors": {
-      "electricity_consumed_interval": 0.0
+      "electricity_consumed": 5.06,
+      "electricity_produced": 0.0,
+      "temperature": 19.5
     },
-    "switches": {
-      "lock": false,
-      "relay": true
+    "thermostat": {
+      "lower_bound": 0.0,
+      "resolution": 0.01,
+      "setpoint": 15.0,
+      "upper_bound": 100.0
     },
-    "vendor": "LUMI",
-    "zigbee_mac_address": "54EF4410002C97F2"
+    "thermostats": {
+      "primary": [
+        "ad4838d7d35c4d6ea796ee12ae5aedf8",
+        "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6"
+      ],
+      "secondary": []
+    },
+    "vendor": "Plugwise",
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "854f8a9b0e7e425db97f1f110e1ce4b3": {
     "available": true,
     "dev_class": "central_heating_pump_plug",
     "firmware": "2020-11-10T01:00:00+01:00",
-    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+    "location": "8201a2ac4d1b4303bf994e18d67311eb",
     "model": "Plug",
     "model_id": "160-01",
     "name": "Plug Vloerverwarming",
     "sensors": {
-      "electricity_consumed": 45.0,
-      "electricity_consumed_interval": 12.0,
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
       "electricity_produced": 0.0,
       "electricity_produced_interval": 0.0
     },
     "switches": {
+      "relay": false
+    },
+    "vendor": "Plugwise",
+    "zigbee_mac_address": "000D6F000D13CB6F"
+  },
+  "8926527679e14b948c7ca7e180445bb8": {
+    "available": true,
+    "dev_class": "solarpanel_plug",
+    "firmware": "2026-07-14T02:00:00+02:00",
+    "hardware": "1",
+    "location": "8201a2ac4d1b4303bf994e18d67311eb",
+    "model": "Stealth",
+    "model_id": "173-01",
+    "name": "Stealth F84477FFFECD6E0E",
+    "sensors": {
+      "electricity_consumed": 4.38,
+      "electricity_consumed_interval": 3.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
+    },
+    "switches": {
+      "lock": true,
       "relay": true
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "000D6F000D13CBA0"
+    "zigbee_mac_address": "F84477FFFECD6E0E"
   },
   "ad4838d7d35c4d6ea796ee12ae5aedf8": {
     "dev_class": "thermostat",
-    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+    "location": "8201a2ac4d1b4303bf994e18d67311eb",
     "model": "ThermoTouch",
     "model_id": "143.1",
     "name": "Anna",
     "sensors": {
-      "setpoint": 20.5,
-      "temperature": 20.1
+      "setpoint": 15.0,
+      "temperature": 19.5
     },
     "vendor": "Plugwise"
   },
@@ -192,14 +229,14 @@
     "dev_class": "pumping",
     "members": [
       "854f8a9b0e7e425db97f1f110e1ce4b3",
-      "ad4838d7d35c4d6ea796ee12ae5aedf8"
+      "da575e9e09b947e281fb6e3ebce3b174"
     ],
     "model": "Group",
     "name": "Vloerverwarming",
     "sensors": {
-      "electricity_consumed": 45.0,
+      "electricity_consumed": 0.0,
       "electricity_produced": 0.0,
-      "temperature": 20.1
+      "temperature": 18.5
     },
     "vendor": "Plugwise"
   },
@@ -208,7 +245,7 @@
       "plugwise_notification": false
     },
     "dev_class": "gateway",
-    "firmware": "3.9.0",
+    "firmware": "3.12.6",
     "gateway_modes": [
       "away",
       "full",
@@ -216,25 +253,25 @@
     ],
     "hardware": "AME Smile 2.0 board",
     "location": "bc93488efab249e5bc54fd7e175a6f91",
-    "mac_address": "D40FB201CBA0",
+    "mac_address": "D40FB2019891",
     "model": "Gateway",
     "model_id": "smile_open_therm",
     "name": "Adam",
     "notifications": {},
     "regulation_modes": [
-      "bleeding_cold",
       "heating",
       "off",
-      "bleeding_hot"
+      "bleeding_hot",
+      "bleeding_cold"
     ],
     "select_gateway_mode": "full",
     "select_regulation_mode": "heating",
     "sensors": {
-      "outdoor_temperature": 15.1
+      "outdoor_temperature": 9.5
     },
     "vendor": "Plugwise",
-    "wifi_mac_address": "D40FB201CBA0",
-    "zigbee_mac_address": "000D6F000D5ACBA0"
+    "wifi_mac_address": "D40FB2019892",
+    "zigbee_mac_address": "000D6F000D5A168D"
   },
   "da575e9e09b947e281fb6e3ebce3b174": {
     "available": true,
@@ -249,13 +286,13 @@
     "model_id": "168-01",
     "name": "Jip",
     "sensors": {
-      "battery": 100,
-      "humidity": 65.8,
-      "setpoint": 20.5,
-      "temperature": 20.4
+      "battery": 88,
+      "humidity": 63.2,
+      "setpoint": 16.5,
+      "temperature": 18.5
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "70AC08FFFEE1CBA0"
+    "zigbee_mac_address": "70AC08FFFEE16437"
   },
   "e2f4322d57924fa090fbbc48b3a140dc": {
     "available": true,
@@ -263,16 +300,16 @@
       "low_battery": false
     },
     "dev_class": "zone_thermostat",
-    "firmware": "2016-10-10T02:00:00+02:00",
+    "firmware": "2020-11-23T01:00:00+01:00",
     "hardware": "255",
     "location": "f871b8c4d63549319221e294e4f88074",
     "model": "Lisa",
     "model_id": "158-01",
     "name": "Lisa Badkamer",
     "sensors": {
-      "battery": 71,
-      "setpoint": 20.0,
-      "temperature": 18.7
+      "battery": 100,
+      "setpoint": 15.0,
+      "temperature": 18.2
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -281,7 +318,7 @@
       "upper_bound": 2.0
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "000D6F000C86CBA0"
+    "zigbee_mac_address": "000D6F000C869B61"
   },
   "e8ef2a01ed3b4139a53bf749204fe6b4": {
     "dev_class": "switching",
@@ -292,7 +329,7 @@
     "model": "Group",
     "name": "Test",
     "sensors": {
-      "electricity_consumed": 16.5,
+      "electricity_consumed": 25.9,
       "electricity_produced": 0.0
     },
     "switches": {
@@ -301,16 +338,12 @@
     "vendor": "Plugwise"
   },
   "f2bf9048bef64cc5b6d5110154e33c81": {
-    "active_preset": "home",
+    "active_preset": "away",
     "available_schedules": [
-      "off",
-      "Badkamer",
-      "Vakantie",
-      "Weekschema",
-      "Test"
+      "off"
     ],
-    "climate_mode": "auto",
-    "control_state": "heating",
+    "climate_mode": "heat",
+    "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Living room",
@@ -321,23 +354,21 @@
       "home",
       "away"
     ],
-    "select_schedule": "Weekschema",
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
-      "electricity_consumed": 60.8,
+      "electricity_consumed": 25.2,
       "electricity_produced": 0.0,
-      "temperature": 19.7
+      "temperature": 18.5
     },
     "thermostat": {
       "lower_bound": 1.0,
       "resolution": 0.01,
-      "setpoint": 20.5,
+      "setpoint": 16.5,
       "upper_bound": 35.0
     },
     "thermostats": {
       "primary": [
-        "ad4838d7d35c4d6ea796ee12ae5aedf8",
-        "14df5c4dc8cb4ba69f9d1ac0eaf7c5c6",
         "da575e9e09b947e281fb6e3ebce3b174"
       ],
       "secondary": []
@@ -350,13 +381,9 @@
     ]
   },
   "f871b8c4d63549319221e294e4f88074": {
-    "active_preset": "vacation",
+    "active_preset": "away",
     "available_schedules": [
-      "off",
-      "Badkamer",
-      "Vakantie",
-      "Weekschema",
-      "Test"
+      "off"
     ],
     "climate_mode": "heat",
     "control_state": "idle",
@@ -375,12 +402,12 @@
     "sensors": {
       "electricity_consumed": 0.0,
       "electricity_produced": 0.0,
-      "temperature": 18.7
+      "temperature": 18.2
     },
     "thermostat": {
       "lower_bound": 0.0,
       "resolution": 0.01,
-      "setpoint": 20.0,
+      "setpoint": 15.0,
       "upper_bound": 99.9
     },
     "thermostats": {
