@@ -173,6 +173,9 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "relay": UOM(NONE),
+    #####################
+    # Specific for a Scan
+    "motion_detection": UOM(NONE),
 }
 
 # Heater Central related measurements
@@ -285,6 +288,7 @@ REQUIRE_APPLIANCES: Final[tuple[str, ...]] = (
 
 ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "heater_central",
+    "motion_sensor",
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
@@ -292,8 +296,10 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
 )
 ActuatorType = Literal[
     "domestic_hot_water_setpoint",
+    "illuminance_detection",
     "maximum_boiler_temperature",
     "max_dhw_temperature",
+    "motion_detection",
     "temperature_offset",
     "thermostat",
 ]
@@ -365,6 +371,7 @@ BinarySensorType = Literal[
     "flame_state",
     "heating_state",
     "low_battery",
+    "motion_detected",
     "plugwise_notification",
     "secondary_boiler_state",
 ]
