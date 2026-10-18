@@ -153,7 +153,7 @@ def common_match_cases(
     data: GwEntityData,
 ) -> None:
     """Helper-function for common match-case execution."""
-    value = location.text in ("on", "true")
+    value = location.text in ("on", "true", "motion_detected")
     match measurement:
         case _ as measurement if measurement in BINARY_SENSORS:
             bs_key = cast(BinarySensorType, measurement)
