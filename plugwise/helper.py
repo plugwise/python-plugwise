@@ -478,6 +478,8 @@ class SmileHelper(SmileCommon):
                     case "select_dhw_mode":
                         self._select_dhw_mode(appl_p_loc.text, data, old_measurement)
 
+                if measurement == "motion_detection"   :
+                    LOGGER.debug("HOI %s, %s, %s", measurement, appl_p_loc.text, data)
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
