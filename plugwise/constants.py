@@ -340,7 +340,7 @@ BinarySensorType = Literal[
     "flame_state",
     "heating_state",
     "low_battery",
-    "motion_detected",
+    "motion_detection",
     "plugwise_notification",
     "secondary_boiler_state",
 ]
