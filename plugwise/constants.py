@@ -474,6 +474,7 @@ class SmileBinarySensors(TypedDict, total=False):
     flame_state: bool
     heating_state: bool
     low_battery: bool
+    motion_detection: bool
     plugwise_notification: bool
     secondary_boiler_state: bool
 
