@@ -247,7 +247,7 @@ class SmileHelper(SmileCommon):
                 self._collect_dhw_modes(appliance)
 
                 return appl
-            case _ as s if s.endswith("_plug"):
+            case _ as s if s.endswith("_plug") or s == "motion_sensor":
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
                 locator = MODULE_LOCATOR
                 module_data = self._get_module_data(appliance, locator)
