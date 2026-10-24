@@ -96,7 +96,7 @@ jobs:
       - cache
       - prepare
       - ruff
-      - shellcheck
+      - checks
       - dependencies_check
     steps:
       - name: Check out committed code
