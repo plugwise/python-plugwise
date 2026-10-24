@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Add support for the Scan(HA), Stealth(HA) and Switch(HA)
 - Improve code, lower complexity via PR [#951](https://github.com/plugwise/python-plugwise/pull/951)
 
 ## v1.17.0
@@ -30,7 +31,6 @@
 
 ## v1.14.8
 
-- Add support for the Scan(HA), Stealth(HA) and Switch(HA)
 - Fix for issue [#933](https://github.com/plugwise/python-plugwise/issues/933) via PR [#934](https://github.com/plugwise/python-plugwise/pull/934)
 - Declare `packaging` as a dependency; `import plugwise` failed on a clean install without it
 
