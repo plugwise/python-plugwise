@@ -96,7 +96,7 @@ jobs:
       - cache
       - prepare
       - ruff
-      - shellcheck
+      - checks
       - dependencies_check
     steps:
       - name: Check out committed code
@@ -183,15 +183,23 @@ jobs:
           pip list | grep -i mypy
           mypy plugwise/
 
-  # Check shellscripts
-  shellcheck:
-    name: Shellcheck
+  # Check shellscripts and core requirements
+  checks:
+    name: Check shellscrips and core dependencies
     runs-on: ubuntu-latest
+    permissions:
+        contents: read
     steps:
       - name: Check out committed code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38
+      - name: Check against HA Core release
+        uses: chemelli74/ha-core-dependency-check/release@c036686f47c5badcb254d5cd3c93344ea8dd0bf8 # v1.2.0
+      - name: Check against HA Core dev
+        uses: chemelli74/ha-core-dependency-check/dev@c036686f47c5badcb254d5cd3c93344ea8dd0bf8 # v1.2.0
 
   # Check for missing python dependencies
   dependencies_check:
