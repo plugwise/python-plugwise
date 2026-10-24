@@ -943,18 +943,15 @@ class SmileHelper(SmileCommon):
         schedule_ids: dict[str, dict[str, str]] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
-            active = rule.find("active").text
             if rule.find(locator) is not None:
                 schedule_ids[rule.get("id")] = {
                     "location": loc_id,
                     "name": name,
-                    "active": active,
                 }
             else:
                 schedule_ids[rule.get("id")] = {
                     "location": NONE,
                     "name": name,
-                    "active": active,
                 }
 
         return schedule_ids
@@ -970,18 +967,15 @@ class SmileHelper(SmileCommon):
         for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
                 name = rule.find("name").text
-                active = rule.find("active").text
                 if rule.find(locator2) is not None:
                     schedule_ids[rule.get("id")] = {
                         "location": loc_id,
                         "name": name,
-                        "active": active,
                     }
                 else:
                     schedule_ids[rule.get("id")] = {
                         "location": NONE,
                         "name": name,
-                        "active": active,
                     }
 
         return schedule_ids
