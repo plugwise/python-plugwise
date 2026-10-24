@@ -1,7 +1,8 @@
 # Changelog
 
-## Ongoing
+## v1.14.8
 
+- Fix for issue [#933](https://github.com/plugwise/python-plugwise/issues/933) via PR [#934](https://github.com/plugwise/python-plugwise/pull/934)
 - Declare `packaging` as a dependency; `import plugwise` failed on a clean install without it
 
 ## v1.14.7
