@@ -1001,7 +1001,6 @@ class SmileHelper(SmileCommon):
 
         schedules: list[str] = []
         for rule_id, data in rule_ids.items():
-            active = data["active"] == "true"
             name = data["name"]
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
@@ -1009,7 +1008,7 @@ class SmileHelper(SmileCommon):
                 continue  # pragma: no cover
 
             available.append(name)
-            if location == data["location"] and active:
+            if location == data["location"]:
                 selected = name
             schedules.append(name)
 
