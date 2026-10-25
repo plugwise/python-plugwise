@@ -28,6 +28,9 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
+    SCHEDULE_NUMBERS,
+    SCHEDULE_PERIOD,
+    SCHEDULE_TAG,
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
@@ -38,6 +41,8 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     GwEntityData,
+    ScheduleData,
+    ScheduleSlot,
     SensorType,
     ThermoLoc,
     ToggleNameType,
@@ -1033,6 +1038,43 @@ class SmileHelper(SmileCommon):
             schedules.append(name)
 
         return available, selected
+
+    def _schedule_rules(self) -> dict[str, ScheduleData]:
+        """Helper-function for data.py: _update_gw_entities().
+
+        Collect every weekly schedule on the gateway, keyed by rule id.
+        """
+        schedules: dict[str, ScheduleData] = {}
+        locator = f'./template[@tag="{SCHEDULE_TAG}"]'
+        for rule in self._domain_objects.findall("./rule"):
+            if rule.find(locator) is None or rule.find("directives") is None:
+                continue
+
+            slots: list[ScheduleSlot] = []
+            for when in rule.findall("directives/when"):
+                slot: ScheduleSlot = {}
+                for key, value in when.attrib.items():
+                    # time is a week interval: "[mo 07:15,mo 16:30)"
+                    if key == "time" and (period := SCHEDULE_PERIOD.fullmatch(value)):
+                        slot["start"], slot["end"] = period.groups()
+                    else:
+                        slot[key] = value
+                if (then := when.find("then")) is not None:
+                    for key, value in then.attrib.items():
+                        slot[key] = float(value) if key in SCHEDULE_NUMBERS else value
+                slots.append(slot)
+
+            schedules[rule.get("id")] = {
+                "name": rule.findtext("name", ""),
+                "active": rule.findtext("active") == "true",
+                "zones": [
+                    location.get("id")
+                    for location in rule.findall("contexts/context/zone/location")
+                ],
+                "slots": slots,
+            }
+
+        return schedules
 
     def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().

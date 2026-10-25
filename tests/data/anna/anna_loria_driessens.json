@@ -16,7 +16,389 @@
       "outdoor_temperature": 6.81
     },
     "vendor": "Plugwise",
-    "wifi_mac_address": "D40FB2011557"
+    "wifi_mac_address": "D40FB2011557",
+    "schedules": {
+      "d4e04f5167ab43348e00c0a45b50a2bb": {
+        "name": "Verwarmen@9-23u",
+        "active": true,
+        "zones": [
+          "fa70e08550c94de3a34feb27ecf31421"
+        ],
+        "slots": [
+          {
+            "start": "mo 09:15",
+            "end": "mo 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "tu 09:15",
+            "end": "tu 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "we 09:15",
+            "end": "we 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "th 09:15",
+            "end": "th 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 09:15",
+            "end": "sa 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "su 09:15",
+            "end": "su 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "mo 23:00",
+            "end": "tu 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 23:00",
+            "end": "we 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 23:00",
+            "end": "th 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 23:00",
+            "end": "fr 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 23:00",
+            "end": "sa 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 23:00",
+            "end": "su 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "su 23:00",
+            "end": "mo 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "mo 09:00",
+            "end": "mo 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "tu 09:00",
+            "end": "tu 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "we 09:00",
+            "end": "we 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "th 09:00",
+            "end": "th 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "sa 09:00",
+            "end": "sa 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "su 09:00",
+            "end": "su 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "fr 09:00",
+            "end": "fr 09:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "fr 09:15",
+            "end": "fr 23:00",
+            "preset": "home"
+          }
+        ]
+      },
+      "68640693f6a445a5993389c636a84435": {
+        "name": "VAKANTIE (winter)",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "mo 10:45",
+            "end": "mo 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "mo 15:30",
+            "end": "tu 10:45",
+            "setpoint": 15.0
+          },
+          {
+            "start": "tu 10:45",
+            "end": "tu 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "tu 15:30",
+            "end": "we 10:45",
+            "setpoint": 15.0
+          },
+          {
+            "start": "we 10:45",
+            "end": "we 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "we 15:30",
+            "end": "th 10:45",
+            "setpoint": 15.0
+          },
+          {
+            "start": "th 10:45",
+            "end": "th 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "th 15:30",
+            "end": "fr 10:45",
+            "setpoint": 15.0
+          },
+          {
+            "start": "fr 10:45",
+            "end": "fr 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "fr 15:30",
+            "end": "sa 10:45",
+            "setpoint": 15.0
+          },
+          {
+            "start": "sa 10:45",
+            "end": "sa 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "sa 15:30",
+            "end": "su 10:45",
+            "setpoint": 15.0
+          },
+          {
+            "start": "su 10:45",
+            "end": "su 15:30",
+            "preset": "away"
+          },
+          {
+            "start": "su 15:30",
+            "end": "mo 10:45",
+            "setpoint": 15.0
+          }
+        ]
+      },
+      "86e18430fa3f49a3a7e89557af183ccb": {
+        "name": "VERWARMEN",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "mo 10:15",
+            "end": "mo 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "mo 17:00",
+            "end": "tu 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 10:15",
+            "end": "tu 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "tu 17:00",
+            "end": "we 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 10:15",
+            "end": "we 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "we 17:00",
+            "end": "th 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 10:15",
+            "end": "th 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "th 17:00",
+            "end": "fr 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 10:15",
+            "end": "fr 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "fr 17:00",
+            "end": "sa 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 10:15",
+            "end": "sa 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 17:00",
+            "end": "su 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "su 10:15",
+            "end": "su 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "su 17:00",
+            "end": "mo 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "mo 10:00",
+            "end": "mo 10:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "tu 10:00",
+            "end": "tu 10:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "we 10:00",
+            "end": "we 10:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "th 10:00",
+            "end": "th 10:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "fr 10:00",
+            "end": "fr 10:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "sa 10:00",
+            "end": "sa 10:15",
+            "setpoint": 21.0
+          },
+          {
+            "start": "su 10:00",
+            "end": "su 10:15",
+            "setpoint": 21.0
+          }
+        ]
+      },
+      "6cfc8d79f7164cd5b0e5d7a8e8d217c3": {
+        "name": "KOELEN",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "mo 08:00",
+            "end": "mo 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "mo 20:00",
+            "end": "tu 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 08:00",
+            "end": "tu 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "tu 20:00",
+            "end": "we 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 08:00",
+            "end": "we 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "we 20:00",
+            "end": "th 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 08:00",
+            "end": "th 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "th 20:00",
+            "end": "fr 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 08:00",
+            "end": "fr 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "fr 20:00",
+            "end": "sa 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 08:00",
+            "end": "sa 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 20:00",
+            "end": "su 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "su 08:00",
+            "end": "su 20:00",
+            "preset": "home"
+          },
+          {
+            "start": "su 20:00",
+            "end": "mo 08:00",
+            "preset": "asleep"
+          }
+        ]
+      }
+    }
   },
   "9fb768d699e44c7fb5cc50309dc4e7d4": {
     "active_preset": "home",

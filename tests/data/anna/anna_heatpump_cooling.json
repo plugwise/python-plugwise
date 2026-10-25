@@ -15,7 +15,71 @@
     "sensors": {
       "outdoor_temperature": 22.0
     },
-    "vendor": "Plugwise"
+    "vendor": "Plugwise",
+    "schedules": {
+      "6bae86c6a4ee44038393abb51c2dfe02": {
+        "name": "standaard",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "su 22:30",
+            "end": "mo 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "mo 22:30",
+            "end": "tu 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 07:00",
+            "end": "tu 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "tu 22:30",
+            "end": "we 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 07:00",
+            "end": "we 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "we 22:30",
+            "end": "th 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 07:00",
+            "end": "th 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "th 22:30",
+            "end": "fr 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 07:00",
+            "end": "su 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "mo 07:00",
+            "end": "mo 10:15",
+            "preset": "home"
+          },
+          {
+            "start": "mo 10:15",
+            "end": "mo 22:30",
+            "preset": "away"
+          }
+        ]
+      }
+    }
   },
   "1cbf783bb11e4a7c8a6843dee3a86927": {
     "available": true,

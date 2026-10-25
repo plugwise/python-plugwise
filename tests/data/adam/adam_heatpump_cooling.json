@@ -452,7 +452,210 @@
       "outdoor_temperature": 13.4
     },
     "vendor": "Plugwise",
-    "zigbee_mac_address": "ABCD012345670101"
+    "zigbee_mac_address": "ABCD012345670101",
+    "schedules": {
+      "09314e39f2bd416a889cc6b65b9c0209": {
+        "name": "Opstaan weekdag",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "su 22:30",
+            "end": "mo 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "mo 22:30",
+            "end": "tu 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 07:00",
+            "end": "tu 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "tu 22:30",
+            "end": "we 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 07:00",
+            "end": "we 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "we 22:30",
+            "end": "th 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 07:00",
+            "end": "th 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "th 22:30",
+            "end": "fr 07:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 07:00",
+            "end": "su 22:30",
+            "preset": "home"
+          },
+          {
+            "start": "mo 07:00",
+            "end": "mo 10:15",
+            "preset": "home"
+          },
+          {
+            "start": "mo 10:15",
+            "end": "mo 22:30",
+            "preset": "away"
+          }
+        ]
+      },
+      "4fed3d61217a408bbee54d56595cd379": {
+        "name": "Werkdag schema",
+        "active": true,
+        "zones": [
+          "fa5fa6b34f6b40a0972988b20e888ed4",
+          "a562019b0b1f47a4bde8ebe3dbe3e8a9",
+          "5cc21042f87f4b4c94ccb5537c47a53f",
+          "8cf650a4c10c44819e426bed406aec34"
+        ],
+        "slots": [
+          {
+            "start": "sa 16:30",
+            "end": "sa 23:30",
+            "preset": "home"
+          },
+          {
+            "start": "su 09:00",
+            "end": "su 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 23:30",
+            "end": "su 09:00",
+            "setpoint": 17.5
+          },
+          {
+            "start": "fr 23:30",
+            "end": "sa 08:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 08:30",
+            "end": "sa 16:30",
+            "preset": "away"
+          },
+          {
+            "start": "su 23:00",
+            "end": "mo 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "mo 23:00",
+            "end": "tu 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 23:00",
+            "end": "we 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 23:00",
+            "end": "th 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 23:00",
+            "end": "fr 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "mo 17:15",
+            "end": "mo 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "tu 08:00",
+            "end": "tu 17:15",
+            "preset": "away"
+          },
+          {
+            "start": "tu 17:15",
+            "end": "tu 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "we 08:00",
+            "end": "we 17:15",
+            "preset": "away"
+          },
+          {
+            "start": "we 17:15",
+            "end": "we 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "th 08:00",
+            "end": "th 17:15",
+            "preset": "away"
+          },
+          {
+            "start": "th 17:15",
+            "end": "th 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "fr 08:00",
+            "end": "fr 17:15",
+            "preset": "away"
+          },
+          {
+            "start": "fr 17:15",
+            "end": "fr 23:30",
+            "preset": "home"
+          },
+          {
+            "start": "mo 08:00",
+            "end": "mo 17:15",
+            "preset": "away"
+          }
+        ]
+      },
+      "cad46f09817f4fcf82de44d0a49cf73c": {
+        "name": "Weekend",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "su 08:30",
+            "end": "su 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "su 23:00",
+            "end": "sa 08:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 08:30",
+            "end": "sa 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 23:00",
+            "end": "su 08:30",
+            "preset": "asleep"
+          }
+        ]
+      }
+    }
   },
   "7fda9f84f01342f8afe9ebbbbff30c0f": {
     "available": true,

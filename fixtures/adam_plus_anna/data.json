@@ -136,6 +136,122 @@
         "error": "There is no OpenTherm communication with the boiler."
       }
     },
+    "schedules": {
+      "12f68057511a4445a162fb307d437cf1": {
+        "active": true,
+        "name": "Weekschema",
+        "slots": [
+          {
+            "end": "su 16:30",
+            "preset": "home",
+            "start": "su 07:30"
+          },
+          {
+            "end": "mo 16:30",
+            "preset": "home",
+            "start": "mo 07:30"
+          },
+          {
+            "end": "tu 16:30",
+            "preset": "home",
+            "start": "tu 07:30"
+          },
+          {
+            "end": "we 16:30",
+            "preset": "home",
+            "start": "we 07:30"
+          },
+          {
+            "end": "th 16:30",
+            "preset": "home",
+            "start": "th 07:30"
+          },
+          {
+            "end": "fr 16:30",
+            "preset": "home",
+            "start": "fr 07:30"
+          },
+          {
+            "end": "sa 16:30",
+            "preset": "home",
+            "start": "sa 07:30"
+          },
+          {
+            "end": "su 22:30",
+            "setpoint": 20.5,
+            "start": "su 16:30"
+          },
+          {
+            "end": "mo 07:30",
+            "preset": "asleep",
+            "start": "su 22:30"
+          },
+          {
+            "end": "mo 22:30",
+            "setpoint": 20.5,
+            "start": "mo 16:30"
+          },
+          {
+            "end": "tu 07:30",
+            "preset": "asleep",
+            "start": "mo 22:30"
+          },
+          {
+            "end": "tu 22:30",
+            "setpoint": 20.5,
+            "start": "tu 16:30"
+          },
+          {
+            "end": "we 07:30",
+            "preset": "asleep",
+            "start": "tu 22:30"
+          },
+          {
+            "end": "we 22:30",
+            "setpoint": 20.5,
+            "start": "we 16:30"
+          },
+          {
+            "end": "th 07:30",
+            "preset": "asleep",
+            "start": "we 22:30"
+          },
+          {
+            "end": "th 22:30",
+            "setpoint": 20.5,
+            "start": "th 16:30"
+          },
+          {
+            "end": "fr 07:30",
+            "preset": "asleep",
+            "start": "th 22:30"
+          },
+          {
+            "end": "fr 22:30",
+            "setpoint": 20.5,
+            "start": "fr 16:30"
+          },
+          {
+            "end": "sa 07:30",
+            "preset": "asleep",
+            "start": "fr 22:30"
+          },
+          {
+            "end": "sa 22:30",
+            "setpoint": 20.5,
+            "start": "sa 16:30"
+          },
+          {
+            "end": "su 07:30",
+            "preset": "asleep",
+            "start": "sa 22:30"
+          }
+        ],
+        "zones": [
+          "009490cc2f674ce6b576863fbb64f867"
+        ]
+      }
+    },
     "sensors": {
       "outdoor_temperature": 11.9
     },

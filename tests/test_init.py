@@ -508,6 +508,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "away_preset_temperature",
                 "vacation_preset_temperature",
                 "no_frost_preset_temperature",
+                "schedules",
             ]
             for testitem, measurements in test_dict.items():
                 item_asserts = 0

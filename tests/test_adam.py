@@ -49,7 +49,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.entity_items == 275
+        assert self.entity_items == 279
         assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
@@ -79,6 +79,29 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert bathroom["home"] == [18.0, 22.0]
         # pylint: disable-next=protected-access
         assert len(api._smile_api._preset_rule_ids("no_such_zone")) == 2
+
+        # pylint: disable-next=protected-access
+        gateway = api._smile_api.gw_entities["da224107914542988a88561b4452b0f6"]
+        schedule = gateway["schedules"]["24df4dace79a4c42a0f4750ce65d84cb"]
+        assert schedule["name"] == "Weekschema"
+        assert schedule["zones"] == ["f2bf9048bef64cc5b6d5110154e33c81"]
+        assert {"start": "su 21:30", "end": "mo 07:15", "preset": "asleep"} in schedule[
+            "slots"
+        ]
+        assert {"start": "mo 07:15", "end": "mo 16:30", "setpoint": 18.5} in schedule[
+            "slots"
+        ]
+        # Attributes the schedule template allows beyond time are kept as they are
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        tree.find('rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when').set(
+            "presence", "true"
+        )
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert slots[0]["presence"] == "true"
 
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
@@ -284,7 +307,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self.entity_items == 486
+        assert self.entity_items == 491
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -358,7 +381,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 494
+        assert self.entity_items == 499
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -395,7 +418,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 743
+        assert self.entity_items == 746
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
@@ -419,7 +442,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 94
+        assert self.entity_items == 97
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
@@ -444,7 +467,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self.entity_items == 105
+        assert self.entity_items == 106
         assert test_items == self.entity_items
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 

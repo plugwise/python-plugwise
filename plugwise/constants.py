@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import namedtuple
 import logging
+import re
 from typing import Final, Literal, TypedDict, get_args
 
 LOGGER = logging.getLogger(__name__)
@@ -551,6 +552,22 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
+SCHEDULE_TAG: Final = "zone_preset_based_on_time_and_presence_with_override"
+SCHEDULE_PERIOD: Final = re.compile(r"\[(\w\w \d\d:\d\d),(\w\w \d\d:\d\d)\)")
+SCHEDULE_NUMBERS: Final = ("setpoint", "heating_setpoint", "cooling_setpoint")
+
+type ScheduleSlot = dict[str, str | float]
+
+
+class ScheduleData(TypedDict):
+    """A weekly schedule, one per schedule rule on the gateway."""
+
+    name: str
+    active: bool
+    zones: list[str]
+    slots: list[ScheduleSlot]
+
+
 class GwEntityData(TypedDict, total=False):
     """The Gateway Entity data class.
 
@@ -608,6 +625,7 @@ class GwEntityData(TypedDict, total=False):
     # Schedules:
     available_schedules: list[str]
     select_schedule: str
+    schedules: dict[str, ScheduleData]
 
     climate_mode: str
     # Extra for Adam Master Thermostats
