@@ -133,6 +133,32 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert "<active>true</active>" in sent[0]
         assert "<active>" not in sent[1]
 
+        # A schedule that is attached but inactive is switched on again
+        await api.set_schedule_state(bathroom_zone, name="Badkamer", state="on")
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        tree.find('rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/active').text = "false"
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await api.set_schedule_state(bathroom_zone, name="Badkamer", state="on")
+        assert "<active>true</active>" in spy.call_args.kwargs["data"]
+
+        # A preset rule with an incomplete switch point is not written
+        tree.find(
+            'rule[@id="91946f89120a44139959d6739b914679"]/directives/when'
+        ).remove(
+            tree.find(
+                'rule[@id="91946f89120a44139959d6739b914679"]/directives/when/then'
+            )
+        )
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_number(bathroom_zone, "home_preset_temperature", 19.0)
+
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
         )

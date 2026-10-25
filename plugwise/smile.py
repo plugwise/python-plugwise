@@ -250,7 +250,11 @@ class SmileAPI(SmileData):
         for when in self._domain_objects.findall(
             f'rule[@id="{rule_id}"]/directives/when'
         ):
-            attrs = dict(when.find("then").attrib)
+            if (when_then := when.find("then")) is None:
+                raise PlugwiseError(
+                    f"Plugwise: preset rule {rule_id} has a switch point without settings"
+                )
+            attrs = dict(when_then.attrib)
             if when.get("preset") == preset:
                 attrs["heating_setpoint"] = heating
             then_attrs = " ".join(f'{key}="{value}"' for key, value in attrs.items())
@@ -277,10 +281,11 @@ class SmileAPI(SmileData):
         new_name = f"<name><![CDATA[{name}]]></name>" if name is not None else ""
         data = f"<rules><rule id='{rule_id}'>{new_name}{directives}</rule></rules>"
         await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
-        rule.remove(rule.find("directives"))
+        if (old_directives := rule.find("directives")) is not None:
+            rule.remove(old_directives)
         rule.append(etree.fromstring(directives))
-        if name is not None:
-            rule.find("name").text = name
+        if name is not None and (rule_name := rule.find("name")) is not None:
+            rule_name.text = name
 
     async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
         """Create a schedule; the gateway adds it inactive and attached to no zone."""
@@ -518,11 +523,18 @@ class SmileAPI(SmileData):
         if not schedule_rule or schedule_rule is None:
             raise PlugwiseError(f"Plugwise: no schedule with name {name} available")
 
-        # If no state change is requested, do nothing
-        if state == self._schedule_old_states[loc_id][name]:
+        schedule_rule_id: str = next(iter(schedule_rule))
+        is_active = (
+            self._domain_objects.findtext(f'rule[@id="{schedule_rule_id}"]/active')
+            == "true"
+        )
+        # If no state change is requested, do nothing; an inactive rule still needs
+        # switching on, since the gateway only runs active schedules
+        if state == self._schedule_old_states[loc_id][name] and (
+            state == STATE_OFF or is_active
+        ):
             return
 
-        schedule_rule_id: str = next(iter(schedule_rule))
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
