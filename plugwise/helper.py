@@ -918,11 +918,8 @@ class SmileHelper(SmileCommon):
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
         presets: dict[str, list[float]] = {}
-        tag_1 = "zone_setpoint_and_state_based_on_preset"
-        tag_2 = "Thermostat presets"
-        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
-            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-                return presets  # pragma: no cover
+        if not (rule_ids := self._preset_rule_ids(loc_id)):
+            return presets  # pragma: no cover
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
@@ -934,6 +931,22 @@ class SmileHelper(SmileCommon):
                 ]
 
         return presets
+
+    def _preset_rule_ids(self, loc_id: str) -> list[str]:
+        """Helper-function for _presets().
+
+        Read only the preset rule attached to loc_id, so each zone gets its own presets.
+        Fall back to all preset rules when none or several are attached.
+        """
+        tag_1 = "zone_setpoint_and_state_based_on_preset"
+        tag_2 = "Thermostat presets"
+        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
+            rule_ids = self._rule_ids_by_name(tag_2, loc_id)
+
+        own = [
+            rule_id for rule_id, data in rule_ids.items() if data["location"] == loc_id
+        ]
+        return own if len(own) == 1 else list(rule_ids)
 
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets().

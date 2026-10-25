@@ -10,11 +10,11 @@
     "model": "ThermoZone",
     "name": "Slaapkamer",
     "preset_modes": [
-      "home",
-      "asleep",
-      "away",
       "vacation",
-      "no_frost"
+      "no_frost",
+      "home",
+      "away",
+      "asleep"
     ],
     "select_schedule": "off",
     "select_zone_profile": "active",
@@ -295,11 +295,11 @@
     "model": "ThermoZone",
     "name": "Kinderkamer",
     "preset_modes": [
-      "home",
-      "asleep",
-      "away",
       "vacation",
-      "no_frost"
+      "no_frost",
+      "home",
+      "away",
+      "asleep"
     ],
     "select_schedule": "off",
     "select_zone_profile": "active",
@@ -362,11 +362,11 @@
     "model": "ThermoZone",
     "name": "Logeerkamer",
     "preset_modes": [
-      "home",
-      "asleep",
-      "away",
       "vacation",
-      "no_frost"
+      "no_frost",
+      "home",
+      "away",
+      "asleep"
     ],
     "select_schedule": "off",
     "select_zone_profile": "active",

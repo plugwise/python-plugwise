@@ -275,9 +275,9 @@
     "model": "ThermoZone",
     "name": "Bathroom",
     "preset_modes": [
-      "vacation",
       "no_frost",
       "asleep",
+      "vacation",
       "home",
       "away"
     ],

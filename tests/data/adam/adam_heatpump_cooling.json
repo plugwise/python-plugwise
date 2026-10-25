@@ -16,8 +16,8 @@
       "no_frost",
       "vacation",
       "away",
-      "home",
-      "asleep"
+      "asleep",
+      "home"
     ],
     "select_schedule": "off",
     "select_zone_profile": "passive",
@@ -282,9 +282,9 @@
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
-      "asleep"
+      "asleep",
+      "away"
     ],
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
@@ -442,9 +442,9 @@
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
-      "asleep"
+      "asleep",
+      "away"
     ],
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
@@ -489,8 +489,8 @@
       "no_frost",
       "vacation",
       "away",
-      "home",
-      "asleep"
+      "asleep",
+      "home"
     ],
     "select_schedule": "off",
     "select_zone_profile": "passive",
@@ -553,8 +553,8 @@
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
+      "away",
       "asleep"
     ],
     "select_schedule": "off",
@@ -665,9 +665,9 @@
     "preset_modes": [
       "no_frost",
       "vacation",
+      "asleep",
       "away",
-      "home",
-      "asleep"
+      "home"
     ],
     "select_schedule": "off",
     "select_zone_profile": "active",
@@ -809,8 +809,8 @@
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
+      "away",
       "asleep"
     ],
     "select_schedule": "off",
