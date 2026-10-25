@@ -137,7 +137,8 @@ class TestPlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-ou
         finally:
             await comm.close_connection()
             await server.close()
-        assert calls and all(call == ("PUT", "<rules />") for call in calls)
+        assert calls
+        assert all(call == ("PUT", "<rules />") for call in calls)
 
     @pytest.mark.asyncio
     async def test_put_not_allowed_raises(self):
