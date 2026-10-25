@@ -8,6 +8,7 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 import datetime as dt
 from typing import Any, cast
+from xml.sax.saxutils import quoteattr
 
 from plugwise.constants import (
     ALLOWED_ZONE_PROFILES,
@@ -23,9 +24,13 @@ from plugwise.constants import (
     OFF,
     PRESET_TEMPERATURES,
     RULES,
+    SCHEDULE_POINT,
+    SCHEDULE_TAG,
+    SCHEDULE_WHEN_KEYS,
     STATE_OFF,
     STATE_ON,
     GwEntityData,
+    ScheduleSlot,
     SwitchType,
     ThermoLoc,
 )
@@ -262,6 +267,81 @@ class SmileAPI(SmileData):
         )
         await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
         then.set("heating_setpoint", heating)
+
+    async def set_schedule(
+        self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
+    ) -> None:
+        """Replace the time slots of a schedule, and rename it when a name is given."""
+        rule = self._schedule_rule(rule_id)
+        directives = self._schedule_directives(slots)
+        new_name = f"<name><![CDATA[{name}]]></name>" if name is not None else ""
+        data = f"<rules><rule id='{rule_id}'>{new_name}{directives}</rule></rules>"
+        await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+        rule.remove(rule.find("directives"))
+        rule.append(etree.fromstring(directives))
+        if name is not None:
+            rule.find("name").text = name
+
+    async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
+        """Create a schedule; the gateway adds it inactive and attached to no zone."""
+        directives = self._schedule_directives(slots)
+        data = (
+            "<rules><rule>"
+            f"<name><![CDATA[{name}]]></name>"
+            f'<template tag="{SCHEDULE_TAG}"/>'
+            f"{directives}"
+            "</rule></rules>"
+        )
+        await self.call_request(RULES, method="post", data=data)
+
+    async def delete_schedule(self, rule_id: str) -> None:
+        """Delete a schedule from the gateway."""
+        rule = self._schedule_rule(rule_id)
+        await self.call_request(f"{RULES};id={rule_id}", method="delete")
+        self._domain_objects.remove(rule)
+
+    def _schedule_rule(self, rule_id: str) -> etree.Element:
+        """Return the schedule rule with this id, or raise if it is missing or not a schedule."""
+        rule = self._domain_objects.find(f'rule[@id="{rule_id}"]')
+        if rule is None or rule.find(f'template[@tag="{SCHEDULE_TAG}"]') is None:
+            raise PlugwiseError(f"Plugwise: no schedule with id {rule_id}")
+
+        return rule
+
+    @staticmethod
+    def _schedule_directives(slots: list[ScheduleSlot]) -> str:
+        """Serialise schedule slots to the gateway's <directives> element."""
+        directives = ""
+        for slot in slots:
+            start, end = slot.get("start"), slot.get("end")
+            if not (
+                isinstance(start, str)
+                and isinstance(end, str)
+                and SCHEDULE_POINT.fullmatch(start)
+                and SCHEDULE_POINT.fullmatch(end)
+            ):
+                raise PlugwiseError(
+                    f"Plugwise: schedule slot {slot} needs a start and end such as 'mo 07:00'"
+                )
+            if "setpoint" in slot and not (
+                MIN_SETPOINT <= float(slot["setpoint"]) <= MAX_SETPOINT
+            ):
+                raise PlugwiseError(
+                    f"Plugwise: schedule setpoint must be between {MIN_SETPOINT} and {MAX_SETPOINT}"
+                )
+
+            when: dict[str, str] = {"time": f"[{start},{end})"}
+            then: dict[str, str] = {}
+            for key, value in slot.items():
+                if key in ("start", "end"):
+                    continue
+                target = when if key in SCHEDULE_WHEN_KEYS else then
+                target[key] = str(value)
+            when_attrs = " ".join(f"{k}={quoteattr(v)}" for k, v in when.items())
+            then_attrs = " ".join(f"{k}={quoteattr(v)}" for k, v in then.items())
+            directives += f"<when {when_attrs}><then {then_attrs}/></when>"
+
+        return f"<directives>{directives}</directives>"
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""

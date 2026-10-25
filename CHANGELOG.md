@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Add `set_schedule`, `create_schedule` and `delete_schedule` to change, rename, add and remove weekly schedules. A new schedule is inactive and attached to no zone.
 - Add the weekly schedules, with their name, zones and time slots, to the gateway data.
 - Add the heating setpoint of each preset as an adjustable value for every zone with its own preset rule. Changing one resets a manual setpoint on that zone to its active preset.
 - Each Adam zone now takes its presets from its own preset rule, not from the last preset rule on the gateway.

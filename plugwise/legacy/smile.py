@@ -21,6 +21,7 @@ from plugwise.constants import (
     STATE_OFF,
     STATE_ON,
     GwEntityData,
+    ScheduleSlot,
     ThermoLoc,
 )
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
@@ -152,6 +153,17 @@ class SmileLegacyAPI(SmileLegacyData):
         """Set-function placeholder for legacy devices."""
 
     async def set_offset(self, dev_id: str, offset: float) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def set_schedule(
+        self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
+    ) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def delete_schedule(self, rule_id: str) -> None:
         """Set-function placeholder for legacy devices."""
 
     async def set_preset(self, _: str, preset: str) -> None:

@@ -124,6 +124,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
+            app.router.add_route("POST", CORE_RULES_TAIL, self.smile_http_accept)
+            app.router.add_route("DELETE", CORE_RULES_TAIL, self.smile_http_accept)
         else:
             app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
@@ -132,6 +134,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("DELETE", CORE_RULES_TAIL, self.smile_timeout)
         return app
 
     def setup_legacy_app(
@@ -1017,6 +1021,36 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     return False
 
         return tinker_preset_temperature_passed
+
+    @staticmethod
+    async def tinker_schedule_write(api, rule_id, other_rule_id, unhappy=False):
+        """Edit, create and delete schedules, then try writes that must fail."""
+        slots = [
+            {"start": "mo 07:00", "end": "mo 22:00", "preset": "home"},
+            {"start": "mo 22:00", "end": "mo 07:00", "setpoint": 16.5},
+        ]
+        bad_slot = [{"start": "xx 07:00", "end": "mo 22:00"}]
+        too_warm = [{"start": "mo 07:00", "end": "mo 22:00", "setpoint": 31}]
+        writes = [
+            (api.set_schedule, (rule_id, slots, "Renamed"), True),
+            (api.set_schedule, ("no_such_rule", slots), False),
+            (api.set_schedule, (other_rule_id, slots), False),
+            (api.create_schedule, ("Bad", bad_slot), False),
+            (api.create_schedule, ("Too warm", too_warm), False),
+            (api.create_schedule, ("New", slots), True),
+            (api.delete_schedule, (rule_id,), True),
+        ]
+        passed = True
+        for call, args, should_work in writes:
+            try:
+                await call(*args)
+                passed &= should_work
+            except pw_exceptions.PlugwiseError:
+                passed &= not should_work
+            except pw_exceptions.ConnectionFailedError:
+                passed &= unhappy and should_work
+        _LOGGER.info("  + schedule writes behaved as intended: %s", passed)
+        return passed
 
     @staticmethod
     async def tinker_gateway_mode(api, unhappy=False):

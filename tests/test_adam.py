@@ -103,6 +103,18 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         ]
         assert slots[0]["presence"] == "true"
 
+        # The test above set presence on Weekschema; it must survive a rewrite
+        # pylint: disable-next=protected-access
+        sent = api._smile_api._schedule_directives(slots)
+        assert '<when time="[tu 21:30,we 07:15)" presence="true">' in sent
+        assert await self.tinker_schedule_write(
+            api, "24df4dace79a4c42a0f4750ce65d84cb", "021e3f453589448e891d29f195fbcaf0"
+        )
+        # pylint: disable-next=protected-access
+        assert (
+            "24df4dace79a4c42a0f4750ce65d84cb" not in api._smile_api._schedule_rules()
+        )
+
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
         )
@@ -271,6 +283,12 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81", unhappy=True
+        )
+        assert await self.tinker_schedule_write(
+            api,
+            "24df4dace79a4c42a0f4750ce65d84cb",
+            "021e3f453589448e891d29f195fbcaf0",
+            unhappy=True,
         )
 
         await api.close_connection()
