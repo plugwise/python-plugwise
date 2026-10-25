@@ -1030,13 +1030,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             {"start": "mo 22:00", "end": "mo 07:00", "setpoint": 16.5},
         ]
         bad_slot = [{"start": "xx 07:00", "end": "mo 22:00"}]
-        too_warm = [{"start": "mo 07:00", "end": "mo 22:00", "setpoint": 31}]
+        too_warm = [{"start": "mo 07:00", "end": "mo 22:00", "heating_setpoint": 31}]
+        warm_text = [{"start": "mo 07:00", "end": "mo 22:00", "setpoint": "warm"}]
+        odd_key = [{"start": "mo 07:00", "end": "mo 22:00", "odd key": "x"}]
         writes = [
             (api.set_schedule, (rule_id, slots, "Renamed"), True),
             (api.set_schedule, ("no_such_rule", slots), False),
             (api.set_schedule, (other_rule_id, slots), False),
             (api.create_schedule, ("Bad", bad_slot), False),
             (api.create_schedule, ("Too warm", too_warm), False),
+            (api.create_schedule, ("Not a number", warm_text), False),
+            (api.create_schedule, ("Odd key", odd_key), False),
+            (api.create_schedule, ("Bad ]]> name", slots), False),
             (api.create_schedule, ("New", slots), True),
             (api.delete_schedule, (rule_id,), True),
         ]

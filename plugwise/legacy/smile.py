@@ -29,6 +29,8 @@ from plugwise.legacy.data import SmileLegacyData
 
 from munch import Munch
 
+NO_SCHEDULE_WRITES = "Plugwise: schedules cannot be changed on this gateway"
+
 
 class SmileLegacyAPI(SmileLegacyData):
     """The Plugwise SmileLegacyAPI helper class for actual Plugwise legacy devices."""
@@ -158,13 +160,16 @@ class SmileLegacyAPI(SmileLegacyData):
     async def set_schedule(
         self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
     ) -> None:
-        """Set-function placeholder for legacy devices."""
+        """Raise an error, since legacy gateways keep schedules in a format this library does not write."""
+        raise PlugwiseError(NO_SCHEDULE_WRITES)
 
     async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
-        """Set-function placeholder for legacy devices."""
+        """Raise an error, since legacy gateways keep schedules in a format this library does not write."""
+        raise PlugwiseError(NO_SCHEDULE_WRITES)
 
     async def delete_schedule(self, rule_id: str) -> None:
-        """Set-function placeholder for legacy devices."""
+        """Raise an error, since legacy gateways keep schedules in a format this library does not write."""
+        raise PlugwiseError(NO_SCHEDULE_WRITES)
 
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""

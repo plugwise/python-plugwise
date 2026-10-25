@@ -1020,7 +1020,7 @@ class SmileHelper(SmileCommon):
         available: list[str] = [OFF]
         rule_ids: dict[str, dict[str, str]] = {}
         selected = OFF
-        tag = "zone_preset_based_on_time_and_presence_with_override"
+        tag = SCHEDULE_TAG
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
 

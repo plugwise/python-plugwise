@@ -146,7 +146,40 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             wraps=api._smile_api.call_request,
         ) as spy:
             await api.set_schedule_state(bathroom_zone, name="Badkamer", state="on")
-        assert "<active>true</active>" in spy.call_args.kwargs["data"]
+        sent = spy.call_args.kwargs["data"]
+        assert "<active>true</active>" in sent
+        # The zone is attached once, also after switching an attached schedule on
+        assert sent.count(bathroom_zone) == 1
+        badkamer_zones = tree.findall(
+            'rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/contexts/context/zone/location'
+        )
+        assert [zone.get("id") for zone in badkamer_zones] == [bathroom_zone]
+
+        # A schedule renamed through set_schedule can be switched by its new name
+        # pylint: disable-next=protected-access
+        badkamer = api._smile_api._schedule_rules()["ebe3e57ec41d4d8faa927ca85c95b747"]
+        await api.set_schedule(
+            "ebe3e57ec41d4d8faa927ca85c95b747", badkamer["slots"], name="Bad"
+        )
+        await api.set_schedule_state(bathroom_zone, name="Bad", state="off")
+        assert not tree.findall(
+            f'rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/contexts/context/zone/location[@id="{bathroom_zone}"]'
+        )
+
+        # A preset write keeps every attribute and escapes the values
+        living_rule = 'rule[@id="021e3f453589448e891d29f195fbcaf0"]/directives/when'
+        tree.find(living_rule).set("presence", "a&b")
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await api.set_number(
+                "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 16.0
+            )
+        assert 'presence="a&amp;b"' in spy.call_args.kwargs["data"]
 
         # A preset rule with an incomplete switch point is not written
         tree.find(
