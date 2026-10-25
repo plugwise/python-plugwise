@@ -532,11 +532,14 @@ class SmileAPI(SmileData):
             template = f'<template id="{template_id}" />'
 
         contexts = self.determine_contexts(loc_id, state, schedule_rule_id)
+        # An attached schedule only runs when its rule is active
+        active = "<active>true</active>" if state == STATE_ON else ""
         data = (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
             f"<name><![CDATA[{name}]]></name>"
             f"{template}"
+            f"{active}"
             f"{contexts}"
             "</rule>"
             "</rules>"
@@ -544,6 +547,16 @@ class SmileAPI(SmileData):
         uri = f"{RULES};id={schedule_rule_id}"
         await self.call_request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = state
+        if (
+            state == STATE_ON
+            and (
+                rule_active := self._domain_objects.find(
+                    f'rule[@id="{schedule_rule_id}"]/active'
+                )
+            )
+            is not None
+        ):
+            rule_active.text = "true"
 
     def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""

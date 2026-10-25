@@ -115,6 +115,24 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "24df4dace79a4c42a0f4750ce65d84cb" not in api._smile_api._schedule_rules()
         )
 
+        # Switching a schedule on activates its rule and switching off leaves the rule alone
+        bathroom_zone = "f871b8c4d63549319221e294e4f88074"
+        sent = []
+        for state in ("on", "off"):
+            with patch.object(
+                # pylint: disable-next=protected-access
+                api._smile_api,
+                "call_request",
+                # pylint: disable-next=protected-access
+                wraps=api._smile_api.call_request,
+            ) as spy:
+                await api.set_schedule_state(
+                    bathroom_zone, name="Badkamer", state=state
+                )
+            sent.append(spy.call_args.kwargs["data"])
+        assert "<active>true</active>" in sent[0]
+        assert "<active>" not in sent[1]
+
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
         )
