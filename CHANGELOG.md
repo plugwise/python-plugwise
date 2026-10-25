@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Fix setting changes after a timeout or a 504 error. The retry sent a read instead of the change, so the change was reported as done even when the gateway never got it.
+
 ## v1.14.8
 
 - Fix for issue [#933](https://github.com/plugwise/python-plugwise/issues/933) via PR [#934](https://github.com/plugwise/python-plugwise/pull/934)

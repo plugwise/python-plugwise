@@ -97,7 +97,7 @@ class SmileComm:
                     exc,
                 )
                 raise ConnectionFailedError from exc
-            return await self._request(command, retry - 1)
+            return await self._request(command, retry - 1, method=method, data=data)
 
         if resp.status == 504:
             if retry < 1:
@@ -108,7 +108,7 @@ class SmileComm:
                     "504 Gateway Timeout",
                 )
                 raise ConnectionFailedError
-            return await self._request(command, retry - 1)
+            return await self._request(command, retry - 1, method=method, data=data)
 
         return await self._request_validate(resp, method)
 
