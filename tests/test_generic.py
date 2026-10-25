@@ -7,6 +7,7 @@ from plugwise.smilecomm import SmileComm
 import pytest
 
 import aiohttp
+from aiohttp import test_utils, web
 
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
@@ -79,14 +80,14 @@ class TestPlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-ou
 
         async def get(request):
             calls.append(("GET", await request.text()))
-            return aiohttp.web.Response(text="<rules />")
+            return web.Response(text="<rules />")
 
-        app = aiohttp.web.Application()
+        app = web.Application()
         if put_handler is not None:
             app.router.add_route("PUT", "/core/rules{tail:.*}", put)
         app.router.add_route("GET", "/core/rules{tail:.*}", get)
-        server = aiohttp.test_utils.TestServer(
-            app, port=aiohttp.test_utils.unused_port(), scheme="http", host="127.0.0.1"
+        server = test_utils.TestServer(
+            app, port=test_utils.unused_port(), scheme="http", host="127.0.0.1"
         )
         await server.start_server()
         return server
@@ -98,8 +99,8 @@ class TestPlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-ou
 
         async def timeout_once(request, calls):
             if len(calls) == 1:
-                raise aiohttp.web.HTTPGatewayTimeout()
-            raise aiohttp.web.HTTPAccepted(text="<xml />")
+                raise web.HTTPGatewayTimeout()
+            raise web.HTTPAccepted(text="<xml />")
 
         server = await self._start_rules_server(calls, timeout_once)
         comm = SmileComm(
