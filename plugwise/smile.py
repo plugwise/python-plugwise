@@ -21,6 +21,7 @@ from plugwise.constants import (
     NONE,
     NOTIFICATIONS,
     OFF,
+    PRESET_TEMPERATURES,
     RULES,
     STATE_OFF,
     STATE_ON,
@@ -170,7 +171,16 @@ class SmileAPI(SmileData):
         key: str,
         temperature: float,
     ) -> None:
-        """Set the boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
+        """Set the boiler- or DHW-setpoint on the Central Heating boiler, the temperature-offset on a Thermostat or a preset temperature."""
+        if key in PRESET_TEMPERATURES:
+            # Anna keeps its climate data on the thermostat, Adam on the zone
+            loc_id = dev_id
+            if (entity := self.gw_entities.get(dev_id)) is not None:
+                loc_id = entity.get("location", dev_id)
+            preset = PRESET_TEMPERATURES[key]
+            await self.set_preset_temperature(loc_id, preset, temperature)
+            return
+
         match key:
             case "temperature_offset":
                 await self.set_offset(dev_id, temperature)
@@ -210,6 +220,48 @@ class SmileAPI(SmileData):
         data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
         await self.call_request(uri, method="put", data=data)
+
+    async def set_preset_temperature(
+        self, loc_id: str, preset: str, temperature: float
+    ) -> None:
+        """Set the heating setpoint of one preset in the zone's preset rule.
+
+        The gateway re-applies the zone's active preset, which resets a manual setpoint.
+        """
+        if (rule_id := self._preset_rule_id(loc_id)) is None:
+            raise PlugwiseError("Plugwise: this zone has no preset rule of its own")
+
+        locator = f'rule[@id="{rule_id}"]/directives/when[@preset="{preset}"]/then'
+        if (then := self._domain_objects.find(locator)) is None:
+            raise PlugwiseError(f"Plugwise: invalid preset {preset}")
+        if not MIN_SETPOINT <= temperature <= MAX_SETPOINT:
+            raise PlugwiseError(
+                f"Plugwise: preset temperature must be between {MIN_SETPOINT} and {MAX_SETPOINT}"
+            )
+
+        # The gateway replaces the whole directive set, so every preset is sent.
+        heating = str(temperature)
+        directives = ""
+        for when in self._domain_objects.findall(
+            f'rule[@id="{rule_id}"]/directives/when'
+        ):
+            attrs = dict(when.find("then").attrib)
+            if when.get("preset") == preset:
+                attrs["heating_setpoint"] = heating
+            then_attrs = " ".join(f'{key}="{value}"' for key, value in attrs.items())
+            directives += (
+                f'<when preset="{when.get("preset")}"><then {then_attrs}/></when>'
+            )
+
+        data = (
+            "<rules>"
+            f"<rule id='{rule_id}'>"
+            f"<directives>{directives}</directives>"
+            "</rule>"
+            "</rules>"
+        )
+        await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+        then.set("heating_setpoint", heating)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""

@@ -265,6 +265,22 @@ ActuatorType = Literal[
 ]
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
 
+PresetTemperatureType = Literal[
+    "home_preset_temperature",
+    "asleep_preset_temperature",
+    "away_preset_temperature",
+    "vacation_preset_temperature",
+    "no_frost_preset_temperature",
+]
+PRESET_TEMPERATURES: Final[dict[PresetTemperatureType, str]] = {
+    "home_preset_temperature": "home",
+    "asleep_preset_temperature": "asleep",
+    "away_preset_temperature": "away",
+    "vacation_preset_temperature": "vacation",
+    "no_frost_preset_temperature": "no_frost",
+}
+PRESET_TEMPERATURE_RESOLUTION: Final[float] = 0.5
+
 ACTIVE_KEYS: Final[tuple[str, ...]] = (
     "control_state",
     "lower_bound",
@@ -584,6 +600,11 @@ class GwEntityData(TypedDict, total=False):
     # Presets:
     active_preset: str | None
     preset_modes: list[str] | None
+    home_preset_temperature: ActuatorData
+    asleep_preset_temperature: ActuatorData
+    away_preset_temperature: ActuatorData
+    vacation_preset_temperature: ActuatorData
+    no_frost_preset_temperature: ActuatorData
     # Schedules:
     available_schedules: list[str]
     select_schedule: str

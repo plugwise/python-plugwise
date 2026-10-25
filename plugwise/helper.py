@@ -938,15 +938,28 @@ class SmileHelper(SmileCommon):
         Read only the preset rule attached to loc_id, so each zone gets its own presets.
         Fall back to all preset rules when none or several are attached.
         """
+        if (rule_id := self._preset_rule_id(loc_id)) is not None:
+            return [rule_id]
+
+        return list(self._all_preset_rules(loc_id))
+
+    def _preset_rule_id(self, loc_id: str) -> str | None:
+        """Return the id of the one preset rule attached to loc_id, or None."""
+        own = [
+            rule_id
+            for rule_id, data in self._all_preset_rules(loc_id).items()
+            if data["location"] == loc_id
+        ]
+        return own[0] if len(own) == 1 else None
+
+    def _all_preset_rules(self, loc_id: str) -> dict[str, dict[str, str]]:
+        """Collect all preset rules, by template tag or else by name."""
         tag_1 = "zone_setpoint_and_state_based_on_preset"
         tag_2 = "Thermostat presets"
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
             rule_ids = self._rule_ids_by_name(tag_2, loc_id)
 
-        own = [
-            rule_id for rule_id, data in rule_ids.items() if data["location"] == loc_id
-        ]
-        return own if len(own) == 1 else list(rule_ids)
+        return rule_ids
 
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets().

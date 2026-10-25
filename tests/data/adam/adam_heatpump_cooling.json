@@ -19,6 +19,36 @@
       "asleep",
       "home"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 19.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -158,6 +188,36 @@
       "home",
       "asleep"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -286,6 +346,36 @@
       "asleep",
       "away"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
     "sensors": {
@@ -446,6 +536,36 @@
       "asleep",
       "away"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
     "sensors": {
@@ -492,6 +612,36 @@
       "asleep",
       "home"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -557,6 +707,36 @@
       "away",
       "asleep"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -623,6 +803,36 @@
       "home",
       "asleep"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 21.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 21.5,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 21.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "active",
     "sensors": {
@@ -669,6 +879,36 @@
       "away",
       "home"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
@@ -813,6 +1053,36 @@
       "away",
       "asleep"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
@@ -929,6 +1199,36 @@
       "home",
       "asleep"
     ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 21.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 21.5,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 21.5,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "active",
     "sensors": {
