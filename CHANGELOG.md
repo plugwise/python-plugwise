@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Each Adam zone now takes its presets from its own preset rule, not from the last preset rule on the gateway.
 - Fix setting changes after a timeout or a 504 error. The retry sent a read instead of the change, so the change was reported as done even when the gateway never got it.
 
 ## v1.14.8

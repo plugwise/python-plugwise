@@ -36,11 +36,11 @@
     "model": "ThermoZone",
     "name": "Badkamer",
     "preset_modes": [
-      "home",
       "asleep",
+      "no_frost",
       "away",
-      "vacation",
-      "no_frost"
+      "home",
+      "vacation"
     ],
     "select_schedule": "Badkamer Schema",
     "sensors": {
@@ -79,10 +79,10 @@
     "name": "Bios",
     "preset_modes": [
       "home",
-      "asleep",
       "away",
       "vacation",
-      "no_frost"
+      "no_frost",
+      "asleep"
     ],
     "select_schedule": "off",
     "sensors": {
@@ -300,10 +300,10 @@
     "name": "Jessie",
     "preset_modes": [
       "home",
-      "asleep",
+      "no_frost",
       "away",
       "vacation",
-      "no_frost"
+      "asleep"
     ],
     "select_schedule": "CV Jessie",
     "sensors": {
@@ -454,11 +454,11 @@
     "model": "ThermoZone",
     "name": "Woonkamer",
     "preset_modes": [
-      "home",
-      "asleep",
-      "away",
       "vacation",
-      "no_frost"
+      "asleep",
+      "no_frost",
+      "away",
+      "home"
     ],
     "select_schedule": "GF7  Woonkamer",
     "sensors": {

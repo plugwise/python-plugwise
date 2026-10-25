@@ -68,6 +68,13 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "f871b8c4d63549319221e294e4f88074",
         ]
         assert api.reboot
+        # Each zone reads its own preset rule, not the last one in the document
+        # pylint: disable-next=protected-access
+        living_room = api._smile_api._presets("f2bf9048bef64cc5b6d5110154e33c81")
+        # pylint: disable-next=protected-access
+        bathroom = api._smile_api._presets("f871b8c4d63549319221e294e4f88074")
+        assert living_room["home"] == [19.0, 22.0]
+        assert bathroom["home"] == [18.0, 22.0]
 
         result = await self.tinker_thermostat(
             api,
