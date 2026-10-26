@@ -249,7 +249,7 @@ class SmileAPI(SmileData):
             raise PlugwiseError("Plugwise: this zone has no preset rule of its own")
 
         locator = f'rule[@id="{rule_id}"]/directives/when[@preset="{preset}"]/then'
-        if self._domain_objects.find(locator) is None:
+        if (then := self._domain_objects.find(locator)) is None:
             raise PlugwiseError(f"Plugwise: invalid preset {preset}")
         if not MIN_SETPOINT <= temperature <= MAX_SETPOINT:
             raise PlugwiseError(
@@ -259,6 +259,18 @@ class SmileAPI(SmileData):
         # The gateway replaces the whole directive set, so every preset is sent.
         # The lock keeps a concurrent write from resending a stale value for another preset.
         async with self._preset_lock:
+            heating = float(then.get("heating_setpoint"))
+            cooling = float(then.get("cooling_setpoint"))
+            if attribute == "heating_setpoint":
+                heating = temperature
+            else:
+                cooling = temperature
+            # Without cooling the stored cooling setpoint is a default nobody can change
+            if self._cooling_present and heating > cooling:
+                raise PlugwiseError(
+                    f"Plugwise: the {preset} heating setpoint {heating} is above its cooling setpoint {cooling}. Lower the heating setpoint or raise the cooling setpoint."
+                )
+
             value = str(temperature)
             directives = ""
             for when in self._domain_objects.findall(

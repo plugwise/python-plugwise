@@ -117,6 +117,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert sent.count("<when preset=") == 5
         assert 'heating_setpoint="20.5"' in sent
         assert 'heating_setpoint="16.0"' in sent
+        # Without cooling, heating may go above the stored cooling setpoint
+        await api.set_number(
+            "f2bf9048bef64cc5b6d5110154e33c81", "home_preset_temperature", 22.5
+        )
         # The heater has no zone with a preset rule of its own
         assert not await self.tinker_preset_temperature(
             api, "056ee145a816487eaa69243c3280f8bf"

@@ -536,6 +536,24 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         away = api._smile_api._presets("15da035090b847e7a21f93e08c015ebc")["away"]
         assert away == [15.0, 26.0]
 
+        # A write that puts heating above cooling is refused before any PUT
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            for value, setpoint in [(27.0, "setpoint_low"), (14.0, "setpoint_high")]:
+                with pytest.raises(pw_exceptions.PlugwiseError):
+                    await api.set_number(
+                        "582dfbdace4d4aeb832923ce7d1ddda0",
+                        "away_preset_temperature",
+                        value,
+                        setpoint=setpoint,
+                    )
+        spy.assert_not_called()
+
         await api.close_connection()
         await self.disconnect(server, client)
 
