@@ -80,6 +80,21 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert bathroom["home"] == [18.0, 22.0]
         # pylint: disable-next=protected-access
         assert len(api._smile_api._preset_rule_ids("no_such_zone")) == 2
+        # A zone whose own rule has no template tag still finds that rule by name
+        # pylint: disable-next=protected-access
+        bathroom_rule = api._smile_api._domain_objects.find(
+            'rule[@id="91946f89120a44139959d6739b914679"]'
+        )
+        template = bathroom_rule.find("template")
+        bathroom_rule.remove(template)
+        # pylint: disable-next=protected-access
+        assert api._smile_api._preset_rule_id("f871b8c4d63549319221e294e4f88074") == (
+            "91946f89120a44139959d6739b914679"
+        )
+        # pylint: disable-next=protected-access
+        bathroom = api._smile_api._presets("f871b8c4d63549319221e294e4f88074")
+        assert bathroom["home"] == [18.0, 22.0]
+        bathroom_rule.append(template)
 
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
