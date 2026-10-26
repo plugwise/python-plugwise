@@ -102,7 +102,17 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert sent.count("<when preset=") == 5
         assert 'heating_setpoint="20.5"' in sent
         assert 'heating_setpoint="16.0"' in sent
-        assert not await self.tinker_preset_temperature(api, "no_such_zone")
+        # The heater has no zone with a preset rule of its own
+        assert not await self.tinker_preset_temperature(
+            api, "056ee145a816487eaa69243c3280f8bf"
+        )
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_number(
+                "f2bf9048bef64cc5b6d5110154e33c81",
+                "away_preset_temperature",
+                16.0,
+                setpoint="bogus",
+            )
 
         # A preset write keeps every attribute and escapes the values
         # pylint: disable-next=protected-access
@@ -441,10 +451,16 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 743
+        assert self.entity_items == 793
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
+        # A zone keeps one climate setpoint, its presets carry heating and cooling
+        # pylint: disable-next=protected-access
+        zone = api._smile_api.gw_entities["04b15f6e884448288f811d29fb7b1b30"]
+        assert "setpoint" in zone["thermostat"]
+        assert zone["home_preset_temperature"]["setpoint_low"] == 19.0
+        assert zone["home_preset_temperature"]["setpoint_high"] == 22.0
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -465,7 +481,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 94
+        assert self.entity_items == 99
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present

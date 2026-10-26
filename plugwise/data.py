@@ -310,17 +310,29 @@ class SmileData(SmileHelper):
     ) -> None:
         """Helper-function for _climate_data().
 
-        Add the heating setpoint of each preset as an adjustable value.
+        Add the setpoints of each preset as an adjustable value: the heating setpoint,
+        or with cooling present the heating (low) and cooling (high) setpoints.
         """
         for key, preset in PRESET_TEMPERATURES.items():
             if preset in presets:
-                entity[key] = ActuatorData(
-                    lower_bound=MIN_SETPOINT,
-                    resolution=PRESET_TEMPERATURE_RESOLUTION,
-                    setpoint=presets[preset][0],
-                    upper_bound=MAX_SETPOINT,
-                )
-                self._count += 4
+                heating, cooling = presets[preset]
+                if self._cooling_present:
+                    entity[key] = ActuatorData(
+                        lower_bound=MIN_SETPOINT,
+                        resolution=PRESET_TEMPERATURE_RESOLUTION,
+                        setpoint_high=cooling,
+                        setpoint_low=heating,
+                        upper_bound=MAX_SETPOINT,
+                    )
+                    self._count += 5
+                else:
+                    entity[key] = ActuatorData(
+                        lower_bound=MIN_SETPOINT,
+                        resolution=PRESET_TEMPERATURE_RESOLUTION,
+                        setpoint=heating,
+                        upper_bound=MAX_SETPOINT,
+                    )
+                    self._count += 4
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""

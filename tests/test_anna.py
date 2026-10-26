@@ -1,5 +1,7 @@
 """Test Plugwise module Anna related functionality."""
 
+from unittest.mock import patch
+
 import pytest
 
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
@@ -186,7 +188,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.entity_items == 93
+        assert self.entity_items == 98
         assert not self.notifications
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -216,7 +218,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(
             api, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert self.entity_items == 89
+        assert self.entity_items == 94
         await api.close_connection()
         await self.disconnect(server, client)
 
@@ -241,7 +243,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-19 00:00:01", testdata)
-        assert self.entity_items == 89
+        assert self.entity_items == 94
         assert self.cooling_present
         assert not self.notifications
 
@@ -287,7 +289,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-19 00:00:01", testdata)
-        assert self.entity_items == 89
+        assert self.entity_items == 94
         assert self.cooling_present
         assert self._cooling_enabled
         assert self._cooling_active
@@ -336,7 +338,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-03-13 00:00:01", testdata)
-        assert self.entity_items == 84
+        assert self.entity_items == 89
         assert api.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -356,7 +358,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2022-03-13 00:00:01", testdata)
         assert not self._cooling_enabled
-        assert self.entity_items == 88
+        assert self.entity_items == 93
 
         result = await self.tinker_thermostat(
             api,
@@ -387,7 +389,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-03-10 00:00:01", testdata)
-        assert self.entity_items == 88
+        assert self.entity_items == 93
         assert not self.notifications
 
         assert self.cooling_present
@@ -440,7 +442,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 90
+        assert self.entity_items == 95
         assert self.cooling_present
         assert not self._cooling_enabled
 
@@ -509,9 +511,30 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 90
+        assert self.entity_items == 95
         assert self.cooling_present
         assert self._cooling_enabled
+
+        # A cooling preset write changes only that preset's cooling setpoint
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await api.set_number(
+                "582dfbdace4d4aeb832923ce7d1ddda0",
+                "away_preset_temperature",
+                26.0,
+                setpoint="setpoint_high",
+            )
+        sent = spy.call_args.kwargs["data"]
+        assert 'heating_setpoint="15" cooling_setpoint="26.0"' in sent
+        assert 'cooling_setpoint="25"' not in sent
+        # pylint: disable-next=protected-access
+        away = api._smile_api._presets("15da035090b847e7a21f93e08c015ebc")["away"]
+        assert away == [15.0, 26.0]
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -532,7 +555,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 91
+        assert self.entity_items == 96
         assert self.cooling_present
         assert not self._cooling_enabled
 

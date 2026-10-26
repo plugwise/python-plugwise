@@ -411,10 +411,11 @@ class Smile(SmileComm):
         dev_id: str,
         key: str,
         temperature: float,
+        setpoint: str = "setpoint",
     ) -> None:
-        """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
+        """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler, the temperature-offset on a Thermostat or a preset temperature."""
         try:
-            await self._smile_api.set_number(dev_id, key, temperature)
+            await self._smile_api.set_number(dev_id, key, temperature, setpoint)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set number '{key}': {str(exc)}"

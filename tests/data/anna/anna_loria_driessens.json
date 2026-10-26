@@ -45,31 +45,36 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint": 20.0,
+      "setpoint_high": 21.0,
+      "setpoint_low": 20.0,
       "upper_bound": 30.0
     },
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint": 19.0,
+      "setpoint_high": 25.0,
+      "setpoint_low": 19.0,
       "upper_bound": 30.0
     },
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint": 17.0,
+      "setpoint_high": 26.0,
+      "setpoint_low": 17.0,
       "upper_bound": 30.0
     },
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint": 15.0,
+      "setpoint_high": 28.0,
+      "setpoint_low": 15.0,
       "upper_bound": 30.0
     },
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint": 17.0,
+      "setpoint_high": 30.0,
+      "setpoint_low": 17.0,
       "upper_bound": 30.0
     },
     "select_schedule": "Verwarmen@9-23u",

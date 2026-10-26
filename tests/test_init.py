@@ -990,11 +990,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_preset_temperature(api, dev_id, unhappy=False):
         """Change a preset temperature, then try a value and a preset that must fail."""
-        tinker_preset_temperature_passed = False
-        for key, value in [
-            ("home_preset_temperature", 20.5),
-            ("home_preset_temperature", 35.0),
-            ("!bogus_preset_temperature", 20.0),
+        tinker_preset_temperature_passed = True
+        for key, value, valid in [
+            ("home_preset_temperature", 20.5, True),
+            ("home_preset_temperature", 35.0, False),
+            ("!bogus_preset_temperature", 20.0, False),
         ]:
             _LOGGER.info("- Adjusting %s to %s", key, value)
             try:
@@ -1003,10 +1003,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     await api._smile_api.set_preset_temperature(dev_id, "!bogus", value)
                 else:
                     await api.set_number(dev_id, key, value)
-                tinker_preset_temperature_passed = True
-                _LOGGER.info("  + tinker_preset_temperature worked as intended")
+                _LOGGER.info("  + tinker_preset_temperature worked")
+                tinker_preset_temperature_passed &= valid
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + tinker_preset_temperature failed as intended")
+                _LOGGER.info("  + tinker_preset_temperature failed")
+                tinker_preset_temperature_passed &= not valid
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")

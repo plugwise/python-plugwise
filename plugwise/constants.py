@@ -280,6 +280,11 @@ PRESET_TEMPERATURES: Final[dict[PresetTemperatureType, str]] = {
     "no_frost_preset_temperature": "no_frost",
 }
 PRESET_TEMPERATURE_RESOLUTION: Final[float] = 0.5
+PRESET_SETPOINT_ATTRIBUTES: Final[dict[str, str]] = {
+    "setpoint": "heating_setpoint",
+    "setpoint_low": "heating_setpoint",
+    "setpoint_high": "cooling_setpoint",
+}
 
 ACTIVE_KEYS: Final[tuple[str, ...]] = (
     "control_state",
