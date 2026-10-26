@@ -8,6 +8,7 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 import datetime as dt
 from typing import Any, cast
+from xml.sax.saxutils import quoteattr
 
 from plugwise.constants import (
     ALLOWED_ZONE_PROFILES,
@@ -36,6 +37,11 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
+
+
+def _xml_attrs(attrs: dict[str, str]) -> str:
+    """Return XML attributes, with escaped values."""
+    return " ".join(f"{key}={quoteattr(value)}" for key, value in attrs.items())
 
 
 def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
@@ -245,12 +251,16 @@ class SmileAPI(SmileData):
         for when in self._domain_objects.findall(
             f'rule[@id="{rule_id}"]/directives/when'
         ):
-            attrs = dict(when.find("then").attrib)
+            if (when_then := when.find("then")) is None:
+                raise PlugwiseError(
+                    f"Plugwise: preset rule {rule_id} has a switch point without settings"
+                )
+            then_attrs = dict(when_then.attrib)
             if when.get("preset") == preset:
-                attrs["heating_setpoint"] = heating
-            then_attrs = " ".join(f'{key}="{value}"' for key, value in attrs.items())
+                then_attrs["heating_setpoint"] = heating
             directives += (
-                f'<when preset="{when.get("preset")}"><then {then_attrs}/></when>'
+                f"<when {_xml_attrs(dict(when.attrib))}>"
+                f"<then {_xml_attrs(then_attrs)}/></when>"
             )
 
         data = (

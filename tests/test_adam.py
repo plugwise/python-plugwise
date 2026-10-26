@@ -103,6 +103,31 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert 'heating_setpoint="16.0"' in sent
         assert not await self.tinker_preset_temperature(api, "no_such_zone")
 
+        # A preset write keeps every attribute and escapes the values
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        living_rule = 'rule[@id="021e3f453589448e891d29f195fbcaf0"]/directives/when'
+        tree.find(living_rule).set("presence", "a&b")
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await api.set_number(
+                "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 16.0
+            )
+        assert 'presence="a&amp;b"' in spy.call_args.kwargs["data"]
+
+        # A preset rule with an incomplete switch point is not written
+        bathroom_rule = 'rule[@id="91946f89120a44139959d6739b914679"]/directives/when'
+        tree.find(bathroom_rule).remove(tree.find(f"{bathroom_rule}/then"))
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_number(
+                "f871b8c4d63549319221e294e4f88074", "home_preset_temperature", 19.0
+            )
+
         result = await self.tinker_thermostat(
             api,
             "f2bf9048bef64cc5b6d5110154e33c81",
