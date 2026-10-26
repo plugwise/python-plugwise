@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core.
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Awaitable, Callable
 import datetime as dt
 from typing import Any, cast
@@ -93,6 +94,7 @@ class SmileAPI(SmileData):
         self._schedule_old_states = _schedule_old_states
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
+        self._preset_lock = asyncio.Lock()
 
     @property
     def cooling_present(self) -> bool:
@@ -246,32 +248,34 @@ class SmileAPI(SmileData):
             )
 
         # The gateway replaces the whole directive set, so every preset is sent.
-        heating = str(temperature)
-        directives = ""
-        for when in self._domain_objects.findall(
-            f'rule[@id="{rule_id}"]/directives/when'
-        ):
-            if (when_then := when.find("then")) is None:
-                raise PlugwiseError(
-                    f"Plugwise: preset rule {rule_id} has a switch point without settings"
+        # The lock keeps a concurrent write from resending a stale value for another preset.
+        async with self._preset_lock:
+            heating = str(temperature)
+            directives = ""
+            for when in self._domain_objects.findall(
+                f'rule[@id="{rule_id}"]/directives/when'
+            ):
+                if (when_then := when.find("then")) is None:
+                    raise PlugwiseError(
+                        f"Plugwise: preset rule {rule_id} has a switch point without settings"
+                    )
+                then_attrs = dict(when_then.attrib)
+                if when.get("preset") == preset:
+                    then_attrs["heating_setpoint"] = heating
+                directives += (
+                    f"<when {_xml_attrs(dict(when.attrib))}>"
+                    f"<then {_xml_attrs(then_attrs)}/></when>"
                 )
-            then_attrs = dict(when_then.attrib)
-            if when.get("preset") == preset:
-                then_attrs["heating_setpoint"] = heating
-            directives += (
-                f"<when {_xml_attrs(dict(when.attrib))}>"
-                f"<then {_xml_attrs(then_attrs)}/></when>"
-            )
 
-        data = (
-            "<rules>"
-            f"<rule id='{rule_id}'>"
-            f"<directives>{directives}</directives>"
-            "</rule>"
-            "</rules>"
-        )
-        await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
-        then.set("heating_setpoint", heating)
+            data = (
+                "<rules>"
+                f"<rule id='{rule_id}'>"
+                f"<directives>{directives}</directives>"
+                "</rule>"
+                "</rules>"
+            )
+            await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+            then.set("heating_setpoint", heating)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""

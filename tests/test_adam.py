@@ -1,5 +1,6 @@
 """Test Plugwise module Adam related functionality."""
 
+import asyncio
 from unittest.mock import patch
 
 import pytest
@@ -119,6 +120,26 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 16.0
             )
         assert 'presence="a&amp;b"' in spy.call_args.kwargs["data"]
+
+        # Simultaneous preset writes on one zone keep both changes
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await asyncio.gather(
+                api.set_number(
+                    "f2bf9048bef64cc5b6d5110154e33c81", "home_preset_temperature", 21.0
+                ),
+                api.set_number(
+                    "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 15.5
+                ),
+            )
+        sent = spy.call_args.kwargs["data"]
+        assert 'heating_setpoint="21.0"' in sent
+        assert 'heating_setpoint="15.5"' in sent
 
         # A preset rule with an incomplete switch point is not written
         bathroom_rule = 'rule[@id="91946f89120a44139959d6739b914679"]/directives/when'
