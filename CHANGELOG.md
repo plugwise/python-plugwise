@@ -2,7 +2,7 @@
 
 ## v1.15.0
 
-- Contribution PR's [#936](https://github.com/plugwise/python-plugwise/pull/936) and [#983](https://github.com/plugwise/python-plugwise/pull/938) by @MartvanMale:
+- Contribution PR's [#936](https://github.com/plugwise/python-plugwise/pull/936) and [#938](https://github.com/plugwise/python-plugwise/pull/938) by @MartvanMale:
   - Add the heating setpoint of each preset as an adjustable value for every zone with its own preset rule, and the cooling setpoint when the gateway has cooling. Changing one resets a manual setpoint on that zone to its active preset.
   - Each Adam zone now takes its presets from its own preset rule, not from the last preset rule on the gateway.
   - Fix setting changes after a timeout or a 504 error. The retry sent a read instead of the change, so the change was reported as done even when the gateway never got it.
