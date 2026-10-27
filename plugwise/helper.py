@@ -920,6 +920,22 @@ class SmileHelper(SmileCommon):
 
         return None  # pragma: no cover
 
+    def _cooling_allowed(self, loc_id: str) -> bool:
+        """Helper-function for data.py: _preset_temperatures().
+
+        Collect whether cooling is allowed in a zone, based on Location ID.
+        Assume it is where the zone says nothing, leaving the gateway-wide
+        capability to decide.
+        """
+        locator = (
+            f'./location[@id="{loc_id}"]/actuator_functionalities'
+            "/thermostat_functionality/cooling_allowed"
+        )
+        if (allowed := self._domain_objects.find(locator)) is not None:
+            return str(allowed.text) == "true"
+
+        return True
+
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
         presets: dict[str, list[float]] = {}

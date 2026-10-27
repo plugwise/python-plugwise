@@ -470,7 +470,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 793
+        assert self.entity_items == 763
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
@@ -480,6 +480,11 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert "setpoint" in zone["thermostat"]
         assert zone["home_preset_temperature"]["setpoint_low"] == 19.0
         assert zone["home_preset_temperature"]["setpoint_high"] == 22.0
+        # A zone that may not cool carries the heating setpoint alone
+        # pylint: disable-next=protected-access
+        no_cool = api._smile_api.gw_entities["20e735858f8146cead98b873177a4f99"]
+        assert no_cool["home_preset_temperature"]["setpoint"] == 18.0
+        assert "setpoint_high" not in no_cool["home_preset_temperature"]
 
         await api.close_connection()
         await self.disconnect(server, client)

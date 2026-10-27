@@ -178,8 +178,7 @@
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 18.0,
+      "setpoint": 18.0,
       "upper_bound": 30.0
     },
     "available_schedules": [
@@ -191,8 +190,7 @@
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 25.0,
-      "setpoint_low": 18.5,
+      "setpoint": 18.5,
       "upper_bound": 30.0
     },
     "climate_mode": "cool",
@@ -201,8 +199,7 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 18.0,
+      "setpoint": 18.0,
       "upper_bound": 30.0
     },
     "model": "ThermoZone",
@@ -210,8 +207,7 @@
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 30.0,
-      "setpoint_low": 10.0,
+      "setpoint": 10.0,
       "upper_bound": 30.0
     },
     "preset_modes": [
@@ -243,8 +239,7 @@
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 28.0,
-      "setpoint_low": 16.0,
+      "setpoint": 16.0,
       "upper_bound": 30.0
     },
     "vendor": "Plugwise",
@@ -341,8 +336,7 @@
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 23.0,
-      "setpoint_low": 20.5,
+      "setpoint": 20.5,
       "upper_bound": 30.0
     },
     "available_schedules": [
@@ -354,8 +348,7 @@
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 25.0,
-      "setpoint_low": 20.5,
+      "setpoint": 20.5,
       "upper_bound": 30.0
     },
     "climate_mode": "auto",
@@ -364,8 +357,7 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 20.5,
+      "setpoint": 20.5,
       "upper_bound": 30.0
     },
     "model": "ThermoZone",
@@ -373,8 +365,7 @@
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 30.0,
-      "setpoint_low": 10.0,
+      "setpoint": 10.0,
       "upper_bound": 30.0
     },
     "preset_modes": [
@@ -405,8 +396,7 @@
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 28.0,
-      "setpoint_low": 16.0,
+      "setpoint": 16.0,
       "upper_bound": 30.0
     },
     "vendor": "Plugwise",
@@ -536,8 +526,7 @@
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 23.0,
-      "setpoint_low": 20.5,
+      "setpoint": 20.5,
       "upper_bound": 30.0
     },
     "available_schedules": [
@@ -549,8 +538,7 @@
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 25.0,
-      "setpoint_low": 20.5,
+      "setpoint": 20.5,
       "upper_bound": 30.0
     },
     "climate_mode": "auto",
@@ -559,8 +547,7 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 20.5,
+      "setpoint": 20.5,
       "upper_bound": 30.0
     },
     "model": "ThermoZone",
@@ -568,8 +555,7 @@
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 30.0,
-      "setpoint_low": 10.0,
+      "setpoint": 10.0,
       "upper_bound": 30.0
     },
     "preset_modes": [
@@ -601,8 +587,7 @@
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 28.0,
-      "setpoint_low": 16.0,
+      "setpoint": 16.0,
       "upper_bound": 30.0
     },
     "vendor": "Plugwise",
@@ -617,8 +602,7 @@
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 18.0,
+      "setpoint": 18.0,
       "upper_bound": 30.0
     },
     "available_schedules": [
@@ -630,8 +614,7 @@
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 25.0,
-      "setpoint_low": 18.5,
+      "setpoint": 18.5,
       "upper_bound": 30.0
     },
     "climate_mode": "cool",
@@ -640,8 +623,7 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 20.0,
+      "setpoint": 20.0,
       "upper_bound": 30.0
     },
     "model": "ThermoZone",
@@ -649,8 +631,7 @@
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 30.0,
-      "setpoint_low": 10.0,
+      "setpoint": 10.0,
       "upper_bound": 30.0
     },
     "preset_modes": [
@@ -681,8 +662,7 @@
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 28.0,
-      "setpoint_low": 16.0,
+      "setpoint": 16.0,
       "upper_bound": 30.0
     },
     "vendor": "Plugwise",
@@ -899,8 +879,7 @@
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 17.5,
+      "setpoint": 17.5,
       "upper_bound": 30.0
     },
     "available_schedules": [
@@ -912,8 +891,7 @@
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 25.0,
-      "setpoint_low": 18.0,
+      "setpoint": 18.0,
       "upper_bound": 30.0
     },
     "climate_mode": "cool",
@@ -922,8 +900,7 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 18.0,
+      "setpoint": 18.0,
       "upper_bound": 30.0
     },
     "model": "ThermoZone",
@@ -931,8 +908,7 @@
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 30.0,
-      "setpoint_low": 10.0,
+      "setpoint": 10.0,
       "upper_bound": 30.0
     },
     "preset_modes": [
@@ -964,8 +940,7 @@
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 28.0,
-      "setpoint_low": 16.0,
+      "setpoint": 16.0,
       "upper_bound": 30.0
     },
     "vendor": "Plugwise",
@@ -1078,8 +1053,7 @@
     "asleep_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 21.5,
-      "setpoint_low": 17.5,
+      "setpoint": 17.5,
       "upper_bound": 30.0
     },
     "available_schedules": [
@@ -1091,8 +1065,7 @@
     "away_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 25.0,
-      "setpoint_low": 17.5,
+      "setpoint": 17.5,
       "upper_bound": 30.0
     },
     "climate_mode": "cool",
@@ -1101,8 +1074,7 @@
     "home_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 22.0,
-      "setpoint_low": 17.5,
+      "setpoint": 17.5,
       "upper_bound": 30.0
     },
     "model": "ThermoZone",
@@ -1110,8 +1082,7 @@
     "no_frost_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 30.0,
-      "setpoint_low": 10.0,
+      "setpoint": 10.0,
       "upper_bound": 30.0
     },
     "preset_modes": [
@@ -1143,8 +1114,7 @@
     "vacation_preset_temperature": {
       "lower_bound": 4.0,
       "resolution": 0.5,
-      "setpoint_high": 28.0,
-      "setpoint_low": 16.0,
+      "setpoint": 16.0,
       "upper_bound": 30.0
     },
     "vendor": "Plugwise",
