@@ -5,9 +5,11 @@ Plugwise backend module for Home Assistant Core.
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Awaitable, Callable
 import datetime as dt
 from typing import Any, cast
+from xml.sax.saxutils import quoteattr
 
 from plugwise.constants import (
     ALLOWED_ZONE_PROFILES,
@@ -21,6 +23,8 @@ from plugwise.constants import (
     NONE,
     NOTIFICATIONS,
     OFF,
+    PRESET_SETPOINT_ATTRIBUTES,
+    PRESET_TEMPERATURES,
     RULES,
     STATE_OFF,
     STATE_ON,
@@ -35,6 +39,11 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
+
+
+def _xml_attrs(attrs: dict[str, str]) -> str:
+    """Return XML attributes, with escaped values."""
+    return " ".join(f"{key}={quoteattr(value)}" for key, value in attrs.items())
 
 
 def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
@@ -86,6 +95,7 @@ class SmileAPI(SmileData):
         self._schedule_old_states = _schedule_old_states
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
+        self._preset_lock = asyncio.Lock()
 
     @property
     def cooling_present(self) -> bool:
@@ -169,8 +179,21 @@ class SmileAPI(SmileData):
         dev_id: str,
         key: str,
         temperature: float,
+        setpoint: str = "setpoint",
     ) -> None:
-        """Set the boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
+        """Set the boiler- or DHW-setpoint on the Central Heating boiler, the temperature-offset on a Thermostat or a preset temperature.
+
+        For a preset temperature, setpoint picks the heating (setpoint, setpoint_low) or cooling (setpoint_high) value.
+        """
+        if key in PRESET_TEMPERATURES:
+            if (attribute := PRESET_SETPOINT_ATTRIBUTES.get(setpoint)) is None:
+                raise PlugwiseError(f"Plugwise: invalid preset setpoint {setpoint}")
+            # An Adam zone is its own location, an Anna thermostat has one
+            loc_id = self.gw_entities[dev_id].get("location", dev_id)
+            preset = PRESET_TEMPERATURES[key]
+            await self.set_preset_temperature(loc_id, preset, temperature, attribute)
+            return
+
         match key:
             case "temperature_offset":
                 await self.set_offset(dev_id, temperature)
@@ -210,6 +233,71 @@ class SmileAPI(SmileData):
         data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
         await self.call_request(uri, method="put", data=data)
+
+    async def set_preset_temperature(
+        self,
+        loc_id: str,
+        preset: str,
+        temperature: float,
+        attribute: str = "heating_setpoint",
+    ) -> None:
+        """Set the heating or cooling setpoint of one preset in the zone's preset rule.
+
+        The gateway re-applies the zone's active preset, which resets a manual setpoint.
+        """
+        if (rule_id := self._preset_rule_id(loc_id)) is None:
+            raise PlugwiseError("Plugwise: this zone has no preset rule of its own")
+
+        locator = f'rule[@id="{rule_id}"]/directives/when[@preset="{preset}"]/then'
+        if (then := self._domain_objects.find(locator)) is None:
+            raise PlugwiseError(f"Plugwise: invalid preset {preset}")
+        if not MIN_SETPOINT <= temperature <= MAX_SETPOINT:
+            raise PlugwiseError(
+                f"Plugwise: preset temperature must be between {MIN_SETPOINT} and {MAX_SETPOINT}"
+            )
+
+        # The gateway replaces the whole directive set, so every preset is sent.
+        # The lock keeps a concurrent write from resending a stale value for another preset.
+        async with self._preset_lock:
+            heating = float(then.get("heating_setpoint"))
+            cooling = float(then.get("cooling_setpoint"))
+            if attribute == "heating_setpoint":
+                heating = temperature
+            else:
+                cooling = temperature
+            # Without cooling the stored cooling setpoint is a default nobody can change
+            if self._cooling_present and heating > cooling:
+                raise PlugwiseError(
+                    f"Plugwise: the {preset} heating setpoint {heating} is above its cooling setpoint {cooling}. Lower the heating setpoint or raise the cooling setpoint."
+                )
+
+            value = str(temperature)
+            directives = ""
+            for when in self._domain_objects.findall(
+                f'rule[@id="{rule_id}"]/directives/when'
+            ):
+                if (when_then := when.find("then")) is None:
+                    raise PlugwiseError(
+                        f"Plugwise: preset rule {rule_id} has a switch point without settings"
+                    )
+                then_attrs = dict(when_then.attrib)
+                if when.get("preset") == preset:
+                    then_attrs[attribute] = value
+                directives += (
+                    f"<when {_xml_attrs(dict(when.attrib))}>"
+                    f"<then {_xml_attrs(then_attrs)}/></when>"
+                )
+
+            data = (
+                "<rules>"
+                f"<rule id='{rule_id}'>"
+                f"<directives>{directives}</directives>"
+                "</rule>"
+                "</rules>"
+            )
+            await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+            for then in self._domain_objects.findall(locator):
+                then.set(attribute, value)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""

@@ -503,6 +503,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "boiler_temperature",
                 "temperature_offset",
                 "thermostat",
+                "home_preset_temperature",
+                "asleep_preset_temperature",
+                "away_preset_temperature",
+                "vacation_preset_temperature",
+                "no_frost_preset_temperature",
             ]
             for testitem, measurements in test_dict.items():
                 item_asserts = 0
@@ -981,6 +986,37 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             else:  # pragma: no cover
                 _LOGGER.info("  - succeeded unexpectedly for some reason")
                 return False
+
+    @staticmethod
+    async def tinker_preset_temperature(api, dev_id, unhappy=False):
+        """Change a preset temperature, then try a value and a preset that must fail."""
+        tinker_preset_temperature_passed = True
+        for key, value, valid in [
+            ("home_preset_temperature", 20.5, True),
+            ("home_preset_temperature", 35.0, False),
+            ("!bogus_preset_temperature", 20.0, False),
+        ]:
+            _LOGGER.info("- Adjusting %s to %s", key, value)
+            try:
+                if key.startswith("!"):
+                    # pylint: disable-next=protected-access
+                    await api._smile_api.set_preset_temperature(dev_id, "!bogus", value)
+                else:
+                    await api.set_number(dev_id, key, value)
+                _LOGGER.info("  + tinker_preset_temperature worked")
+                tinker_preset_temperature_passed &= valid
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + tinker_preset_temperature failed")
+                tinker_preset_temperature_passed &= not valid
+            except pw_exceptions.ConnectionFailedError:
+                if unhappy:
+                    _LOGGER.info("  + failed as expected before intended failure")
+                    return True
+                else:  # pragma: no cover
+                    _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
+
+        return tinker_preset_temperature_passed
 
     @staticmethod
     async def tinker_gateway_mode(api, unhappy=False):

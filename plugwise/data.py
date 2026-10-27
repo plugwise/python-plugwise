@@ -13,6 +13,8 @@ from plugwise.constants import (
     MAX_SETPOINT,
     MIN_SETPOINT,
     OFF,
+    PRESET_TEMPERATURE_RESOLUTION,
+    PRESET_TEMPERATURES,
     ActuatorData,
     GwEntityData,
 )
@@ -273,6 +275,9 @@ class SmileData(SmileHelper):
         if presets := self._presets(loc_id):
             entity["preset_modes"] = list(presets)
             entity["active_preset"] = self._preset(loc_id)
+            # Only a zone's own rule can be edited without touching other zones
+            if self._preset_rule_id(loc_id) is not None:
+                self._preset_temperatures(presets, entity)
 
         # Schedule
         entity["available_schedules"] = [OFF]
@@ -299,6 +304,35 @@ class SmileData(SmileHelper):
         self._get_schedule_states_with_off(
             loc_id, avail_schedules, sel_schedule, entity
         )
+
+    def _preset_temperatures(
+        self, presets: dict[str, list[float]], entity: GwEntityData
+    ) -> None:
+        """Helper-function for _climate_data().
+
+        Add the setpoints of each preset as an adjustable value: the heating setpoint,
+        or with cooling present the heating (low) and cooling (high) setpoints.
+        """
+        for key, preset in PRESET_TEMPERATURES.items():
+            if preset in presets:
+                heating, cooling = presets[preset]
+                if self._cooling_present:
+                    entity[key] = ActuatorData(
+                        lower_bound=MIN_SETPOINT,
+                        resolution=PRESET_TEMPERATURE_RESOLUTION,
+                        setpoint_high=cooling,
+                        setpoint_low=heating,
+                        upper_bound=MAX_SETPOINT,
+                    )
+                    self._count += 5
+                else:
+                    entity[key] = ActuatorData(
+                        lower_bound=MIN_SETPOINT,
+                        resolution=PRESET_TEMPERATURE_RESOLUTION,
+                        setpoint=heating,
+                        upper_bound=MAX_SETPOINT,
+                    )
+                    self._count += 4
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""

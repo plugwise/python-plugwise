@@ -254,6 +254,12 @@
   },
   "f2bf9048bef64cc5b6d5110154e33c81": {
     "active_preset": "home",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.0,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
       "off",
       "Badkamer",
@@ -261,16 +267,34 @@
       "Vakantie",
       "Weekschema"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "off",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Living room",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
-      "no_frost",
-      "asleep",
       "vacation",
+      "no_frost",
       "home",
+      "asleep",
       "away"
     ],
     "select_schedule": "off",
@@ -292,6 +316,12 @@
       ],
       "secondary": []
     },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
     "vendor": "Plugwise",
     "zone_profiles": [
       "active",
@@ -301,6 +331,12 @@
   },
   "f871b8c4d63549319221e294e4f88074": {
     "active_preset": "home",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 12.0,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
       "off",
       "Badkamer",
@@ -308,11 +344,29 @@
       "Vakantie",
       "Weekschema"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
     "climate_mode": "off",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Bathroom",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "asleep",
@@ -340,6 +394,12 @@
       "secondary": [
         "1772a4ea304041adb83f357b751341ff"
       ]
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 12.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [

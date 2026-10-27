@@ -78,6 +78,11 @@ def search_actuator_functionalities(
     return None
 
 
+def _own_rule_ids(rules: dict[str, dict[str, str]], loc_id: str) -> list[str]:
+    """Return the ids of the rules attached to loc_id."""
+    return [rule_id for rule_id, data in rules.items() if data["location"] == loc_id]
+
+
 class SmileHelper(SmileCommon):
     """The SmileHelper class."""
 
@@ -918,11 +923,8 @@ class SmileHelper(SmileCommon):
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
         presets: dict[str, list[float]] = {}
-        tag_1 = "zone_setpoint_and_state_based_on_preset"
-        tag_2 = "Thermostat presets"
-        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
-            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-                return presets  # pragma: no cover
+        if not (rule_ids := self._preset_rule_ids(loc_id)):
+            return presets  # pragma: no cover
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
@@ -934,6 +936,40 @@ class SmileHelper(SmileCommon):
                 ]
 
         return presets
+
+    def _preset_rule_ids(self, loc_id: str) -> list[str]:
+        """Helper-function for _presets().
+
+        Read only the preset rule attached to loc_id, so each zone gets its own presets.
+        Fall back to all preset rules when none or several are attached.
+        """
+        if (rule_id := self._preset_rule_id(loc_id)) is not None:
+            return [rule_id]
+
+        return list(self._all_preset_rules(loc_id))
+
+    def _preset_rule_id(self, loc_id: str) -> str | None:
+        """Return the id of the one preset rule attached to loc_id, or None."""
+        own = _own_rule_ids(self._all_preset_rules(loc_id), loc_id)
+        return own[0] if len(own) == 1 else None
+
+    def _all_preset_rules(self, loc_id: str) -> dict[str, dict[str, str]]:
+        """Collect all preset rules, choosing tagged or named rules per zone.
+
+        Use the rules found by name when loc_id has no tagged rule of its own but does
+        have a rule by name, or when there are no tagged rules at all.
+        """
+        tag_1 = "zone_setpoint_and_state_based_on_preset"
+        tag_2 = "Thermostat presets"
+        tagged = self._rule_ids_by_tag(tag_1, loc_id)
+        if _own_rule_ids(tagged, loc_id):
+            return tagged
+
+        named = self._rule_ids_by_name(tag_2, loc_id)
+        if _own_rule_ids(named, loc_id) or not tagged:
+            return named
+
+        return tagged
 
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets().

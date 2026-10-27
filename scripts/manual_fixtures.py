@@ -109,6 +109,20 @@ m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["sensors"]["temperature"] = 2
 m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["control_state"] = "cooling"
 m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "auto"
 
+# With cooling present, each preset carries a heating (low) and cooling (high) setpoint
+cooling_setpoints = {
+    "home_preset_temperature": 22.0,
+    "asleep_preset_temperature": 24.0,
+    "away_preset_temperature": 25.0,
+    "vacation_preset_temperature": 28.0,
+    "no_frost_preset_temperature": 30.0,
+}
+for zone in ("f2bf9048bef64cc5b6d5110154e33c81", "f871b8c4d63549319221e294e4f88074"):
+    for key, cooling in cooling_setpoints.items():
+        preset = m_adam_cooling[zone][key]
+        preset["setpoint_low"] = preset.pop("setpoint")
+        preset["setpoint_high"] = cooling
+
 
 # Go for da22
 m_adam_cooling["da224107914542988a88561b4452b0f6"]["select_regulation_mode"] = "cooling"
@@ -127,19 +141,30 @@ m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
 m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"]["flame_state"] = (
     False
 )
-m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["boiler_temperature"]["current"] = 19.0
+m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["boiler_temperature"]["current"] = (
+    19.0
+)
 m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 17.5
-m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"][
-    "water_temperature"
-] = 19.0
+m_adam_cooling["056ee145a816487eaa69243c3280f8bf"]["sensors"]["water_temperature"] = (
+    19.0
+)
 
 json_writer("m_adam_cooling", m_adam_cooling)
 
 ### FROM ABOVE
 
 m_adam_heating = m_adam_cooling.copy()
+
+# Without cooling, each preset carries only the heating setpoint
+for zone_id in ("f2bf9048bef64cc5b6d5110154e33c81", "f871b8c4d63549319221e294e4f88074"):
+    zone = m_adam_heating[zone_id] = dict(m_adam_heating[zone_id])
+    for key in cooling_setpoints:
+        preset = dict(zone[key])
+        preset["setpoint"] = preset.pop("setpoint_low")
+        preset.pop("setpoint_high")
+        zone[key] = preset
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
 m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"]["setpoint"] = 20.0
@@ -185,13 +210,15 @@ m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"]["flame_state"] = (
     False
 )
-m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["boiler_temperature"]["current"] = 37.0
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["boiler_temperature"]["current"] = (
+    37.0
+)
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 38.1
-m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"][
-    "water_temperature"
-] = 37.0
+m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["sensors"]["water_temperature"] = (
+    37.0
+)
 m_adam_heating["056ee145a816487eaa69243c3280f8bf"]["dhw_temperature"] = {
     "current": 37.0,
     "setpoint": 60.0,
@@ -208,17 +235,25 @@ json_writer("m_adam_heating", m_adam_heating)
 # Version with select_regulation = off and an active schedule
 m_adam_heating_off_schedule = m_adam_heating.copy()
 
-# Updates for f2bf9048bef64cc5b6d5110154e33c81" 
+# Updates for f2bf9048bef64cc5b6d5110154e33c81"
 m_adam_heating_off_schedule["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "off"
-m_adam_heating_off_schedule["f2bf9048bef64cc5b6d5110154e33c81"]["control_state"] = "idle"
+m_adam_heating_off_schedule["f2bf9048bef64cc5b6d5110154e33c81"]["control_state"] = (
+    "idle"
+)
 
 # Go for e2f4
 m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "off"
-m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["control_state"] = "idle"
-m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["select_schedule"] = "Badkamer"
+m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["control_state"] = (
+    "idle"
+)
+m_adam_heating_off_schedule["f871b8c4d63549319221e294e4f88074"]["select_schedule"] = (
+    "Badkamer"
+)
 
 # Go for da22
-m_adam_heating_off_schedule["da224107914542988a88561b4452b0f6"]["select_regulation_mode"] = "off"
+m_adam_heating_off_schedule["da224107914542988a88561b4452b0f6"][
+    "select_regulation_mode"
+] = "off"
 
 # Go for 056e
 m_adam_heating_off_schedule["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
@@ -253,8 +288,12 @@ m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["binary_sensors"][
     "cooling_state"
 ] = True
 
-m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["boiler_temperature"]["current"] = 22.7
-m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["dhw_temperature"]["current"] = 41.5
+m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["boiler_temperature"][
+    "current"
+] = 22.7
+m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["dhw_temperature"][
+    "current"
+] = 41.5
 m_anna_heatpump_cooling["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "dhw_temperature"
 ] = 41.5
@@ -312,8 +351,12 @@ m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["binary_sensors"][
     "cooling_state"
 ] = False
 
-m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["boiler_temperature"]["current"] = 19.1
-m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["dhw_temperature"]["current"] = 46.3
+m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["boiler_temperature"][
+    "current"
+] = 19.1
+m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["dhw_temperature"][
+    "current"
+] = 46.3
 m_anna_heatpump_idle["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
     "intended_boiler_temperature"
 ] = 18.0

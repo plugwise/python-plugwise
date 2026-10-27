@@ -1,5 +1,8 @@
 """Test Plugwise module Adam related functionality."""
 
+import asyncio
+from unittest.mock import patch
+
 import pytest
 
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
@@ -47,7 +50,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.entity_items == 235
+        assert self.entity_items == 275
         assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
@@ -68,6 +71,112 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "f871b8c4d63549319221e294e4f88074",
         ]
         assert api.reboot
+        # Each zone reads its own preset rule, not the last one in the document
+        # pylint: disable-next=protected-access
+        living_room = api._smile_api._presets("f2bf9048bef64cc5b6d5110154e33c81")
+        # pylint: disable-next=protected-access
+        bathroom = api._smile_api._presets("f871b8c4d63549319221e294e4f88074")
+        assert living_room["home"] == [19.0, 22.0]
+        assert bathroom["home"] == [18.0, 22.0]
+        # pylint: disable-next=protected-access
+        assert len(api._smile_api._preset_rule_ids("no_such_zone")) == 2
+        # A zone whose own rule has no template tag still finds that rule by name
+        # pylint: disable-next=protected-access
+        bathroom_rule = api._smile_api._domain_objects.find(
+            'rule[@id="91946f89120a44139959d6739b914679"]'
+        )
+        template = bathroom_rule.find("template")
+        bathroom_rule.remove(template)
+        # pylint: disable-next=protected-access
+        assert api._smile_api._preset_rule_id("f871b8c4d63549319221e294e4f88074") == (
+            "91946f89120a44139959d6739b914679"
+        )
+        # pylint: disable-next=protected-access
+        bathroom = api._smile_api._presets("f871b8c4d63549319221e294e4f88074")
+        assert bathroom["home"] == [18.0, 22.0]
+        bathroom_rule.append(template)
+
+        assert await self.tinker_preset_temperature(
+            api, "f2bf9048bef64cc5b6d5110154e33c81"
+        )
+        # pylint: disable-next=protected-access
+        living_room = api._smile_api._presets("f2bf9048bef64cc5b6d5110154e33c81")
+        assert living_room["home"] == [20.5, 22.0]
+        # The gateway replaces the whole directive set, so all presets must be sent
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await api.set_number(
+                "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 16.0
+            )
+        sent = spy.call_args.kwargs["data"]
+        assert sent.count("<when preset=") == 5
+        assert 'heating_setpoint="20.5"' in sent
+        assert 'heating_setpoint="16.0"' in sent
+        # Without cooling, heating may go above the stored cooling setpoint
+        await api.set_number(
+            "f2bf9048bef64cc5b6d5110154e33c81", "home_preset_temperature", 22.5
+        )
+        # The heater has no zone with a preset rule of its own
+        assert not await self.tinker_preset_temperature(
+            api, "056ee145a816487eaa69243c3280f8bf"
+        )
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_number(
+                "f2bf9048bef64cc5b6d5110154e33c81",
+                "away_preset_temperature",
+                16.0,
+                setpoint="bogus",
+            )
+
+        # A preset write keeps every attribute and escapes the values
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        living_rule = 'rule[@id="021e3f453589448e891d29f195fbcaf0"]/directives/when'
+        tree.find(living_rule).set("presence", "a&b")
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await api.set_number(
+                "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 16.0
+            )
+        assert 'presence="a&amp;b"' in spy.call_args.kwargs["data"]
+
+        # Simultaneous preset writes on one zone keep both changes
+        with patch.object(
+            # pylint: disable-next=protected-access
+            api._smile_api,
+            "call_request",
+            # pylint: disable-next=protected-access
+            wraps=api._smile_api.call_request,
+        ) as spy:
+            await asyncio.gather(
+                api.set_number(
+                    "f2bf9048bef64cc5b6d5110154e33c81", "home_preset_temperature", 21.0
+                ),
+                api.set_number(
+                    "f2bf9048bef64cc5b6d5110154e33c81", "away_preset_temperature", 15.5
+                ),
+            )
+        sent = spy.call_args.kwargs["data"]
+        assert 'heating_setpoint="21.0"' in sent
+        assert 'heating_setpoint="15.5"' in sent
+
+        # A preset rule with an incomplete switch point is not written
+        bathroom_rule = 'rule[@id="91946f89120a44139959d6739b914679"]/directives/when'
+        tree.find(bathroom_rule).remove(tree.find(f"{bathroom_rule}/then"))
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_number(
+                "f871b8c4d63549319221e294e4f88074", "home_preset_temperature", 19.0
+            )
 
         result = await self.tinker_thermostat(
             api,
@@ -212,6 +321,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             unhappy=True,
         )
 
+        assert await self.tinker_preset_temperature(
+            api, "f2bf9048bef64cc5b6d5110154e33c81", unhappy=True
+        )
+
         await api.close_connection()
         await self.disconnect(server, client)
 
@@ -246,7 +359,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self.entity_items == 386
+        assert self.entity_items == 486
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -320,7 +433,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 394
+        assert self.entity_items == 494
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -357,10 +470,16 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 543
+        assert self.entity_items == 793
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
+        # A zone keeps one climate setpoint, its presets carry heating and cooling
+        # pylint: disable-next=protected-access
+        zone = api._smile_api.gw_entities["04b15f6e884448288f811d29fb7b1b30"]
+        assert "setpoint" in zone["thermostat"]
+        assert zone["home_preset_temperature"]["setpoint_low"] == 19.0
+        assert zone["home_preset_temperature"]["setpoint_high"] == 22.0
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -381,7 +500,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 74
+        assert self.entity_items == 99
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
@@ -406,7 +525,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self.entity_items == 85
+        assert self.entity_items == 105
         assert test_items == self.entity_items
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
@@ -447,7 +566,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2021-06-20 00:00:01", testdata)
         assert api.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self.entity_items == 273
+        assert self.entity_items == 353
         assert test_items == self.entity_items
 
         # Negative test
