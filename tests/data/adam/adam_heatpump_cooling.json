@@ -181,7 +181,7 @@
       "Werkdag schema",
       "Weekend"
     ],
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
@@ -605,7 +605,7 @@
       "Werkdag schema",
       "Weekend"
     ],
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
@@ -882,7 +882,7 @@
       "Werkdag schema",
       "Weekend"
     ],
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
@@ -1056,7 +1056,7 @@
       "Werkdag schema",
       "Weekend"
     ],
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",

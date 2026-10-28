@@ -265,8 +265,12 @@ class SmileAPI(SmileData):
                 heating = temperature
             else:
                 cooling = temperature
-            # Without cooling the stored cooling setpoint is a default nobody can change
-            if self._cooling_present and heating > cooling:
+            # Where a zone may not cool, the stored cooling setpoint is a default nobody can change
+            if (
+                self._cooling_present
+                and self._cooling_allowed(loc_id)
+                and heating > cooling
+            ):
                 raise PlugwiseError(
                     f"Plugwise: the {preset} heating setpoint {heating} is above its cooling setpoint {cooling}. Lower the heating setpoint or raise the cooling setpoint."
                 )

@@ -193,7 +193,7 @@
       "setpoint": 18.5,
       "upper_bound": 30.0
     },
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "home_preset_temperature": {
@@ -617,7 +617,7 @@
       "setpoint": 18.5,
       "upper_bound": 30.0
     },
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "home_preset_temperature": {
@@ -894,7 +894,7 @@
       "setpoint": 18.0,
       "upper_bound": 30.0
     },
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "home_preset_temperature": {
@@ -1068,7 +1068,7 @@
       "setpoint": 17.5,
       "upper_bound": 30.0
     },
-    "climate_mode": "cool",
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "home_preset_temperature": {

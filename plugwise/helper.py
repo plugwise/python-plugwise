@@ -921,7 +921,7 @@ class SmileHelper(SmileCommon):
         return None  # pragma: no cover
 
     def _cooling_allowed(self, loc_id: str) -> bool:
-        """Helper-function for data.py: _preset_temperatures().
+        """Helper-function for data.py: _climate_data() and smile.py: set_preset_temperature().
 
         Collect whether cooling is allowed in a zone, based on Location ID.
         Assume it is where the zone says nothing, leaving the gateway-wide
