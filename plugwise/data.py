@@ -268,6 +268,8 @@ class SmileData(SmileHelper):
         if entity.get("location") is not None:
             loc_id = entity["location"]
 
+        zone_cools = self._cooling_present and self._cooling_allowed(loc_id)
+
         # Presets
         entity["preset_modes"] = None
         entity["active_preset"] = None
@@ -277,7 +279,7 @@ class SmileData(SmileHelper):
             entity["active_preset"] = self._preset(loc_id)
             # Only a zone's own rule can be edited without touching other zones
             if self._preset_rule_id(loc_id) is not None:
-                self._preset_temperatures(presets, entity)
+                self._preset_temperatures(zone_cools, presets, entity)
 
         # Schedule
         entity["available_schedules"] = [OFF]
@@ -293,7 +295,7 @@ class SmileData(SmileHelper):
         self._count += 1
         if sel_schedule == OFF:
             entity["climate_mode"] = "heat"
-            if self._cooling_present:
+            if zone_cools:
                 entity["climate_mode"] = (
                     "cool" if self.check_reg_mode("cooling") else "heat_cool"
                 )
@@ -306,17 +308,17 @@ class SmileData(SmileHelper):
         )
 
     def _preset_temperatures(
-        self, presets: dict[str, list[float]], entity: GwEntityData
+        self, zone_cools: bool, presets: dict[str, list[float]], entity: GwEntityData
     ) -> None:
         """Helper-function for _climate_data().
 
         Add the setpoints of each preset as an adjustable value: the heating setpoint,
-        or with cooling present the heating (low) and cooling (high) setpoints.
+        or where the zone may cool the heating (low) and cooling (high) setpoints.
         """
         for key, preset in PRESET_TEMPERATURES.items():
             if preset in presets:
                 heating, cooling = presets[preset]
-                if self._cooling_present:
+                if zone_cools:
                     entity[key] = ActuatorData(
                         lower_bound=MIN_SETPOINT,
                         resolution=PRESET_TEMPERATURE_RESOLUTION,
