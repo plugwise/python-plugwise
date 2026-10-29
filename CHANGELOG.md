@@ -1,9 +1,10 @@
 # Changelog
 
-## Ongoing
+## v1.16.0
 
-- A zone shows the cooling setpoint of each preset only when the gateway has cooling and cooling is allowed for that zone. A zone that may not cool shows the heating setpoint alone, and, when no schedule is selected, reports heating as its climate mode.
-- Setting the heating setpoint of a preset no longer fails in a zone that may not cool when the value is above the cooling setpoint stored for that zone.
+- Contribution PR [#940](https://github.com/plugwise/python-plugwise/pull/940) by @MartvanMale:
+  - A zone shows the cooling setpoint of each preset only when the gateway has cooling and cooling is allowed for that zone. A zone that may not cool shows the heating setpoint alone, and, when no schedule is selected, reports heating as its climate mode.
+  - Setting the heating setpoint of a preset no longer fails in a zone that may not cool when the value is above the cooling setpoint stored for that zone.
 
 ## v1.15.0
 
