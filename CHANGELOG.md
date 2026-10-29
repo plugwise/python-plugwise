@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Add the weekly schedules, with their name, zones and time slots, to the gateway data. The slots are listed in week order, starting on Monday.
+
 ## v1.16.0
 
 - Contribution PR [#940](https://github.com/plugwise/python-plugwise/pull/940) by @MartvanMale:

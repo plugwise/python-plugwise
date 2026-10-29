@@ -50,7 +50,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.entity_items == 275
+        assert self.entity_items == 279
         assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
@@ -95,6 +95,60 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         bathroom = api._smile_api._presets("f871b8c4d63549319221e294e4f88074")
         assert bathroom["home"] == [18.0, 22.0]
         bathroom_rule.append(template)
+
+        # pylint: disable-next=protected-access
+        gateway = api._smile_api.gw_entities["da224107914542988a88561b4452b0f6"]
+        schedule = gateway["schedules"]["24df4dace79a4c42a0f4750ce65d84cb"]
+        assert schedule["name"] == "Weekschema"
+        assert schedule["zones"] == ["f2bf9048bef64cc5b6d5110154e33c81"]
+        assert {"start": "su 21:30", "end": "mo 07:15", "preset": "asleep"} in schedule[
+            "slots"
+        ]
+        assert {"start": "mo 07:15", "end": "mo 16:30", "setpoint": 18.5} in schedule[
+            "slots"
+        ]
+        # Attributes the schedule template allows beyond time are kept as they are
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        tree.find('rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when').set(
+            "presence", "true"
+        )
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert {
+            "start": "tu 21:30",
+            "end": "we 07:15",
+            "presence": "true",
+            "preset": "asleep",
+        } in slots
+        # Slots run in week order, Monday first, whatever the gateway's order
+        assert slots[0]["start"] == "mo 07:15"
+        assert slots[-1]["start"] == "su 21:30"
+        # A slot without a readable start goes last
+        first_when = tree.find(
+            'rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when'
+        )
+        first_when.set("time", "tu 21:30:00")
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert slots[-1]["time"] == "tu 21:30:00"
+        first_when.set("time", "[tu 21:30,we 07:15)")
+        # A setpoint that is not a number is kept as text
+        setpoint_then = tree.find(
+            'rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when/then[@setpoint]'
+        )
+        original_setpoint = setpoint_then.get("setpoint")
+        setpoint_then.set("setpoint", "warm")
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert "warm" in [slot.get("setpoint") for slot in slots]
+        setpoint_then.set("setpoint", original_setpoint)
 
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
@@ -359,7 +413,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self.entity_items == 486
+        assert self.entity_items == 491
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -433,7 +487,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 494
+        assert self.entity_items == 499
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -470,7 +524,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 763
+        assert self.entity_items == 766
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
@@ -514,7 +568,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 99
+        assert self.entity_items == 102
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
@@ -539,7 +593,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self.entity_items == 105
+        assert self.entity_items == 106
         assert test_items == self.entity_items
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
