@@ -16,6 +16,19 @@ GF7_WOONKAMER = "GF7  Woonkamer"
 WERKDAG_SCHEMA = "Werkdag schema"
 
 
+async def _sent_schedule_state(api, loc_id, name, state):
+    """Switch a schedule and return the request body sent to the gateway."""
+    with patch.object(
+        # pylint: disable-next=protected-access
+        api._smile_api,
+        "call_request",
+        # pylint: disable-next=protected-access
+        wraps=api._smile_api.call_request,
+    ) as spy:
+        await api.set_schedule_state(loc_id, name=name, state=state)
+    return spy.call_args.kwargs["data"]
+
+
 class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outside-init
     """Tests for Adam."""
 
@@ -306,6 +319,45 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         zomer = api._smile_api._schedule_rules()["e497d6c3572540008daa9d3ec9d500cd"]
         assert zomer["name"] == "Zomer"
         assert zomer["zones"] == ["f871b8c4d63549319221e294e4f88074"]
+
+        # Switching a schedule on activates its rule and switching off leaves the rule alone
+        bathroom_zone = "f871b8c4d63549319221e294e4f88074"
+        sent_on = await _sent_schedule_state(api, bathroom_zone, "Badkamer", "on")
+        sent_off = await _sent_schedule_state(api, bathroom_zone, "Badkamer", "off")
+        assert "<active>true</active>" in sent_on
+        assert "<active>" not in sent_off
+
+        # A schedule that is attached but inactive is switched on again
+        await api.set_schedule_state(bathroom_zone, name="Badkamer", state="on")
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        tree.find('rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/active').text = "false"
+        sent = await _sent_schedule_state(api, bathroom_zone, "Badkamer", "on")
+        assert "<active>true</active>" in sent
+        # The zone is attached once, also after switching an attached schedule on
+        assert sent.count(bathroom_zone) == 1
+        badkamer_zones = tree.findall(
+            'rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/contexts/context/zone/location'
+        )
+        assert bathroom_zone in [zone.get("id") for zone in badkamer_zones]
+        assert len(badkamer_zones) == len({zone.get("id") for zone in badkamer_zones})
+
+        # A schedule renamed through set_schedule can be switched off by its new name
+        # pylint: disable-next=protected-access
+        badkamer = api._smile_api._schedule_rules()["ebe3e57ec41d4d8faa927ca85c95b747"]
+        await api.set_schedule(
+            "ebe3e57ec41d4d8faa927ca85c95b747", badkamer["slots"], name="Bad"
+        )
+        await api.set_schedule_state(bathroom_zone, name="Bad", state="off")
+        assert not tree.findall(
+            f'rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/contexts/context/zone/location[@id="{bathroom_zone}"]'
+        )
+        # Switching off a schedule the zone is not attached to sends the contexts unchanged
+        # pylint: disable-next=protected-access
+        api._smile_api._schedule_old_states[bathroom_zone]["Bad"] = "on"
+        sent = await _sent_schedule_state(api, bathroom_zone, "Bad", "off")
+        assert "<contexts" in sent
+        assert bathroom_zone not in sent
 
         switch_change = await self.tinker_switch(
             api,

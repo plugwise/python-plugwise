@@ -623,25 +623,33 @@ class SmileAPI(SmileData):
         if not schedule_rule or schedule_rule is None:
             raise PlugwiseError(f"Plugwise: no schedule with name {name} available")
 
-        # If no state change is requested, do nothing
-        if state == self._schedule_old_states[loc_id].get(name):
+        schedule_rule_id: str = next(iter(schedule_rule))
+        rule_active = self._domain_objects.find(
+            f'rule[@id="{schedule_rule_id}"]/active'
+        )
+        is_active = rule_active is not None and rule_active.text == "true"
+        # If no state change is requested, do nothing; an inactive rule still needs
+        # switching on, since the gateway only runs active schedules
+        if state == self._schedule_old_states[loc_id].get(name) and (
+            state == STATE_OFF or is_active
+        ):
             return
 
-        schedule_rule_id: str = next(iter(schedule_rule))
-        template = (
-            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
-        )
+        template = f'<template tag="{SCHEDULE_TAG}" />'
         if self.check_name(ANNA):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).get("id")
             template = f'<template id="{template_id}" />'
 
         contexts = self.determine_contexts(loc_id, state, schedule_rule_id)
+        # An attached schedule only runs when its rule is active
+        active = "<active>true</active>" if state == STATE_ON else ""
         data = (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
             f"<name><![CDATA[{name}]]></name>"
             f"{template}"
+            f"{active}"
             f"{contexts}"
             "</rule>"
             "</rules>"
@@ -649,20 +657,20 @@ class SmileAPI(SmileData):
         uri = f"{RULES};id={schedule_rule_id}"
         await self.call_request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = state
+        if state == STATE_ON and rule_active is not None:
+            rule_active.text = "true"
 
     def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""
         locator = f'.//*[@id="{sched_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
         locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := contexts.find(locator)) is None:
-            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-            subject = etree.fromstring(subject)
-
-        if state == STATE_OFF:
+        subject = contexts.find(locator)
+        if state == STATE_OFF and subject is not None:
             contexts.remove(subject)
-        if state == STATE_ON:
-            contexts.append(subject)
+        if state == STATE_ON and subject is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            contexts.append(etree.fromstring(subject))
 
         return str(etree.tostring(contexts, encoding="unicode").rstrip())
 
