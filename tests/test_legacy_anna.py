@@ -2,7 +2,7 @@
 
 import pytest
 
-from .test_init import _LOGGER, TestPlugwise
+from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
 SMILE_TYPE = "anna"
 # Reoccuring constants
@@ -35,6 +35,16 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         result = await self.tinker_legacy_thermostat(api, schedule_on=False)
         assert result
+
+        # Legacy gateways refuse schedule writes
+        slots = [{"start": "mo 07:00", "end": "mo 22:00", "preset": "home"}]
+        for call in (
+            api.set_schedule("rule", slots),
+            api.create_schedule("New", slots),
+            api.delete_schedule("rule"),
+        ):
+            with pytest.raises(pw_exceptions.PlugwiseError):
+                await call
 
         await api.close_connection()
         await self.disconnect(server, client)

@@ -561,6 +561,9 @@ SCHEDULE_TAG: Final = "zone_preset_based_on_time_and_presence_with_override"
 SCHEDULE_PERIOD: Final = re.compile(r"\[(\w\w \d\d:\d\d),(\w\w \d\d:\d\d)\)")
 SCHEDULE_NUMBERS: Final = ("setpoint", "heating_setpoint", "cooling_setpoint")
 SCHEDULE_DAYS: Final = ("mo", "tu", "we", "th", "fr", "sa", "su")
+SCHEDULE_POINT: Final = re.compile(r"(mo|tu|we|th|fr|sa|su) ([01]\d|2[0-3]):[0-5]\d")
+# Slot keys that belong on <when>; all others go on <then>
+SCHEDULE_WHEN_KEYS: Final = ("presence",)
 
 type ScheduleSlot = dict[str, str | float]
 

@@ -278,6 +278,35 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert result_1 and result_2
 
+        # A rewrite keeps the presence attribute set on Weekschema earlier in this test
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        # pylint: disable-next=protected-access
+        sent = api._smile_api._schedule_directives(slots)
+        assert '<when time="[tu 21:30,we 07:15)" presence="true">' in sent
+        assert await self.tinker_schedule_write(
+            api, "24df4dace79a4c42a0f4750ce65d84cb", "021e3f453589448e891d29f195fbcaf0"
+        )
+        # pylint: disable-next=protected-access
+        assert (
+            "24df4dace79a4c42a0f4750ce65d84cb" not in api._smile_api._schedule_rules()
+        )
+        # A renamed schedule can be switched on by its new name before the next update
+        # pylint: disable-next=protected-access
+        vakantie = api._smile_api._schedule_rules()["e497d6c3572540008daa9d3ec9d500cd"]
+        await api.set_schedule(
+            "e497d6c3572540008daa9d3ec9d500cd", vakantie["slots"], name="Zomer"
+        )
+        await api.set_schedule_state(
+            "f871b8c4d63549319221e294e4f88074", name="Zomer", state="on"
+        )
+        # pylint: disable-next=protected-access
+        zomer = api._smile_api._schedule_rules()["e497d6c3572540008daa9d3ec9d500cd"]
+        assert zomer["name"] == "Zomer"
+        assert zomer["zones"] == ["f871b8c4d63549319221e294e4f88074"]
+
         switch_change = await self.tinker_switch(
             api,
             "e8ef2a01ed3b4139a53bf749204fe6b4",
@@ -377,6 +406,12 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81", unhappy=True
+        )
+        assert await self.tinker_schedule_write(
+            api,
+            "24df4dace79a4c42a0f4750ce65d84cb",
+            "021e3f453589448e891d29f195fbcaf0",
+            unhappy=True,
         )
 
         await api.close_connection()
