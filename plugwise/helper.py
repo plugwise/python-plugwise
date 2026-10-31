@@ -5,6 +5,7 @@ Plugwise Smile protocol helpers.
 
 from __future__ import annotations
 
+from contextlib import suppress
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -28,6 +29,10 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
+    SCHEDULE_DAYS,
+    SCHEDULE_NUMBERS,
+    SCHEDULE_PERIOD,
+    SCHEDULE_TAG,
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
@@ -38,6 +43,8 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     GwEntityData,
+    ScheduleData,
+    ScheduleSlot,
     SensorType,
     ThermoLoc,
     ToggleNameType,
@@ -81,6 +88,14 @@ def search_actuator_functionalities(
 def _own_rule_ids(rules: dict[str, dict[str, str]], loc_id: str) -> list[str]:
     """Return the ids of the rules attached to loc_id."""
     return [rule_id for rule_id, data in rules.items() if data["location"] == loc_id]
+
+
+def _slot_order(slot: ScheduleSlot) -> tuple[int, str]:
+    """Return a sort key that orders slots by their start in the week, Monday first."""
+    start = slot.get("start")
+    if isinstance(start, str) and start[:2] in SCHEDULE_DAYS:
+        return SCHEDULE_DAYS.index(start[:2]), start[3:]
+    return len(SCHEDULE_DAYS), ""
 
 
 class SmileHelper(SmileCommon):
@@ -1041,7 +1056,7 @@ class SmileHelper(SmileCommon):
         available: list[str] = [OFF]
         rule_ids: dict[str, dict[str, str]] = {}
         selected = OFF
-        tag = "zone_preset_based_on_time_and_presence_with_override"
+        tag = SCHEDULE_TAG
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
 
@@ -1059,6 +1074,47 @@ class SmileHelper(SmileCommon):
             schedules.append(name)
 
         return available, selected
+
+    def _schedule_rules(self) -> dict[str, ScheduleData]:
+        """Helper-function for data.py: _update_gw_entities().
+
+        Collect every weekly schedule on the gateway, keyed by rule id.
+        """
+        schedules: dict[str, ScheduleData] = {}
+        locator = f'./template[@tag="{SCHEDULE_TAG}"]'
+        for rule in self._domain_objects.findall("./rule"):
+            if rule.find(locator) is None or rule.find("directives") is None:
+                continue
+
+            slots: list[ScheduleSlot] = []
+            for when in rule.findall("directives/when"):
+                slot: ScheduleSlot = {}
+                for key, value in when.attrib.items():
+                    # time is a week interval: "[mo 07:15,mo 16:30)"
+                    if key == "time" and (period := SCHEDULE_PERIOD.fullmatch(value)):
+                        slot["start"], slot["end"] = period.groups()
+                    else:
+                        slot[key] = value
+                if (then := when.find("then")) is not None:
+                    for key, value in then.attrib.items():
+                        slot[key] = value
+                        if key in SCHEDULE_NUMBERS:
+                            # One unreadable slot must not break the whole update
+                            with suppress(ValueError):
+                                slot[key] = float(value)
+                slots.append(slot)
+
+            schedules[rule.get("id")] = {
+                "name": rule.findtext("name", ""),
+                "active": rule.findtext("active") == "true",
+                "zones": [
+                    location.get("id")
+                    for location in rule.findall("contexts/context/zone/location")
+                ],
+                "slots": sorted(slots, key=_slot_order),
+            }
+
+        return schedules
 
     def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().

@@ -115,7 +115,17 @@
       "outdoor_temperature": 11.8
     },
     "vendor": "Plugwise",
-    "wifi_mac_address": "C4930002ABCE"
+    "wifi_mac_address": "C4930002ABCE",
+    "schedules": {
+      "898e6eaa068b44019ff9dc5c578881b2": {
+        "name": "Thermostat schedule",
+        "active": false,
+        "zones": [
+          "5b13651d79c4454684fd268850b1bff8"
+        ],
+        "slots": []
+      }
+    }
   },
   "da7be222ab3b420c927f3e49fade0304": {
     "available": true,

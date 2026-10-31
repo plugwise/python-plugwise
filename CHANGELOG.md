@@ -1,5 +1,11 @@
 # Changelog
 
+## Ongoing
+
+- Switching a schedule on also makes it active, so a schedule that was inactive starts running. Switching on a schedule that is already attached no longer adds its zone a second time.
+- Add `set_schedule`, `create_schedule` and `delete_schedule` to change, rename, add and remove weekly schedules. A new schedule is inactive and attached to no zone.
+- Add the weekly schedules, with their name, zones and time slots, to the gateway data. The slots are listed in week order, starting on Monday.
+
 ## v1.16.0
 
 - Contribution PR [#940](https://github.com/plugwise/python-plugwise/pull/940) by @MartvanMale:

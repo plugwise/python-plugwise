@@ -16,6 +16,19 @@ GF7_WOONKAMER = "GF7  Woonkamer"
 WERKDAG_SCHEMA = "Werkdag schema"
 
 
+async def _sent_schedule_state(api, loc_id, name, state):
+    """Switch a schedule and return the request body sent to the gateway."""
+    with patch.object(
+        # pylint: disable-next=protected-access
+        api._smile_api,
+        "call_request",
+        # pylint: disable-next=protected-access
+        wraps=api._smile_api.call_request,
+    ) as spy:
+        await api.set_schedule_state(loc_id, name=name, state=state)
+    return spy.call_args.kwargs["data"]
+
+
 class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outside-init
     """Tests for Adam."""
 
@@ -50,7 +63,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2025-10-12 00:00:01", testdata)
         assert api.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.entity_items == 275
+        assert self.entity_items == 279
         assert test_items == self.entity_items
         assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
@@ -95,6 +108,60 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         bathroom = api._smile_api._presets("f871b8c4d63549319221e294e4f88074")
         assert bathroom["home"] == [18.0, 22.0]
         bathroom_rule.append(template)
+
+        # pylint: disable-next=protected-access
+        gateway = api._smile_api.gw_entities["da224107914542988a88561b4452b0f6"]
+        schedule = gateway["schedules"]["24df4dace79a4c42a0f4750ce65d84cb"]
+        assert schedule["name"] == "Weekschema"
+        assert schedule["zones"] == ["f2bf9048bef64cc5b6d5110154e33c81"]
+        assert {"start": "su 21:30", "end": "mo 07:15", "preset": "asleep"} in schedule[
+            "slots"
+        ]
+        assert {"start": "mo 07:15", "end": "mo 16:30", "setpoint": 18.5} in schedule[
+            "slots"
+        ]
+        # Attributes the schedule template allows beyond time are kept as they are
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        tree.find('rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when').set(
+            "presence", "true"
+        )
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert {
+            "start": "tu 21:30",
+            "end": "we 07:15",
+            "presence": "true",
+            "preset": "asleep",
+        } in slots
+        # Slots run in week order, Monday first, whatever the gateway's order
+        assert slots[0]["start"] == "mo 07:15"
+        assert slots[-1]["start"] == "su 21:30"
+        # A slot without a readable start goes last
+        first_when = tree.find(
+            'rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when'
+        )
+        first_when.set("time", "tu 21:30:00")
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert slots[-1]["time"] == "tu 21:30:00"
+        first_when.set("time", "[tu 21:30,we 07:15)")
+        # A setpoint that is not a number is kept as text
+        setpoint_then = tree.find(
+            'rule[@id="24df4dace79a4c42a0f4750ce65d84cb"]/directives/when/then[@setpoint]'
+        )
+        original_setpoint = setpoint_then.get("setpoint")
+        setpoint_then.set("setpoint", "warm")
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        assert "warm" in [slot.get("setpoint") for slot in slots]
+        setpoint_then.set("setpoint", original_setpoint)
 
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81"
@@ -224,6 +291,74 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert result_1 and result_2
 
+        # A rewrite keeps the presence attribute set on Weekschema earlier in this test
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()["24df4dace79a4c42a0f4750ce65d84cb"][
+            "slots"
+        ]
+        # pylint: disable-next=protected-access
+        sent = api._smile_api._schedule_directives(slots)
+        assert '<when time="[tu 21:30,we 07:15)" presence="true">' in sent
+        assert await self.tinker_schedule_write(
+            api, "24df4dace79a4c42a0f4750ce65d84cb", "021e3f453589448e891d29f195fbcaf0"
+        )
+        # pylint: disable-next=protected-access
+        assert (
+            "24df4dace79a4c42a0f4750ce65d84cb" not in api._smile_api._schedule_rules()
+        )
+        # A renamed schedule can be switched on by its new name before the next update
+        # pylint: disable-next=protected-access
+        vakantie = api._smile_api._schedule_rules()["e497d6c3572540008daa9d3ec9d500cd"]
+        await api.set_schedule(
+            "e497d6c3572540008daa9d3ec9d500cd", vakantie["slots"], name="Zomer"
+        )
+        await api.set_schedule_state(
+            "f871b8c4d63549319221e294e4f88074", name="Zomer", state="on"
+        )
+        # pylint: disable-next=protected-access
+        zomer = api._smile_api._schedule_rules()["e497d6c3572540008daa9d3ec9d500cd"]
+        assert zomer["name"] == "Zomer"
+        assert zomer["zones"] == ["f871b8c4d63549319221e294e4f88074"]
+
+        # Switching a schedule on activates its rule and switching off leaves the rule alone
+        bathroom_zone = "f871b8c4d63549319221e294e4f88074"
+        sent_on = await _sent_schedule_state(api, bathroom_zone, "Badkamer", "on")
+        sent_off = await _sent_schedule_state(api, bathroom_zone, "Badkamer", "off")
+        assert "<active>true</active>" in sent_on
+        assert "<active>" not in sent_off
+
+        # A schedule that is attached but inactive is switched on again
+        await api.set_schedule_state(bathroom_zone, name="Badkamer", state="on")
+        # pylint: disable-next=protected-access
+        tree = api._smile_api._domain_objects
+        tree.find('rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/active').text = "false"
+        sent = await _sent_schedule_state(api, bathroom_zone, "Badkamer", "on")
+        assert "<active>true</active>" in sent
+        # The zone is attached once, also after switching an attached schedule on
+        assert sent.count(bathroom_zone) == 1
+        badkamer_zones = tree.findall(
+            'rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/contexts/context/zone/location'
+        )
+        assert bathroom_zone in [zone.get("id") for zone in badkamer_zones]
+        assert len(badkamer_zones) == len({zone.get("id") for zone in badkamer_zones})
+
+        # A schedule renamed through set_schedule can be switched off by its new name
+        # pylint: disable-next=protected-access
+        badkamer = api._smile_api._schedule_rules()["ebe3e57ec41d4d8faa927ca85c95b747"]
+        await api.set_schedule(
+            "ebe3e57ec41d4d8faa927ca85c95b747", badkamer["slots"], name="Bad"
+        )
+        await api.set_schedule_state(bathroom_zone, name="Bad", state="off")
+        assert not tree.findall(
+            f'rule[@id="ebe3e57ec41d4d8faa927ca85c95b747"]/contexts/context/zone/location[@id="{bathroom_zone}"]'
+        )
+        # Switching off a schedule the zone is not attached to sends the contexts unchanged
+        # pylint: disable-next=protected-access
+        api._smile_api._schedule_old_states[bathroom_zone]["Bad"] = "on"
+        sent = await _sent_schedule_state(api, bathroom_zone, "Bad", "off")
+        assert "<contexts" in sent
+        assert bathroom_zone not in sent
+
         switch_change = await self.tinker_switch(
             api,
             "e8ef2a01ed3b4139a53bf749204fe6b4",
@@ -324,6 +459,12 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert await self.tinker_preset_temperature(
             api, "f2bf9048bef64cc5b6d5110154e33c81", unhappy=True
         )
+        assert await self.tinker_schedule_write(
+            api,
+            "24df4dace79a4c42a0f4750ce65d84cb",
+            "021e3f453589448e891d29f195fbcaf0",
+            unhappy=True,
+        )
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -359,7 +500,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
         assert api.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self.entity_items == 486
+        assert self.entity_items == 491
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -433,7 +574,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 494
+        assert self.entity_items == 499
         assert test_items == self.entity_items
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -470,7 +611,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, api, client = await self.connect_wrapper()
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 763
+        assert self.entity_items == 766
         assert test_items == self.entity_items
         assert self.cooling_present
         assert self._cooling_enabled
@@ -514,7 +655,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         test_items = await self.device_test(api, "2022-01-02 00:00:01", testdata)
-        assert self.entity_items == 99
+        assert self.entity_items == 102
         assert test_items == self.entity_items
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
@@ -539,7 +680,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         test_items = await self.device_test(api, "2020-03-22 00:00:01", testdata)
         assert api.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self.entity_items == 105
+        assert self.entity_items == 106
         assert test_items == self.entity_items
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
