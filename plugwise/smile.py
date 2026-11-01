@@ -62,6 +62,62 @@ def _in_range(value: object) -> bool:
         return False
 
 
+def _check_slot(slot: ScheduleSlot) -> tuple[str, str]:
+    """Return the start and end of a schedule slot, raising when the slot is not valid."""
+    start, end = slot.get("start"), slot.get("end")
+    if not (
+        isinstance(start, str)
+        and isinstance(end, str)
+        and SCHEDULE_POINT.fullmatch(start)
+        and SCHEDULE_POINT.fullmatch(end)
+    ):
+        raise PlugwiseError(
+            f"Plugwise: schedule slot {slot} needs a start and end written as a day and time, such as 'mo 07:00'."
+        )
+    for key in SCHEDULE_NUMBERS:
+        if key in slot and not _in_range(slot[key]):
+            raise PlugwiseError(
+                f"Plugwise: schedule {key} must be a number between {MIN_SETPOINT} and {MAX_SETPOINT}"
+            )
+    if (
+        "heating_setpoint" in slot
+        and "cooling_setpoint" in slot
+        and float(slot["heating_setpoint"]) > float(slot["cooling_setpoint"])
+    ):
+        raise PlugwiseError(
+            f"Plugwise: schedule slot {slot} has a heating setpoint above its cooling setpoint. Lower the heating setpoint or raise the cooling setpoint."
+        )
+    for key in slot:
+        if not XML_NAME.fullmatch(key):
+            raise PlugwiseError(
+                f"Plugwise: schedule slot key {key!r} is not valid. Use a name that"
+                " starts with a letter or '_' and holds only letters, digits,"
+                " '_', '.' or '-'."
+            )
+
+    return start, end
+
+
+def _slot_attrs(
+    slot: ScheduleSlot, start: str, end: str
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Return the <when> and <then> attributes of a schedule slot."""
+    when: dict[str, str] = {"time": f"[{start},{end})"}
+    then: dict[str, str] = {}
+    for key, value in slot.items():
+        if key in ("start", "end"):
+            continue
+        # The gateway reads presence from <when> and the settings from <then>
+        target = when if key in SCHEDULE_WHEN_KEYS else then
+        target[key] = str(value)
+    if not then:
+        raise PlugwiseError(
+            f"Plugwise: schedule slot {slot} has no setting. Add a preset or a setpoint."
+        )
+
+    return when, then
+
+
 def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
     """Translate state and switch attributes based on model name.
 
@@ -414,48 +470,8 @@ class SmileAPI(SmileData):
             )
         directives = ""
         for slot in slots:
-            start, end = slot.get("start"), slot.get("end")
-            if not (
-                isinstance(start, str)
-                and isinstance(end, str)
-                and SCHEDULE_POINT.fullmatch(start)
-                and SCHEDULE_POINT.fullmatch(end)
-            ):
-                raise PlugwiseError(
-                    f"Plugwise: schedule slot {slot} needs a start and end written as a day and time, such as 'mo 07:00'."
-                )
-            for key in SCHEDULE_NUMBERS:
-                if key in slot and not _in_range(slot[key]):
-                    raise PlugwiseError(
-                        f"Plugwise: schedule {key} must be a number between {MIN_SETPOINT} and {MAX_SETPOINT}"
-                    )
-            if (
-                "heating_setpoint" in slot
-                and "cooling_setpoint" in slot
-                and float(slot["heating_setpoint"]) > float(slot["cooling_setpoint"])
-            ):
-                raise PlugwiseError(
-                    f"Plugwise: schedule slot {slot} has a heating setpoint above its cooling setpoint. Lower the heating setpoint or raise the cooling setpoint."
-                )
-            for key in slot:
-                if not XML_NAME.fullmatch(key):
-                    raise PlugwiseError(
-                        f"Plugwise: schedule slot key {key!r} is not valid. Use a name that"
-                        " starts with a letter or '_' and holds only letters, digits,"
-                        " '_', '.' or '-'."
-                    )
-
-            when: dict[str, str] = {"time": f"[{start},{end})"}
-            then: dict[str, str] = {}
-            for key, value in slot.items():
-                if key in ("start", "end"):
-                    continue
-                target = when if key in SCHEDULE_WHEN_KEYS else then
-                target[key] = str(value)
-            if not then:
-                raise PlugwiseError(
-                    f"Plugwise: schedule slot {slot} has no setting. Add a preset or a setpoint."
-                )
+            start, end = _check_slot(slot)
+            when, then = _slot_attrs(slot, start, end)
             directives += f"<when {_xml_attrs(when)}><then {_xml_attrs(then)}/></when>"
 
         return f"<directives>{directives}</directives>"

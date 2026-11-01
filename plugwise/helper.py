@@ -98,6 +98,34 @@ def _slot_order(slot: ScheduleSlot) -> tuple[int, str]:
     return len(SCHEDULE_DAYS), ""
 
 
+def _slot_settings(then: etree.Element) -> ScheduleSlot:
+    """Return the settings of one schedule slot, from its <then> element."""
+    settings: ScheduleSlot = {}
+    for key, value in then.attrib.items():
+        settings[key] = value
+        if key in SCHEDULE_NUMBERS:
+            # One unreadable slot must not break the whole update
+            with suppress(ValueError):
+                settings[key] = float(value)
+
+    return settings
+
+
+def _schedule_slot(when: etree.Element) -> ScheduleSlot:
+    """Return one time slot of a schedule, from its <when> element."""
+    slot: ScheduleSlot = {}
+    for key, value in when.attrib.items():
+        # The time attribute is a week interval such as "[mo 07:15,mo 16:30)"
+        if key == "time" and (period := SCHEDULE_PERIOD.fullmatch(value)):
+            slot["start"], slot["end"] = period.groups()
+        else:
+            slot[key] = value
+    if (then := when.find("then")) is not None:
+        slot.update(_slot_settings(then))
+
+    return slot
+
+
 class SmileHelper(SmileCommon):
     """The SmileHelper class."""
 
@@ -1086,24 +1114,7 @@ class SmileHelper(SmileCommon):
             if rule.find(locator) is None or rule.find("directives") is None:
                 continue
 
-            slots: list[ScheduleSlot] = []
-            for when in rule.findall("directives/when"):
-                slot: ScheduleSlot = {}
-                for key, value in when.attrib.items():
-                    # time is a week interval: "[mo 07:15,mo 16:30)"
-                    if key == "time" and (period := SCHEDULE_PERIOD.fullmatch(value)):
-                        slot["start"], slot["end"] = period.groups()
-                    else:
-                        slot[key] = value
-                if (then := when.find("then")) is not None:
-                    for key, value in then.attrib.items():
-                        slot[key] = value
-                        if key in SCHEDULE_NUMBERS:
-                            # One unreadable slot must not break the whole update
-                            with suppress(ValueError):
-                                slot[key] = float(value)
-                slots.append(slot)
-
+            slots = [_schedule_slot(when) for when in rule.findall("directives/when")]
             schedules[rule.get("id")] = {
                 "name": rule.findtext("name", ""),
                 "active": rule.findtext("active") == "true",
