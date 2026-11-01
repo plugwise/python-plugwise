@@ -63,6 +63,15 @@ def _in_range(value: str | float) -> bool:
         return False
 
 
+def _check_name(name: str) -> None:
+    """Raise when a schedule name would break the rule XML or a lookup by name."""
+    # "]]>" ends the CDATA block the name is written in and '"' closes the XPath string
+    if "]]>" in name or '"' in name:
+        raise PlugwiseError(
+            "Plugwise: a schedule name cannot contain ']]>' or '\"'. Choose a name without them."
+        )
+
+
 def _check_slot(slot: ScheduleSlot) -> tuple[str, str]:
     """Return the start and end of a schedule slot, raising when the slot is not valid."""
     start, end = slot.get("start"), slot.get("end")
@@ -435,10 +444,7 @@ class SmileAPI(SmileData):
             raise PlugwiseError(
                 "Plugwise: a schedule name cannot be empty or only spaces. Choose a name."
             )
-        if "]]>" in name or '"' in name:
-            raise PlugwiseError(
-                "Plugwise: a schedule name cannot contain ']]>' or '\"'. Choose a name without them."
-            )
+        _check_name(name)
         if name in (NONE, OFF):
             raise PlugwiseError(
                 f"Plugwise: the name '{name}' is reserved. Choose another name."
@@ -452,6 +458,7 @@ class SmileAPI(SmileData):
 
     def _schedule_rule_id_by_name(self, name: str, loc_id: str) -> str:
         """Return the id of the schedule rule with this name, skipping rules that are not schedules."""
+        _check_name(name)
         for rule_id in self._rule_ids_by_name(name, loc_id):
             # Other kinds of rule carry a name too, and a write must not reach one
             locator = f'rule[@id="{rule_id}"]/template[@tag="{SCHEDULE_TAG}"]'

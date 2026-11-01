@@ -374,6 +374,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         # A name carried only by a non-schedule rule is not a schedule name
         with pytest.raises(pw_exceptions.PlugwiseError):
             await api.set_schedule_state(bathroom_zone, "Thermostat presets", "on")
+        # A name holding '"' would end the XPath string of the lookup by name
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_schedule_state(bathroom_zone, 'Kid"s room', "on")
         tree.remove(collision)
 
         switch_change = await self.tinker_switch(
