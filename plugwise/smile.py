@@ -52,13 +52,14 @@ def _xml_attrs(attrs: dict[str, str]) -> str:
     return " ".join(f"{key}={quoteattr(value)}" for key, value in attrs.items())
 
 
-def _in_range(value: object) -> bool:
+def _in_range(value: str | float) -> bool:
     """Return whether a schedule value is a number in the setpoint range."""
-    if not isinstance(value, str | int | float):
-        return False
     try:
         return MIN_SETPOINT <= float(value) <= MAX_SETPOINT
-    except ValueError:
+    except (
+        TypeError,
+        ValueError,
+    ):
         return False
 
 
