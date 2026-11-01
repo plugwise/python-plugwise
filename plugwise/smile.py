@@ -374,24 +374,36 @@ class SmileAPI(SmileData):
 
     def _schedule_name(self, name: str, rule_id: str | None = None) -> str:
         """Return a new schedule name as CDATA, refusing names that would break a lookup by name."""
+        if not name.strip():
+            raise PlugwiseError(
+                "Plugwise: a schedule name cannot be empty or only spaces. Choose a name."
+            )
         if "]]>" in name or '"' in name:
             raise PlugwiseError(
                 "Plugwise: a schedule name cannot contain ']]>' or '\"'. Choose a name without them."
             )
-        if name == OFF:
+        if name in (NONE, OFF):
             raise PlugwiseError(
-                f"Plugwise: '{OFF}' is reserved for switching a schedule off. Choose another name."
+                f"Plugwise: the name '{name}' is reserved. Choose another name."
             )
         for rule in self._domain_objects.findall("rule"):
-            if (
-                rule.get("id") != rule_id
-                and rule.findtext("name") == name
-                and rule.find(f'template[@tag="{SCHEDULE_TAG}"]') is not None
-            ):
+            if rule.get("id") != rule_id and rule.findtext("name") == name:
                 raise PlugwiseError(
-                    f"Plugwise: a schedule named {name} already exists. Choose another name."
+                    f"Plugwise: the name '{name}' is already in use on the gateway. Choose another name."
                 )
         return f"<![CDATA[{name}]]>"
+
+    def _schedule_rule_id_by_name(self, name: str, loc_id: str) -> str:
+        """Return the id of the schedule rule with this name, skipping rules that are not schedules."""
+        for rule_id in self._rule_ids_by_name(name, loc_id):
+            # Other kinds of rule carry a name too, and a write must not reach one
+            locator = f'rule[@id="{rule_id}"]/template[@tag="{SCHEDULE_TAG}"]'
+            if self._domain_objects.find(locator) is not None:
+                return rule_id
+
+        raise PlugwiseError(
+            f"Plugwise: there is no schedule named {name}. Choose a name from the gateway's schedules."
+        )
 
     @staticmethod
     def _schedule_directives(slots: list[ScheduleSlot]) -> str:
@@ -618,12 +630,7 @@ class SmileAPI(SmileData):
             if name in (NONE, OFF):  # no active schedule found, nothing to do
                 return
 
-        schedule_rule = self._rule_ids_by_name(name, loc_id)
-        # Raise an error when the schedule name does not exist
-        if not schedule_rule or schedule_rule is None:
-            raise PlugwiseError(f"Plugwise: no schedule with name {name} available")
-
-        schedule_rule_id: str = next(iter(schedule_rule))
+        schedule_rule_id = self._schedule_rule_id_by_name(name, loc_id)
         rule_active = self._domain_objects.find(
             f'rule[@id="{schedule_rule_id}"]/active'
         )

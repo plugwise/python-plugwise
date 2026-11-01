@@ -558,6 +558,7 @@ class ActuatorData(TypedDict, total=False):
 
 
 SCHEDULE_TAG: Final = "zone_preset_based_on_time_and_presence_with_override"
+LEGACY_SCHEDULE_NAME: Final = "Thermostat schedule"
 SCHEDULE_PERIOD: Final = re.compile(r"\[(\w\w \d\d:\d\d),(\w\w \d\d:\d\d)\)")
 SCHEDULE_NUMBERS: Final = ("setpoint", "heating_setpoint", "cooling_setpoint")
 SCHEDULE_DAYS: Final = ("mo", "tu", "we", "th", "fr", "sa", "su")

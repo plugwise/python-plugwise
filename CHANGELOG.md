@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Fix switching a schedule on or off sending the schedule's settings to another rule that shares its name, such as a preset rule. A name that belongs only to another rule is now refused. This affected both current and legacy gateways.
 - Switching a schedule on also makes it active, so a schedule that was inactive starts running. Switching on a schedule that is already attached no longer adds its zone a second time.
 - Add `set_schedule`, `create_schedule` and `delete_schedule` to change, rename, add and remove weekly schedules. A new schedule is inactive and attached to no zone.
 - Add the weekly schedules, with their name, zones and time slots, to the gateway data. The slots are listed in week order, starting on Monday.

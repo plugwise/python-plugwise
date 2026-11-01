@@ -46,6 +46,10 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             with pytest.raises(pw_exceptions.PlugwiseError):
                 await call
 
+        # A preset rule's name is not a schedule name
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_schedule_state("dummy", "Thermostat home preset", "on")
+
         await api.close_connection()
         await self.disconnect(server, client)
 

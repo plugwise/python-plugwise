@@ -1,6 +1,7 @@
 """Test Plugwise module Adam related functionality."""
 
 import asyncio
+import copy
 from unittest.mock import patch
 
 import pytest
@@ -358,6 +359,22 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         sent = await _sent_schedule_state(api, bathroom_zone, "Bad", "off")
         assert "<contexts" in sent
         assert bathroom_zone not in sent
+
+        # A schedule sharing its name with another rule still writes to the schedule
+        preset_rule = tree.find('rule[@id="021e3f453589448e891d29f195fbcaf0"]')
+        collision = copy.deepcopy(preset_rule)
+        collision.set("id", "f" * 32)
+        collision.find("name").text = "Bad"
+        tree.insert(0, collision)
+        # pylint: disable-next=protected-access
+        api._smile_api._schedule_old_states[bathroom_zone]["Bad"] = "off"
+        sent = await _sent_schedule_state(api, bathroom_zone, "Bad", "on")
+        assert "ebe3e57ec41d4d8faa927ca85c95b747" in sent
+        assert "f" * 32 not in sent
+        # A name carried only by a non-schedule rule is not a schedule name
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            await api.set_schedule_state(bathroom_zone, "Thermostat presets", "on")
+        tree.remove(collision)
 
         switch_change = await self.tinker_switch(
             api,
