@@ -1,8 +1,79 @@
 # Changelog
 
-## Ongoing
+## v1.16.0
 
-- Add Add missing Emma firmware via PR [#863](https://github.com/plugwise/python-plugwise/pull/863)
+- Contribution PR [#940](https://github.com/plugwise/python-plugwise/pull/940) by @MartvanMale:
+  - A zone shows the cooling setpoint of each preset only when the gateway has cooling and cooling is allowed for that zone. A zone that may not cool shows the heating setpoint alone, and, when no schedule is selected, reports heating as its climate mode.
+  - Setting the heating setpoint of a preset no longer fails in a zone that may not cool when the value is above the cooling setpoint stored for that zone.
+
+## v1.15.0
+
+- Contribution PR's [#936](https://github.com/plugwise/python-plugwise/pull/936) and [#938](https://github.com/plugwise/python-plugwise/pull/938) by @MartvanMale:
+  - Add the heating setpoint of each preset as an adjustable value for every zone with its own preset rule, and the cooling setpoint when the gateway has cooling. Changing one resets a manual setpoint on that zone to its active preset.
+  - Each Adam zone now takes its presets from its own preset rule, not from the last preset rule on the gateway.
+  - Fix setting changes after a timeout or a 504 error. The retry sent a read instead of the change, so the change was reported as done even when the gateway never got it.
+
+## v1.14.8
+
+- Fix for issue [#933](https://github.com/plugwise/python-plugwise/issues/933) via PR [#934](https://github.com/plugwise/python-plugwise/pull/934)
+- Declare `packaging` as a dependency; `import plugwise` failed on a clean install without it
+
+## v1.14.7
+
+- Adapt to percentages being shown as 0-100 instead of 0-1, solving Issue [#903](https://github.com/plugwise/python-plugwise/issues/903)
+- Collect wifi_mac_address [#904](https://github.com/plugwise/python-plugwise/issues/904)
+
+## v1.14.6
+
+- Bugfixes: fix domestic hot water comfort switching, dhw modes selection issues reported in Core issue [#178699](https://github.com/home-assistant/core/issues/178699) via PR [#914](https://github.com/plugwise/python-plugwise/pull/914)
+
+## v1.14.5
+
+- Rename dict-keys: `max_dhw_temperature` to `dhw_temperature`, `maximum_boiler_temperature` to `boiler_temperature` via PR [#908](https://github.com/plugwise/python-plugwise/pull/908)
+
+## v1.14.4
+
+- Correct typing of select_schedule, manual fixture update
+
+## v1.14.3
+
+- Change representation of no-thermostat-schedule-defined to a single `off` option via PR [#899](https://github.com/plugwise/python-plugwise/pull/899)
+
+## v1.14.2
+
+- Implement common typing in functions that are interacting.
+
+## v1.14.1
+
+- Improve manual fixtures script, reorder set_schedule_state() arguments for better compatibility with set_dhw_mode(), via PR[#897](https://github.com/plugwise/python-plugwise/pull/897)
+
+## v1.14.0
+
+- Include both old and new entities for a step-wise introduction of water_heaters in HA via PR [#895](https://github.com/plugwise/python-plugwise/pull/895):
+  - Keep the `dhw_cm_switch` and add the `dhw_modes list` and the `select_dhw_mode` string that will replace the `dhw_cm_switch` in the future
+  - `dhw_cm_switch` = `on` --> `select_dhw_mode` = `comfort`, `dhw_cm_switch` = `off` --> `select_dhw_mode` = `eco`
+  - Add a `current` (`temperature`) key to the `maximum_boiler_temperature` and `max_dhw_temperature` dicts
+
+## v1.13.1
+
+- Implement dedicated boiler_temperature dict for legacy Anna via PR [#893](https://github.com/plugwise/python-plugwise/pull/893)
+
+## v1.13.0
+
+- Improve on v1.12.0 update by outputting dedicated boiler_ and dhw_temperature dicts with current-key added. Rename dhw_mode off to eco for standard cv-heaters.
+  Via PR [#888](https://github.com/plugwise/python-plugwise/pull/888)
+- Add PEP 740 digital attestations (workaround until included in `uv publish`), pin GitHub acions including our own from gh-actions, via PR [#891](https://github.com/plugwise/python-plugwise/pull/891)
+- Solve aiohttp BasicAuth deprecation via PR [#890](https://github.com/plugwise/python-plugwise/pull/890)
+
+## v1.12.0
+
+- Replace the DHW-comfort-mode switch by a DHW mode selector to match the new HA select or water_heater platform updates, via PR [#883](https://github.com/plugwise/python-plugwise/pull/883)
+
+## v1.11.4
+
+- Correct Anna P1 detection via PR [#879](https://github.com/plugwise/python-plugwise/pull/879)
+- Create an extra test-fixture for increased test coverage in the Integration via PR [#878](https://github.com/plugwise/python-plugwise/pull/878)
+- Add missing Emma firmware via PR [#863](https://github.com/plugwise/python-plugwise/pull/863)
 - Improve test function added in #860 via PR [#862](https://github.com/plugwise/python-plugwise/pull/862)
 
 ## v1.11.3

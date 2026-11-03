@@ -12,8 +12,9 @@ from plugwise.constants import (
     ANNA,
     MAX_SETPOINT,
     MIN_SETPOINT,
-    NONE,
     OFF,
+    PRESET_TEMPERATURE_RESOLUTION,
+    PRESET_TEMPERATURES,
     ActuatorData,
     GwEntityData,
 )
@@ -77,6 +78,14 @@ class SmileData(SmileHelper):
             self._update_for_cooling(entity)
 
             remove_empty_platform_dicts(entity)
+
+            # Replace select_dhw_mode with dhw_mode when applicable
+            if (
+                "dhw_temperature" in entity
+                and (mode := entity.get("select_dhw_mode")) is not None
+            ):
+                entity.pop("select_dhw_mode")
+                entity["dhw_mode"] = mode
 
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""
@@ -259,6 +268,8 @@ class SmileData(SmileHelper):
         if entity.get("location") is not None:
             loc_id = entity["location"]
 
+        zone_cools = self._cooling_present and self._cooling_allowed(loc_id)
+
         # Presets
         entity["preset_modes"] = None
         entity["active_preset"] = None
@@ -266,22 +277,25 @@ class SmileData(SmileHelper):
         if presets := self._presets(loc_id):
             entity["preset_modes"] = list(presets)
             entity["active_preset"] = self._preset(loc_id)
+            # Only a zone's own rule can be edited without touching other zones
+            if self._preset_rule_id(loc_id) is not None:
+                self._preset_temperatures(zone_cools, presets, entity)
 
         # Schedule
-        entity["available_schedules"] = []
-        entity["select_schedule"] = None
+        entity["available_schedules"] = [OFF]
+        entity["select_schedule"] = OFF
         self._count += 2
         avail_schedules, sel_schedule = self._schedules(loc_id)
-        if avail_schedules != [NONE]:
+        if avail_schedules != [OFF]:
             entity["available_schedules"] = avail_schedules
             entity["select_schedule"] = sel_schedule
 
         # Set HA climate HVACMode: auto, heat, heat_cool, cool and off
         entity["climate_mode"] = "auto"
         self._count += 1
-        if sel_schedule in (NONE, OFF):
+        if sel_schedule == OFF:
             entity["climate_mode"] = "heat"
-            if self._cooling_present:
+            if zone_cools:
                 entity["climate_mode"] = (
                     "cool" if self.check_reg_mode("cooling") else "heat_cool"
                 )
@@ -289,10 +303,38 @@ class SmileData(SmileHelper):
         if self.check_reg_mode("off"):
             entity["climate_mode"] = "off"
 
-        if NONE not in avail_schedules:
-            self._get_schedule_states_with_off(
-                loc_id, avail_schedules, sel_schedule, entity
-            )
+        self._get_schedule_states_with_off(
+            loc_id, avail_schedules, sel_schedule, entity
+        )
+
+    def _preset_temperatures(
+        self, zone_cools: bool, presets: dict[str, list[float]], entity: GwEntityData
+    ) -> None:
+        """Helper-function for _climate_data().
+
+        Add the setpoints of each preset as an adjustable value: the heating setpoint,
+        or where the zone may cool the heating (low) and cooling (high) setpoints.
+        """
+        for key, preset in PRESET_TEMPERATURES.items():
+            if preset in presets:
+                heating, cooling = presets[preset]
+                if zone_cools:
+                    entity[key] = ActuatorData(
+                        lower_bound=MIN_SETPOINT,
+                        resolution=PRESET_TEMPERATURE_RESOLUTION,
+                        setpoint_high=cooling,
+                        setpoint_low=heating,
+                        upper_bound=MAX_SETPOINT,
+                    )
+                    self._count += 5
+                else:
+                    entity[key] = ActuatorData(
+                        lower_bound=MIN_SETPOINT,
+                        resolution=PRESET_TEMPERATURE_RESOLUTION,
+                        setpoint=heating,
+                        upper_bound=MAX_SETPOINT,
+                    )
+                    self._count += 4
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
@@ -318,15 +360,12 @@ class SmileData(SmileHelper):
     def _get_schedule_states_with_off(
         self, location: str, schedules: list[str], selected: str, entity: GwEntityData
     ) -> None:
-        """Collect schedules with states for each thermostat.
-
-        Also, replace NONE by OFF when none of the schedules are active.
-        """
+        """Collect schedules with states for each thermostat."""
         all_off = True
         self._schedule_old_states[location] = {}
         for schedule in schedules:
-            active: bool = schedule == selected and entity["climate_mode"] == "auto"
             self._schedule_old_states[location][schedule] = "off"
+            active: bool = schedule == selected and entity["climate_mode"] == "auto"
             if active:
                 self._schedule_old_states[location][schedule] = "on"
                 all_off = False

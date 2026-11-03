@@ -115,22 +115,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
         if not raise_timeout:
+            app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_http_accept)
+            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept)
             app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_http_accept)
-            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_http_accept)
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route(
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
-            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept)
         else:
-            app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_timeout)
-            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
-            app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_timeout)
-            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_timeout)
+            app.router.add_route("POST", CORE_LOCATIONS_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout)
-
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
         return app
 
     def setup_legacy_app(
@@ -282,6 +283,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         broken=False,
         fail_auth=False,
         raise_timeout=False,
+        *,
         smile_timeout_value=10,
         stretch=False,
         timeout_happened=False,
@@ -493,7 +495,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             tests = 0
             tested_items = 0
             asserts = 0
-            bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+            dicts_content = [
+                "binary_sensors",
+                "sensors",
+                "switches",
+                "dhw_temperature",
+                "boiler_temperature",
+                "temperature_offset",
+                "thermostat",
+                "home_preset_temperature",
+                "asleep_preset_temperature",
+                "away_preset_temperature",
+                "vacation_preset_temperature",
+                "no_frost_preset_temperature",
+            ]
             for testitem, measurements in test_dict.items():
                 item_asserts = 0
                 tests += 1
@@ -512,10 +527,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
                             )
                             tests += 1
-                            if (
-                                measure_key in bsw_list
-                                or measure_key in pw_constants.ACTIVE_ACTUATORS
-                            ):
+                            if measure_key in dicts_content:
                                 tests -= 1
                                 for key_1, val_1 in measure_assert.items():
                                     tests += 1
@@ -727,7 +739,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat_schedule(
-        self, api, loc_id, state, good_schedules=None, single=False, unhappy=False
+        self, api, loc_id, state, *, good_schedules=None, single=False, unhappy=False
     ):
         """Toggle schedules to test functionality."""
         # pragma warning disable S3776
@@ -743,7 +755,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    await api.set_select("select_schedule", loc_id, new_schedule, state)
+                    await api.set_select("select_schedule", loc_id, new_schedule)
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
@@ -797,6 +809,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self,
         api,
         loc_id,
+        *,
         schedule_on=True,
         good_schedules=None,
         single=False,
@@ -816,14 +829,29 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             for item in api._schedule_old_states[loc_id]:
                 api._schedule_old_states[loc_id][item] = "off"
         result_3 = await self.tinker_thermostat_schedule(
-            api, loc_id, "on", good_schedules, single, unhappy
+            api,
+            loc_id,
+            "on",
+            good_schedules=good_schedules,
+            single=single,
+            unhappy=unhappy,
         )
         if schedule_on:
             result_4 = await self.tinker_thermostat_schedule(
-                api, loc_id, "off", good_schedules, single, unhappy
+                api,
+                loc_id,
+                "off",
+                good_schedules=good_schedules,
+                single=single,
+                unhappy=unhappy,
             )
             result_5 = await self.tinker_thermostat_schedule(
-                api, loc_id, "on", good_schedules, single, unhappy
+                api,
+                loc_id,
+                "on",
+                good_schedules=good_schedules,
+                single=single,
+                unhappy=unhappy,
             )
             return result_1 and result_2 and result_3 and result_4 and result_5
         return result_1 and result_2 and result_3
@@ -849,17 +877,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return result_1 and result_2 and result_3
 
     @staticmethod
-    async def tinker_dhw_mode(api, unhappy=False):
+    async def tinker_dhw_mode(api, appliance, key, length, unhappy=False):
         """Toggle dhw to test functionality."""
         tinker_dhw_mode_passed = False
-        for mode in ["auto", "boost", BOGUS]:
+        for mode in ["off", "comfort", "auto", BOGUS]:
             warning = ""
             if mode[0] == "!":
                 warning = " TD Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
-                await api.set_select("select_dhw_mode", "dummy", mode)
+                await api.set_dhw_mode(key, appliance, mode, length)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
                 tinker_dhw_mode_passed = True
             except pw_exceptions.PlugwiseError:
@@ -909,24 +937,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_reg_mode_passed
 
     @staticmethod
-    async def tinker_max_boiler_temp(api, unhappy=False):
-        """Change max boiler temp setpoint to test functionality."""
-        tinker_max_boiler_temp_passed = False
+    async def tinker_actuator_temp(api, unhappy=False):
+        """Change actuator temperature setpoint to test functionality."""
+        tinker_actuator_passed = False
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
         for test in [
-            "maximum_boiler_temperature",
-            "max_dhw_temperature",
+            "boiler_temperature",
+            "dhw_temperature",
             "bogus_temperature",
         ]:
             _LOGGER.info("  + for %s", test)
             try:
                 await api.set_number("dummy", test, new_temp)
-                _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
-                tinker_max_boiler_temp_passed = True
+                _LOGGER.info("  + tinker_actuator_temp worked as intended")
+                tinker_actuator_passed = True
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
-                tinker_max_boiler_temp_passed = False
+                _LOGGER.info("  + tinker_actuator_temp failed as intended")
+                tinker_actuator_passed = False
             except (
                 pw_exceptions.ConnectionFailedError
             ):  # leave for-loop at connect-error
@@ -937,7 +965,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
                     return False
 
-        return tinker_max_boiler_temp_passed
+        return tinker_actuator_passed
 
     @staticmethod
     async def tinker_temp_offset(api, dev_id, unhappy=False):
@@ -958,6 +986,37 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             else:  # pragma: no cover
                 _LOGGER.info("  - succeeded unexpectedly for some reason")
                 return False
+
+    @staticmethod
+    async def tinker_preset_temperature(api, dev_id, unhappy=False):
+        """Change a preset temperature, then try a value and a preset that must fail."""
+        tinker_preset_temperature_passed = True
+        for key, value, valid in [
+            ("home_preset_temperature", 20.5, True),
+            ("home_preset_temperature", 35.0, False),
+            ("!bogus_preset_temperature", 20.0, False),
+        ]:
+            _LOGGER.info("- Adjusting %s to %s", key, value)
+            try:
+                if key.startswith("!"):
+                    # pylint: disable-next=protected-access
+                    await api._smile_api.set_preset_temperature(dev_id, "!bogus", value)
+                else:
+                    await api.set_number(dev_id, key, value)
+                _LOGGER.info("  + tinker_preset_temperature worked")
+                tinker_preset_temperature_passed &= valid
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + tinker_preset_temperature failed")
+                tinker_preset_temperature_passed &= not valid
+            except pw_exceptions.ConnectionFailedError:
+                if unhappy:
+                    _LOGGER.info("  + failed as expected before intended failure")
+                    return True
+                else:  # pragma: no cover
+                    _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
+
+        return tinker_preset_temperature_passed
 
     @staticmethod
     async def tinker_gateway_mode(api, unhappy=False):

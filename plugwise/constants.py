@@ -181,6 +181,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     ),  # Available with the Loria and Elga (newer Anna firmware) heatpumps
     "cooling_state": UOM(NONE),
     "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
+    "domestic_hot_water_comfort_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
@@ -257,12 +258,33 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
 )
 ActuatorType = Literal[
     "domestic_hot_water_setpoint",
-    "max_dhw_temperature",
     "maximum_boiler_temperature",
+    "max_dhw_temperature",
     "temperature_offset",
     "thermostat",
 ]
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
+
+PresetTemperatureType = Literal[
+    "home_preset_temperature",
+    "asleep_preset_temperature",
+    "away_preset_temperature",
+    "vacation_preset_temperature",
+    "no_frost_preset_temperature",
+]
+PRESET_TEMPERATURES: Final[dict[PresetTemperatureType, str]] = {
+    "home_preset_temperature": "home",
+    "asleep_preset_temperature": "asleep",
+    "away_preset_temperature": "away",
+    "vacation_preset_temperature": "vacation",
+    "no_frost_preset_temperature": "no_frost",
+}
+PRESET_TEMPERATURE_RESOLUTION: Final[float] = 0.5
+PRESET_SETPOINT_ATTRIBUTES: Final[dict[str, str]] = {
+    "setpoint": "heating_setpoint",
+    "setpoint_low": "heating_setpoint",
+    "setpoint_high": "cooling_setpoint",
+}
 
 ACTIVE_KEYS: Final[tuple[str, ...]] = (
     "control_state",
@@ -276,6 +298,7 @@ ACTIVE_KEYS: Final[tuple[str, ...]] = (
 
 ActuatorDataType = Literal[
     "control_state",
+    "current",
     "lower_bound",
     "regulation_control",
     "resolution",
@@ -296,6 +319,7 @@ ApplianceType = Literal[
     "model_id",
     "name",
     "vendor",
+    "wifi_mac_address",
     "zigbee_mac_address",
 ]
 
@@ -379,7 +403,6 @@ SpecialType = Literal[
     "c_heating_state",
     "thermostat_supports_cooling",
 ]
-
 SPECIALS: Final[tuple[str, ...]] = get_args(SpecialType)
 
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
@@ -523,6 +546,7 @@ class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
     control_state: str
+    current: float
     lower_bound: float
     regulation_control: str
     resolution: float
@@ -549,6 +573,7 @@ class GwEntityData(TypedDict, total=False):
     model_id: str | None
     name: str
     vendor: str
+    wifi_mac_address: str
     zigbee_mac_address: str
 
     # For temporary use
@@ -561,9 +586,10 @@ class GwEntityData(TypedDict, total=False):
     # Device availability
     available: bool | None
 
-    # Loria
-    select_dhw_mode: str
+    # DHW mode related
+    dhw_mode: str
     dhw_modes: list[str]
+    select_dhw_mode: str
 
     # Gateway
     gateway_modes: list[str]
@@ -579,9 +605,14 @@ class GwEntityData(TypedDict, total=False):
     # Presets:
     active_preset: str | None
     preset_modes: list[str] | None
+    home_preset_temperature: ActuatorData
+    asleep_preset_temperature: ActuatorData
+    away_preset_temperature: ActuatorData
+    vacation_preset_temperature: ActuatorData
+    no_frost_preset_temperature: ActuatorData
     # Schedules:
     available_schedules: list[str]
-    select_schedule: str | None
+    select_schedule: str
 
     climate_mode: str
     # Extra for Adam Master Thermostats
@@ -589,6 +620,8 @@ class GwEntityData(TypedDict, total=False):
 
     # Dict-types
     binary_sensors: SmileBinarySensors
+    boiler_temperature: ActuatorData
+    dhw_temperature: ActuatorData
     max_dhw_temperature: ActuatorData
     maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors

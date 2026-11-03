@@ -1,23 +1,51 @@
 {
   "04b15f6e884448288f811d29fb7b1b30": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 18.0,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 18.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "cool",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 19.0,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Slaapkamer SJ",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
       "away",
-      "home",
-      "asleep"
+      "asleep",
+      "home"
     ],
     "select_schedule": "off",
     "select_zone_profile": "passive",
@@ -38,6 +66,13 @@
       ],
       "secondary": []
     },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 28.0,
+      "setpoint_low": 16.0,
+      "upper_bound": 30.0
+    },
     "vendor": "Plugwise",
     "zone_profiles": [
       "active",
@@ -54,27 +89,34 @@
       "flame_state": false,
       "heating_state": false
     },
-    "dev_class": "heater_central",
-    "location": "eedadcb297564f1483faa509179aebed",
-    "max_dhw_temperature": {
-      "lower_bound": 40.0,
-      "resolution": 0.01,
-      "setpoint": 60.0,
-      "upper_bound": 65.0
-    },
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 24.5,
       "lower_bound": 7.0,
       "resolution": 0.01,
       "setpoint": 35.0,
       "upper_bound": 50.0
     },
+    "dev_class": "heater_central",
+    "dhw_mode": "comfort",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
+    "dhw_temperature": {
+      "current": 63.5,
+      "lower_bound": 40.0,
+      "resolution": 0.01,
+      "setpoint": 60.0,
+      "upper_bound": 65.0
+    },
+    "location": "eedadcb297564f1483faa509179aebed",
     "model": "Generic heater/cooler",
     "model_id": "17.1",
     "name": "OpenTherm",
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
-      "modulation_level": 0.0,
+      "modulation_level": 0,
       "outdoor_air_temperature": 13.5,
       "return_temperature": 24.9,
       "water_pressure": 2.0,
@@ -133,17 +175,41 @@
   },
   "20e735858f8146cead98b873177a4f99": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
-    "climate_mode": "cool",
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Slaapkamer DB",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
@@ -169,6 +235,12 @@
         "47e2c550a33846b680725aa3fb229473"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [
@@ -261,23 +333,47 @@
   },
   "5cc21042f87f4b4c94ccb5537c47a53f": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Badkamer 2",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
-      "asleep"
+      "asleep",
+      "away"
     ],
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
@@ -296,6 +392,12 @@
         "f04c985c11ad4848b8fcd710343f9dcf"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [
@@ -421,23 +523,47 @@
   },
   "8cf650a4c10c44819e426bed406aec34": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Badkamer 1",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
-      "asleep"
+      "asleep",
+      "away"
     ],
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
@@ -458,6 +584,12 @@
       ],
       "secondary": []
     },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
+    },
     "vendor": "Plugwise",
     "zone_profiles": [
       "active",
@@ -467,23 +599,47 @@
   },
   "93ac3f7bf25342f58cbb77c4a99ac0b3": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
-    "climate_mode": "cool",
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.5,
+      "upper_bound": 30.0
+    },
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.0,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Slaapkamer RB",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
       "away",
-      "home",
-      "asleep"
+      "asleep",
+      "home"
     ],
     "select_schedule": "off",
     "select_zone_profile": "passive",
@@ -502,6 +658,12 @@
         "c4ed311d54e341f58b4cdd201d1fde7e"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [
@@ -532,22 +694,50 @@
   },
   "9a27714b970547ee9a6bdadc2b815ad5": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 18.0,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 18.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "cool",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 18.0,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Slaapkamer SQ",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
+      "away",
       "asleep"
     ],
     "select_schedule": "off",
@@ -568,6 +758,13 @@
         "beb32da072274e698146db8b022f3c36"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 28.0,
+      "setpoint_low": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [
@@ -598,17 +795,45 @@
   },
   "a562019b0b1f47a4bde8ebe3dbe3e8a9": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Keuken",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
@@ -635,6 +860,13 @@
       ],
       "secondary": []
     },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 28.0,
+      "setpoint_low": 16.0,
+      "upper_bound": 30.0
+    },
     "vendor": "Plugwise",
     "zone_profiles": [
       "active",
@@ -644,23 +876,47 @@
   },
   "b52908550469425b812c87f766fe5303": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
-    "climate_mode": "cool",
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 18.0,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Bijkeuken",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
+      "asleep",
       "away",
-      "home",
-      "asleep"
+      "home"
     ],
     "select_schedule": "off",
     "select_zone_profile": "active",
@@ -680,6 +936,12 @@
         "1053c8bbf8be43c6921742b146a625f1"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [
@@ -788,22 +1050,46 @@
   },
   "e39529c79ab54fda9bed26cfc0447546": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
-    "climate_mode": "cool",
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
+    "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Slaapkamer JM",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
-      "away",
       "home",
+      "away",
       "asleep"
     ],
     "select_schedule": "off",
@@ -824,6 +1110,12 @@
         "7fda9f84f01342f8afe9ebbbbff30c0f"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [
@@ -904,17 +1196,45 @@
   },
   "fa5fa6b34f6b40a0972988b20e888ed4": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Woonkamer",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
@@ -940,6 +1260,13 @@
         "ca79d23ae0094120b877558734cff85c"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 28.0,
+      "setpoint_low": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [

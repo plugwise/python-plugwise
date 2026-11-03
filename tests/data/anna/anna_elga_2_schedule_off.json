@@ -11,8 +11,13 @@
       "secondary_boiler_state": false
     },
     "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
     "location": "d34dfe6ab90b410c98068e75de3eb631",
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 22.8,
       "lower_bound": 0.0,
       "resolution": 1.0,
       "setpoint": 60.0,
@@ -20,6 +25,7 @@
     },
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
+    "select_dhw_mode": "comfort",
     "sensors": {
       "domestic_hot_water_setpoint": 60.0,
       "intended_boiler_temperature": 0.0,
@@ -36,7 +42,10 @@
   },
   "ebd90df1ab334565b5895f37590ccff4": {
     "active_preset": "home",
-    "available_schedules": ["Thermostat schedule", "off"],
+    "available_schedules": [
+      "off",
+      "Thermostat schedule"
+    ],
     "climate_mode": "heat_cool",
     "control_state": "idle",
     "dev_class": "thermostat",
@@ -45,7 +54,48 @@
     "location": "d3ce834534114348be628b61b26d9220",
     "model": "ThermoTouch",
     "name": "Anna",
-    "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+    "preset_modes": [
+      "away",
+      "no_frost",
+      "vacation",
+      "home",
+      "asleep"
+    ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 23.0,
+      "setpoint_low": 19.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 23.0,
+      "setpoint_low": 19.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 15.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 27.0,
+      "setpoint_low": 15.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "off",
     "sensors": {
       "cooling_activation_outdoor_temperature": 26.0,

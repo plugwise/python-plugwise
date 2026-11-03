@@ -60,8 +60,8 @@ class Smile(SmileComm):
             password,
             port,
             self._timeout,
-            username,
-            websession,
+            username=username,
+            websession=websession,
         )
 
         self._cooling_present = False
@@ -85,6 +85,7 @@ class Smile(SmileComm):
         self.smile.name = NONE
         self.smile.type = NONE
         self.smile.version = Version("0.0.0")
+        self.smile.wifi_mac_address = None
         self.smile.zigbee_mac_address = None
 
     @property
@@ -187,28 +188,20 @@ class Smile(SmileComm):
         """Helper-function for connect().
 
         Detect which type of Plugwise Gateway is being connected.
+        Store the collected data, also collect some specific thermostat devices.
         """
-        model: str = "Unknown"
-        if (gateway := result.find("./gateway")) is not None:
-            self.smile.version = parse(gateway.find("firmware_version").text)
-            self.smile.hw_version = gateway.find("hardware_version").text
-            self.smile.hostname = gateway.find("hostname").text
-            self.smile.mac_address = gateway.find("mac_address").text
-            if (vendor_model := gateway.find("vendor_model")) is None:
-                return  # pragma: no cover
+        model = await self._collect_smile_data(dsmrmain, result)
+        self._store_smile_data(model)
+        self._process_for_thermostat(result)
 
-            model = vendor_model.text
-            elec_measurement = gateway.find(
-                "gateway_environment/electricity_consumption_tariff_structure"
-            )
-            if (
-                elec_measurement is not None
-                and elec_measurement.text
-                and model == "smile_thermo"
-            ):
-                self.smile.anna_p1 = True
+    async def _collect_smile_data(
+        self, dsmrmain: etree.Element, result: etree.Element
+    ) -> str:
+        """Collect smile/gateway data."""
+        if (gateway := result.find("./gateway")) is not None:
+            model = self._collect_gateway_data(gateway, result)
         else:
-            model = await self._smile_detect_legacy(result, dsmrmain, model)
+            model = await self._smile_detect_legacy(result, dsmrmain, "Unknown")
 
         if model == "Unknown" or self.smile.version == Version(
             "0.0.0"
@@ -220,6 +213,58 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
+        return model
+
+    def _collect_gateway_data(
+        self, gateway: etree.Element, result: etree.Element
+    ) -> str:
+        """Collect data from a current-generation gateway."""
+        self.smile.version = parse(gateway.find("firmware_version").text)
+        self.smile.hw_version = gateway.find("hardware_version").text
+        self.smile.hostname = gateway.find("hostname").text
+        self.smile.mac_address = gateway.find("mac_address").text
+        if (wifi_mac := gateway.find("wifi_mac_address")) is not None:
+            self.smile.wifi_mac_address = wifi_mac.text
+
+        model: str = gateway.findtext("vendor_model", "Unknown")
+        if model == "smile_thermo":
+            has_anna_p1 = any(
+                meter.get("id")
+                for meter in result.findall(
+                    "./location/logs/point_log/electricity_point_meter"
+                )
+            )
+            if has_anna_p1:
+                self.smile.anna_p1 = True
+        return model
+
+    def _process_for_thermostat(self, result: etree.Element) -> None:
+        """Extra processing for thermostats."""
+        if self.smile.type != "thermostat":
+            return
+
+        self._is_thermostat = True
+        # For Adam, Anna, determine the system capabilities:
+        # Find the connected heating/cooling device (heater_central),
+        # e.g. heat-pump or gas-fired heater
+        onoff_boiler = result.find("./module/protocols/onoff_boiler")
+        open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
+        self._on_off_device = onoff_boiler is not None
+        self._opentherm_device = open_therm_boiler is not None
+
+        # Determine the presence of special features
+        locator_1 = "./gateway/features/cooling"
+        locator_2 = "./gateway/features/elga_support"
+        if result.find(locator_1) is not None:
+            self._cooling_present = True
+        if result.find(locator_2) is not None:
+            self._elga = True
+
+    def _store_smile_data(self, model: str) -> None:
+        """Store the collected the smile/gateway data.
+
+        Perform some checks, and set a shorter timeout for non-legacy Gateways.
+        """
         version_major = str(self.smile.version.major)
         self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
@@ -250,30 +295,6 @@ class Smile(SmileComm):
 
         if self.smile.type == "stretch":
             self._stretch_v2 = int(version_major) == 2
-
-        self._process_for_thermostat(result)
-
-    def _process_for_thermostat(self, result: etree.Element) -> None:
-        """Extra processing for thermostats."""
-        if self.smile.type != "thermostat":
-            return
-
-        self._is_thermostat = True
-        # For Adam, Anna, determine the system capabilities:
-        # Find the connected heating/cooling device (heater_central),
-        # e.g. heat-pump or gas-fired heater
-        onoff_boiler = result.find("./module/protocols/onoff_boiler")
-        open_therm_boiler = result.find("./module/protocols/open_therm_boiler")
-        self._on_off_device = onoff_boiler is not None
-        self._opentherm_device = open_therm_boiler is not None
-
-        # Determine the presence of special features
-        locator_1 = "./gateway/features/cooling"
-        locator_2 = "./gateway/features/elga_support"
-        if result.find(locator_1) is not None:
-            self._cooling_present = True
-        if result.find(locator_2) is not None:
-            self._elga = True
 
     async def _smile_detect_legacy(
         self, result: etree.Element, dsmrmain: etree.Element, model: str
@@ -345,11 +366,11 @@ class Smile(SmileComm):
         key: str,
         loc_id: str,
         option: str,
-        state: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Set the selected option for the applicable Select."""
         try:
-            await self._smile_api.set_select(key, loc_id, option, state)
+            await self._smile_api.set_select(key, loc_id, option, state=state)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set select option '{option}': {str(exc)}"
@@ -358,12 +379,12 @@ class Smile(SmileComm):
     async def set_schedule_state(
         self,
         loc_id: str,
-        state: str | None,
         name: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         try:
-            await self._smile_api.set_schedule_state(loc_id, state, name)
+            await self._smile_api.set_schedule_state(loc_id, name=name, state=state)
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(
                 f"Failed to set schedule state: {str(exc)}"
@@ -390,10 +411,11 @@ class Smile(SmileComm):
         dev_id: str,
         key: str,
         temperature: float,
+        setpoint: str = "setpoint",
     ) -> None:
-        """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
+        """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler, the temperature-offset on a Thermostat or a preset temperature."""
         try:
-            await self._smile_api.set_number(dev_id, key, temperature)
+            await self._smile_api.set_number(dev_id, key, temperature, setpoint)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError(
                 f"Failed to set number '{key}': {str(exc)}"
@@ -410,7 +432,7 @@ class Smile(SmileComm):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given State of the relevant Switch.
 
         Return the result:
@@ -448,10 +470,17 @@ class Smile(SmileComm):
                 f"Failed to set regulation mode: {str(exc)}"
             ) from exc  # pragma no cover
 
-    async def set_dhw_mode(self, mode: str) -> None:
+    async def set_dhw_mode(
+        self, key: str, location: str, mode: str, length: int | str | None = None
+    ) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:  # pragma no cover
-            await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
+            await self._smile_api.set_dhw_mode(
+                key,
+                location,
+                mode,
+                length=length,
+            )  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
             raise ConnectionFailedError(
                 f"Failed to set dhw mode: {str(exc)}"

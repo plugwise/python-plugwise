@@ -11,9 +11,14 @@
       "secondary_boiler_state": true
     },
     "dev_class": "heater_central",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
     "location": "d34dfe6ab90b410c98068e75de3eb631",
     "model": "Generic heater/cooler",
     "name": "OpenTherm",
+    "select_dhw_mode": "eco",
     "sensors": {
       "domestic_hot_water_setpoint": 60.0,
       "intended_boiler_temperature": 58.3,
@@ -30,7 +35,10 @@
   },
   "ebd90df1ab334565b5895f37590ccff4": {
     "active_preset": "home",
-    "available_schedules": ["Thermostat schedule", "off"],
+    "available_schedules": [
+      "off",
+      "Thermostat schedule"
+    ],
     "climate_mode": "auto",
     "control_state": "heating",
     "dev_class": "thermostat",
@@ -39,7 +47,48 @@
     "location": "d3ce834534114348be628b61b26d9220",
     "model": "ThermoTouch",
     "name": "Anna",
-    "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+    "preset_modes": [
+      "away",
+      "no_frost",
+      "vacation",
+      "home",
+      "asleep"
+    ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 23.0,
+      "setpoint_low": 18.5,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 23.0,
+      "setpoint_low": 18.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 15.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 27.0,
+      "setpoint_low": 15.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "select_schedule": "Thermostat schedule",
     "sensors": {
       "cooling_activation_outdoor_temperature": 24.0,
@@ -80,6 +129,7 @@
     "sensors": {
       "outdoor_temperature": 6.38
     },
-    "vendor": "Plugwise"
+    "vendor": "Plugwise",
+    "wifi_mac_address": "C4930002FE77"
   }
 }

@@ -9,11 +9,13 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
+    DHW_SETPOINT,
     GROUP_TYPES,
     NONE,
     PRIORITY_DEVICE_CLASSES,
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
+    ActuatorData,
     ApplianceType,
     GwEntityData,
     ModuleData,
@@ -158,6 +160,7 @@ class SmileCommon:
             "model_id": appl.model_id,
             "name": appl.name,
             "vendor": appl.vendor_name,
+            "wifi_mac_address": appl.wifi_mac_address,
             "zigbee_mac_address": appl.zigbee_mac,
         }.items():
             if value is not None or key == "location":
@@ -289,3 +292,28 @@ class SmileCommon:
             break
 
         return module_data
+
+    def _create_special_dicts(
+        self, item: str, data: GwEntityData, temp_dict: ActuatorData
+    ) -> tuple[str, ActuatorData]:
+        """Update the dhw_temperature and boiler_temperature dicts with a current key."""
+        if item == DHW_SETPOINT:
+            item = "dhw_temperature"
+            if DHW_SETPOINT in data["sensors"]:
+                data["sensors"].pop(DHW_SETPOINT)
+                self._count -= 1
+            # Use dhw_temperature when available, otherwise use water_temperature
+            if "dhw_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["dhw_temperature"]
+                self._count += 1
+            elif "water_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["water_temperature"]
+                self._count += 1
+
+        if item == "maximum_boiler_temperature":
+            item = "boiler_temperature"
+            if "water_temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["water_temperature"]
+                self._count += 1
+
+        return item, temp_dict

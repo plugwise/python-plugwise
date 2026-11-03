@@ -131,7 +131,13 @@ class SmileLegacyAPI(SmileLegacyData):
     async def reboot_gateway(self) -> None:
         """Set-function placeholder for legacy devices."""
 
-    async def set_dhw_mode(self, mode: str) -> None:
+    async def set_dhw_mode(
+        self,
+        key: str,
+        location: str,
+        mode: str,
+        length: int | str | None,
+    ) -> None:
         """Set-function placeholder for legacy devices."""
 
     async def set_gateway_mode(self, mode: str) -> None:
@@ -142,6 +148,7 @@ class SmileLegacyAPI(SmileLegacyData):
         dev_id: str,
         key: str,
         temperature: float,
+        setpoint: str = "setpoint",
     ) -> None:
         """Set-function placeholder for legacy devices."""
 
@@ -151,15 +158,15 @@ class SmileLegacyAPI(SmileLegacyData):
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         if not (presets := self._presets()):
-            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
+            raise PlugwiseError("Plugwise: no presets available")  # pragma: no cover
         if preset not in list(presets):
-            raise PlugwiseError("Plugwise: invalid preset.")
+            raise PlugwiseError(f"Plugwise: invalid preset {preset}")
 
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
-            raise PlugwiseError("Plugwise: no preset rule found.")  # pragma: no cover
+            raise PlugwiseError("Plugwise: no preset rule found")  # pragma: no cover
         if (rule_id := rule.get("id")) is None:
-            raise PlugwiseError("Plugwise: no preset id found.")  # pragma: no cover
+            raise PlugwiseError("Plugwise: no preset id found")  # pragma: no cover
 
         data = f"<rules><rule id='{rule_id}'><active>true</active></rule></rules>"
         await self.call_request(RULES, method="put", data=data)
@@ -168,14 +175,21 @@ class SmileLegacyAPI(SmileLegacyData):
         """Set-function placeholder for legacy devices."""
 
     async def set_select(
-        self, key: str, loc_id: str, option: str, state: str | None
+        self,
+        _: str,
+        loc_id: str,
+        option: str,
+        state: int | str | None = None,
     ) -> None:
         """Set the thermostat schedule option."""
         # schedule name corresponds to select option
-        await self.set_schedule_state("dummy", state, option)
+        await self.set_schedule_state("loc_id", option, state=state)
 
     async def set_schedule_state(
-        self, _: str, state: str | None, name: str | None
+        self,
+        _: str,
+        name: str | None = None,
+        state: int | str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule.
 
@@ -183,7 +197,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         if state not in (STATE_OFF, STATE_ON):
-            raise PlugwiseError("Plugwise: invalid schedule state.")
+            raise PlugwiseError(f"Plugwise: invalid schedule state {state}")
 
         # Handle no schedule-name / Off-schedule provided
         if name is None or name == OFF:
@@ -197,7 +211,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         if schedule_rule_id is None:
             raise PlugwiseError(
-                "Plugwise: no schedule with this name available."
+                f"Plugwise: no schedule with name {name} available"
             )  # pragma: no cover
 
         new_state = "false"
@@ -221,7 +235,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> bool | None:
         """Set the given state of the relevant switch.
 
         For individual switches, sets the state directly.
@@ -229,7 +243,7 @@ class SmileLegacyAPI(SmileLegacyData):
         For switch-locks, sets the lock state using a different data format.
         Return the requested state when successful, the current state otherwise.
         """
-        current_state = self.gw_entities[appl_id]["switches"]["relay"]
+        current_state = self.gw_entities[appl_id]["switches"].get("relay")
         requested_state = state == STATE_ON
         switch = Munch()
         switch.actuator = "actuator_functionalities"

@@ -7,26 +7,33 @@
       "flame_state": false,
       "heating_state": false
     },
-    "dev_class": "heater_central",
-    "location": "eedadcb297564f1483faa509179aebed",
-    "max_dhw_temperature": {
-      "lower_bound": 40.0,
-      "resolution": 0.01,
-      "setpoint": 60.0,
-      "upper_bound": 65.0
-    },
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 24.5,
       "lower_bound": 7.0,
       "resolution": 0.01,
       "setpoint": 35.0,
       "upper_bound": 50.0
     },
+    "dev_class": "heater_central",
+    "dhw_mode": "comfort",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
+    "dhw_temperature": {
+      "current": 63.5,
+      "lower_bound": 40.0,
+      "resolution": 0.01,
+      "setpoint": 60.0,
+      "upper_bound": 65.0
+    },
+    "location": "eedadcb297564f1483faa509179aebed",
     "model": "Unknown",
     "name": "OnOff",
     "sensors": {
       "dhw_temperature": 63.5,
       "intended_boiler_temperature": 0.0,
-      "modulation_level": 0.0,
+      "modulation_level": 0,
       "outdoor_air_temperature": 13.5,
       "return_temperature": 24.9,
       "water_pressure": 2.0,
@@ -83,17 +90,45 @@
   },
   "fa5fa6b34f6b40a0972988b20e888ed4": {
     "active_preset": "away",
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "available_schedules": [
+      "off",
       "Opstaan weekdag",
       "Werkdag schema",
-      "Weekend",
-      "off"
+      "Weekend"
     ],
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 25.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "climate_mode": "auto",
     "control_state": "idle",
     "dev_class": "climate",
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 22.0,
+      "setpoint_low": 21.5,
+      "upper_bound": 30.0
+    },
     "model": "ThermoZone",
     "name": "Woonkamer",
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 30.0,
+      "setpoint_low": 10.0,
+      "upper_bound": 30.0
+    },
     "preset_modes": [
       "no_frost",
       "vacation",
@@ -119,6 +154,13 @@
         "ca79d23ae0094120b877558734cff85c"
       ],
       "secondary": []
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint_high": 28.0,
+      "setpoint_low": 16.0,
+      "upper_bound": 30.0
     },
     "vendor": "Plugwise",
     "zone_profiles": [

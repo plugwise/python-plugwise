@@ -110,6 +110,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.model_id = None
             appl.name = appliance.find("name").text
             appl.vendor_name = None
+            appl.wifi_mac_address = None
             appl.zigbee_mac = None
 
             # Skip thermostats that have this key, should be an orphaned device (Core #81712)
@@ -241,6 +242,7 @@ class SmileLegacyHelper(SmileCommon):
         appl.model_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
+        appl.wifi_mac_address = None
         appl.zigbee_mac = None
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_entity_info_finder(location, appl)
@@ -273,7 +275,7 @@ class SmileLegacyHelper(SmileCommon):
             self._get_lock_state(appliance, data, self._stretch_v2)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, entity, data)
+                self._get_actuator_functionalities(appliance, data)
 
         # Anna: the Smile outdoor_temperature is present in the Home location
         # For some Anna's LOCATIONS is empty, falling back to domain_objects!
@@ -342,17 +344,12 @@ class SmileLegacyHelper(SmileCommon):
         self._count = count_data_items(self._count, data)
 
     def _get_actuator_functionalities(
-        self, xml: etree.Element, entity: GwEntityData, data: GwEntityData
+        self,
+        xml: etree.Element,
+        data: GwEntityData,
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
-            # Skip max_dhw_temperature, not initially valid,
-            # skip thermostat for thermo_sensors
-            if item == "max_dhw_temperature" or (
-                item == "thermostat" and entity["dev_class"] == "thermo_sensor"
-            ):
-                continue
-
             temp_dict: ActuatorData = {}
             functionality = "thermostat_functionality"
 
@@ -373,6 +370,7 @@ class SmileLegacyHelper(SmileCommon):
                     self._count += 1
 
             if temp_dict:
+                item, temp_dict = self._create_special_dicts(item, data, temp_dict)
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
@@ -409,8 +407,8 @@ class SmileLegacyHelper(SmileCommon):
 
     def _schedules(self) -> tuple[list[str], str]:
         """Collect the schedule for the legacy thermostat."""
-        available: list[str] = [NONE]
-        rule_id = selected = NONE
+        available: list[str] = [OFF]
+        rule_id = selected = OFF
         name: str | None = None
 
         search = self._domain_objects
@@ -429,7 +427,7 @@ class SmileLegacyHelper(SmileCommon):
             search.find(f'./rule[@id="{rule_id}"]/directives/when/then') is not None
         )
         if directives and name is not None:
-            available = [name, OFF]
+            available = [OFF, name]
             selected = name if active else OFF
 
         return available, selected

@@ -15,7 +15,8 @@
     },
     "dev_class": "heater_central",
     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 23.6,
       "lower_bound": 50.0,
       "resolution": 1.0,
       "setpoint": 50.0,
@@ -35,7 +36,9 @@
   },
   "0d266432d64443e283b5d708ae98b455": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": [
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "heating",
     "dev_class": "thermostat",
@@ -44,8 +47,14 @@
     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
     "model": "ThermoTouch",
     "name": "Anna",
-    "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
-    "select_schedule": null,
+    "preset_modes": [
+      "away",
+      "vacation",
+      "asleep",
+      "home",
+      "no_frost"
+    ],
+    "select_schedule": "off",
     "sensors": {
       "illuminance": 150.8,
       "setpoint": 20.5,

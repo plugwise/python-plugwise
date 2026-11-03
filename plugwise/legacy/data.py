@@ -7,7 +7,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, OFF, GwEntityData
+from plugwise.constants import OFF, GwEntityData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -63,18 +63,18 @@ class SmileLegacyData(SmileLegacyHelper):
             entity["active_preset"] = self._preset()
 
         # Schedule
-        entity["available_schedules"] = []
-        entity["select_schedule"] = None
+        entity["available_schedules"] = [OFF]
+        entity["select_schedule"] = OFF
         self._count += 2
         avail_schedules, sel_schedule = self._schedules()
-        if avail_schedules != [NONE]:
+        if avail_schedules != [OFF]:
             entity["available_schedules"] = avail_schedules
             entity["select_schedule"] = sel_schedule
 
         # Set HA climate HVACMode: auto, heat
         entity["climate_mode"] = "auto"
         self._count += 1
-        if sel_schedule in (NONE, OFF):
+        if sel_schedule == OFF:
             entity["climate_mode"] = "heat"
 
     def _get_anna_control_state(self, entity: GwEntityData) -> None:

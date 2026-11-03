@@ -18,7 +18,6 @@ from plugwise.constants import (
     ATTR_NAME,
     DATA,
     DEVICE_MEASUREMENTS,
-    DHW_SETPOINT,
     DOMAIN_OBJECTS,
     ENERGY_WATT_HOUR,
     GROUP_MEASUREMENTS,
@@ -79,6 +78,11 @@ def search_actuator_functionalities(
     return None
 
 
+def _own_rule_ids(rules: dict[str, dict[str, str]], loc_id: str) -> list[str]:
+    """Return the ids of the rules attached to loc_id."""
+    return [rule_id for rule_id, data in rules.items() if data["location"] == loc_id]
+
+
 class SmileHelper(SmileCommon):
     """The SmileHelper class."""
 
@@ -87,6 +91,7 @@ class SmileHelper(SmileCommon):
         super().__init__()
         self._endpoint: str
         self._elga: bool
+        self._dhw_allowed_modes: list[str] | None = None
         self._is_thermostat: bool
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
@@ -127,6 +132,7 @@ class SmileHelper(SmileCommon):
             appl.module_id = None
             appl.name = appliance.find("name").text
             appl.pwclass = appliance.find("type").text
+            appl.wifi_mac_address = None
             appl.zigbee_mac = None
             appl.vendor_name = None
 
@@ -191,6 +197,7 @@ class SmileHelper(SmileCommon):
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.vendor_name = module_data["vendor_name"]
+        appl.wifi_mac_address = None
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
@@ -242,9 +249,8 @@ class SmileHelper(SmileCommon):
                     appl := self._appl_heater_central_info(appl, appliance, False)
                 ):  # False means non-legacy entity
                     return Munch()
-                self._dhw_allowed_modes = self._get_appl_actuator_modes(
-                    appliance, "domestic_hot_water_mode_control_functionality"
-                )
+                self._collect_dhw_modes(appliance)
+
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
@@ -265,6 +271,20 @@ class SmileHelper(SmileCommon):
             case _:  # pragma: no cover
                 return Munch()
 
+    def _collect_dhw_modes(self, appliance: etree.Element) -> None:
+        """Collect the DHW modes."""
+        # Collect the Loria dhw modes
+        self._dhw_allowed_modes = self._get_appl_actuator_modes(
+            appliance, "domestic_hot_water_mode_control_functionality"
+        )
+        # Determine the dhw modes from the domestic_hot_water_comfort_mode toggle
+        if self._dhw_allowed_modes:
+            return
+
+        self._get_toggle_state(
+            appliance, "domestic_hot_water_comfort_mode", "dhw_cm_switch", {}
+        )
+
     def _appl_gateway_info(self, appl: Munch, appliance: etree.Element) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         self._gateway_id = appl.entity_id
@@ -276,6 +296,7 @@ class SmileHelper(SmileCommon):
         appl.model_id = self.smile.model_id
         appl.name = self.smile.name
         appl.vendor_name = "Plugwise"
+        appl.wifi_mac_address = self.smile.wifi_mac_address
 
         # Adam: collect the ZigBee MAC address of the Smile
         if self.check_name(ADAM):
@@ -351,7 +372,7 @@ class SmileHelper(SmileCommon):
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
-            # Show the allowed dhw_modes (Loria only)
+            # Show the available dhw_modes
             if self._dhw_allowed_modes:
                 data["dhw_modes"] = self._dhw_allowed_modes
                 # Counting of this item is done in _appliance_measurements()
@@ -407,6 +428,7 @@ class SmileHelper(SmileCommon):
         if (
             appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
+            # Collect the cooling enabled toggle state
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
 
@@ -451,6 +473,7 @@ class SmileHelper(SmileCommon):
                 if skip_obsolete_measurements(appliance, measurement):
                     continue
 
+                old_measurement = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
@@ -458,8 +481,7 @@ class SmileHelper(SmileCommon):
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
                     case "select_dhw_mode":
-                        if self._dhw_allowed_modes:
-                            data["select_dhw_mode"] = appl_p_loc.text
+                        self._select_dhw_mode(appl_p_loc.text, data, old_measurement)
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
@@ -472,8 +494,19 @@ class SmileHelper(SmileCommon):
 
         self._count = count_data_items(self._count, data)
 
+    def _select_dhw_mode(self, text: str, data: GwEntityData, measurement: str) -> None:
+        """Set the selected dhw mode."""
+        if self._dhw_allowed_modes and "select_dhw_mode" not in data:
+            data["select_dhw_mode"] = text
+            if measurement == "domestic_hot_water_comfort_mode":
+                data["select_dhw_mode"] = "comfort" if text == "on" else "eco"
+
     def _get_toggle_state(
-        self, xml: etree.Element, toggle: str, name: ToggleNameType, data: GwEntityData
+        self,
+        xml: etree.Element,
+        toggle: str,
+        name: ToggleNameType,
+        data: GwEntityData,
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -482,8 +515,14 @@ class SmileHelper(SmileCommon):
         if xml.find("type").text == "heater_central":
             locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
             if (state := xml.find(locator)) is not None:
-                data["switches"][name] = state.text == "on"
-                self._count += 1
+                if "switches" in data:
+                    data["switches"][name] = state.text == "on"
+                    self._count += 1
+                if (
+                    not self._dhw_allowed_modes
+                    and toggle == "domestic_hot_water_comfort_mode"
+                ):
+                    self._dhw_allowed_modes = ["comfort", "eco"]
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
@@ -557,14 +596,7 @@ class SmileHelper(SmileCommon):
                         temp_dict[act_key] = str(pw_function.text)
 
             if temp_dict:
-                # If domestic_hot_water_setpoint is present as actuator,
-                # rename and remove as sensor
-                if item == DHW_SETPOINT:
-                    item = "max_dhw_temperature"
-                    if DHW_SETPOINT in data["sensors"]:
-                        data["sensors"].pop(DHW_SETPOINT)
-                        self._count -= 1
-
+                item, temp_dict = self._create_special_dicts(item, data, temp_dict)
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
@@ -888,14 +920,27 @@ class SmileHelper(SmileCommon):
 
         return None  # pragma: no cover
 
+    def _cooling_allowed(self, loc_id: str) -> bool:
+        """Helper-function for data.py: _climate_data() and smile.py: set_preset_temperature().
+
+        Collect whether cooling is allowed in a zone, based on Location ID.
+        Assume it is where the zone says nothing, leaving the gateway-wide
+        capability to decide.
+        """
+        locator = (
+            f'./location[@id="{loc_id}"]/actuator_functionalities'
+            "/thermostat_functionality/cooling_allowed"
+        )
+        if (allowed := self._domain_objects.find(locator)) is not None:
+            return str(allowed.text) == "true"
+
+        return True
+
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
         presets: dict[str, list[float]] = {}
-        tag_1 = "zone_setpoint_and_state_based_on_preset"
-        tag_2 = "Thermostat presets"
-        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
-            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-                return presets  # pragma: no cover
+        if not (rule_ids := self._preset_rule_ids(loc_id)):
+            return presets  # pragma: no cover
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
@@ -908,6 +953,40 @@ class SmileHelper(SmileCommon):
 
         return presets
 
+    def _preset_rule_ids(self, loc_id: str) -> list[str]:
+        """Helper-function for _presets().
+
+        Read only the preset rule attached to loc_id, so each zone gets its own presets.
+        Fall back to all preset rules when none or several are attached.
+        """
+        if (rule_id := self._preset_rule_id(loc_id)) is not None:
+            return [rule_id]
+
+        return list(self._all_preset_rules(loc_id))
+
+    def _preset_rule_id(self, loc_id: str) -> str | None:
+        """Return the id of the one preset rule attached to loc_id, or None."""
+        own = _own_rule_ids(self._all_preset_rules(loc_id), loc_id)
+        return own[0] if len(own) == 1 else None
+
+    def _all_preset_rules(self, loc_id: str) -> dict[str, dict[str, str]]:
+        """Collect all preset rules, choosing tagged or named rules per zone.
+
+        Use the rules found by name when loc_id has no tagged rule of its own but does
+        have a rule by name, or when there are no tagged rules at all.
+        """
+        tag_1 = "zone_setpoint_and_state_based_on_preset"
+        tag_2 = "Thermostat presets"
+        tagged = self._rule_ids_by_tag(tag_1, loc_id)
+        if _own_rule_ids(tagged, loc_id):
+            return tagged
+
+        named = self._rule_ids_by_name(tag_2, loc_id)
+        if _own_rule_ids(named, loc_id) or not tagged:
+            return named
+
+        return tagged
+
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets().
 
@@ -916,18 +995,15 @@ class SmileHelper(SmileCommon):
         schedule_ids: dict[str, dict[str, str]] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
-            active = rule.find("active").text
             if rule.find(locator) is not None:
                 schedule_ids[rule.get("id")] = {
                     "location": loc_id,
                     "name": name,
-                    "active": active,
                 }
             else:
                 schedule_ids[rule.get("id")] = {
                     "location": NONE,
                     "name": name,
-                    "active": active,
                 }
 
         return schedule_ids
@@ -943,18 +1019,15 @@ class SmileHelper(SmileCommon):
         for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
                 name = rule.find("name").text
-                active = rule.find("active").text
                 if rule.find(locator2) is not None:
                     schedule_ids[rule.get("id")] = {
                         "location": loc_id,
                         "name": name,
-                        "active": active,
                     }
                 else:
                     schedule_ids[rule.get("id")] = {
                         "location": NONE,
                         "name": name,
-                        "active": active,
                     }
 
         return schedule_ids
@@ -965,16 +1038,15 @@ class SmileHelper(SmileCommon):
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available: list[str] = [NONE]
+        available: list[str] = [OFF]
         rule_ids: dict[str, dict[str, str]] = {}
-        selected = NONE
+        selected = OFF
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
 
         schedules: list[str] = []
         for rule_id, data in rule_ids.items():
-            active = data["active"] == "true"
             name = data["name"]
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
@@ -982,15 +1054,9 @@ class SmileHelper(SmileCommon):
                 continue  # pragma: no cover
 
             available.append(name)
-            if location == data["location"] and active:
+            if location == data["location"]:
                 selected = name
             schedules.append(name)
-
-        if schedules:
-            available.remove(NONE)
-            available.append(OFF)
-            if selected == NONE:
-                selected = OFF
 
         return available, selected
 

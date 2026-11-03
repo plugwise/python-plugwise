@@ -1,14 +1,52 @@
 {
   "06aecb3d00354375924f50c47af36bd2": {
     "active_preset": "no_frost",
-    "available_schedules": [],
+    "available_schedules": [
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Slaapkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-    "select_schedule": null,
+    "preset_modes": [
+      "vacation",
+      "no_frost",
+      "home",
+      "away",
+      "asleep"
+    ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 9.0,
+      "upper_bound": 30.0
+    },
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 24.2
@@ -20,22 +58,68 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["1346fbd8498d4dbcab7e18d51b771f3d"],
-      "secondary": ["356b65335e274d769c338223e7af9c33"]
+      "primary": [
+        "1346fbd8498d4dbcab7e18d51b771f3d"
+      ],
+      "secondary": [
+        "356b65335e274d769c338223e7af9c33"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "13228dab8ce04617af318a2888b3c548": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": [
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Woonkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-    "select_schedule": null,
+    "preset_modes": [
+      "home",
+      "asleep",
+      "away",
+      "vacation",
+      "no_frost"
+    ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 20.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 17.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 10.0,
+      "upper_bound": 30.0
+    },
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 27.4
@@ -47,11 +131,19 @@
       "upper_bound": 30.0
     },
     "thermostats": {
-      "primary": ["f61f1a2535f54f52ad006a3d18e459ca"],
-      "secondary": ["833de10f269c4deab58fb9df69901b4e"]
+      "primary": [
+        "f61f1a2535f54f52ad006a3d18e459ca"
+      ],
+      "secondary": [
+        "833de10f269c4deab58fb9df69901b4e"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "1346fbd8498d4dbcab7e18d51b771f3d": {
     "available": true,
@@ -92,7 +184,7 @@
       "setpoint": 13.0,
       "temperature": 28.8,
       "temperature_difference": 2.0,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -116,7 +208,7 @@
       "setpoint": 13.0,
       "temperature": 24.2,
       "temperature_difference": 1.7,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -226,7 +318,11 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
-    "gateway_modes": ["away", "full", "vacation"],
+    "gateway_modes": [
+      "away",
+      "full",
+      "vacation"
+    ],
     "hardware": "AME Smile 2.0 board",
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
     "mac_address": "012345670001",
@@ -234,7 +330,12 @@
     "model_id": "smile_open_therm",
     "name": "Adam",
     "notifications": {},
-    "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
+    "regulation_modes": [
+      "heating",
+      "off",
+      "bleeding_cold",
+      "bleeding_hot"
+    ],
     "select_gateway_mode": "full",
     "select_regulation_mode": "heating",
     "sensors": {
@@ -245,14 +346,52 @@
   },
   "d27aede973b54be484f6842d1b2802ad": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": [
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Kinderkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-    "select_schedule": null,
+    "preset_modes": [
+      "vacation",
+      "no_frost",
+      "home",
+      "away",
+      "asleep"
+    ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 9.0,
+      "upper_bound": 30.0
+    },
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 30.0
@@ -264,11 +403,19 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["6f3e9d7084214c21b9dfa46f6eeb8700"],
-      "secondary": ["d4496250d0e942cfa7aea3476e9070d5"]
+      "primary": [
+        "6f3e9d7084214c21b9dfa46f6eeb8700"
+      ],
+      "secondary": [
+        "d4496250d0e942cfa7aea3476e9070d5"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "d4496250d0e942cfa7aea3476e9070d5": {
     "available": true,
@@ -283,7 +430,7 @@
       "setpoint": 13.0,
       "temperature": 28.7,
       "temperature_difference": 1.9,
-      "valve_position": 0.0
+      "valve_position": 0
     },
     "temperature_offset": {
       "lower_bound": -2.0,
@@ -296,14 +443,52 @@
   },
   "d58fec52899f4f1c92e4f8fad6d8c48c": {
     "active_preset": "home",
-    "available_schedules": [],
+    "available_schedules": [
+      "off"
+    ],
     "climate_mode": "heat",
     "control_state": "idle",
     "dev_class": "climate",
     "model": "ThermoZone",
     "name": "Logeerkamer",
-    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-    "select_schedule": null,
+    "preset_modes": [
+      "vacation",
+      "no_frost",
+      "home",
+      "away",
+      "asleep"
+    ],
+    "home_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "asleep_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "away_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 13.0,
+      "upper_bound": 30.0
+    },
+    "vacation_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 15.0,
+      "upper_bound": 30.0
+    },
+    "no_frost_preset_temperature": {
+      "lower_bound": 4.0,
+      "resolution": 0.5,
+      "setpoint": 9.0,
+      "upper_bound": 30.0
+    },
+    "select_schedule": "off",
     "select_zone_profile": "active",
     "sensors": {
       "temperature": 30.0
@@ -315,11 +500,19 @@
       "upper_bound": 99.9
     },
     "thermostats": {
-      "primary": ["a6abc6a129ee499c88a4d420cc413b47"],
-      "secondary": ["1da4d325838e4ad8aac12177214505c9"]
+      "primary": [
+        "a6abc6a129ee499c88a4d420cc413b47"
+      ],
+      "secondary": [
+        "1da4d325838e4ad8aac12177214505c9"
+      ]
     },
     "vendor": "Plugwise",
-    "zone_profiles": ["active", "off", "passive"]
+    "zone_profiles": [
+      "active",
+      "off",
+      "passive"
+    ]
   },
   "e4684553153b44afbef2200885f379dc": {
     "available": true,
@@ -329,14 +522,21 @@
       "heating_state": false
     },
     "dev_class": "heater_central",
+    "dhw_mode": "eco",
+    "dhw_modes": [
+      "comfort",
+      "eco"
+    ],
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
-    "max_dhw_temperature": {
+    "dhw_temperature": {
+      "current": 37.3,
       "lower_bound": 40.0,
       "resolution": 0.01,
       "setpoint": 60.0,
       "upper_bound": 60.0
     },
-    "maximum_boiler_temperature": {
+    "boiler_temperature": {
+      "current": 37.3,
       "lower_bound": 20.0,
       "resolution": 0.01,
       "setpoint": 90.0,

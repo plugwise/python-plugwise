@@ -15,7 +15,13 @@ from plugwise.exceptions import (
 from plugwise.util import escape_illegal_xml_characters
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
+from aiohttp import (
+    ClientError,
+    ClientResponse,
+    ClientSession,
+    ClientTimeout,
+    encode_basic_auth,
+)
 from defusedxml import ElementTree as etree
 
 
@@ -28,6 +34,7 @@ class SmileComm:
         password: str,
         port: int,
         timeout: int,
+        *,
         username: str,
         websession: ClientSession | None,
     ) -> None:
@@ -42,7 +49,9 @@ class SmileComm:
         if host.count(":") > 2:  # pragma: no cover
             host = f"[{host}]"
 
-        self._auth = BasicAuth(username, password=password)
+        self._base_header = {
+            "Authorization": encode_basic_auth(username, password=password)
+        }
         self._endpoint = f"http://{host}:{str(port)}"  # Sensitive
 
     async def _request(
@@ -58,28 +67,24 @@ class SmileComm:
         try:
             match method:
                 case "delete":
-                    resp = await self._websession.delete(url, auth=self._auth)
+                    resp = await self._websession.delete(url, headers=self._base_header)
                 case "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
-                    headers = {"Accept-Encoding": "gzip"}
-                    resp = await self._websession.get(
-                        url, headers=headers, auth=self._auth
-                    )
+                    headers = {**self._base_header, "Accept-Encoding": "gzip"}
+                    resp = await self._websession.get(url, headers=headers)
                 case "post":
-                    headers = {"Content-type": "text/xml"}
+                    headers = {**self._base_header, "Content-type": "text/xml"}
                     resp = await self._websession.post(
                         url,
                         headers=headers,
                         data=data,
-                        auth=self._auth,
                     )
                 case "put":
-                    headers = {"Content-type": "text/xml"}
+                    headers = {**self._base_header, "Content-type": "text/xml"}
                     resp = await self._websession.put(
                         url,
                         headers=headers,
                         data=data,
-                        auth=self._auth,
                     )
         except (
             ClientError
@@ -92,7 +97,7 @@ class SmileComm:
                     exc,
                 )
                 raise ConnectionFailedError from exc
-            return await self._request(command, retry - 1)
+            return await self._request(command, retry - 1, method=method, data=data)
 
         if resp.status == 504:
             if retry < 1:
@@ -103,7 +108,7 @@ class SmileComm:
                     "504 Gateway Timeout",
                 )
                 raise ConnectionFailedError
-            return await self._request(command, retry - 1)
+            return await self._request(command, retry - 1, method=method, data=data)
 
         return await self._request_validate(resp, method)
 
