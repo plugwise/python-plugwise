@@ -189,7 +189,7 @@ class SmileAPI(SmileData):
             case preset if preset in PRESET_TEMPERATURES:
                 if (attribute := PRESET_SETPOINT_ATTRIBUTES.get(setpoint)) is None:
                     raise PlugwiseError(f"Plugwise: invalid preset setpoint {setpoint}")
-                # An Adam zone dev_id is its own location, an Anna/Emma thermostat has one location
+                # An Adam zone dev_id is its own location, a stand-alone Anna/Emma thermostat has one location
                 loc_id = self.gw_entities[dev_id].get("location", dev_id)
                 preset = PRESET_TEMPERATURES[key]
                 await self.set_preset_temperature(
