@@ -260,12 +260,13 @@ class SmileAPI(SmileData):
         # The gateway replaces the whole directive set, so every preset is sent.
         # The lock keeps a concurrent write from resending a stale value for another preset.
         async with self._preset_lock:
-            heating = float(then.get("heating_setpoint"))
-            cooling = float(then.get("cooling_setpoint"))
             if attribute == "heating_setpoint":
+                cooling = float(then.get("cooling_setpoint"))
                 heating = temperature
             else:
                 cooling = temperature
+                heating = float(then.get("heating_setpoint"))
+
             # Where a zone may not cool, the stored cooling setpoint is a default nobody can change
             if (
                 self._cooling_present
