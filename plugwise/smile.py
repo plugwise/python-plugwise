@@ -302,6 +302,7 @@ class SmileAPI(SmileData):
                 "</rules>"
             )
             await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+            # Update self._domain_objects for testing an update
             for then in self._domain_objects.findall(locator):
                 then.set(attribute, value)
 
