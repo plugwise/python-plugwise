@@ -185,16 +185,17 @@ class SmileAPI(SmileData):
 
         For a preset temperature, setpoint picks the heating (setpoint, setpoint_low) or cooling (setpoint_high) value.
         """
-        if key in PRESET_TEMPERATURES:
-            if (attribute := PRESET_SETPOINT_ATTRIBUTES.get(setpoint)) is None:
-                raise PlugwiseError(f"Plugwise: invalid preset setpoint {setpoint}")
-            # An Adam zone is its own location, an Anna thermostat has one
-            loc_id = self.gw_entities[dev_id].get("location", dev_id)
-            preset = PRESET_TEMPERATURES[key]
-            await self.set_preset_temperature(loc_id, preset, temperature, attribute)
-            return
-
         match key:
+            case preset if preset in PRESET_TEMPERATURES:
+                if (attribute := PRESET_SETPOINT_ATTRIBUTES.get(setpoint)) is None:
+                    raise PlugwiseError(f"Plugwise: invalid preset setpoint {setpoint}")
+                # An Adam zone dev_id is its own location, an Anna/Emma thermostat has one location
+                loc_id = self.gw_entities[dev_id].get("location", dev_id)
+                preset = PRESET_TEMPERATURES[key]
+                await self.set_preset_temperature(
+                    loc_id, preset, temperature, attribute
+                )
+                return
             case "temperature_offset":
                 await self.set_offset(dev_id, temperature)
                 return
