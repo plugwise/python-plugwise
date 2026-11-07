@@ -31,7 +31,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
         assert api.gateway_id == "0466eae8520144c78afb29628384edeb"
-        assert self.entity_items == 84
+        assert self.entity_items == 86
         assert not self.notifications
 
         assert not self.cooling_present
@@ -103,7 +103,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
-        assert self.entity_items == 84
+        assert self.entity_items == 86
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -132,7 +132,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-05 00:00:01", testdata)
-        assert self.entity_items == 84
+        assert self.entity_items == 86
 
         result = await self.tinker_thermostat(
             api,
@@ -160,7 +160,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 62
+        assert self.entity_items == 64
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -188,7 +188,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.entity_items == 98
+        assert self.entity_items == 99
         assert not self.notifications
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -218,7 +218,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(
             api, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert self.entity_items == 94
+        assert self.entity_items == 95
         await api.close_connection()
         await self.disconnect(server, client)
 
@@ -243,7 +243,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-19 00:00:01", testdata)
-        assert self.entity_items == 94
+        assert self.entity_items == 95
         assert self.cooling_present
         assert not self.notifications
 
@@ -289,7 +289,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-19 00:00:01", testdata)
-        assert self.entity_items == 94
+        assert self.entity_items == 95
         assert self.cooling_present
         assert self._cooling_enabled
         assert self._cooling_active
@@ -315,7 +315,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2020-04-12 00:00:01", testdata)
         assert api.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.entity_items == 89
+        assert self.entity_items == 90
         assert not self.notifications
         assert not self.cooling_present
 
@@ -338,7 +338,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-03-13 00:00:01", testdata)
-        assert self.entity_items == 89
+        assert self.entity_items == 90
         assert api.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self._cooling_enabled
@@ -358,7 +358,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(api, "2022-03-13 00:00:01", testdata)
         assert not self._cooling_enabled
-        assert self.entity_items == 93
+        assert self.entity_items == 94
 
         result = await self.tinker_thermostat(
             api,
@@ -389,7 +389,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-03-10 00:00:01", testdata)
-        assert self.entity_items == 93
+        assert self.entity_items == 94
         assert not self.notifications
 
         assert self.cooling_present
@@ -442,7 +442,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 95
+        assert self.entity_items == 97
         assert self.cooling_present
         assert not self._cooling_enabled
 
@@ -511,7 +511,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 95
+        assert self.entity_items == 97
         assert self.cooling_present
         assert self._cooling_enabled
 
@@ -573,7 +573,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 96
+        assert self.entity_items == 100
         assert self.cooling_present
         assert not self._cooling_enabled
 
@@ -596,7 +596,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2025-11-02 00:00:01", testdata)
-        assert self.entity_items == 99
+        assert self.entity_items == 100
 
         await api.close_connection()
         await self.disconnect(server, client)
@@ -617,7 +617,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2022-05-16 00:00:01", testdata)
-        assert self.entity_items == 12
+        assert self.entity_items == 14
 
         await api.close_connection()
         await self.disconnect(server, client)

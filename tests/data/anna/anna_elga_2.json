@@ -130,6 +130,112 @@
       "outdoor_temperature": 6.38
     },
     "vendor": "Plugwise",
-    "wifi_mac_address": "C4930002FE77"
+    "wifi_mac_address": "C4930002FE77",
+    "schedules": {
+      "40e484ccfd644f1fa8b82f669091144a": {
+        "name": "Thermostat schedule",
+        "active": true,
+        "zones": [
+          "d3ce834534114348be628b61b26d9220"
+        ],
+        "slots": [
+          {
+            "start": "mo 08:00",
+            "end": "mo 15:00",
+            "preset": "home"
+          },
+          {
+            "start": "mo 15:00",
+            "end": "mo 23:00",
+            "setpoint": 19.0
+          },
+          {
+            "start": "mo 23:00",
+            "end": "tu 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 10:00",
+            "end": "tu 15:00",
+            "preset": "home"
+          },
+          {
+            "start": "tu 15:00",
+            "end": "tu 23:00",
+            "setpoint": 19.0
+          },
+          {
+            "start": "tu 23:00",
+            "end": "we 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 10:00",
+            "end": "we 15:00",
+            "preset": "home"
+          },
+          {
+            "start": "we 15:00",
+            "end": "we 23:00",
+            "setpoint": 19.0
+          },
+          {
+            "start": "we 23:00",
+            "end": "th 08:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 08:00",
+            "end": "th 15:00",
+            "preset": "home"
+          },
+          {
+            "start": "th 15:00",
+            "end": "th 23:00",
+            "setpoint": 19.0
+          },
+          {
+            "start": "th 23:00",
+            "end": "fr 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 10:00",
+            "end": "fr 15:00",
+            "preset": "home"
+          },
+          {
+            "start": "fr 15:00",
+            "end": "fr 23:00",
+            "setpoint": 19.0
+          },
+          {
+            "start": "fr 23:00",
+            "end": "sa 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 10:00",
+            "end": "sa 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 23:00",
+            "end": "su 10:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "su 10:00",
+            "end": "su 22:45",
+            "preset": "home"
+          },
+          {
+            "start": "su 22:45",
+            "end": "mo 08:00",
+            "preset": "asleep"
+          }
+        ]
+      }
+    }
   }
 }

@@ -136,6 +136,88 @@
     "sensors": {
       "outdoor_temperature": 31.0
     },
-    "vendor": "Plugwise"
+    "vendor": "Plugwise",
+    "schedules": {
+      "40e484ccfd644f1fa8b82f669091144a": {
+        "name": "Thermostat schedule",
+        "active": true,
+        "zones": [
+          "d3ce834534114348be628b61b26d9220"
+        ],
+        "slots": [
+          {
+            "start": "mo 06:45",
+            "end": "tu 06:45",
+            "preset": "home"
+          },
+          {
+            "start": "mo 23:00",
+            "end": "th 23:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 06:45",
+            "end": "we 06:45",
+            "preset": "home"
+          },
+          {
+            "start": "tu 23:00",
+            "end": "sa 08:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 06:45",
+            "end": "th 06:45",
+            "preset": "home"
+          },
+          {
+            "start": "we 23:00",
+            "end": "tu 23:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 06:45",
+            "end": "fr 06:45",
+            "preset": "home"
+          },
+          {
+            "start": "th 23:00",
+            "end": "fr 23:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 06:45",
+            "end": "su 08:30",
+            "preset": "home"
+          },
+          {
+            "start": "fr 23:00",
+            "end": "we 23:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 08:30",
+            "end": "sa 23:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 23:00",
+            "end": "mo 06:45",
+            "heating_setpoint": 18.5,
+            "cooling_setpoint": 23.5
+          },
+          {
+            "start": "su 08:30",
+            "end": "su 22:45",
+            "preset": "home"
+          },
+          {
+            "start": "su 22:45",
+            "end": "mo 23:00",
+            "preset": "asleep"
+          }
+        ]
+      }
+    }
   }
 }

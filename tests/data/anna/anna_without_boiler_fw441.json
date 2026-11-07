@@ -88,7 +88,155 @@
       "outdoor_temperature": 8.31
     },
     "vendor": "Plugwise",
-    "wifi_mac_address": "D40FB200FA1D"
+    "wifi_mac_address": "D40FB200FA1D",
+    "schedules": {
+      "d28edc40489b436e80888fa1490c77a5": {
+        "name": "Test",
+        "active": true,
+        "zones": [],
+        "slots": [
+          {
+            "start": "mo 02:00",
+            "end": "tu 01:45",
+            "preset": "home"
+          },
+          {
+            "start": "tu 01:45",
+            "end": "mo 02:00",
+            "preset": "home"
+          }
+        ]
+      },
+      "a36b5218575a42809dc3748377d160f9": {
+        "name": "Normaal",
+        "active": true,
+        "zones": [
+          "c34c6864216446528e95d88985e714cc"
+        ],
+        "slots": [
+          {
+            "start": "mo 06:30",
+            "end": "mo 09:00",
+            "setpoint": 18.0
+          },
+          {
+            "start": "mo 09:00",
+            "end": "mo 17:00",
+            "preset": "home"
+          },
+          {
+            "start": "mo 17:00",
+            "end": "mo 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "mo 21:00",
+            "end": "tu 06:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "tu 06:30",
+            "end": "tu 08:00",
+            "setpoint": 18.0
+          },
+          {
+            "start": "tu 08:00",
+            "end": "tu 17:00",
+            "preset": "away"
+          },
+          {
+            "start": "tu 17:00",
+            "end": "tu 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "tu 21:00",
+            "end": "we 06:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "we 06:30",
+            "end": "we 08:00",
+            "setpoint": 18.0
+          },
+          {
+            "start": "we 08:00",
+            "end": "we 17:00",
+            "preset": "away"
+          },
+          {
+            "start": "we 17:00",
+            "end": "we 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "we 21:00",
+            "end": "th 06:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "th 06:30",
+            "end": "th 08:00",
+            "setpoint": 18.0
+          },
+          {
+            "start": "th 08:00",
+            "end": "th 17:00",
+            "preset": "away"
+          },
+          {
+            "start": "th 17:00",
+            "end": "th 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "th 21:00",
+            "end": "fr 06:30",
+            "preset": "asleep"
+          },
+          {
+            "start": "fr 06:30",
+            "end": "fr 08:00",
+            "setpoint": 18.0
+          },
+          {
+            "start": "fr 08:00",
+            "end": "fr 17:00",
+            "preset": "away"
+          },
+          {
+            "start": "fr 17:00",
+            "end": "fr 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "fr 21:00",
+            "end": "sa 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "sa 09:00",
+            "end": "sa 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "sa 21:00",
+            "end": "su 09:00",
+            "preset": "asleep"
+          },
+          {
+            "start": "su 09:00",
+            "end": "su 21:00",
+            "preset": "home"
+          },
+          {
+            "start": "su 21:00",
+            "end": "mo 06:30",
+            "preset": "asleep"
+          }
+        ]
+      }
+    }
   },
   "c46b4794d28149699eacf053deedd003": {
     "binary_sensors": {

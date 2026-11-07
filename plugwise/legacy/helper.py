@@ -20,6 +20,7 @@ from plugwise.constants import (
     FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
+    LEGACY_SCHEDULE_NAME,
     NONE,
     OFF,
     P1_LEGACY_MEASUREMENTS,
@@ -412,8 +413,10 @@ class SmileLegacyHelper(SmileCommon):
         name: str | None = None
 
         search = self._domain_objects
-        if (result := search.find("./rule[name='Thermostat schedule']")) is not None:
-            name = "Thermostat schedule"
+        if (
+            result := search.find(f"./rule[name='{LEGACY_SCHEDULE_NAME}']")
+        ) is not None:
+            name = LEGACY_SCHEDULE_NAME
             rule_id = result.get("id")
 
         log_type = "schedule_state"

@@ -22,6 +22,7 @@ from plugwise.constants import (
     STATUS,
     SYSTEM,
     GwEntityData,
+    ScheduleSlot,
     ThermoLoc,
 )
 from plugwise.exceptions import (
@@ -389,6 +390,33 @@ class Smile(SmileComm):
             raise ConnectionFailedError(
                 f"Failed to set schedule state: {str(exc)}"
             ) from exc  # pragma no cover
+
+    async def set_schedule(
+        self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
+    ) -> None:
+        """Replace the time slots of a schedule, and rename it when a name is given."""
+        try:
+            await self._smile_api.set_schedule(rule_id, slots, name=name)
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError(f"Failed to set schedule: {str(exc)}") from exc
+
+    async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
+        """Create a schedule; the gateway adds it inactive and attached to no zone."""
+        try:
+            await self._smile_api.create_schedule(name, slots)
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError(
+                f"Failed to create schedule: {str(exc)}"
+            ) from exc
+
+    async def delete_schedule(self, rule_id: str) -> None:
+        """Delete a schedule from the gateway."""
+        try:
+            await self._smile_api.delete_schedule(rule_id)
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError(
+                f"Failed to delete schedule: {str(exc)}"
+            ) from exc
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
