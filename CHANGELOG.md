@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Code optimizations via PR [#946](https://github.com/plugwise/python-plugwise/pull/946)
+
 ## v1.16.0
 
 - Contribution PR [#940](https://github.com/plugwise/python-plugwise/pull/940) by @MartvanMale:
