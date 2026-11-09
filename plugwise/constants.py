@@ -27,10 +27,13 @@ STATE_OFF: Final = "off"
 STATE_ON: Final = "on"
 TEMP_CELSIUS: Final = "°C"
 TEMP_KELVIN: Final = "°K"
+TIME_HOURS: Final = "h"
 TIME_MILLISECONDS: Final = "ms"
+UNIT_COUNT: Final = "count"  # Unitless integer value: counters and (fault-)codes
 UNIT_LUMEN: Final = "lm"
 VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
+VOLUME_FLOW_LITERS_PER_MINUTE: Final = "L/min"
 
 ADAM: Final = "Adam"
 ALLOWED_ZONE_PROFILES: Final[list[str]] = ["active", "off", "passive"]
@@ -147,6 +150,9 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "humidity": UOM(NONE),  # Specific for an Emma or Jip
     "illuminance": UOM(UNIT_LUMEN),  # Specific for an Anna
+    "maximum_modulation_level": UOM(
+        PERCENTAGE
+    ),  # Present on some OpenTherm thermostats connected to an Adam
     "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
     "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
     ########################################################
@@ -185,6 +191,9 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
+    "domestic_hot_water_flow": DATA(
+        "dhw_flow", VOLUME_FLOW_LITERS_PER_MINUTE
+    ),  # Only present when the boiler reports the DHW flow-rate via OpenTherm
     "elga_status_code": UOM(NONE),
     "intended_boiler_state": DATA(
         "heating_state", NONE
@@ -197,12 +206,34 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
         "heating_state", NONE
     ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": UOM(PERCENTAGE),
+    # OpenTherm fault- and diagnostic-codes, raw values, meaning is boiler-specific
+    "open_therm_application_specific_fault_code": UOM(UNIT_COUNT),
+    "open_therm_oem_diagnostic_code": UOM(UNIT_COUNT),
+    "open_therm_oem_fault_code": UOM(UNIT_COUNT),
     "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
     "outdoor_temperature": DATA(
         "outdoor_air_temperature", TEMP_CELSIUS
     ),  # Outdoor temperature from APPLIANCES - present for a heatpump
     "slave_boiler_state": DATA("secondary_boiler_state", NONE),
     "thermostat_supports_cooling": UOM(NONE),  # present with heatpump
+}
+
+# Heater Central related counters, provided as cumulative_log
+HEATER_CENTRAL_COUNTERS: Final[dict[str, DATA | UOM]] = {
+    "burner_operation_time": UOM(TIME_HOURS),
+    "burner_starts": UOM(UNIT_COUNT),
+    "central_heater_pump_operation_time": UOM(TIME_HOURS),
+    "central_heater_pump_starts": UOM(UNIT_COUNT),
+    "domestic_hot_water_burner_operation_time": DATA(
+        "dhw_burner_operation_time", TIME_HOURS
+    ),
+    "domestic_hot_water_burner_starts": DATA("dhw_burner_starts", UNIT_COUNT),
+    "domestic_hot_water_pump_operation_time": DATA(
+        "dhw_pump_operation_time", TIME_HOURS
+    ),
+    "domestic_hot_water_pump_starts": DATA("dhw_pump_starts", UNIT_COUNT),
+    "failed_burner_flame_ignitions": UOM(UNIT_COUNT),
+    "failed_burner_starts": UOM(UNIT_COUNT),
 }
 
 OBSOLETE_MEASUREMENTS: Final[tuple[str, ...]] = (
@@ -340,8 +371,17 @@ GROUP_TYPES: Final[tuple[str, ...]] = ("pumping", "report", "switching")
 
 SensorType = Literal[
     "battery",
+    "burner_operation_time",
+    "burner_starts",
+    "central_heater_pump_operation_time",
+    "central_heater_pump_starts",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
+    "dhw_burner_operation_time",
+    "dhw_burner_starts",
+    "dhw_flow",
+    "dhw_pump_operation_time",
+    "dhw_pump_starts",
     "dhw_temperature",
     "domestic_hot_water_setpoint",
     "temperature",
@@ -369,14 +409,20 @@ SensorType = Literal[
     "electricity_produced_peak_interval",
     "electricity_produced_peak_point",
     "electricity_produced_point",
+    "failed_burner_flame_ignitions",
+    "failed_burner_starts",
     "gas_consumed_cumulative",
     "gas_consumed_interval",
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
+    "maximum_modulation_level",
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
+    "open_therm_application_specific_fault_code",
+    "open_therm_oem_diagnostic_code",
+    "open_therm_oem_fault_code",
     "outdoor_air_temperature",
     "outdoor_temperature",
     "return_temperature",
@@ -406,6 +452,7 @@ SpecialType = Literal[
 SPECIALS: Final[tuple[str, ...]] = get_args(SpecialType)
 
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
+INTEGER_FORMAT: Final[tuple[str, ...]] = (TIME_HOURS, UNIT_COUNT)
 
 SwitchType = Literal[
     "cooling_ena_switch",
@@ -472,8 +519,17 @@ class SmileSensors(TypedDict, total=False):
     """Smile Sensors class."""
 
     battery: int
+    burner_operation_time: int
+    burner_starts: int
+    central_heater_pump_operation_time: int
+    central_heater_pump_starts: int
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
+    dhw_burner_operation_time: int
+    dhw_burner_starts: int
+    dhw_flow: float
+    dhw_pump_operation_time: int
+    dhw_pump_starts: int
     dhw_temperature: float
     domestic_hot_water_setpoint: float
     temperature: float
@@ -501,14 +557,20 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_peak_interval: float
     electricity_produced_peak_point: float
     electricity_produced_point: float
+    failed_burner_flame_ignitions: int
+    failed_burner_starts: int
     gas_consumed_cumulative: float
     gas_consumed_interval: float
     humidity: float
     illuminance: float
     intended_boiler_temperature: float
+    maximum_modulation_level: int
     modulation_level: int
     net_electricity_cumulative: float
     net_electricity_point: float
+    open_therm_application_specific_fault_code: int
+    open_therm_oem_diagnostic_code: int
+    open_therm_oem_fault_code: int
     outdoor_air_temperature: float
     outdoor_temperature: float
     return_temperature: float

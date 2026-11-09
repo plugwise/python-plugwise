@@ -73,6 +73,7 @@
     "select_schedule": "Verwarmen@9-23u",
     "sensors": {
       "illuminance": 5.5,
+      "maximum_modulation_level": 100,
       "setpoint_high": 30.0,
       "setpoint_low": 20.0,
       "temperature": 21.2
@@ -139,6 +140,8 @@
       "dhw_temperature": 49.5,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
+      "open_therm_application_specific_fault_code": 0,
+      "open_therm_oem_fault_code": 0,
       "outdoor_air_temperature": 7.5,
       "return_temperature": 23.0,
       "water_temperature": 23.3

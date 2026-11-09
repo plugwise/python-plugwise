@@ -16,11 +16,13 @@ from plugwise.constants import (
     ALLOWED_ZONE_PROFILES,
     ANNA,
     ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
     DATA,
     DEVICE_MEASUREMENTS,
     DOMAIN_OBJECTS,
     ENERGY_WATT_HOUR,
     GROUP_MEASUREMENTS,
+    HEATER_CENTRAL_COUNTERS,
     HEATER_CENTRAL_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
@@ -370,7 +372,8 @@ class SmileHelper(SmileCommon):
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and entity_id == self.heater_id:
+        is_heater = self._is_thermostat and entity_id == self.heater_id
+        if is_heater:
             measurements = HEATER_CENTRAL_MEASUREMENTS
             # Show the available dhw_modes
             if self._dhw_allowed_modes:
@@ -382,6 +385,8 @@ class SmileHelper(SmileCommon):
                 data, entity, entity_id, measurements
             )
         ) is not None:
+            if is_heater:
+                self._appliance_counters(appliance, data)
             self._get_regulation_mode(appliance, entity_id, data)
             self._get_gateway_mode(appliance, entity_id, data)
             self._get_gateway_outdoor_temp(entity_id, data)
@@ -493,6 +498,24 @@ class SmileHelper(SmileCommon):
                 )
 
         self._count = count_data_items(self._count, data)
+
+    def _appliance_counters(self, appliance: etree.Element, data: GwEntityData) -> None:
+        """Helper-function for _get_measurement_data() - collect appliance counter data.
+
+        Counters like burner-starts and operation-times are provided as cumulative_log.
+        """
+        count_before = len(data["sensors"])
+        for measurement, attrs in HEATER_CENTRAL_COUNTERS.items():
+            locator = f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
+            if (appl_c_loc := appliance.find(locator)) is None:
+                continue
+
+            name = cast(SensorType, getattr(attrs, ATTR_NAME, None) or measurement)
+            data["sensors"][name] = format_measure(
+                appl_c_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+            )
+
+        self._count += len(data["sensors"]) - count_before
 
     def _select_dhw_mode(self, text: str, data: GwEntityData, measurement: str) -> None:
         """Set the selected dhw mode."""

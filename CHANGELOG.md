@@ -3,6 +3,11 @@
 ## Ongoing
 
 - Code optimizations via PR [#946](https://github.com/plugwise/python-plugwise/pull/946)
+- Add more OpenTherm boiler data, when provided by the boiler:
+  - DHW flow-rate (`dhw_flow`).
+  - Raw OpenTherm fault- and diagnostic-codes (`open_therm_oem_fault_code`, `open_therm_application_specific_fault_code`, `open_therm_oem_diagnostic_code`), the meaning of the codes is boiler-specific.
+  - Burner, central heating pump and DHW counters and operation-times, collected from the `cumulative_log` items.
+  - The maximum modulation level reported by an OpenTherm thermostat.
 
 ## v1.16.0
 
