@@ -197,9 +197,9 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38
       - name: Check against HA Core release
-        uses: chemelli74/ha-core-dependency-check/release@7788df2ecd810988a459b20e599bb8c975dd7a3a # v1.3.0
+        uses: chemelli74/ha-core-dependency-check/release@0ce53675a52d2f728e7e9cd2dcdc4ec0e74348c4 # v1.3.1
       - name: Check against HA Core dev
-        uses: chemelli74/ha-core-dependency-check/dev@7788df2ecd810988a459b20e599bb8c975dd7a3a # v1.3.0
+        uses: chemelli74/ha-core-dependency-check/dev@0ce53675a52d2f728e7e9cd2dcdc4ec0e74348c4 # v1.3.1
 
   # Check for missing python dependencies
   dependencies_check:
