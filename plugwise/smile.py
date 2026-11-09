@@ -185,16 +185,17 @@ class SmileAPI(SmileData):
 
         For a preset temperature, setpoint picks the heating (setpoint, setpoint_low) or cooling (setpoint_high) value.
         """
-        if key in PRESET_TEMPERATURES:
-            if (attribute := PRESET_SETPOINT_ATTRIBUTES.get(setpoint)) is None:
-                raise PlugwiseError(f"Plugwise: invalid preset setpoint {setpoint}")
-            # An Adam zone is its own location, an Anna thermostat has one
-            loc_id = self.gw_entities[dev_id].get("location", dev_id)
-            preset = PRESET_TEMPERATURES[key]
-            await self.set_preset_temperature(loc_id, preset, temperature, attribute)
-            return
-
         match key:
+            case preset if preset in PRESET_TEMPERATURES:
+                if (attribute := PRESET_SETPOINT_ATTRIBUTES.get(setpoint)) is None:
+                    raise PlugwiseError(f"Plugwise: invalid preset setpoint {setpoint}")
+                # An Adam zone dev_id is its own location, a stand-alone Anna/Emma thermostat has one location
+                loc_id = self.gw_entities[dev_id].get("location", dev_id)
+                preset = PRESET_TEMPERATURES[key]
+                await self.set_preset_temperature(
+                    loc_id, preset, temperature, attribute
+                )
+                return
             case "temperature_offset":
                 await self.set_offset(dev_id, temperature)
                 return
@@ -259,12 +260,13 @@ class SmileAPI(SmileData):
         # The gateway replaces the whole directive set, so every preset is sent.
         # The lock keeps a concurrent write from resending a stale value for another preset.
         async with self._preset_lock:
-            heating = float(then.get("heating_setpoint"))
-            cooling = float(then.get("cooling_setpoint"))
             if attribute == "heating_setpoint":
+                cooling = float(then.get("cooling_setpoint"))
                 heating = temperature
             else:
                 cooling = temperature
+                heating = float(then.get("heating_setpoint"))
+
             # Where a zone may not cool, the stored cooling setpoint is a default nobody can change
             if (
                 self._cooling_present
@@ -300,6 +302,7 @@ class SmileAPI(SmileData):
                 "</rules>"
             )
             await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+            # Update self._domain_objects for testing an update
             for then in self._domain_objects.findall(locator):
                 then.set(attribute, value)
 
