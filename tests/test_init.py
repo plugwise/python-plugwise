@@ -1053,7 +1053,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             (api.create_schedule, ("Not a number", warm_text), False),
             (api.create_schedule, ("Odd key", odd_key), False),
             (api.create_schedule, ("Bad ]]> name", slots), False),
-            (api.create_schedule, ('Kid"s room', slots), False),
+            (api.create_schedule, ('Kid"s room', slots), True),
             (api.create_schedule, ("off", slots), False),
             (api.create_schedule, ("None", slots), False),
             (api.create_schedule, ("Badkamer", slots), False),

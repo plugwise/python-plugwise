@@ -64,11 +64,11 @@ def _in_range(value: str | float) -> bool:
 
 
 def _check_name(name: str) -> None:
-    """Raise when a schedule name would break the rule XML or a lookup by name."""
-    # "]]>" ends the CDATA block the name is written in and '"' closes the XPath string
-    if "]]>" in name or '"' in name:
+    """Raise when a schedule name would break the rule XML."""
+    # "]]>" ends the CDATA block the name is written in
+    if "]]>" in name:
         raise PlugwiseError(
-            "Plugwise: a schedule name cannot contain ']]>' or '\"'. Choose a name without them."
+            "Plugwise: a schedule name cannot contain ']]>'. Choose a name without it."
         )
 
 

@@ -1037,7 +1037,10 @@ class SmileHelper(SmileCommon):
         """
         schedule_ids: dict[str, dict[str, str]] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
+        for rule in self._domain_objects.findall("./rule"):
+            # Comparing here keeps a name holding a quote out of the XPath
+            if rule.findtext("name") != name:
+                continue
             if rule.find(locator) is not None:
                 schedule_ids[rule.get("id")] = {
                     "location": loc_id,
