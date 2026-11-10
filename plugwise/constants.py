@@ -216,10 +216,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     ),  # Outdoor temperature from APPLIANCES - present for a heatpump
     "slave_boiler_state": DATA("secondary_boiler_state", NONE),
     "thermostat_supports_cooling": UOM(NONE),  # present with heatpump
-}
-
-# Heater Central related counters, provided as cumulative_log
-HEATER_CENTRAL_COUNTERS: Final[dict[str, DATA | UOM]] = {
+    # Counters, provided as cumulative_log
     "burner_operation_time": UOM(TIME_HOURS),
     "burner_starts": UOM(UNIT_COUNT),
     "central_heater_pump_operation_time": UOM(TIME_HOURS),

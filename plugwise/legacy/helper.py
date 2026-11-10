@@ -14,6 +14,7 @@ from plugwise.constants import (
     ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
     DATA,
     DEVICE_MEASUREMENTS,
     ENERGY_WATT_HOUR,
@@ -23,6 +24,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_LEGACY_MEASUREMENTS,
+    POWER_WATT,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     UOM,
@@ -333,6 +335,10 @@ class SmileLegacyHelper(SmileCommon):
                     measurement = new_name
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
+
+            # Only power-measurements have a matching energy interval_log, skip the others
+            if getattr(attrs, ATTR_UNIT_OF_MEASUREMENT) != POWER_WATT:
+                continue
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:

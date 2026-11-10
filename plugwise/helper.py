@@ -22,7 +22,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     ENERGY_WATT_HOUR,
     GROUP_MEASUREMENTS,
-    HEATER_CENTRAL_COUNTERS,
     HEATER_CENTRAL_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
@@ -30,6 +29,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
+    POWER_WATT,
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
@@ -385,8 +385,6 @@ class SmileHelper(SmileCommon):
                 data, entity, entity_id, measurements
             )
         ) is not None:
-            if is_heater:
-                self._appliance_counters(appliance, data)
             self._get_regulation_mode(appliance, entity_id, data)
             self._get_gateway_mode(appliance, entity_id, data)
             self._get_gateway_outdoor_temp(entity_id, data)
@@ -490,6 +488,10 @@ class SmileHelper(SmileCommon):
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
+            # Only power-measurements have a matching energy interval_log, skip the others
+            if getattr(attrs, ATTR_UNIT_OF_MEASUREMENT) != POWER_WATT:
+                continue
+
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = cast(SensorType, f"{measurement}_interval")
@@ -497,15 +499,23 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
+        self._appliance_cumulative_measurements(appliance, data, measurements)
         self._count = count_data_items(self._count, data)
 
-    def _appliance_counters(self, appliance: etree.Element, data: GwEntityData) -> None:
-        """Helper-function for _get_measurement_data() - collect appliance counter data.
+    def _appliance_cumulative_measurements(
+        self,
+        appliance: etree.Element,
+        data: GwEntityData,
+        measurements: dict[str, DATA | UOM],
+    ) -> None:
+        """Helper-function for _appliance_measurements() - collect cumulative_log measurement data.
 
-        Counters like burner-starts and operation-times are provided as cumulative_log.
+        Only for the heater_central: counters like burner-starts and operation-times.
         """
-        count_before = len(data["sensors"])
-        for measurement, attrs in HEATER_CENTRAL_COUNTERS.items():
+        if appliance.find("type").text != "heater_central":
+            return
+
+        for measurement, attrs in measurements.items():
             locator = f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
             if (appl_c_loc := appliance.find(locator)) is None:
                 continue
@@ -514,8 +524,6 @@ class SmileHelper(SmileCommon):
             data["sensors"][name] = format_measure(
                 appl_c_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
             )
-
-        self._count += len(data["sensors"]) - count_before
 
     def _select_dhw_mode(self, text: str, data: GwEntityData, measurement: str) -> None:
         """Set the selected dhw mode."""
