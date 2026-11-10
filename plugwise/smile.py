@@ -409,12 +409,13 @@ class SmileAPI(SmileData):
             rule_name.text = name
 
     async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
-        """Create a schedule; the gateway adds it inactive and attached to no zone."""
+        """Create a schedule, active and attached to no zone."""
         directives = self._schedule_directives(slots)
         data = (
             "<rules><rule>"
             f"<name>{self._schedule_name(name)}</name>"
             f'<template tag="{SCHEDULE_TAG}"/>'
+            "<active>true</active>"
             f"{directives}"
             "</rule></rules>"
         )
