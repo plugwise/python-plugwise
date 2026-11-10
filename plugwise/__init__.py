@@ -401,7 +401,7 @@ class Smile(SmileComm):
             raise ConnectionFailedError(f"Failed to set schedule: {str(exc)}") from exc
 
     async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
-        """Create a schedule; the gateway adds it inactive and attached to no zone."""
+        """Create a schedule, active and attached to no zone."""
         try:
             await self._smile_api.create_schedule(name, slots)
         except ConnectionFailedError as exc:
