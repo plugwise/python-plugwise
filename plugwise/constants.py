@@ -29,7 +29,8 @@ TEMP_CELSIUS: Final = "°C"
 TEMP_KELVIN: Final = "°K"
 TIME_HOURS: Final = "h"
 TIME_MILLISECONDS: Final = "ms"
-UNIT_COUNT: Final = "count"  # Unitless integer value: counters and (fault-)codes
+UNIT_CODE: Final = "code"  # Unitless integer value: OpenTherm fault-flags and -codes
+UNIT_COUNT: Final = "count"  # Unitless integer value: counters
 UNIT_LUMEN: Final = "lm"
 VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
@@ -207,9 +208,9 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": UOM(PERCENTAGE),
     # OpenTherm fault- and diagnostic-codes, raw values, meaning is boiler-specific
-    "open_therm_application_specific_fault_code": UOM(UNIT_COUNT),
-    "open_therm_oem_diagnostic_code": UOM(UNIT_COUNT),
-    "open_therm_oem_fault_code": UOM(UNIT_COUNT),
+    "open_therm_application_specific_fault_code": UOM(UNIT_CODE),
+    "open_therm_oem_diagnostic_code": UOM(UNIT_CODE),
+    "open_therm_oem_fault_code": UOM(UNIT_CODE),
     "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
     "outdoor_temperature": DATA(
         "outdoor_air_temperature", TEMP_CELSIUS
@@ -449,7 +450,7 @@ SpecialType = Literal[
 SPECIALS: Final[tuple[str, ...]] = get_args(SpecialType)
 
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
-INTEGER_FORMAT: Final[tuple[str, ...]] = (TIME_HOURS, UNIT_COUNT)
+INTEGER_FORMAT: Final[tuple[str, ...]] = (TIME_HOURS, UNIT_CODE, UNIT_COUNT)
 
 SwitchType = Literal[
     "cooling_ena_switch",
