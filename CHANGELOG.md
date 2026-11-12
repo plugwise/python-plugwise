@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improve code, lower complexity via PR
+
 ## v1.17.0
 
 - Contribution PR [#949](https://github.com/plugwise/python-plugwise/pull/949) by @bilhert:
