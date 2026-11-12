@@ -323,31 +323,55 @@ class SmileLegacyHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
-            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if (appl_p_loc := appliance.find(p_locator)) is not None:
-                if measurement == "domestic_hot_water_state":
-                    continue
-
-                if skip_obsolete_measurements(appliance, measurement):
-                    continue  # pragma: no cover
-
-                if new_name := getattr(attrs, ATTR_NAME, None):
-                    measurement = new_name
-
-                common_match_cases(measurement, attrs, appl_p_loc, data)
-
-            # Only power-measurements have a matching energy interval_log, skip the others
-            if getattr(attrs, ATTR_UNIT_OF_MEASUREMENT) != POWER_WATT:
+            measurement = self._appliance_point_measurement(
+                appliance, data, measurement, attrs
+            )
+            if measurement is None:
                 continue
 
-            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if (appl_i_loc := appliance.find(i_locator)) is not None:
-                name = cast(SensorType, f"{measurement}_interval")
-                data["sensors"][name] = format_measure(
-                    appl_i_loc.text, ENERGY_WATT_HOUR
-                )
+            self._appliance_interval_measurement(appliance, data, measurement, attrs)
 
         self._count = count_data_items(self._count, data)
+
+    def _appliance_point_measurement(
+        self,
+        appliance: etree.Element,
+        data: GwEntityData,
+        measurement: str,
+        attrs: DATA | UOM,
+    ) -> str | None:
+        """Collect point-log data and return its measurement name, or None to skip."""
+        p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
+        if (appl_p_loc := appliance.find(p_locator)) is None:
+            return measurement
+
+        if measurement == "domestic_hot_water_state":
+            return None
+
+        if skip_obsolete_measurements(appliance, measurement):
+            return None  # pragma: no cover
+
+        if new_name := getattr(attrs, ATTR_NAME, None):
+            measurement = new_name
+
+        common_match_cases(measurement, attrs, appl_p_loc, data)
+        return measurement
+
+    def _appliance_interval_measurement(
+        self,
+        appliance: etree.Element,
+        data: GwEntityData,
+        measurement: str,
+        attrs: DATA | UOM,
+    ) -> None:
+        """Collect interval-log data for power measurements."""
+        if getattr(attrs, ATTR_UNIT_OF_MEASUREMENT) != POWER_WATT:
+            return
+
+        i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+        if (appl_i_loc := appliance.find(i_locator)) is not None:
+            name = cast(SensorType, f"{measurement}_interval")
+            data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
     def _get_actuator_functionalities(
         self,
