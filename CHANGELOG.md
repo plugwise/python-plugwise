@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Improve code, lower complexity via PR
+- Improve code, lower complexity via PR [#951](https://github.com/plugwise/python-plugwise/pull/951)
 
 ## v1.17.0
 
