@@ -54,10 +54,10 @@
     "sensors": {
       "dhw_flow": 1.8,
       "dhw_temperature": 41.5,
+      "fault_flags": 0,
       "intended_boiler_temperature": 18.0,
       "modulation_level": 0,
-      "open_therm_application_specific_fault_code": 0,
-      "open_therm_oem_fault_code": 0,
+      "oem_fault_code": 0,
       "outdoor_air_temperature": 28.2,
       "return_temperature": 22.0,
       "water_pressure": 1.57,

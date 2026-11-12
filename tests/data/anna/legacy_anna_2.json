@@ -66,7 +66,7 @@
       "dhw_temperature": 0.0,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
-      "open_therm_oem_fault_code": 255,
+      "oem_fault_code": 255,
       "return_temperature": 0.0,
       "water_pressure": 1.7,
       "water_temperature": 54.0

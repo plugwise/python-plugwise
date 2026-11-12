@@ -128,9 +128,9 @@
       "dhw_flow": 0.0,
       "intended_boiler_temperature": 39.9,
       "modulation_level": 0.0,
-      "open_therm_application_specific_fault_code": 0,
-      "open_therm_oem_diagnostic_code": 204,
-      "open_therm_oem_fault_code": 0,
+      "fault_flags": 0,
+      "oem_diagnostic_code": 204,
+      "oem_fault_code": 0,
       "return_temperature": 32.0,
       "water_pressure": 2.2,
       "water_temperature": 45.0

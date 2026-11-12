@@ -34,8 +34,8 @@
       "dhw_temperature": 49.9,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0.0,
-      "open_therm_application_specific_fault_code": 0,
-      "open_therm_oem_fault_code": 0,
+      "fault_flags": 0,
+      "oem_fault_code": 0,
       "outdoor_air_temperature": 13.6,
       "return_temperature": 33.0,
       "water_temperature": 20.9

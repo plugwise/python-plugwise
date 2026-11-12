@@ -28,9 +28,9 @@
       "dhw_burner_operation_time": 894,
       "failed_burner_flame_ignitions": 33,
       "failed_burner_starts": 3,
+      "fault_flags": 0,
       "intended_boiler_temperature": 0.0,
-      "open_therm_application_specific_fault_code": 0,
-      "open_therm_oem_fault_code": 255,
+      "oem_fault_code": 255,
       "water_temperature": 30.0
     },
     "switches": {

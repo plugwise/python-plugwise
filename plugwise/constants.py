@@ -208,9 +208,9 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": UOM(PERCENTAGE),
     # OpenTherm fault- and diagnostic-codes, raw values, meaning is boiler-specific
-    "open_therm_application_specific_fault_code": UOM(UNIT_CODE),
-    "open_therm_oem_diagnostic_code": UOM(UNIT_CODE),
-    "open_therm_oem_fault_code": UOM(UNIT_CODE),
+    "open_therm_application_specific_fault_code": DATA("fault_flags", UNIT_CODE),
+    "open_therm_oem_diagnostic_code": DATA("oem_diagnostic_code", UNIT_CODE),
+    "open_therm_oem_fault_code": DATA("oem_fault_code", UNIT_CODE),
     "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
     "outdoor_temperature": DATA(
         "outdoor_air_temperature", TEMP_CELSIUS
@@ -220,8 +220,10 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Counters, provided as cumulative_log
     "burner_operation_time": UOM(TIME_HOURS),
     "burner_starts": UOM(UNIT_COUNT),
-    "central_heater_pump_operation_time": UOM(TIME_HOURS),
-    "central_heater_pump_starts": UOM(UNIT_COUNT),
+    "central_heater_pump_operation_time": DATA(
+        "heating_pump_operation_time", TIME_HOURS
+    ),
+    "central_heater_pump_starts": DATA("heating_pump_starts", UNIT_COUNT),
     "domestic_hot_water_burner_operation_time": DATA(
         "dhw_burner_operation_time", TIME_HOURS
     ),
@@ -371,8 +373,6 @@ SensorType = Literal[
     "battery",
     "burner_operation_time",
     "burner_starts",
-    "central_heater_pump_operation_time",
-    "central_heater_pump_starts",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
     "dhw_burner_operation_time",
@@ -409,8 +409,11 @@ SensorType = Literal[
     "electricity_produced_point",
     "failed_burner_flame_ignitions",
     "failed_burner_starts",
+    "fault_flags",
     "gas_consumed_cumulative",
     "gas_consumed_interval",
+    "heating_pump_operation_time",
+    "heating_pump_starts",
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
@@ -418,9 +421,8 @@ SensorType = Literal[
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
-    "open_therm_application_specific_fault_code",
-    "open_therm_oem_diagnostic_code",
-    "open_therm_oem_fault_code",
+    "oem_diagnostic_code",
+    "oem_fault_code",
     "outdoor_air_temperature",
     "outdoor_temperature",
     "return_temperature",
@@ -519,8 +521,6 @@ class SmileSensors(TypedDict, total=False):
     battery: int
     burner_operation_time: int
     burner_starts: int
-    central_heater_pump_operation_time: int
-    central_heater_pump_starts: int
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
     dhw_burner_operation_time: int
@@ -557,8 +557,11 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_point: float
     failed_burner_flame_ignitions: int
     failed_burner_starts: int
+    fault_flags: int
     gas_consumed_cumulative: float
     gas_consumed_interval: float
+    heating_pump_operation_time: int
+    heating_pump_starts: int
     humidity: float
     illuminance: float
     intended_boiler_temperature: float
@@ -566,9 +569,8 @@ class SmileSensors(TypedDict, total=False):
     modulation_level: int
     net_electricity_cumulative: float
     net_electricity_point: float
-    open_therm_application_specific_fault_code: int
-    open_therm_oem_diagnostic_code: int
-    open_therm_oem_fault_code: int
+    oem_diagnostic_code: int
+    oem_fault_code: int
     outdoor_air_temperature: float
     outdoor_temperature: float
     return_temperature: float
