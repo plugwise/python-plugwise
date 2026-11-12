@@ -21,8 +21,10 @@
     "select_dhw_mode": "eco",
     "sensors": {
       "domestic_hot_water_setpoint": 60.0,
+      "fault_flags": 0,
       "intended_boiler_temperature": 58.3,
       "modulation_level": 55,
+      "oem_fault_code": 0,
       "outdoor_air_temperature": 6.0,
       "return_temperature": 35.5,
       "water_pressure": 0.5,
@@ -87,6 +89,7 @@
       "cooling_activation_outdoor_temperature": 24.0,
       "cooling_deactivation_threshold": 2.0,
       "illuminance": 0.5,
+      "maximum_modulation_level": 100,
       "setpoint_high": 30.0,
       "setpoint_low": 19.5,
       "temperature": 19.2

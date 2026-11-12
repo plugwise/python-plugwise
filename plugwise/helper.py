@@ -16,6 +16,7 @@ from plugwise.constants import (
     ALLOWED_ZONE_PROFILES,
     ANNA,
     ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
     DATA,
     DEVICE_MEASUREMENTS,
     DOMAIN_OBJECTS,
@@ -28,6 +29,8 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
+    POWER_WATT,
+    SENSORS,
     TEMP_CELSIUS,
     THERMO_MATCHING,
     THERMOSTAT_CLASSES,
@@ -485,6 +488,10 @@ class SmileHelper(SmileCommon):
 
                 common_match_cases(measurement, attrs, appl_p_loc, data)
 
+            # Only power-measurements have a matching energy interval_log, skip the others
+            if getattr(attrs, ATTR_UNIT_OF_MEASUREMENT) != POWER_WATT:
+                continue
+
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = cast(SensorType, f"{measurement}_interval")
@@ -492,7 +499,35 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
+        if measurements is HEATER_CENTRAL_MEASUREMENTS:
+            self._appliance_cumulative_measurements(appliance, data, measurements)
+
         self._count = count_data_items(self._count, data)
+
+    def _appliance_cumulative_measurements(
+        self,
+        appliance: etree.Element,
+        data: GwEntityData,
+        measurements: dict[str, DATA | UOM],
+    ) -> None:
+        """Helper-function for _appliance_measurements() - collect cumulative_log measurement data.
+
+        Only for the heater_central: counters like burner-starts and operation-times.
+        Only sensor-keys are collected and a value already collected from a point_log
+        is never overwritten.
+        """
+        for measurement, attrs in measurements.items():
+            name = cast(SensorType, getattr(attrs, ATTR_NAME, None) or measurement)
+            if name not in SENSORS or name in data["sensors"]:
+                continue
+
+            locator = f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
+            if (appl_c_loc := appliance.find(locator)) is None:
+                continue
+
+            data["sensors"][name] = format_measure(
+                appl_c_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+            )
 
     def _select_dhw_mode(self, text: str, data: GwEntityData, measurement: str) -> None:
         """Set the selected dhw mode."""

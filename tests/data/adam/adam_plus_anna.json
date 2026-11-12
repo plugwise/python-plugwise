@@ -91,7 +91,14 @@
     "name": "OpenTherm",
     "select_dhw_mode": "eco",
     "sensors": {
+      "burner_operation_time": 8068,
+      "burner_starts": 17392,
+      "dhw_burner_operation_time": 795,
+      "failed_burner_flame_ignitions": 30,
+      "failed_burner_starts": 3,
       "intended_boiler_temperature": 0.0,
+      "fault_flags": 0,
+      "oem_fault_code": 255,
       "water_temperature": 48.0
     },
     "switches": {

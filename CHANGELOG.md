@@ -2,6 +2,13 @@
 
 ## Ongoing
 
+- Contribution PR [#949](https://github.com/plugwise/python-plugwise/pull/949) by @bilhert:
+  - Add more OpenTherm boiler data, when provided by the boiler:
+    - DHW flow-rate (`dhw_flow`).
+    - Raw OpenTherm fault-flags and fault- and diagnostic-codes (`fault_flags`, `oem_fault_code`, `oem_diagnostic_code`), the meaning of the OEM codes is boiler-specific. Note: `oem_fault_code` is OEM-specific (0..255), several boilers report 255 while there is no active fault.
+    - Burner, heating pump and DHW counters and operation-times, collected from the `cumulative_log` items.
+    - The maximum modulation level reported by an OpenTherm thermostat.
+  - Collect `interval_log` data only for power-measurements (W to Wh), the only measurements with a matching energy `interval_log`. This applies to all devices; no existing `_interval` sensor is affected.
 - Code optimizations via PR [#946](https://github.com/plugwise/python-plugwise/pull/946)
 
 ## v1.16.0

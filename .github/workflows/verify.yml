@@ -13,7 +13,7 @@ on:
     - cron: "2 4 * * 0" # weekly
   workflow_dispatch:
   push:
-# pull_request:
+  pull_request:
 
 jobs:
   # Determine cache key once
@@ -249,6 +249,8 @@ jobs:
 
   test-publishing:
     name: Build and publish Python 🐍 distributions 📦 to TestPyPI
+    # We cant test publish for contributions, todo
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     environment: testpypi
     permissions:
