@@ -323,10 +323,10 @@ class SmileLegacyHelper(SmileCommon):
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
-            measurement = self._appliance_point_measurement(
-                appliance, data, measurement, attrs
-            )
-            if measurement is None:
+            if (
+                self._appliance_point_measurement(appliance, data, measurement, attrs)
+                is None
+            ):
                 continue
 
             self._appliance_interval_measurement(appliance, data, measurement, attrs)
