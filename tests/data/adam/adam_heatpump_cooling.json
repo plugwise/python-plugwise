@@ -58,10 +58,10 @@
     "select_zone_profile": "passive",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 22.6
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 22.6,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 20.5,
@@ -240,10 +240,10 @@
     "select_zone_profile": "passive",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 22.0
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 22.0,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 18.0,
@@ -397,10 +397,10 @@
     "select_schedule": "Werkdag schema",
     "select_zone_profile": "passive",
     "sensors": {
-      "electricity_consumed": 0.0,
-      "temperature": 21.9
+      "electricity_consumed": 0.0
     },
     "thermostat": {
+      "current": 21.9,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 20.5,
@@ -588,10 +588,10 @@
     "select_zone_profile": "passive",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 21.5
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 21.5,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 20.5,
@@ -663,10 +663,10 @@
     "select_schedule": "off",
     "select_zone_profile": "passive",
     "sensors": {
-      "electricity_consumed": 3.13,
-      "temperature": 20.7
+      "electricity_consumed": 3.13
     },
     "thermostat": {
+      "current": 20.7,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 17.0,
@@ -764,10 +764,10 @@
     "select_zone_profile": "passive",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 21.4
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 21.4,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 18.5,
@@ -865,10 +865,10 @@
     "select_zone_profile": "active",
     "sensors": {
       "electricity_consumed": 2.13,
-      "electricity_produced": 0.0,
-      "temperature": 22.5
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 22.5,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 21.5,
@@ -941,10 +941,10 @@
     "select_zone_profile": "active",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 18.8
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 18.8,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 18.0,
@@ -1116,10 +1116,10 @@
     "select_zone_profile": "passive",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 20.0
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 20.0,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 18.0,
@@ -1267,10 +1267,10 @@
     "select_zone_profile": "active",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 22.5
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 22.5,
       "lower_bound": 1.0,
       "resolution": 0.01,
       "setpoint": 21.5,
