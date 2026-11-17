@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import cast
 
 from plugwise.constants import (
+    ADAM,
     ANNA,
     DHW_SETPOINT,
     GROUP_TYPES,
@@ -315,10 +316,11 @@ class SmileCommon:
             if "water_temperature" in data["sensors"]:
                 temp_dict["current"] = data["sensors"]["water_temperature"]
                 self._count += 1
-        
+
         if item == "thermostat":
             if "temperature" in data["sensors"]:
                 temp_dict["current"] = data["sensors"]["temperature"]
-                data["sensors"].pop("temperature")
+                if self.check_name(ADAM):
+                    data["sensors"].pop("temperature")
 
         return item, temp_dict
