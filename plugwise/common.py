@@ -296,7 +296,7 @@ class SmileCommon:
     def _create_special_dicts(
         self, item: str, data: GwEntityData, temp_dict: ActuatorData
     ) -> tuple[str, ActuatorData]:
-        """Update the dhw_temperature and boiler_temperature dicts with a current key."""
+        """Update the boiler_temperature, dhw_temperature and thermostat dicts with a current key."""
         if item == DHW_SETPOINT:
             item = "dhw_temperature"
             if DHW_SETPOINT in data["sensors"]:
@@ -315,5 +315,10 @@ class SmileCommon:
             if "water_temperature" in data["sensors"]:
                 temp_dict["current"] = data["sensors"]["water_temperature"]
                 self._count += 1
+        
+        if item == "thermostat":
+            if "temperature" in data["sensors"]:
+                temp_dict["current"] = data["sensors"]["temperature"]
+                data["sensors"].pop("temperature")
 
         return item, temp_dict
