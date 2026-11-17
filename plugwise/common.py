@@ -317,9 +317,11 @@ class SmileCommon:
                 temp_dict["current"] = data["sensors"]["water_temperature"]
                 self._count += 1
 
+        # Solution for Core issue #192756
         if item == "thermostat" and "temperature" in data["sensors"]:
             temp_dict["current"] = data["sensors"]["temperature"]
             self._count += 1
+            # For Anna the temperature value is duplicated, for Adam it is moved
             if self.check_name(ADAM):
                 data["sensors"].pop("temperature")
                 self._count -= 1
