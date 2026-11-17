@@ -277,6 +277,7 @@
       "temperature": 19.1
     },
     "thermostat": {
+      "current": 19.7,
       "lower_bound": 1.0,
       "resolution": 0.01,
       "setpoint": 20.0,
@@ -356,6 +357,7 @@
       "temperature": 17.9
     },
     "thermostat": {
+      "current": 18.7,
       "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 15.0,
