@@ -317,10 +317,11 @@ class SmileCommon:
                 temp_dict["current"] = data["sensors"]["water_temperature"]
                 self._count += 1
 
-        if item == "thermostat":
-            if "temperature" in data["sensors"]:
-                temp_dict["current"] = data["sensors"]["temperature"]
-                if self.check_name(ADAM):
-                    data["sensors"].pop("temperature")
+        if item == "thermostat" and "temperature" in data["sensors"]:
+            temp_dict["current"] = data["sensors"]["temperature"]
+            self._count += 1
+            if self.check_name(ADAM):
+                data["sensors"].pop("temperature")
+                self._count -= 1
 
         return item, temp_dict
