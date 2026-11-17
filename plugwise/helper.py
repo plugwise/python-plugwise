@@ -6,6 +6,7 @@ Plugwise Smile protocol helpers.
 from __future__ import annotations
 
 from contextlib import suppress
+import math
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -104,9 +105,11 @@ def _slot_settings(then: etree.Element) -> ScheduleSlot:
     for key, value in then.attrib.items():
         settings[key] = value
         if key in SCHEDULE_NUMBERS:
-            # One unreadable slot must not break the whole update
+            # One unusable slot value must not break the whole update
             with suppress(ValueError):
-                settings[key] = float(value)
+                number = float(value)
+                if math.isfinite(number):
+                    settings[key] = number
 
     return settings
 

@@ -162,6 +162,14 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "slots"
         ]
         assert "warm" in [slot.get("setpoint") for slot in slots]
+        # A setpoint that is not a finite number is kept as text
+        for text in ("NaN", "-Infinity", "1e999"):
+            setpoint_then.set("setpoint", text)
+            # pylint: disable-next=protected-access
+            slots = api._smile_api._schedule_rules()[
+                "24df4dace79a4c42a0f4750ce65d84cb"
+            ]["slots"]
+            assert text in [slot.get("setpoint") for slot in slots]
         setpoint_then.set("setpoint", original_setpoint)
 
         assert await self.tinker_preset_temperature(
