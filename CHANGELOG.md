@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Implement fix for Core issue [#192756](https://github.com/home-assistant/core/issues/192756) via PR[#954](https://github.com/plugwise/python-plugwise/pull/954), this fix removes the thermozones temperature sensor.
 - Improve code, lower complexity via PR [#951](https://github.com/plugwise/python-plugwise/pull/951)
 
 ## v1.17.0
