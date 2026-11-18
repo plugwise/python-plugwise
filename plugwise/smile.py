@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable, Callable
+from contextlib import suppress
 import datetime as dt
 import re
 from typing import Any, cast
@@ -26,6 +27,7 @@ from plugwise.constants import (
     OFF,
     PRESET_SETPOINT_ATTRIBUTES,
     PRESET_TEMPERATURES,
+    RULE_LOCATOR,
     RULES,
     SCHEDULE_NUMBERS,
     SCHEDULE_POINT,
@@ -39,8 +41,14 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
+from plugwise.exceptions import (
+    ConnectionFailedError,
+    DataMissingError,
+    PlugwiseError,
+    PlugwiseException,
+)
 
+from aiohttp import ClientError
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -394,6 +402,7 @@ class SmileAPI(SmileData):
     ) -> None:
         """Replace the time slots of a schedule, and rename it when a name is given."""
         rule = self._schedule_rule(rule_id)
+        old_name = rule.findtext("name")
         directives = self._schedule_directives(slots)
         new_name = (
             f"<name>{self._schedule_name(name, rule_id)}</name>"
@@ -402,11 +411,17 @@ class SmileAPI(SmileData):
         )
         data = f"<rules><rule id='{rule_id}'>{new_name}{directives}</rule></rules>"
         await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+        # An update during the request can have replaced the cached rules
+        if (rule := self._domain_objects.find(f'rule[@id="{rule_id}"]')) is None:
+            return
         if (old_directives := rule.find("directives")) is not None:
             rule.remove(old_directives)
         rule.append(etree.fromstring(directives))
         if name is not None and (rule_name := rule.find("name")) is not None:
             rule_name.text = name
+            for states in self._schedule_old_states.values():
+                if old_name in states:
+                    states[name] = states.pop(old_name)
 
     async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
         """Create a schedule, active and attached to no zone."""
@@ -420,12 +435,20 @@ class SmileAPI(SmileData):
             "</rule></rules>"
         )
         await self.call_request(RULES, method="post", data=data)
+        # The schedule exists now, so a failed read is left to the next update
+        with suppress(PlugwiseException, ClientError, TimeoutError):
+            await self.full_xml_update()
 
     async def delete_schedule(self, rule_id: str) -> None:
         """Delete a schedule from the gateway."""
         rule = self._schedule_rule(rule_id)
+        name = rule.findtext("name")
         await self.call_request(f"{RULES};id={rule_id}", method="delete")
-        self._domain_objects.remove(rule)
+        # An update during the request can have replaced the cached rules
+        if (current := self._domain_objects.find(f'rule[@id="{rule_id}"]')) is not None:
+            self._domain_objects.remove(current)
+        for states in self._schedule_old_states.values():
+            states.pop(name, None)
 
     def _schedule_rule(self, rule_id: str) -> etree.Element:
         """Return the schedule rule with this id, or raise if it is missing or not a schedule."""
@@ -450,7 +473,7 @@ class SmileAPI(SmileData):
             raise PlugwiseError(
                 f"Plugwise: the name '{name}' is reserved. Choose another name."
             )
-        for rule in self._domain_objects.findall("rule"):
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
             if rule.get("id") != rule_id and rule.findtext("name") == name:
                 raise PlugwiseError(
                     f"Plugwise: the name '{name}' is already in use on the gateway. Choose another name."

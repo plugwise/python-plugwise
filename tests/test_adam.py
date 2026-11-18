@@ -6,6 +6,8 @@ from unittest.mock import patch
 
 import pytest
 
+from aiohttp import ClientPayloadError
+
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
 SMILE_TYPE = "adam"
@@ -15,6 +17,8 @@ BADKAMER_SCHEMA = "Badkamer Schema"
 CV_JESSIE = "CV Jessie"
 GF7_WOONKAMER = "GF7  Woonkamer"
 WERKDAG_SCHEMA = "Werkdag schema"
+BATHROOM_RULE = "ebe3e57ec41d4d8faa927ca85c95b747"
+BATHROOM_ZONE = "f871b8c4d63549319221e294e4f88074"
 
 
 async def _sent_schedule_state(api, loc_id, name, state):
@@ -386,7 +390,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await api.set_schedule(
             "ebe3e57ec41d4d8faa927ca85c95b747", badkamer["slots"], name='Kid"s room'
         )
-        sent = await _sent_schedule_state(api, bathroom_zone, 'Kid"s room', "on")
+        sent = await _sent_schedule_state(api, bathroom_zone, 'Kid"s room', "off")
         assert "ebe3e57ec41d4d8faa927ca85c95b747" in sent
         # A name holding ']]>' would end the CDATA block the name is written in
         with pytest.raises(pw_exceptions.PlugwiseError):
@@ -499,6 +503,156 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "021e3f453589448e891d29f195fbcaf0",
             unhappy=True,
         )
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    async def _connect_for_schedule_writes(self):
+        """Connect to an Adam that accepts writes and collect its schedule states."""
+        self.smile_setup = "adam_plus_anna_new"
+        server, api, client = await self.connect(self.setup_app)
+        await api.async_update()
+        return server, api, client
+
+    @pytest.mark.asyncio
+    async def test_adam_created_schedule_name_is_taken(self):
+        """Test that a second schedule with a just created name is refused."""
+        server, api, client = await self._connect_for_schedule_writes()
+        # pylint: disable-next=protected-access
+        smile = api._smile_api
+        tree = smile._domain_objects  # pylint: disable=protected-access
+        created = copy.deepcopy(tree.find(f'rule[@id="{BATHROOM_RULE}"]'))
+        created.set("id", "a" * 32)
+        created.find("name").text = "Nieuw"
+        slots = smile._schedule_rules()[BATHROOM_RULE]["slots"]  # pylint: disable=protected-access
+
+        with patch.object(
+            smile, "full_xml_update", side_effect=lambda: tree.append(created)
+        ):
+            await api.create_schedule("Nieuw", slots)
+            with pytest.raises(pw_exceptions.PlugwiseError):
+                await api.create_schedule("Nieuw", slots)
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "error",
+        [pw_exceptions.ConnectionFailedError, TimeoutError, ClientPayloadError],
+    )
+    async def test_adam_created_schedule_survives_a_failed_read(self, error):
+        """Test that a create succeeds when the read after it fails."""
+        server, api, client = await self._connect_for_schedule_writes()
+        # pylint: disable-next=protected-access
+        smile = api._smile_api
+        slots = smile._schedule_rules()[BATHROOM_RULE]["slots"]  # pylint: disable=protected-access
+
+        with patch.object(
+            smile,
+            "full_xml_update",
+            side_effect=error,
+        ) as refresh:
+            await api.create_schedule("Nieuw", slots)
+        refresh.assert_awaited_once()
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("rule_stays", [True, False])
+    async def test_adam_schedule_writes_survive_an_update(self, rule_stays):
+        """Test writes during which an update replaces the cached rules."""
+        server, api, client = await self._connect_for_schedule_writes()
+        # pylint: disable-next=protected-access
+        smile = api._smile_api
+        slots = smile._schedule_rules()[BATHROOM_RULE]["slots"]  # pylint: disable=protected-access
+
+        async def replace_rules(*_args, **_kwargs):
+            """Replace the cached rules, as an update during a request does."""
+            rules = copy.deepcopy(smile._domain_objects)  # pylint: disable=protected-access
+            if not rule_stays:
+                rules.remove(rules.find(f'rule[@id="{BATHROOM_RULE}"]'))
+            smile._domain_objects = rules  # pylint: disable=protected-access
+
+        with patch.object(smile, "call_request", side_effect=replace_rules):
+            await api.set_schedule(BATHROOM_RULE, slots, name="Bad")
+            tree = smile._domain_objects  # pylint: disable=protected-access
+            rule = tree.find(f'rule[@id="{BATHROOM_RULE}"]')
+            assert (rule is not None) is rule_stays
+            assert rule is None or rule.findtext("name") == "Bad"
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("rule_stays", [True, False])
+    async def test_adam_delete_survives_an_update(self, rule_stays):
+        """Test a delete during which an update replaces the cached rules."""
+        server, api, client = await self._connect_for_schedule_writes()
+        # pylint: disable-next=protected-access
+        smile = api._smile_api
+        states = smile._schedule_old_states[BATHROOM_ZONE]  # pylint: disable=protected-access
+        states["Badkamer"] = "on"
+
+        async def replace_rules(*_args, **_kwargs):
+            """Replace the cached rules, as an update during a request does."""
+            rules = copy.deepcopy(smile._domain_objects)  # pylint: disable=protected-access
+            if not rule_stays:
+                rules.remove(rules.find(f'rule[@id="{BATHROOM_RULE}"]'))
+            smile._domain_objects = rules  # pylint: disable=protected-access
+
+        with patch.object(smile, "call_request", side_effect=replace_rules):
+            await api.delete_schedule(BATHROOM_RULE)
+
+        tree = smile._domain_objects  # pylint: disable=protected-access
+        assert tree.find(f'rule[@id="{BATHROOM_RULE}"]') is None
+        assert "Badkamer" not in states
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_adam_renamed_schedule_keeps_its_state(self):
+        """Test switching on a schedule that was renamed and switched off in between."""
+        server, api, client = await self._connect_for_schedule_writes()
+        # pylint: disable-next=protected-access
+        slots = api._smile_api._schedule_rules()[BATHROOM_RULE]["slots"]
+
+        await api.set_schedule_state(BATHROOM_ZONE, name="Badkamer", state="on")
+        await api.set_schedule(BATHROOM_RULE, slots, name="Bad")
+        await api.set_schedule_state(BATHROOM_ZONE, name="Bad", state="off")
+        await api.set_schedule(BATHROOM_RULE, slots, name="Badkamer")
+
+        sent = await _sent_schedule_state(api, BATHROOM_ZONE, "Badkamer", "on")
+        assert BATHROOM_ZONE in sent
+
+        await api.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_adam_deleted_schedule_leaves_no_state(self):
+        """Test switching on a schedule after deleting another one with its name."""
+        server, api, client = await self._connect_for_schedule_writes()
+        # pylint: disable-next=protected-access
+        smile = api._smile_api
+        states = smile._schedule_old_states[BATHROOM_ZONE]  # pylint: disable=protected-access
+        states["Badkamer"] = "on"
+        await api.set_schedule_state(BATHROOM_ZONE, name="Badkamer", state="off")
+
+        tree = smile._domain_objects  # pylint: disable=protected-access
+        remaining = tree.find(f'rule[@id="{BATHROOM_RULE}"]')
+        remaining.find("active").text = "true"
+        duplicate = copy.deepcopy(remaining)
+        duplicate.set("id", "a" * 32)
+        tree.insert(0, duplicate)
+        states["Badkamer"] = "on"
+
+        await api.delete_schedule("a" * 32)
+
+        sent = await _sent_schedule_state(api, BATHROOM_ZONE, "Badkamer", "on")
+        assert BATHROOM_RULE in sent
+        assert BATHROOM_ZONE in sent
 
         await api.close_connection()
         await self.disconnect(server, client)

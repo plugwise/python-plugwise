@@ -30,6 +30,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
+    RULE_LOCATOR,
     SCHEDULE_DAYS,
     SCHEDULE_NUMBERS,
     SCHEDULE_PERIOD,
@@ -1040,7 +1041,7 @@ class SmileHelper(SmileCommon):
         """
         schedule_ids: dict[str, dict[str, str]] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall("./rule"):
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
             # Comparing here keeps a name holding a quote out of the XPath
             if rule.findtext("name") != name:
                 continue
@@ -1065,7 +1066,7 @@ class SmileHelper(SmileCommon):
         schedule_ids: dict[str, dict[str, str]] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall("./rule"):
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
             if rule.find(locator1) is not None:
                 name = rule.find("name").text
                 if rule.find(locator2) is not None:
@@ -1097,7 +1098,7 @@ class SmileHelper(SmileCommon):
         schedules: list[str] = []
         for rule_id, data in rule_ids.items():
             name = data["name"]
-            locator = f'./rule[@id="{rule_id}"]/directives'
+            locator = f'{RULE_LOCATOR}[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if self._domain_objects.find(locator) is None:
                 continue  # pragma: no cover
@@ -1116,7 +1117,7 @@ class SmileHelper(SmileCommon):
         """
         schedules: dict[str, ScheduleData] = {}
         locator = f'./template[@tag="{SCHEDULE_TAG}"]'
-        for rule in self._domain_objects.findall("./rule"):
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
             if rule.find(locator) is None or rule.find("directives") is None:
                 continue
 

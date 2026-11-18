@@ -95,6 +95,7 @@ MODULE_LOCATOR: Final = "./logs/point_log/*[@id]"
 NONE: Final = "None"
 OFF: Final = "off"
 PRIORITY_DEVICE_CLASSES = ("gateway", "heater_central")
+RULE_LOCATOR: Final = "./rule"
 THERMO_MATCHING: Final[dict[str, int]] = {
     "thermostat": 2,
     "zone_thermometer": 2,
