@@ -84,8 +84,8 @@ m_adam_cooling["da575e9e09b947e281fb6e3ebce3b174"]["sensors"]["setpoint"] = 23.5
 m_adam_cooling["da575e9e09b947e281fb6e3ebce3b174"]["sensors"]["temperature"] = 23.8
 m_adam_cooling["14df5c4dc8cb4ba69f9d1ac0eaf7c5c6"]["sensors"]["setpoint"] = 23.5
 m_adam_cooling["14df5c4dc8cb4ba69f9d1ac0eaf7c5c6"]["sensors"]["temperature"] = 24.2
+m_adam_cooling["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"]["current"] = 24.2
 m_adam_cooling["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"]["setpoint"] = 23.5
-m_adam_cooling["f2bf9048bef64cc5b6d5110154e33c81"]["sensors"]["temperature"] = 24.2
 m_adam_cooling["f2bf9048bef64cc5b6d5110154e33c81"]["select_schedule"] = "off"
 m_adam_cooling["f2bf9048bef64cc5b6d5110154e33c81"]["control_state"] = "cooling"
 m_adam_cooling["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "cool"
@@ -104,8 +104,8 @@ m_adam_cooling["1772a4ea304041adb83f357b751341ff"]["sensors"]["temperature"] = 2
 # Go for e2f4
 m_adam_cooling["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"]["setpoint"] = 25.0
 m_adam_cooling["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"]["temperature"] = 25.6
+m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["thermostat"]["current"] = 25.8
 m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["thermostat"]["setpoint"] = 25.0
-m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["sensors"]["temperature"] = 25.8
 m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["control_state"] = "cooling"
 m_adam_cooling["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "auto"
 
@@ -167,11 +167,11 @@ for zone_id in ("f2bf9048bef64cc5b6d5110154e33c81", "f871b8c4d63549319221e294e4f
         zone[key] = preset
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
+m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"]["current"] = 19.1
 m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"]["setpoint"] = 20.0
 m_adam_heating["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"]["setpoint"] = 20.0
 m_adam_cooling["da575e9e09b947e281fb6e3ebce3b174"]["sensors"]["setpoint"] = 20.0
 m_adam_cooling["14df5c4dc8cb4ba69f9d1ac0eaf7c5c6"]["sensors"]["setpoint"] = 20.0
-m_adam_heating["f2bf9048bef64cc5b6d5110154e33c81"]["sensors"]["temperature"] = 19.1
 m_adam_heating["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"]["temperature"] = 19.1
 m_adam_cooling["da575e9e09b947e281fb6e3ebce3b174"]["sensors"]["temperature"] = 19.3
 m_adam_cooling["14df5c4dc8cb4ba69f9d1ac0eaf7c5c6"]["sensors"]["temperature"] = 19.5
@@ -185,9 +185,9 @@ m_adam_heating["1772a4ea304041adb83f357b751341ff"]["sensors"]["temperature"] = 1
 # Related zone temperature is set below
 
 # Go for e2f4
+m_adam_heating["f871b8c4d63549319221e294e4f88074"]["thermostat"]["current"] = 17.9
 m_adam_heating["f871b8c4d63549319221e294e4f88074"]["thermostat"]["setpoint"] = 15.0
 m_adam_heating["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"]["setpoint"] = 15.0
-m_adam_heating["f871b8c4d63549319221e294e4f88074"]["sensors"]["temperature"] = 17.9
 m_adam_heating["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"]["temperature"] = 17.9
 
 m_adam_heating["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "auto"
@@ -321,6 +321,9 @@ m_anna_heatpump_cooling["015ae9ea3f964e668e490fa39da3870b"]["sensors"][
 # Go for 3cb7
 m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "cooling"
 m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
+    "current"
+] = 26.3
+m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
     "setpoint_low"
 ] = 20.5
 m_anna_heatpump_cooling["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
@@ -379,5 +382,8 @@ m_anna_heatpump_idle["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"]["temperature
 m_anna_heatpump_idle["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
     "cooling_activation_outdoor_temperature"
 ] = 25.0
+m_anna_heatpump_idle["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"]["current"] = (
+    23.0
+)
 
 json_writer("m_anna_heatpump_idle", m_anna_heatpump_idle)

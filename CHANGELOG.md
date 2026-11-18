@@ -1,7 +1,8 @@
 # Changelog
 
-## Ongoing
+## v1.17.1
 
+- Implement fix for Core issue [#192756](https://github.com/home-assistant/core/issues/192756) via PR[#954](https://github.com/plugwise/python-plugwise/pull/954), this fix removes the thermozone temperature sensors to avoid creating sensors with the same name in HA.
 - Improve code, lower complexity via PR [#951](https://github.com/plugwise/python-plugwise/pull/951)
 
 ## v1.17.0

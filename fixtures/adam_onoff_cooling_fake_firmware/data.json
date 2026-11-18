@@ -154,10 +154,10 @@
     "select_zone_profile": "active",
     "sensors": {
       "electricity_consumed": 0.0,
-      "electricity_produced": 0.0,
-      "temperature": 22.5
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 22.5,
       "lower_bound": 1.0,
       "resolution": 0.01,
       "setpoint": 21.5,

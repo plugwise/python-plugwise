@@ -902,8 +902,8 @@ class SmileHelper(SmileCommon):
 
             # Older Adam firmware does not have the control_state xml-key
             # Work around this by comparing the reported temperature and setpoint for a location
-            setpoint = data["sensors"]["setpoint"]
-            temperature = data["sensors"]["temperature"]
+            setpoint = data["thermostat"]["setpoint"]
+            temperature = data["thermostat"]["current"]
             # No cooling available in older firmware
             return "heating" if temperature < setpoint else "off"
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import cast
 
 from plugwise.constants import (
+    ADAM,
     ANNA,
     DHW_SETPOINT,
     GROUP_TYPES,
@@ -296,7 +297,7 @@ class SmileCommon:
     def _create_special_dicts(
         self, item: str, data: GwEntityData, temp_dict: ActuatorData
     ) -> tuple[str, ActuatorData]:
-        """Update the dhw_temperature and boiler_temperature dicts with a current key."""
+        """Update the boiler_temperature, dhw_temperature and thermostat dicts with a current key."""
         if item == DHW_SETPOINT:
             item = "dhw_temperature"
             if DHW_SETPOINT in data["sensors"]:
@@ -315,5 +316,14 @@ class SmileCommon:
             if "water_temperature" in data["sensors"]:
                 temp_dict["current"] = data["sensors"]["water_temperature"]
                 self._count += 1
+
+        # Solution for Core issue #192756
+        if item == "thermostat" and "temperature" in data["sensors"]:
+            temp_dict["current"] = data["sensors"]["temperature"]
+            self._count += 1
+            # For Anna the temperature value is duplicated, for Adam it is moved
+            if self.check_name(ADAM):
+                data["sensors"].pop("temperature")
+                self._count -= 1
 
         return item, temp_dict

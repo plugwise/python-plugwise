@@ -44,10 +44,10 @@
     "select_schedule": "Weekschema",
     "sensors": {
       "electricity_consumed": 74.2,
-      "electricity_produced": 0.0,
-      "temperature": 20.5
+      "electricity_produced": 0.0
     },
     "thermostat": {
+      "current": 20.5,
       "lower_bound": 1.0,
       "resolution": 0.01,
       "setpoint": 20.5,
