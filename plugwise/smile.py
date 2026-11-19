@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable, Callable
-from contextlib import suppress
 import datetime as dt
 import re
 from typing import Any, cast
@@ -190,6 +189,7 @@ class SmileAPI(SmileData):
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
         self._preset_lock = asyncio.Lock()
+        self._rules_stale = False
 
     @property
     def cooling_present(self) -> bool:
@@ -199,6 +199,7 @@ class SmileAPI(SmileData):
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
+        self._rules_stale = False
         self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
@@ -401,6 +402,7 @@ class SmileAPI(SmileData):
         self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
     ) -> None:
         """Replace the time slots of a schedule, and rename it when a name is given."""
+        await self._refresh_stale_rules()
         rule = self._schedule_rule(rule_id)
         old_name = rule.findtext("name")
         directives = self._schedule_directives(slots)
@@ -425,6 +427,7 @@ class SmileAPI(SmileData):
 
     async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
         """Create a schedule, active and attached to no zone."""
+        await self._refresh_stale_rules()
         directives = self._schedule_directives(slots)
         data = (
             "<rules><rule>"
@@ -436,11 +439,18 @@ class SmileAPI(SmileData):
         )
         await self.call_request(RULES, method="post", data=data)
         # The schedule exists now, so a failed read is left to the next update
-        with suppress(PlugwiseException, ClientError, TimeoutError):
+        try:
             await self.full_xml_update()
+        except (
+            PlugwiseException,
+            ClientError,
+            TimeoutError,
+        ):
+            self._rules_stale = True
 
     async def delete_schedule(self, rule_id: str) -> None:
         """Delete a schedule from the gateway."""
+        await self._refresh_stale_rules()
         rule = self._schedule_rule(rule_id)
         name = rule.findtext("name")
         await self.call_request(f"{RULES};id={rule_id}", method="delete")
@@ -449,6 +459,11 @@ class SmileAPI(SmileData):
             self._domain_objects.remove(current)
         for states in self._schedule_old_states.values():
             states.pop(name, None)
+
+    async def _refresh_stale_rules(self) -> None:
+        """Read the rules again after a failed read that followed a create, so lookups see the new schedule."""
+        if self._rules_stale:
+            await self.full_xml_update()
 
     def _schedule_rule(self, rule_id: str) -> etree.Element:
         """Return the schedule rule with this id, or raise if it is missing or not a schedule."""
@@ -662,6 +677,7 @@ class SmileAPI(SmileData):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
+        await self._refresh_stale_rules()
         # Input checking
         if state is None:
             state = STATE_ON
@@ -712,8 +728,11 @@ class SmileAPI(SmileData):
         uri = f"{RULES};id={schedule_rule_id}"
         await self.call_request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = state
-        if state == STATE_ON and rule_active is not None:
-            rule_active.text = "true"
+        # An update during the request can have replaced the cached rules
+        if state == STATE_ON:
+            locator = f'rule[@id="{schedule_rule_id}"]/active'
+            if (rule_active := self._domain_objects.find(locator)) is not None:
+                rule_active.text = "true"
 
     def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""
