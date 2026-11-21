@@ -681,44 +681,70 @@ class SmileAPI(SmileData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         await self._refresh_stale_rules()
-        # Input checking
-        if state is None:
-            state = STATE_ON
-        elif state not in (STATE_OFF, STATE_ON):
-            raise PlugwiseError(f"Plugwise: invalid schedule state {state}")
-
-        # Translate selection of Off-schedule-option to disabling the active schedule
+        state = self._normalize_schedule_state(state)
         if name == OFF:
             state = STATE_OFF
-
-        # Handle no schedule-name / schedule-off requested: find the active schedule
-        if name is None or name == OFF:
-            _, name = self._schedules(loc_id)
-            if name in (NONE, OFF):  # no active schedule found, nothing to do
-                return
-
+        name = self._resolve_schedule_name(loc_id, name)
+        if name is None:
+            return
         schedule_rule_id = self._schedule_rule_id_by_name(name, loc_id)
+        if not self._schedule_state_needs_update(loc_id, name, state, schedule_rule_id):
+            return
+
+        data = self._schedule_rule_data(loc_id, name, state, schedule_rule_id)
+        uri = f"{RULES};id={schedule_rule_id}"
+        await self.call_request(uri, method="put", data=data)
+        self._schedule_old_states[loc_id][name] = state
+        self._update_cached_schedule_activity(schedule_rule_id, state)
+
+    def _normalize_schedule_state(self, state: int | str | None) -> str:
+        """Validate and normalize a requested schedule state."""
+        if state is None:
+            return STATE_ON
+        if state not in (STATE_OFF, STATE_ON):
+            raise PlugwiseError(f"Plugwise: invalid schedule state {state}")
+        return str(state)
+
+    def _resolve_schedule_name(self, loc_id: str, name: str | None) -> str | None:
+        """Resolve an omitted or Off selection to the active schedule name."""
+        if name is not None and name != OFF:
+            return name
+        _, active_name = self._schedules(loc_id)
+        if active_name in (NONE, OFF):
+            return None
+        return active_name
+
+    def _schedule_state_needs_update(
+        self, loc_id: str, name: str, state: str, schedule_rule_id: str
+    ) -> bool:
+        """Return whether the schedule state differs from the cached/gateway state."""
         rule_active = self._domain_objects.find(
             f'rule[@id="{schedule_rule_id}"]/active'
         )
         is_active = rule_active is not None and rule_active.text == "true"
-        # If no state change is requested, do nothing; an inactive rule still needs
-        # switching on, since the gateway only runs active schedules
-        if state == self._schedule_old_states[loc_id].get(name) and (
-            state == STATE_OFF or is_active
-        ):
-            return
+        old_state = self._schedule_old_states[loc_id].get(name)
+        return not (
+            state == old_state
+            and (state == STATE_OFF or is_active)
+        )
 
+    def _schedule_rule_template(self, schedule_rule_id: str) -> str:
+        """Return the template XML required by the gateway."""
         template = f'<template tag="{SCHEDULE_TAG}" />'
         if self.check_name(ANNA):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).get("id")
             template = f'<template id="{template_id}" />'
+        return template
 
+    def _schedule_rule_data(
+        self, loc_id: str, name: str, state: str, schedule_rule_id: str
+    ) -> str:
+        """Build the schedule rule XML payload."""
+        template = self._schedule_rule_template(schedule_rule_id)
         contexts = self.determine_contexts(loc_id, state, schedule_rule_id)
-        # An attached schedule only runs when its rule is active
         active = "<active>true</active>" if state == STATE_ON else ""
-        data = (
+        return (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
             f"<name><![CDATA[{name}]]></name>"
@@ -728,9 +754,11 @@ class SmileAPI(SmileData):
             "</rule>"
             "</rules>"
         )
-        uri = f"{RULES};id={schedule_rule_id}"
-        await self.call_request(uri, method="put", data=data)
-        self._schedule_old_states[loc_id][name] = state
+
+    def _update_cached_schedule_activity(
+        self, schedule_rule_id: str, state: str
+    ) -> None:
+        """Update a stale in-memory active element after a successful request."""
         # An update during the request can have replaced the cached rules
         if state == STATE_ON:
             locator = f'rule[@id="{schedule_rule_id}"]/active'
