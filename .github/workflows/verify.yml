@@ -13,7 +13,7 @@ on:
     - cron: "2 4 * * 0" # weekly
   workflow_dispatch:
   push:
-# pull_request:
+  pull_request:
 
 jobs:
   # Determine cache key once
@@ -197,9 +197,9 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38
       - name: Check against HA Core release
-        uses: chemelli74/ha-core-dependency-check/release@c036686f47c5badcb254d5cd3c93344ea8dd0bf8 # v1.2.0
+        uses: chemelli74/ha-core-dependency-check/release@0ce53675a52d2f728e7e9cd2dcdc4ec0e74348c4 # v1.3.1
       - name: Check against HA Core dev
-        uses: chemelli74/ha-core-dependency-check/dev@c036686f47c5badcb254d5cd3c93344ea8dd0bf8 # v1.2.0
+        uses: chemelli74/ha-core-dependency-check/dev@0ce53675a52d2f728e7e9cd2dcdc4ec0e74348c4 # v1.3.1
 
   # Check for missing python dependencies
   dependencies_check:
@@ -249,6 +249,8 @@ jobs:
 
   test-publishing:
     name: Build and publish Python 🐍 distributions 📦 to TestPyPI
+    # We cant test publish for contributions, todo
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     environment: testpypi
     permissions:

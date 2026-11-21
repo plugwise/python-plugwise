@@ -27,6 +27,7 @@
       "temperature": 21.4
     },
     "thermostat": {
+      "current": 21.4,
       "lower_bound": 4.0,
       "resolution": 0.1,
       "setpoint": 15.0,
@@ -66,6 +67,7 @@
       "dhw_temperature": 0.0,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
+      "oem_fault_code": 255,
       "return_temperature": 0.0,
       "water_pressure": 1.7,
       "water_temperature": 54.0

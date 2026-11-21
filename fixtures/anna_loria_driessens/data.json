@@ -455,6 +455,7 @@
     "select_schedule": "Verwarmen@9-23u",
     "sensors": {
       "illuminance": 5.5,
+      "maximum_modulation_level": 100,
       "setpoint_high": 30.0,
       "setpoint_low": 20.0,
       "temperature": 21.2
@@ -466,6 +467,7 @@
       "upper_bound": 2.0
     },
     "thermostat": {
+      "current": 21.2,
       "lower_bound": 4.0,
       "resolution": 0.1,
       "setpoint_high": 30.0,
@@ -519,8 +521,10 @@
     "name": "OpenTherm",
     "sensors": {
       "dhw_temperature": 49.5,
+      "fault_flags": 0,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
+      "oem_fault_code": 0,
       "outdoor_air_temperature": 7.5,
       "return_temperature": 23.0,
       "water_temperature": 23.3

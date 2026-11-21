@@ -5,7 +5,7 @@ default_language_version:
 repos:
   # Run manually in CI skipping the branch checks
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.3
+    rev: v0.17.6
     hooks:
       - id: ruff
         name: "Ruff check"
@@ -112,7 +112,7 @@ repos:
         language: script
         pass_filenames: false
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.41
+    rev: v0.9.42
     hooks:
       - id: pymarkdown
         name: MarkDown Lint

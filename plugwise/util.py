@@ -13,6 +13,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    INTEGER_FORMAT,
     NONE,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
@@ -199,6 +200,9 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
 def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
     float_measure = float(measure)
+    if unit in INTEGER_FORMAT:
+        return int(float_measure)
+
     if unit == PERCENTAGE:
         if 0 < float_measure <= 1:  # support older firmware
             return int(float_measure * 100)

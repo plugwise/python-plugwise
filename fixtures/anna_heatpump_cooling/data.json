@@ -109,10 +109,13 @@
     "name": "OpenTherm",
     "select_dhw_mode": "eco",
     "sensors": {
+      "dhw_flow": 0.26,
       "dhw_temperature": 41.5,
       "domestic_hot_water_setpoint": 60.0,
+      "fault_flags": 0,
       "intended_boiler_temperature": 0.0,
       "modulation_level": 40,
+      "oem_fault_code": 0,
       "outdoor_air_temperature": 22.0,
       "return_temperature": 23.8,
       "water_pressure": 1.61,
@@ -188,6 +191,7 @@
       "upper_bound": 2.0
     },
     "thermostat": {
+      "current": 22.3,
       "lower_bound": 4.0,
       "resolution": 0.1,
       "setpoint_high": 22.0,

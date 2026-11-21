@@ -7,6 +7,22 @@
 - Add `set_schedule`, `create_schedule` and `delete_schedule` to change, rename, add and remove weekly schedules. A new schedule is active and attached to no zone.
 - Add the weekly schedules, with their name, zones and time slots, to the gateway data. The slots are listed in week order, starting on Monday.
 
+## v1.17.1
+
+- Implement fix for Core issue [#192756](https://github.com/home-assistant/core/issues/192756) via PR[#954](https://github.com/plugwise/python-plugwise/pull/954), this fix removes the thermozone temperature sensors to avoid creating sensors with the same name in HA.
+- Improve code, lower complexity via PR [#951](https://github.com/plugwise/python-plugwise/pull/951)
+
+## v1.17.0
+
+- Contribution PR [#949](https://github.com/plugwise/python-plugwise/pull/949) by @bilhert:
+  - Add more OpenTherm boiler data, when provided by the boiler:
+    - DHW flow-rate (`dhw_flow`).
+    - Raw OpenTherm fault-flags and fault- and diagnostic-codes (`fault_flags`, `oem_fault_code`, `oem_diagnostic_code`), the meaning of the OEM codes is boiler-specific. Note: `oem_fault_code` is OEM-specific (0..255), several boilers report 255 while there is no active fault.
+    - Burner, heating pump and DHW counters and operation-times, collected from the `cumulative_log` items.
+    - The maximum modulation level reported by an OpenTherm thermostat.
+  - Collect `interval_log` data only for power-measurements (W to Wh), the only measurements with a matching energy `interval_log`. This applies to all devices; no existing `_interval` sensor is affected.
+- Code optimizations via PR [#946](https://github.com/plugwise/python-plugwise/pull/946)
+
 ## v1.16.0
 
 - Contribution PR [#940](https://github.com/plugwise/python-plugwise/pull/940) by @MartvanMale:
