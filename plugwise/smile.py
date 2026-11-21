@@ -8,6 +8,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Awaitable, Callable
 import datetime as dt
+import re
 from typing import Any, cast
 from xml.sax.saxutils import quoteattr
 
@@ -25,16 +26,28 @@ from plugwise.constants import (
     OFF,
     PRESET_SETPOINT_ATTRIBUTES,
     PRESET_TEMPERATURES,
+    RULE_LOCATOR,
     RULES,
+    SCHEDULE_NUMBERS,
+    SCHEDULE_POINT,
+    SCHEDULE_TAG,
+    SCHEDULE_WHEN_KEYS,
     STATE_OFF,
     STATE_ON,
     GwEntityData,
+    ScheduleSlot,
     SwitchType,
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
+from plugwise.exceptions import (
+    ConnectionFailedError,
+    DataMissingError,
+    PlugwiseError,
+    PlugwiseException,
+)
 
+from aiohttp import ClientError
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -44,6 +57,82 @@ from munch import Munch
 def _xml_attrs(attrs: dict[str, str]) -> str:
     """Return XML attributes, with escaped values."""
     return " ".join(f"{key}={quoteattr(value)}" for key, value in attrs.items())
+
+
+def _in_range(value: str | float) -> bool:
+    """Return whether a schedule value is a number in the setpoint range."""
+    try:
+        return MIN_SETPOINT <= float(value) <= MAX_SETPOINT
+    except (
+        TypeError,
+        ValueError,
+    ):
+        return False
+
+
+def _check_name(name: str) -> None:
+    """Raise when a schedule name would break the rule XML."""
+    # "]]>" ends the CDATA block the name is written in
+    if "]]>" in name:
+        raise PlugwiseError(
+            "Plugwise: a schedule name cannot contain ']]>'. Choose a name without it."
+        )
+
+
+def _check_slot(slot: ScheduleSlot) -> tuple[str, str]:
+    """Return the start and end of a schedule slot, raising when the slot is not valid."""
+    start, end = slot.get("start"), slot.get("end")
+    if not (
+        isinstance(start, str)
+        and isinstance(end, str)
+        and SCHEDULE_POINT.fullmatch(start)
+        and SCHEDULE_POINT.fullmatch(end)
+    ):
+        raise PlugwiseError(
+            f"Plugwise: schedule slot {slot} needs a start and end written as a day and time, such as 'mo 07:00'."
+        )
+    for key in SCHEDULE_NUMBERS:
+        if key in slot and not _in_range(slot[key]):
+            raise PlugwiseError(
+                f"Plugwise: schedule {key} must be a number between {MIN_SETPOINT} and {MAX_SETPOINT}"
+            )
+    if (
+        "heating_setpoint" in slot
+        and "cooling_setpoint" in slot
+        and float(slot["heating_setpoint"]) > float(slot["cooling_setpoint"])
+    ):
+        raise PlugwiseError(
+            f"Plugwise: schedule slot {slot} has a heating setpoint above its cooling setpoint. Lower the heating setpoint or raise the cooling setpoint."
+        )
+    for key in slot:
+        if not XML_NAME.fullmatch(key):
+            raise PlugwiseError(
+                f"Plugwise: schedule slot key {key!r} is not valid. Use a name that"
+                " starts with a letter or '_' and holds only letters, digits,"
+                " '_', '.' or '-'."
+            )
+
+    return start, end
+
+
+def _slot_attrs(
+    slot: ScheduleSlot, start: str, end: str
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Return the <when> and <then> attributes of a schedule slot."""
+    when: dict[str, str] = {"time": f"[{start},{end})"}
+    then: dict[str, str] = {}
+    for key, value in slot.items():
+        if key in ("start", "end"):
+            continue
+        # The gateway reads presence from <when> and the settings from <then>
+        target = when if key in SCHEDULE_WHEN_KEYS else then
+        target[key] = str(value)
+    if not then:
+        raise PlugwiseError(
+            f"Plugwise: schedule slot {slot} has no setting. Add a preset or a setpoint."
+        )
+
+    return when, then
 
 
 def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, Munch]:
@@ -64,6 +153,10 @@ def model_to_switch_items(model: str, state: str, switch: Munch) -> tuple[str, M
             state = "true" if state == STATE_ON else "false"
 
     return state, switch
+
+
+XML_NAME = re.compile(r"[A-Za-z_][\w.-]*")
+RULE_ID = re.compile(r"[0-9a-f]{32}")
 
 
 class SmileAPI(SmileData):
@@ -96,6 +189,7 @@ class SmileAPI(SmileData):
         self.smile = smile
         self.therms_with_offset_func: list[str] = []
         self._preset_lock = asyncio.Lock()
+        self._rules_stale = False
 
     @property
     def cooling_present(self) -> bool:
@@ -105,6 +199,7 @@ class SmileAPI(SmileData):
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
+        self._rules_stale = False
         self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
@@ -306,6 +401,131 @@ class SmileAPI(SmileData):
             for then in self._domain_objects.findall(locator):
                 then.set(attribute, value)
 
+    async def set_schedule(
+        self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
+    ) -> None:
+        """Replace the time slots of a schedule, and rename it when a name is given."""
+        await self._refresh_stale_rules()
+        rule = self._schedule_rule(rule_id)
+        old_name = rule.findtext("name")
+        directives = self._schedule_directives(slots)
+        new_name = (
+            f"<name>{self._schedule_name(name, rule_id)}</name>"
+            if name is not None
+            else ""
+        )
+        data = f"<rules><rule id='{rule_id}'>{new_name}{directives}</rule></rules>"
+        await self.call_request(f"{RULES};id={rule_id}", method="put", data=data)
+        # An update during the request can have replaced the cached rules
+        if (rule := self._domain_objects.find(f'rule[@id="{rule_id}"]')) is None:
+            return
+        if (old_directives := rule.find("directives")) is not None:
+            rule.remove(old_directives)
+        rule.append(etree.fromstring(directives))
+        if name is not None and (rule_name := rule.find("name")) is not None:
+            rule_name.text = name
+            for states in self._schedule_old_states.values():
+                if old_name in states:
+                    states[name] = states.pop(old_name)
+
+    async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
+        """Create a schedule, active and attached to no zone."""
+        await self._refresh_stale_rules()
+        directives = self._schedule_directives(slots)
+        data = (
+            "<rules><rule>"
+            f"<name>{self._schedule_name(name)}</name>"
+            f'<template tag="{SCHEDULE_TAG}"/>'
+            "<active>true</active>"
+            f"{directives}"
+            "</rule></rules>"
+        )
+        await self.call_request(RULES, method="post", data=data)
+        # The schedule exists now, so a failed read is left to the next update
+        try:
+            await self.full_xml_update()
+        except (
+            PlugwiseException,
+            ClientError,
+            TimeoutError,
+        ):
+            self._rules_stale = True
+
+    async def delete_schedule(self, rule_id: str) -> None:
+        """Delete a schedule from the gateway."""
+        await self._refresh_stale_rules()
+        rule = self._schedule_rule(rule_id)
+        name = rule.findtext("name")
+        await self.call_request(f"{RULES};id={rule_id}", method="delete")
+        # An update during the request can have replaced the cached rules
+        if (current := self._domain_objects.find(f'rule[@id="{rule_id}"]')) is not None:
+            self._domain_objects.remove(current)
+        for states in self._schedule_old_states.values():
+            states.pop(name, None)
+
+    async def _refresh_stale_rules(self) -> None:
+        """Read the rules again after a failed read that followed a create, so lookups see the new schedule."""
+        if self._rules_stale:
+            await self.full_xml_update()
+
+    def _schedule_rule(self, rule_id: str) -> etree.Element:
+        """Return the schedule rule with this id, or raise if it is missing or not a schedule."""
+        rule = None
+        if RULE_ID.fullmatch(rule_id):
+            rule = self._domain_objects.find(f'rule[@id="{rule_id}"]')
+        if rule is None or rule.find(f'template[@tag="{SCHEDULE_TAG}"]') is None:
+            raise PlugwiseError(
+                f"Plugwise: no schedule with id {rule_id}. Use a rule id from the gateway's schedules."
+            )
+
+        return rule
+
+    def _schedule_name(self, name: str, rule_id: str | None = None) -> str:
+        """Return a new schedule name as CDATA, refusing names that would break a lookup by name."""
+        if not name.strip():
+            raise PlugwiseError(
+                "Plugwise: a schedule name cannot be empty or only spaces. Choose a name."
+            )
+        _check_name(name)
+        if name in (NONE, OFF):
+            raise PlugwiseError(
+                f"Plugwise: the name '{name}' is reserved. Choose another name."
+            )
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
+            if rule.get("id") != rule_id and rule.findtext("name") == name:
+                raise PlugwiseError(
+                    f"Plugwise: the name '{name}' is already in use on the gateway. Choose another name."
+                )
+        return f"<![CDATA[{name}]]>"
+
+    def _schedule_rule_id_by_name(self, name: str, loc_id: str) -> str:
+        """Return the id of the schedule rule with this name, skipping rules that are not schedules."""
+        _check_name(name)
+        for rule_id in self._rule_ids_by_name(name, loc_id):
+            # Other kinds of rule carry a name too, and a write must not reach one
+            locator = f'rule[@id="{rule_id}"]/template[@tag="{SCHEDULE_TAG}"]'
+            if self._domain_objects.find(locator) is not None:
+                return rule_id
+
+        raise PlugwiseError(
+            f"Plugwise: there is no schedule named {name}. Choose a name from the gateway's schedules."
+        )
+
+    @staticmethod
+    def _schedule_directives(slots: list[ScheduleSlot]) -> str:
+        """Serialise schedule slots to the gateway's <directives> element."""
+        if not slots:
+            raise PlugwiseError(
+                "Plugwise: a schedule needs at least one slot. Use delete_schedule to remove it."
+            )
+        directives = ""
+        for slot in slots:
+            start, end = _check_slot(slot)
+            when, then = _slot_attrs(slot, start, end)
+            directives += f"<when {_xml_attrs(when)}><then {_xml_attrs(then)}/></when>"
+
+        return f"<directives>{directives}</directives>"
+
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if (presets := self._presets(loc_id)) is None:
@@ -460,6 +680,7 @@ class SmileAPI(SmileData):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
+        await self._refresh_stale_rules()
         # Input checking
         if state is None:
             state = STATE_ON
@@ -476,30 +697,33 @@ class SmileAPI(SmileData):
             if name in (NONE, OFF):  # no active schedule found, nothing to do
                 return
 
-        schedule_rule = self._rule_ids_by_name(name, loc_id)
-        # Raise an error when the schedule name does not exist
-        if not schedule_rule or schedule_rule is None:
-            raise PlugwiseError(f"Plugwise: no schedule with name {name} available")
-
-        # If no state change is requested, do nothing
-        if state == self._schedule_old_states[loc_id][name]:
+        schedule_rule_id = self._schedule_rule_id_by_name(name, loc_id)
+        rule_active = self._domain_objects.find(
+            f'rule[@id="{schedule_rule_id}"]/active'
+        )
+        is_active = rule_active is not None and rule_active.text == "true"
+        # If no state change is requested, do nothing; an inactive rule still needs
+        # switching on, since the gateway only runs active schedules
+        if state == self._schedule_old_states[loc_id].get(name) and (
+            state == STATE_OFF or is_active
+        ):
             return
 
-        schedule_rule_id: str = next(iter(schedule_rule))
-        template = (
-            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
-        )
+        template = f'<template tag="{SCHEDULE_TAG}" />'
         if self.check_name(ANNA):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).get("id")
             template = f'<template id="{template_id}" />'
 
         contexts = self.determine_contexts(loc_id, state, schedule_rule_id)
+        # An attached schedule only runs when its rule is active
+        active = "<active>true</active>" if state == STATE_ON else ""
         data = (
             "<rules>"
             f"<rule id='{schedule_rule_id}'>"
             f"<name><![CDATA[{name}]]></name>"
             f"{template}"
+            f"{active}"
             f"{contexts}"
             "</rule>"
             "</rules>"
@@ -507,20 +731,23 @@ class SmileAPI(SmileData):
         uri = f"{RULES};id={schedule_rule_id}"
         await self.call_request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = state
+        # An update during the request can have replaced the cached rules
+        if state == STATE_ON:
+            locator = f'rule[@id="{schedule_rule_id}"]/active'
+            if (rule_active := self._domain_objects.find(locator)) is not None:
+                rule_active.text = "true"
 
     def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> str:
         """Helper-function for set_schedule_state()."""
         locator = f'.//*[@id="{sched_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
         locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := contexts.find(locator)) is None:
-            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-            subject = etree.fromstring(subject)
-
-        if state == STATE_OFF:
+        subject = contexts.find(locator)
+        if state == STATE_OFF and subject is not None:
             contexts.remove(subject)
-        if state == STATE_ON:
-            contexts.append(subject)
+        if state == STATE_ON and subject is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            contexts.append(etree.fromstring(subject))
 
         return str(etree.tostring(contexts, encoding="unicode").rstrip())
 

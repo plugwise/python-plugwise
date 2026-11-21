@@ -59,6 +59,9 @@ class SmileData(SmileHelper):
             if entity_id == self._gateway_id:
                 mac_list = self._detect_low_batteries()
                 self._add_or_update_notifications(entity_id, entity)
+                if schedules := self._schedule_rules():
+                    entity["schedules"] = schedules
+                    self._count += len(schedules)
 
             is_battery_low = (
                 mac_list

@@ -1,5 +1,12 @@
 # Changelog
 
+## Ongoing
+
+- Fix switching a schedule on or off sending the schedule's settings to another rule that shares its name, such as a preset rule. A name that belongs only to another rule is now refused. This affected both current and legacy gateways.
+- Switching a schedule on also makes it active, so a schedule that was inactive starts running. Switching on a schedule that is already attached no longer adds its zone a second time.
+- Add `set_schedule`, `create_schedule` and `delete_schedule` to change, rename, add and remove weekly schedules. A new schedule is active and attached to no zone.
+- Add the weekly schedules, with their name, zones and time slots, to the gateway data. The slots are listed in week order, starting on Monday.
+
 ## v1.17.1
 
 - Implement fix for Core issue [#192756](https://github.com/home-assistant/core/issues/192756) via PR[#954](https://github.com/plugwise/python-plugwise/pull/954), this fix removes the thermozone temperature sensors to avoid creating sensors with the same name in HA.

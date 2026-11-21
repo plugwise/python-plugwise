@@ -12,6 +12,7 @@ from typing import Any
 from plugwise.constants import (
     APPLIANCES,
     DOMAIN_OBJECTS,
+    LEGACY_SCHEDULE_NAME,
     LOCATIONS,
     LOGGER,
     MODULES,
@@ -21,12 +22,15 @@ from plugwise.constants import (
     STATE_OFF,
     STATE_ON,
     GwEntityData,
+    ScheduleSlot,
     ThermoLoc,
 )
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
 from munch import Munch
+
+NO_SCHEDULE_WRITES = "Plugwise: schedules cannot be changed on this gateway. Change them in the Plugwise app."
 
 
 class SmileLegacyAPI(SmileLegacyData):
@@ -155,6 +159,20 @@ class SmileLegacyAPI(SmileLegacyData):
     async def set_offset(self, dev_id: str, offset: float) -> None:
         """Set-function placeholder for legacy devices."""
 
+    async def set_schedule(
+        self, rule_id: str, slots: list[ScheduleSlot], name: str | None = None
+    ) -> None:
+        """Raise an error, since legacy gateways keep schedules in a format this library does not write."""
+        raise PlugwiseError(NO_SCHEDULE_WRITES)
+
+    async def create_schedule(self, name: str, slots: list[ScheduleSlot]) -> None:
+        """Raise an error, since legacy gateways keep schedules in a format this library does not write."""
+        raise PlugwiseError(NO_SCHEDULE_WRITES)
+
+    async def delete_schedule(self, rule_id: str) -> None:
+        """Raise an error, since legacy gateways keep schedules in a format this library does not write."""
+        raise PlugwiseError(NO_SCHEDULE_WRITES)
+
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         if not (presets := self._presets()):
@@ -201,18 +219,20 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Handle no schedule-name / Off-schedule provided
         if name is None or name == OFF:
-            name = "Thermostat schedule"
+            name = LEGACY_SCHEDULE_NAME
 
-        schedule_rule_id: str | None = None
-        for rule in self._domain_objects.findall("rule"):
-            if rule.find("name").text == name:
-                schedule_rule_id = rule.get("id")
-                break
-
-        if schedule_rule_id is None:
+        # A legacy gateway holds one schedule, and other rules carry a name too
+        rule = (
+            self._domain_objects.find(f"./rule[name='{LEGACY_SCHEDULE_NAME}']")
+            if name == LEGACY_SCHEDULE_NAME
+            else None
+        )
+        if rule is None:
             raise PlugwiseError(
-                f"Plugwise: no schedule with name {name} available"
-            )  # pragma: no cover
+                f"Plugwise: there is no schedule named {name}. Choose a name from the gateway's schedules."
+            )
+
+        schedule_rule_id = rule.get("id")
 
         new_state = "false"
         if state == STATE_ON:

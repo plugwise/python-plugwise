@@ -5,6 +5,8 @@ Plugwise Smile protocol helpers.
 
 from __future__ import annotations
 
+from contextlib import suppress
+import math
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -30,6 +32,11 @@ from plugwise.constants import (
     OFF,
     P1_MEASUREMENTS,
     POWER_WATT,
+    RULE_LOCATOR,
+    SCHEDULE_DAYS,
+    SCHEDULE_NUMBERS,
+    SCHEDULE_PERIOD,
+    SCHEDULE_TAG,
     SENSORS,
     TEMP_CELSIUS,
     THERMO_MATCHING,
@@ -41,6 +48,8 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     GwEntityData,
+    ScheduleData,
+    ScheduleSlot,
     SensorType,
     ThermoLoc,
     ToggleNameType,
@@ -84,6 +93,44 @@ def search_actuator_functionalities(
 def _own_rule_ids(rules: dict[str, dict[str, str]], loc_id: str) -> list[str]:
     """Return the ids of the rules attached to loc_id."""
     return [rule_id for rule_id, data in rules.items() if data["location"] == loc_id]
+
+
+def _slot_order(slot: ScheduleSlot) -> tuple[int, str]:
+    """Return a sort key that orders slots by their start in the week, Monday first."""
+    start = slot.get("start")
+    if isinstance(start, str) and start[:2] in SCHEDULE_DAYS:
+        return SCHEDULE_DAYS.index(start[:2]), start[3:]
+    return len(SCHEDULE_DAYS), ""
+
+
+def _slot_settings(then: etree.Element) -> ScheduleSlot:
+    """Return the settings of one schedule slot, from its <then> element."""
+    settings: ScheduleSlot = {}
+    for key, value in then.attrib.items():
+        settings[key] = value
+        if key in SCHEDULE_NUMBERS:
+            # One unusable slot value must not break the whole update
+            with suppress(ValueError):
+                number = float(value)
+                if math.isfinite(number):
+                    settings[key] = number
+
+    return settings
+
+
+def _schedule_slot(when: etree.Element) -> ScheduleSlot:
+    """Return one time slot of a schedule, from its <when> element."""
+    slot: ScheduleSlot = {}
+    for key, value in when.attrib.items():
+        # The time attribute is a week interval such as "[mo 07:15,mo 16:30)"
+        if key == "time" and (period := SCHEDULE_PERIOD.fullmatch(value)):
+            slot["start"], slot["end"] = period.groups()
+        else:
+            slot[key] = value
+    if (then := when.find("then")) is not None:
+        slot.update(_slot_settings(then))
+
+    return slot
 
 
 class SmileHelper(SmileCommon):
@@ -1029,7 +1076,10 @@ class SmileHelper(SmileCommon):
         """
         schedule_ids: dict[str, dict[str, str]] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
+            # Comparing here keeps a name holding a quote out of the XPath
+            if rule.findtext("name") != name:
+                continue
             if rule.find(locator) is not None:
                 schedule_ids[rule.get("id")] = {
                     "location": loc_id,
@@ -1051,7 +1101,7 @@ class SmileHelper(SmileCommon):
         schedule_ids: dict[str, dict[str, str]] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall("./rule"):
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
             if rule.find(locator1) is not None:
                 name = rule.find("name").text
                 if rule.find(locator2) is not None:
@@ -1076,14 +1126,14 @@ class SmileHelper(SmileCommon):
         available: list[str] = [OFF]
         rule_ids: dict[str, dict[str, str]] = {}
         selected = OFF
-        tag = "zone_preset_based_on_time_and_presence_with_override"
+        tag = SCHEDULE_TAG
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected
 
         schedules: list[str] = []
         for rule_id, data in rule_ids.items():
             name = data["name"]
-            locator = f'./rule[@id="{rule_id}"]/directives'
+            locator = f'{RULE_LOCATOR}[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if self._domain_objects.find(locator) is None:
                 continue  # pragma: no cover
@@ -1094,6 +1144,30 @@ class SmileHelper(SmileCommon):
             schedules.append(name)
 
         return available, selected
+
+    def _schedule_rules(self) -> dict[str, ScheduleData]:
+        """Helper-function for data.py: _update_gw_entities().
+
+        Collect every weekly schedule on the gateway, keyed by rule id.
+        """
+        schedules: dict[str, ScheduleData] = {}
+        locator = f'./template[@tag="{SCHEDULE_TAG}"]'
+        for rule in self._domain_objects.findall(RULE_LOCATOR):
+            if rule.find(locator) is None or rule.find("directives") is None:
+                continue
+
+            slots = [_schedule_slot(when) for when in rule.findall("directives/when")]
+            schedules[rule.get("id")] = {
+                "name": rule.findtext("name", ""),
+                "active": rule.findtext("active") == "true",
+                "zones": [
+                    location.get("id")
+                    for location in rule.findall("contexts/context/zone/location")
+                ],
+                "slots": sorted(slots, key=_slot_order),
+            }
+
+        return schedules
 
     def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().
