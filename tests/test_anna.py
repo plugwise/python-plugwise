@@ -243,7 +243,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(api, "2020-04-19 00:00:01", testdata)
-        assert self.entity_items == 98
+        assert self.entity_items == 99
         assert self.cooling_present
         assert not self.notifications
 
