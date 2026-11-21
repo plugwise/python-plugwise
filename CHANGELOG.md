@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v1.18.0
 
 - Fix switching a schedule on or off sending the schedule's settings to another rule that shares its name, such as a preset rule. A name that belongs only to another rule is now refused. This affected both current and legacy gateways.
 - Switching a schedule on also makes it active, so a schedule that was inactive starts running. Switching on a schedule that is already attached no longer adds its zone a second time.
